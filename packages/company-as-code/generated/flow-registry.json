@@ -1,5 +1,5 @@
 {
-  "count": 3,
+  "count": 4,
   "generatedFrom": "/company/**/workflows/*.yaml",
   "workflows": [
     {
@@ -36,6 +36,18 @@
       "trigger": {
         "actor": "people:head-of-growth",
         "kind": "human"
+      }
+    },
+    {
+      "declaredIn": "company/workflows/incident-response.yaml",
+      "hitl": true,
+      "module": "company/runtime",
+      "name": "incident-response",
+      "purpose": "Orchestrate a declared incident from declaration through retrospective. Cross-cutting workflow that lives at the runtime layer because it spans every module. Always human-led — the commander is a person, not an agent.\n",
+      "steps": 10,
+      "trigger": {
+        "event": "runtime.incident_declared",
+        "kind": "event"
       }
     }
   ]

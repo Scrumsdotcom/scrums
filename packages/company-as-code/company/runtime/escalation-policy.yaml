@@ -1,0 +1,70 @@
+# Runtime escalation policy.
+#
+# Defines how `escalated` agents and `human-gated` failures route through
+# the on-call hierarchy. Maps generic role identifiers (e.g. `people:on-call-platform`)
+# to canonical Person IDs at request time — the routing layer is one
+# integration away, but the policy is declared here.
+
+version: 1
+
+# Severity → SLA pairs. Used by both incident-response and bounded-retry escalation.
+severities:
+  sev-1:
+    description: Customer-facing outage; data loss; security breach.
+    acknowledgeWithin: PT5M
+    incidentCommanderWithin: PT5M
+    pageMode: continuous-until-ack
+  sev-2:
+    description: Significant degradation; partial outage.
+    acknowledgeWithin: PT15M
+    incidentCommanderWithin: PT30M
+    pageMode: continuous-until-ack
+  sev-3:
+    description: Minor degradation; internal-only impact.
+    acknowledgeWithin: PT4H
+    incidentCommanderWithin: best-effort
+    pageMode: notify
+  sev-4:
+    description: Anomaly to investigate; no current impact.
+    acknowledgeWithin: P1D
+    incidentCommanderWithin: not-required
+    pageMode: notify
+
+# Role-based routing. The runtime resolves a role to the canonical Person
+# currently bound to it at invocation time. Bindings live under
+# /company/integrations/seeds/ (see the worked seeds).
+roles:
+  - role: on-call-platform
+    description: Platform module on-call rotation.
+    fallback:
+      - role: platform-lead
+      - role: cto
+  - role: on-call-finance
+    description: Finance module on-call rotation.
+    fallback:
+      - role: finance-lead
+      - role: cfo
+  - role: on-call-growth
+    description: Growth module on-call rotation.
+    fallback:
+      - role: head-of-growth
+      - role: cro
+
+# Per-agent default escalation. Standalone agent files may declare their own
+# `escalation` block; this file is the fallback when an agent has no
+# explicit policy.
+defaults:
+  escalatedAgentThreshold: "3 consecutive failures within 30 minutes"
+  escalatedAgentRecipient: on-call-platform
+
+# Communication channels — vendor-neutral; integrations resolve the actual delivery.
+channels:
+  - kind: page
+    target: integrations/paging-system
+    forSeverities: [sev-1, sev-2]
+  - kind: chat
+    target: integrations/team-chat
+    forSeverities: [sev-1, sev-2, sev-3]
+  - kind: email
+    target: integrations/email
+    forSeverities: [sev-3, sev-4]

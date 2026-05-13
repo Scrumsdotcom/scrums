@@ -1,0 +1,64 @@
+# Example task. Schema: /schemas/task.schema.json
+#
+# Tasks usually live under their owning module (e.g. /company/domains/.../tasks/).
+# This top-level example demonstrates a cross-cutting task — coordinating the
+# first incident-response dry-run after the policy lands.
+
+apiVersion: company-as-code/v1
+kind: Task
+
+id: TASK-EXAMPLE-0001
+title: Run a tabletop incident-response exercise across platform + finance
+description: >
+  Validate the new incident-response policy and workflow end-to-end with a
+  tabletop exercise. Simulated SEV-2 affecting the platform module's billing
+  reconciliation and the finance module's month-end close cadence. No live
+  external writes; all actions are captured in the audit log.
+
+module: company/runtime
+
+state: planned
+
+owner:
+  kind: team
+  id: team:platform
+
+priority: p2
+dueAt: 2026-06-15T00:00:00Z
+
+sla:
+  respondWithin: P3D
+  resolveWithin: P14D
+
+dependencies: []
+subtasks: []
+
+automation:
+  workflow: incident-response
+  trigger: human
+
+approvals:
+  - role: incident-commander
+    decision: pending
+  - role: platform-lead
+    decision: pending
+  - role: finance-lead
+    decision: pending
+
+labels:
+  - tabletop
+  - cross-domain
+  - first-run
+
+createdAt: 2026-05-13T00:00:00Z
+updatedAt: 2026-05-13T00:00:00Z
+
+history:
+  - state: backlog
+    at: 2026-05-13T00:00:00Z
+    actor: people:platform-lead
+    note: Created post-incident-policy ratification.
+  - state: planned
+    at: 2026-05-13T00:00:00Z
+    actor: people:platform-lead
+    note: Scheduled for Q3 onboarding window.

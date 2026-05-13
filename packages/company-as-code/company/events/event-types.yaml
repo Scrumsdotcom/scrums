@@ -1,0 +1,82 @@
+# Event type registry.
+#
+# The typed event ledger is enum-controlled. Every event in /company/events/
+# must use a `type:` value from this registry. New event types require a
+# schema migration (per /docs/standards/schema-migrations.md) and an ADR.
+#
+# Naming convention: dotted segments, lowercase + snake_case.
+# Leading segment is the domain or module emitting the event.
+# Trailing segment is the past-tense state transition.
+
+version: 1
+events:
+
+  # ── finance-ops / finance ────────────────────────────────────────────────
+  - type: finance.cash_forecast_updated
+    description: The cash-forecaster regenerated the rolling 13-week forecast and the new value differs from the previous by ≥1%.
+    emittingModule: company/domains/finance-ops/finance
+    payloadSchema: payloads/cash-forecast-updated.yaml
+    status: stable
+
+  - type: finance.period_closed
+    description: A monthly close completed through the human-gated workflow.
+    emittingModule: company/domains/finance-ops/finance
+    status: stable
+
+  - type: finance.forecast_horizon_changed
+    description: The cash forecast horizon (default 13 weeks) was changed. Requires an ADR.
+    emittingModule: company/domains/finance-ops/finance
+    status: stable
+
+  # ── product-operations / platform ────────────────────────────────────────
+  - type: platform.deploy_succeeded
+    description: A production deploy completed through the production-deploy workflow.
+    emittingModule: company/domains/product-operations/platform
+    status: stable
+
+  - type: platform.deploy_failed
+    description: A production deploy failed; deploy-watchdog escalates after 3 within 30 minutes.
+    emittingModule: company/domains/product-operations/platform
+    status: stable
+
+  - type: platform.identity_drift_detected
+    description: The identity-drift-detector found canonical/external IdP divergence.
+    emittingModule: company/domains/product-operations/platform
+    status: stable
+
+  - type: platform.billing_reconciliation_proposed
+    description: The billing-reconciler produced a proposal awaiting human approval.
+    emittingModule: company/domains/product-operations/platform
+    status: stable
+
+  # ── sales-marketing / growth ─────────────────────────────────────────────
+  - type: growth.allocation_recommendation_emitted
+    description: The growth-experiment-runner produced a channel-allocation recommendation.
+    emittingModule: company/domains/sales-marketing/growth
+    status: stable
+
+  - type: growth.allocation_applied
+    description: A human-approved channel-allocation shift was applied.
+    emittingModule: company/domains/sales-marketing/growth
+    status: stable
+
+  - type: growth.experiment_stop_loss_breached
+    description: An active growth experiment breached its declared stop-loss threshold.
+    emittingModule: company/domains/sales-marketing/growth
+    status: stable
+
+  # ── coordination / runtime ───────────────────────────────────────────────
+  - type: coordination.record_unarchived
+    description: An archived record was brought back into hot storage by a tasked operator action.
+    emittingModule: company/runtime
+    status: stable
+
+  - type: runtime.incident_declared
+    description: A new incident was opened. Carries severity and incident commander.
+    emittingModule: company/runtime
+    status: stable
+
+  - type: runtime.incident_resolved
+    description: An incident transitioned to resolved. Triggers the retrospective cadence.
+    emittingModule: company/runtime
+    status: stable

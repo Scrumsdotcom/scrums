@@ -61,16 +61,58 @@ CI enforces (1), (3), and the manifest contract for (2) via the dependency-graph
 
 The repository is an **executable organizational graph**, not an org chart.
 
+```mermaid
+flowchart TD
+    CEO[ceo<br/><i>executive cognition</i>]
+    FE[finance-ops<br/><i>executive</i>]
+    PE[product-operations<br/><i>executive</i>]
+    SE[sales-marketing<br/><i>executive</i>]
+
+    CEO --> FE
+    CEO --> PE
+    CEO --> SE
+
+    FE --> FIN[finance]
+    FE --> LEG[legal]
+    FE --> PEO[people]
+    FE --> SUP[suppliers]
+    FE --> OPS[operations]
+    FE --> GOV[governance]
+    FE --> INFR[infra]
+    FE --> REP[reporting]
+
+    PE --> WEB[web]
+    PE --> PROD[products]
+    PE --> PLAT[platform]
+    PE --> DEL[delivery]
+    PE --> ARCH[architecture]
+    PE --> SEC[security]
+    PE --> QA[qa]
+    PE --> REL[reliability]
+    PE --> DOC[documentation]
+
+    PLAT --> IDN[identity]
+    PLAT --> BIL[billing]
+    PLAT --> DEP[deployment]
+
+    SE --> MKT[marketing]
+    SE --> SAL[sales]
+    SE --> CUST[customer]
+    SE --> PAR[partnerships]
+    SE --> GRW[growth]
+    SE --> BRD[brand]
+    SE --> CON[content]
+    SE --> ROP[revenue-operations]
+
+    style FIN stroke-width:3px
+    style PLAT stroke-width:3px
+    style GRW stroke-width:3px
+    style IDN stroke-dasharray: 3 3
+    style BIL stroke-dasharray: 3 3
+    style DEP stroke-dasharray: 3 3
 ```
-ceo (executive)
-├── finance-ops (executive)
-│   └── finance, legal, people, suppliers, operations, governance, infra, reporting
-├── product-operations (executive)
-│   ├── platform → identity, billing, deployment   (sub-cognition)
-│   └── web, products, delivery, architecture, security, qa, reliability, documentation
-└── sales-marketing (executive)
-    └── marketing, sales, customer, partnerships, growth, brand, content, revenue-operations
-```
+
+> Bold-bordered nodes are the worked example modules in this seed. Dashed-bordered nodes are sub-cognition modules under their parent.
 
 Each node supports scoped memory, tools, workflows, dashboards, observability, permissions, tasks, automation, context windows.
 
@@ -160,13 +202,27 @@ Every mutation writes a typed event. Every action writes an audit row. Nothing e
 
 Every state-mutating sync follows the same five steps, regardless of which systems are involved:
 
+```mermaid
+flowchart LR
+    A[1. Baseline<br/><i>read current state</i>] --> B[2. Dry-run<br/><i>compute projected payload</i>]
+    B --> C{3. Confirm counts<br/><i>delta within expected?</i>}
+    C -->|no| STOP[STOP<br/>file TASK<br/>escalate]
+    C -->|yes| D[4. Live<br/><i>smallest possible scope</i>]
+    D --> E[5. Re-verify<br/><i>state matches projection</i>]
+
+    style STOP fill:#fee
+    style C fill:#ffd
+```
+
 1. **Baseline** — query current state, record counts/IDs/hashes
 2. **Dry-run** — execute with `dryRun=true`, inspect projected payload
 3. **Confirm counts** — compare projected delta to baseline; stop if wildly off
 4. **Live** — execute with `dryRun=false`, smallest possible scope
 5. **Re-verify** — re-query baseline, confirm state shifted as predicted
 
-The audit log captures this as a queryable narrative. Agents that follow this protocol are auditable in the same way humans are.
+The audit log captures this as a queryable narrative under a single correlation ID. Agents that follow this protocol are auditable in the same way humans are.
+
+See the [`sync-verification`](../company/skills/sync-verification.yaml) skill for the canonical operationalization.
 
 ## Observability
 

@@ -5,6 +5,9 @@ Numbered, dated, status-tracked records of architectural decisions. Use [`/templ
 | # | Title | Status |
 |---|---|---|
 | [0001](./0001-record-architecture-decisions.md) | Record architecture decisions | Accepted |
+| [0002](./0002-modular-monolith.md) | Modular monolith as the canonical structure | Accepted |
+| [0003](./0003-unidirectional-mutation.md) | Unidirectional mutation flow | Accepted |
+| [0004](./0004-drift-gate.md) | Generated registries + drift gate | Accepted |
 
 ## Adding an ADR
 

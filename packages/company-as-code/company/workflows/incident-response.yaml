@@ -1,0 +1,100 @@
+apiVersion: company-as-code/v1
+kind: Workflow
+
+name: incident-response
+module: company/runtime
+
+purpose: >
+  Orchestrate a declared incident from declaration through retrospective.
+  Cross-cutting workflow that lives at the runtime layer because it spans
+  every module. Always human-led — the commander is a person, not an agent.
+
+trigger:
+  kind: event
+  event: runtime.incident_declared
+
+# Cross-cutting incident handling is human-led end-to-end.
+hitl: true
+
+inputs:
+  - name: incidentId
+    type: incident-canonical-id
+    required: true
+  - name: severity
+    type: severity-enum
+    required: true
+  - name: affectedModules
+    type: array
+    required: true
+
+outputs:
+  - name: incidentRecord
+    type: incident-record
+  - name: retroPlan
+    type: file-path
+
+steps:
+  - id: classify
+    kind: human-approval
+    approver: people:first-responder
+    hitl: true
+
+  - id: declare
+    kind: emit-event
+    emitsEvent: runtime.incident_declared
+
+  - id: assemble
+    kind: human-approval
+    approver: people:incident-commander
+    hitl: true
+
+  - id: stabilize
+    kind: branch
+    branches:
+      - when: severity in [sev-1, sev-2]
+        next: stabilize-with-war-room
+      - when: severity == sev-3
+        next: stabilize-light
+      - when: severity == sev-4
+        next: stabilize-async
+
+  - id: stabilize-with-war-room
+    kind: human-approval
+    approver: people:incident-commander
+    hitl: true
+
+  - id: stabilize-light
+    kind: human-approval
+    approver: people:incident-commander
+    hitl: true
+
+  - id: stabilize-async
+    kind: human-approval
+    approver: people:on-call
+
+  - id: communicate
+    kind: human-approval
+    approver: people:incident-commander
+    hitl: true
+
+  - id: resolve
+    kind: emit-event
+    emitsEvent: runtime.incident_resolved
+
+  - id: retrospect
+    kind: human-approval
+    approver: people:incident-commander
+    hitl: true
+
+invariants:
+  - The commander role is a human (canonical Person ID), never an agent.
+  - Every step writes an audit record under the incident correlation ID.
+  - Resolution cannot fire before stabilization.
+  - The retrospect step is mandatory for sev-1 and sev-2; skipping requires an explicit override audit row signed by the commander.
+
+observability:
+  dashboards:
+    - executive-overview
+    - platform-overview
+  metrics:
+    - METRIC-RUNTIME-MTTR

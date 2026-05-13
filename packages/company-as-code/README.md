@@ -13,6 +13,10 @@ Run your company like software — observable, versioned, orchestrated, automata
 [Concepts](#core-concepts) ·
 [Architecture](./docs/architecture.md) ·
 [Getting Started](./docs/getting-started.md) ·
+[Anatomy](./docs/anatomy) ·
+[Scenarios](./docs/scenarios) ·
+[Forking](./docs/forking.md) ·
+[FAQ](./docs/faq.md) ·
 [Standards](./docs/standards) ·
 [Glossary](./docs/glossary.md)
 

@@ -1,0 +1,72 @@
+# Dashboard: platform-overview
+#
+# Referenced from:
+# - company/domains/product-operations/platform/manifest.yaml (owns.dashboards)
+# - company/domains/product-operations/platform/agents/identity-drift-detector.yaml
+# - company/domains/product-operations/platform/agents/billing-reconciler.yaml
+
+apiVersion: company-as-code/v1
+kind: Dashboard
+name: platform-overview
+
+owner:
+  module: company/domains/product-operations/platform
+
+purpose: >
+  Capacity, incident posture, identity drift, billing reconciliation
+  status. The single view consumed by the platform-lead and the
+  product-operations executive.
+
+audience:
+  - platform-lead
+  - cto
+
+refresh: realtime
+
+panels:
+  - id: deploy-frequency
+    title: Deploy frequency (rolling 7d)
+    type: stat
+    metric: derived/deploys_per_day
+
+  - id: deploy-failure-rate
+    title: Deploy failure rate (rolling 7d)
+    type: percentage
+    metric: derived/deploy_failure_rate
+    thresholds:
+      warning: { comparator: gt, value: 5 }
+      critical: { comparator: gt, value: 15 }
+
+  - id: identity-drift-rate
+    title: Identity drift events (rolling 24h)
+    type: counter
+    metric: events/platform.identity_drift_detected/count
+
+  - id: billing-recon-staleness
+    title: Last billing reconciliation
+    type: stat
+    metric: derived/last_billing_reconciliation_age
+    thresholds:
+      warning: { comparator: gt, value: PT26H }
+      critical: { comparator: gt, value: P2D }
+
+  - id: open-incidents
+    title: Open incidents touching platform
+    type: list
+    source: tasks/by-label/incident,module=platform
+
+alerts:
+  - id: deploy-failure-streak
+    description: Three consecutive deploy failures within 30 minutes (triggers deploy-watchdog escalation).
+    severity: sev-2
+    routing: on-call-platform
+
+  - id: identity-drift-spike
+    description: Identity drift events > 10× rolling baseline over 6h.
+    severity: sev-3
+    routing: on-call-platform
+
+  - id: billing-reconciliation-stale
+    description: Billing reconciliation hasn't run in > 26h.
+    severity: sev-3
+    routing: platform-lead
