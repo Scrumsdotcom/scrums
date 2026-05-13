@@ -13,6 +13,13 @@ This file is updated through PRs like any other artefact. Disagreements about sc
 ### v0.1.0 — initial seed
 - Canonical specification, JSON Schemas for 13 primitives, `/company` scaffold, worked examples in finance / platform / growth, reference TypeScript CLI, CI workflows, architecture + standards + glossary + ADR-0001.
 
+### v0.3.0 cycle (PR #4 + #5)
+- **Schema completeness** — JSON Schemas for `Dashboard`, `Automation`, `EventTypeRegistry`, `AutonomyPolicy`, `EscalationPolicy`; every YAML in `/company/**` now schema-validates.
+- **Reference runtime host** at [`/runtime`](../runtime) — TypeScript daemon-style CLI that loads the manifest graph, executes workflows (dry-run by default, opt-in `--live`), persists audit + event records.
+- **Append-only sinks behind a common interface.** Reference backends ship for SQLite (zero-config) and Postgres (production); forks add Kafka / NATS / cloud-streaming by implementing the same two interfaces.
+- **Execution-time invariants enforced by the runtime.** HITL workflow + scheduled trigger is refused. Live-write requires a prior dry-run audit row under the same correlation ID. emit-event rejects types absent from the registry.
+- **Correlation-ID audit narratives.** Every audit row and typed event under a single execution shares a correlation ID; `cac-host audit <id>` prints the time-ordered narrative.
+
 ### v0.2.0 cycle (PR #2 + #3)
 - **Skill primitive** (Tier-3 knowledge model) with cross-runtime adapters (Claude `SKILL.md`, AGENTS.md, Gemini Gem).
 - **`AGENTS.md`** root navigation for any AGENTS.md-aware AI runtime.
@@ -39,21 +46,7 @@ After PR #4 lands, **every YAML in `/company/**` is machine-validated** — ther
 
 ## Considered next (no committed timeline)
 
-The user's brief for the next phase moves the framework from **declarative substrate** toward **executable operating system**. These are larger architectural additions, each a PR or a small sequence of PRs.
-
-### Reference runtime host
-> A binary that loads the manifest graph and actually executes workflows / agents / automations in a real runtime, not just the TypeScript CLI's read-and-generate model.
-
-- Language candidates: **Go** (deployable single binary, ecosystem fit), **Rust** (correctness, performance for long-running daemons), or both.
-- Initial scope: load the manifest graph from a clone, expose a CLI that runs a single workflow in dry-run mode (no real external calls), emit audit + event rows to stdout in the canonical schemas.
-- Out of scope for v1: a managed control plane, hot-reload, distributed execution.
-
-### Event bus + audit ledger
-> Move from `/company/events/` (the registry) to a real append-only stream and a queryable audit log.
-
-- Reference backends: SQLite (zero-config local), Postgres (production), with an abstract `EventSink` / `AuditSink` interface that NATS / Kafka / cloud-native streaming implementations can satisfy.
-- Schema is already defined ([`event.schema.json`](../schemas/event.schema.json), [`audit-record.schema.json`](../schemas/audit-record.schema.json)) and now enum-controlled by the [event-type registry](../schemas/event-type-registry.schema.json) — what's missing is the persistence layer.
-- Out of scope for v1: distributed consensus, multi-region replication.
+These are larger architectural additions, each a PR or a small sequence of PRs.
 
 ### Dynamic authorization (RBAC / ABAC)
 > Map manifest-declared roles (`contacts`, `approver: people:x`, `escalation.to`) to actual execution permissions.

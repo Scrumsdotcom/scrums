@@ -54,6 +54,7 @@ These are enforced by schema, CI, or merge protection. Do not fight them.
 | Worked module examples | [`company/domains/finance-ops/finance/`](./company/domains/finance-ops/finance), [`company/domains/product-operations/platform/`](./company/domains/product-operations/platform), [`company/domains/sales-marketing/growth/`](./company/domains/sales-marketing/growth) |
 | Tier-3 skills (reusable techniques) | [`company/skills/`](./company/skills) |
 | Generated registries | [`generated/`](./generated) |
+| Reference runtime host (execute workflows + persist audit/events) | [`runtime/`](./runtime) |
 
 ---
 

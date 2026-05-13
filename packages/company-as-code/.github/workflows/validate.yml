@@ -21,6 +21,16 @@ jobs:
       - name: Validate manifests, agents, workflows, primitives
         working-directory: cli
         run: npm run validate
-      - name: Unit tests
+      - name: Unit tests (CLI)
         working-directory: cli
         run: npm test
+
+      - name: Install runtime host
+        working-directory: runtime
+        run: npm ci || npm install
+      - name: Unit tests (runtime host)
+        working-directory: runtime
+        run: npm test
+      - name: Runtime host smoke — load the manifest graph
+        working-directory: runtime
+        run: npx tsx src/index.ts load --repo ..

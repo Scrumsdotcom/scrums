@@ -13,6 +13,7 @@ Company-as-Code separates **framework-level** content (rarely edited in a fork) 
 | `/schemas/*.schema.json` | Rarely — these are the framework contract |
 | `/templates/*.yaml`, `/templates/*.md` | Rarely — these are framework-level authoring starters |
 | `/cli/` | Optional — you can use as-is, or port to your stack |
+| `/runtime/` | Optional — reference runtime host. Replace pluggable invokers (`AgentInvoker`, `AutomationInvoker`, `ApprovalProvider`) with your real implementations, or write your own runtime against the same schemas |
 | `/docs/spec/company-as-code-spec.md` | Treat as upstream — don't edit; track upstream changes |
 | `/docs/standards/`, `/docs/architecture.md` | Edit if your fork changes a standard (record via ADR) |
 | `/docs/adr/` | Add your own ADRs as `0010-…`, `0011-…` (leave 0001-0004 in place as bootstrap history) |

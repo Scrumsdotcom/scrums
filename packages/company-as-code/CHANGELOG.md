@@ -10,6 +10,24 @@ When the schema for a canonical primitive changes in a backwards-incompatible wa
 
 ## [Unreleased]
 
+### Added — Reference runtime host (TypeScript)
+
+- **New `/runtime/` package.** TypeScript daemon-style CLI (`cac-host`) that loads the manifest graph from a clone, executes workflows (dry-run by default, opt-in `--live`), and persists audit + event records.
+- **Commands:** `cac-host load`, `cac-host execute <workflow> [--live] [--auto-approve]`, `cac-host audit <correlationId>`, `cac-host events --type <name>|--entity <id>`.
+- **Two reference backends behind a common interface:**
+  - `SqliteSinks` — zero-config local; WAL journal mode; indexed by correlation, type, entity (`better-sqlite3`).
+  - `PostgresSinks` — production-grade; JSONB payloads; auto-creates schema on first connection (`pg`).
+- **Execution-time invariants enforced by the runtime:**
+  - HITL workflow + scheduled trigger is refused at load (throws).
+  - `live-write` requires a prior dry-run audit row under the same correlation ID (refuses the step otherwise).
+  - `emit-event` rejects types not registered in the `EventTypeRegistry`.
+  - Every step writes an audit row, including failures and refusals.
+- **Pluggable invokers:** `AgentInvoker`, `AutomationInvoker`, `ApprovalProvider` — reference implementations ship but are deliberately minimal. Forks plug in real AI runtimes, integration clients, and approval surfaces.
+- **8 new vitest cases** covering the sinks and the executor (workflow round-trip, event emission, live-write safety rail, hitl-on-schedule refusal, registry enforcement).
+- **`/docs/anatomy/runtime-host.md`** — field-by-field deep-dive on the runtime.
+- **CI updated** to install + test the runtime host on every PR.
+- **`/runtime/runtime.db*`** added to `.gitignore` — operational state is never committed.
+
 ### Added — Schema completeness for runtime primitives
 
 - **Five new JSON Schemas** covering every illustrative YAML now shipped in the seed:

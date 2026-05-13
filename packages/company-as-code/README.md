@@ -230,18 +230,19 @@ See [`docs/architecture.md#ai-native-design`](./docs/architecture.md) for the fu
 
 ## Project status
 
-**Current release:** `v0.1.0` — initial public seed.
+**Current release:** `v0.1.0` — initial public seed. v0.2.0 and v0.3.0 work in flight (see [CHANGELOG](./CHANGELOG.md) and [roadmap](./docs/roadmap.md)).
 
 This is a **seed repository**. It ships:
 
 - the complete canonical structure
 - JSON Schemas for every primitive
 - a working TypeScript CLI with validation + generators
-- CI workflows enforcing schema validity and zero generator drift
+- a reference TypeScript **runtime host** that loads the manifest graph and executes workflows with audit + event persistence (SQLite or Postgres)
+- CI workflows enforcing schema validity, unit tests, and zero generator drift
 - worked examples across all three canonical domains
 - documentation of the architecture, standards, and operating discipline
 
-It does **not** ship runtime infrastructure — that's intentionally pluggable. Pick your event bus, your observability stack, your AI provider, your workflow engine. The framework specifies the contracts; you bring the implementations.
+The runtime host is a **reference**, not the only runtime. Forks pick their own AI provider, integration clients, approval surface, and storage backend; the schemas guarantee that any implementation is portable. See [`/runtime/README.md`](./runtime/README.md).
 
 ---
 
