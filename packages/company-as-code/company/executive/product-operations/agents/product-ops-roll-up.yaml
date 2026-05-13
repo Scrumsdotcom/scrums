@@ -1,0 +1,48 @@
+apiVersion: company-as-code/v1
+kind: Agent
+
+name: product-ops-roll-up
+module: company/executive/product-operations
+
+purpose: >
+  Aggregate product-operations domain state (delivery throughput,
+  platform state, security posture) into the product-rollup payload
+  consumed by the CEO cognition node.
+
+runtime: llm
+schedule: "0 5 * * MON"
+cadence: weekly
+autonomy: autonomous
+
+inputs:
+  - name: delivery-throughput
+    type: delivery-throughput
+    from: company/domains/product-operations/delivery:delivery-throughput
+  - name: platform-state
+    type: platform-state
+    from: company/domains/product-operations/platform:platform-state
+  - name: security-posture
+    type: security-posture
+    from: company/domains/product-operations/security:security-posture
+
+outputs:
+  - name: product-rollup
+    type: product-rollup
+
+tools: []
+
+memoryScope: company/memory/product-ops-roll-up
+
+observability:
+  dashboards:
+    - executive-overview
+  alerts: []
+  auditTopic: product-ops-roll-up
+
+invariants:
+  - Reads only from declared consumes-interfaces.
+  - Read-only; never writes to external systems.
+
+contacts:
+  - role: accountable
+    person: cto

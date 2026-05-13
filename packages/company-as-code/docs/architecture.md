@@ -55,7 +55,11 @@ The repository is a modular monolith. The discipline:
 4. Infrastructure layers contain zero business logic — capabilities only.
 5. State mutation is unidirectional. All state changes originate from the coordination layer; downstream systems read.
 
-CI enforces (1), (3), and the manifest contract for (2) via the dependency-graph generator.
+What's machine-enforced vs operator-enforced is laid out in [`/docs/standards/policy-to-control-matrix.md`](standards/policy-to-control-matrix.md). In summary:
+
+- (3) is enforced by **schemas + cross-document checks** — every manifest is validated; cross-doc rules catch dangling references and singleton violations.
+- (2) is surfaced by the **dependency-graph generator** — every cross-module edge appears in `/generated/dependency-graph.json` for review. Direct import enforcement at the source-code layer is fork-specific.
+- (1), (4), (5) are **operator discipline** today (no enforceable code-layer check); the policy-to-control matrix tracks them as candidates for elevation.
 
 ## Cognition tree
 

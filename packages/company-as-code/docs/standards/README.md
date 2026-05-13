@@ -11,3 +11,4 @@ Engineering and operational standards. Versioned, reviewable, enforceable. If a 
 | [`security.md`](./security.md) | Force-push policy, secret handling, dependency review |
 | [`observability.md`](./observability.md) | What every new agent must emit |
 | [`documentation.md`](./documentation.md) | What every new module must declare |
+| [`policy-to-control-matrix.md`](./policy-to-control-matrix.md) | Every declared rule mapped to its enforcement location (schema / CI / runtime / discipline) |

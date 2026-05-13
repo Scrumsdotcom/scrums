@@ -1,0 +1,82 @@
+{
+  "agent": {
+    "autonomy": "autonomous",
+    "cadence": "weekly",
+    "module": "company/executive/finance-ops",
+    "name": "finance-ops-roll-up",
+    "purpose": "Aggregate the finance-ops domain's state (ledger summary, workforce state, compliance state) into the finance-rollup payload consumed by the CEO cognition node.\n",
+    "runtime": "llm",
+    "schedule": "0 5 * * MON"
+  },
+  "apiVersion": "company-as-code/v1",
+  "canonicalEvents": [],
+  "generatedFrom": "company/executive/finance-ops/agents/finance-ops-roll-up.yaml",
+  "invariants": [
+    "Reads only from declared consumes-interfaces.",
+    "Read-only; never writes to external systems."
+  ],
+  "kind": "ContextBundle",
+  "memoryScope": "company/memory/finance-ops-roll-up",
+  "observability": {
+    "alerts": [],
+    "auditTopic": "finance-ops-roll-up",
+    "dashboards": [
+      "executive-overview"
+    ]
+  },
+  "readAccess": {
+    "inputs": [
+      {
+        "from": "company/domains/finance-ops/finance:ledger-summary",
+        "name": "ledger-summary",
+        "type": "ledger-summary"
+      },
+      {
+        "from": "company/domains/finance-ops/people:workforce-state",
+        "name": "workforce-state",
+        "type": "workforce-state"
+      },
+      {
+        "from": "company/domains/finance-ops/governance:compliance-state",
+        "name": "compliance-state",
+        "type": "compliance-state"
+      }
+    ],
+    "moduleConsumes": [
+      {
+        "from": "company/domains/finance-ops/finance",
+        "interface": "ledger-summary",
+        "usage": "P&L, cash, runway"
+      },
+      {
+        "from": "company/domains/finance-ops/people",
+        "interface": "workforce-state",
+        "usage": "headcount, attrition signals"
+      },
+      {
+        "from": "company/domains/finance-ops/governance",
+        "interface": "compliance-state",
+        "usage": "open audit items, control attestations"
+      }
+    ]
+  },
+  "tools": [
+    "canonical-ledger-reader"
+  ],
+  "writeAccess": {
+    "hitlConstraints": [],
+    "moduleExposes": [
+      {
+        "description": "Domain-level roll-up consumed by the CEO module",
+        "interface": "finance-rollup",
+        "stability": "experimental"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "finance-rollup",
+        "type": "finance-rollup"
+      }
+    ]
+  }
+}

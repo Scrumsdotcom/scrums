@@ -1,0 +1,51 @@
+version: 2
+
+updates:
+  # Reference TypeScript CLI
+  - package-ecosystem: "npm"
+    directory: "/cli"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "cli"
+    commit-message:
+      prefix: "deps(cli)"
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+      runtime-dependencies:
+        dependency-type: "production"
+
+  # Reference runtime host
+  - package-ecosystem: "npm"
+    directory: "/runtime"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "runtime"
+    commit-message:
+      prefix: "deps(runtime)"
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+      runtime-dependencies:
+        dependency-type: "production"
+
+  # GitHub Actions — supply chain
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "deps(actions)"

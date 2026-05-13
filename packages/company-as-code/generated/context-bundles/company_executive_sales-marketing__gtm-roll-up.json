@@ -1,0 +1,79 @@
+{
+  "agent": {
+    "autonomy": "autonomous",
+    "cadence": "weekly",
+    "module": "company/executive/sales-marketing",
+    "name": "gtm-roll-up",
+    "purpose": "Aggregate sales-marketing domain state (pipeline state, customer health, growth state) into the gtm-rollup payload consumed by the CEO cognition node.\n",
+    "runtime": "llm",
+    "schedule": "0 5 * * MON"
+  },
+  "apiVersion": "company-as-code/v1",
+  "canonicalEvents": [],
+  "generatedFrom": "company/executive/sales-marketing/agents/gtm-roll-up.yaml",
+  "invariants": [
+    "Reads only from declared consumes-interfaces.",
+    "Read-only; never writes to external systems."
+  ],
+  "kind": "ContextBundle",
+  "memoryScope": "company/memory/gtm-roll-up",
+  "observability": {
+    "alerts": [],
+    "auditTopic": "gtm-roll-up",
+    "dashboards": [
+      "executive-overview"
+    ]
+  },
+  "readAccess": {
+    "inputs": [
+      {
+        "from": "company/domains/sales-marketing/sales:pipeline-state",
+        "name": "pipeline-state",
+        "type": "pipeline-state"
+      },
+      {
+        "from": "company/domains/sales-marketing/customer:customer-health",
+        "name": "customer-health",
+        "type": "customer-health"
+      },
+      {
+        "from": "company/domains/sales-marketing/growth:growth-state",
+        "name": "growth-state",
+        "type": "growth-state"
+      }
+    ],
+    "moduleConsumes": [
+      {
+        "from": "company/domains/sales-marketing/sales",
+        "interface": "pipeline-state",
+        "usage": "pipeline coverage, conversion rates"
+      },
+      {
+        "from": "company/domains/sales-marketing/customer",
+        "interface": "customer-health",
+        "usage": "retention, NPS, churn risk"
+      },
+      {
+        "from": "company/domains/sales-marketing/growth",
+        "interface": "growth-state",
+        "usage": "acquisition velocity, channel mix"
+      }
+    ]
+  },
+  "tools": [],
+  "writeAccess": {
+    "hitlConstraints": [],
+    "moduleExposes": [
+      {
+        "interface": "gtm-rollup",
+        "stability": "experimental"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "gtm-rollup",
+        "type": "gtm-rollup"
+      }
+    ]
+  }
+}

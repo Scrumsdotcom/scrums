@@ -10,6 +10,29 @@ When the schema for a canonical primitive changes in a backwards-incompatible wa
 
 ## [Unreleased]
 
+### Added — Hardening pass: drift orphans, conditional schemas, supply-chain CI, governance matrix
+
+- **Drift gate flags orphans.** `cli/src/generate.ts` `checkDrift` now walks `/generated/**` and fails when any file present is not emitted by a generator. Stale artefacts can no longer hide.
+- **Generator idempotency contract test.** `cli/test/generate.test.ts` regenerates twice and asserts byte-identical output; also asserts orphan detection fires correctly.
+- **Conditional schema rules on workflow trigger + step kinds:**
+  - `trigger.kind=schedule` requires `schedule:`; `kind=event` requires `event:`; `kind=human` requires `actor:`
+  - step `kind=agent` requires `agent:`; `kind=automation`/`dry-run`/`live-write` requires `automation:`; `kind=human-approval` requires `approver:`; `kind=emit-event` requires `emitsEvent:`; `kind=branch` requires `branches:`
+- **Manifest agent summaries ↔ standalone files must agree.** New cross-doc check enforces module path resolution, manifest listing, discrete-field equality (`autonomy`, `cadence`, `runtime`, `schedule`), and round-trip completeness. The standalone file is the single source of truth.
+- **Four new standalone agent files for the executive layer** (`ceo-strategist`, `finance-ops-roll-up`, `product-ops-roll-up`, `gtm-roll-up`) — closing the gap surfaced by the new check.
+- **Security workflows in CI** (`.github/workflows/security.yml`):
+  - gitleaks secret scanning
+  - `npm audit --omit=dev --audit-level=high` for `cli/` and `runtime/`
+  - CodeQL JavaScript/TypeScript analysis
+  - Runs on every PR + weekly cron
+- **`npm ci` strict in CI** — removed `|| npm install` fallback from `validate.yml` and `generate-check.yml`. Lockfile is authoritative.
+- **All GitHub Actions pinned by SHA**, not by tag.
+- **Dependabot** (`.github/dependabot.yml`) — weekly PRs to bump action SHAs and dependency versions across both packages.
+- **Ajv `strict: true`** in `cli/src/validate.ts`, with `allowUnionTypes` for legitimate cases. Caught and fixed several ambiguous constructs in `workflow.schema.json`.
+- **9 new negative-fixture tests** in `cli/test/negative-fixtures.test.ts` — adversarial documents that must fail validation.
+- **`docs/standards/policy-to-control-matrix.md`** — every declared rule mapped to its enforcement location (schema / CI / runtime / discipline). The declared-vs-enforced gap is now impossible to hide.
+- **`docs/standards/security.md`** aligned to actual enforcement (each claim points at the workflow or config that backs it).
+- **`docs/architecture.md`** aligned — the vague "CI enforces" sentence replaced with a precise breakdown referencing the matrix.
+
 ### Added — Reference runtime host (TypeScript)
 
 - **New `/runtime/` package.** TypeScript daemon-style CLI (`cac-host`) that loads the manifest graph from a clone, executes workflows (dry-run by default, opt-in `--live`), and persists audit + event records.

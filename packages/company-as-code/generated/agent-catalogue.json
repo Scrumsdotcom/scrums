@@ -53,40 +53,40 @@
     {
       "autonomy": "human-gated",
       "cadence": "weekly",
-      "declaredIn": "company/executive/ceo/manifest.yaml",
+      "declaredIn": "company/executive/ceo/agents/ceo-strategist.yaml",
       "module": "company/executive/ceo",
       "name": "ceo-strategist",
-      "purpose": "Generate weekly executive brief from domain roll-ups; flag drift against approved OKRs.",
+      "purpose": "Generate the weekly executive brief from the three domain roll-ups (finance, product-operations, sales-marketing). Flag drift against approved OKRs. Human-gated; the brief is reviewed before it lands in the leadership team's surface.\n",
       "runtime": "llm",
       "schedule": "0 6 * * MON"
     },
     {
       "autonomy": "autonomous",
       "cadence": "weekly",
-      "declaredIn": "company/executive/finance-ops/manifest.yaml",
+      "declaredIn": "company/executive/finance-ops/agents/finance-ops-roll-up.yaml",
       "module": "company/executive/finance-ops",
       "name": "finance-ops-roll-up",
-      "purpose": "Aggregate domain-level state into a finance-rollup payload for the CEO cognition node.",
+      "purpose": "Aggregate the finance-ops domain's state (ledger summary, workforce state, compliance state) into the finance-rollup payload consumed by the CEO cognition node.\n",
       "runtime": "llm",
       "schedule": "0 5 * * MON"
     },
     {
       "autonomy": "autonomous",
       "cadence": "weekly",
-      "declaredIn": "company/executive/product-operations/manifest.yaml",
+      "declaredIn": "company/executive/product-operations/agents/product-ops-roll-up.yaml",
       "module": "company/executive/product-operations",
       "name": "product-ops-roll-up",
-      "purpose": "Aggregate domain state into the product-rollup payload.",
+      "purpose": "Aggregate product-operations domain state (delivery throughput, platform state, security posture) into the product-rollup payload consumed by the CEO cognition node.\n",
       "runtime": "llm",
       "schedule": "0 5 * * MON"
     },
     {
       "autonomy": "autonomous",
       "cadence": "weekly",
-      "declaredIn": "company/executive/sales-marketing/manifest.yaml",
+      "declaredIn": "company/executive/sales-marketing/agents/gtm-roll-up.yaml",
       "module": "company/executive/sales-marketing",
       "name": "gtm-roll-up",
-      "purpose": "Aggregate GTM domain state into the gtm-rollup payload.",
+      "purpose": "Aggregate sales-marketing domain state (pipeline state, customer health, growth state) into the gtm-rollup payload consumed by the CEO cognition node.\n",
       "runtime": "llm",
       "schedule": "0 5 * * MON"
     }

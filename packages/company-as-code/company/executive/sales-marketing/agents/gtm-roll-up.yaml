@@ -1,0 +1,48 @@
+apiVersion: company-as-code/v1
+kind: Agent
+
+name: gtm-roll-up
+module: company/executive/sales-marketing
+
+purpose: >
+  Aggregate sales-marketing domain state (pipeline state, customer
+  health, growth state) into the gtm-rollup payload consumed by the
+  CEO cognition node.
+
+runtime: llm
+schedule: "0 5 * * MON"
+cadence: weekly
+autonomy: autonomous
+
+inputs:
+  - name: pipeline-state
+    type: pipeline-state
+    from: company/domains/sales-marketing/sales:pipeline-state
+  - name: customer-health
+    type: customer-health
+    from: company/domains/sales-marketing/customer:customer-health
+  - name: growth-state
+    type: growth-state
+    from: company/domains/sales-marketing/growth:growth-state
+
+outputs:
+  - name: gtm-rollup
+    type: gtm-rollup
+
+tools: []
+
+memoryScope: company/memory/gtm-roll-up
+
+observability:
+  dashboards:
+    - executive-overview
+  alerts: []
+  auditTopic: gtm-roll-up
+
+invariants:
+  - Reads only from declared consumes-interfaces.
+  - Read-only; never writes to external systems.
+
+contacts:
+  - role: accountable
+    person: cro

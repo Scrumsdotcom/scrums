@@ -21,7 +21,21 @@
         "event": { "type": "string" },
         "schedule": { "type": "string" },
         "actor": { "type": "string" }
-      }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "schedule" } }, "required": ["kind"] },
+          "then": { "required": ["schedule"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "event" } }, "required": ["kind"] },
+          "then": { "required": ["event"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "human" } }, "required": ["kind"] },
+          "then": { "required": ["actor"] }
+        }
+      ]
     },
     "inputs": {
       "type": "array",
@@ -84,7 +98,37 @@
               }
             }
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "kind": { "const": "agent" } }, "required": ["kind"] },
+            "then": { "required": ["agent"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "automation" } }, "required": ["kind"] },
+            "then": { "required": ["automation"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "dry-run" } }, "required": ["kind"] },
+            "then": { "required": ["automation"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "live-write" } }, "required": ["kind"] },
+            "then": { "required": ["automation"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "human-approval" } }, "required": ["kind"] },
+            "then": { "required": ["approver"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "emit-event" } }, "required": ["kind"] },
+            "then": { "required": ["emitsEvent"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "branch" } }, "required": ["kind"] },
+            "then": { "required": ["branches"] }
+          }
+        ]
       }
     },
     "invariants": {
@@ -109,16 +153,19 @@
   "allOf": [
     {
       "if": {
+        "type": "object",
         "properties": {
           "hitl": { "const": true }
         },
         "required": ["hitl"]
       },
       "then": {
+        "type": "object",
         "properties": {
           "trigger": {
+            "type": "object",
             "properties": {
-              "kind": { "not": { "const": "schedule" } }
+              "kind": { "type": "string", "not": { "const": "schedule" } }
             }
           }
         }

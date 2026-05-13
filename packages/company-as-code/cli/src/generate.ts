@@ -45,7 +45,9 @@ async function writeAll(files: GeneratedFile[]): Promise<void> {
 
 async function checkDrift(files: GeneratedFile[]): Promise<boolean> {
   const drifted: string[] = [];
+  const expectedPaths = new Set<string>();
   for (const f of files) {
+    expectedPaths.add(path.normalize(f.name));
     const full = path.join(GENERATED_DIR, f.name);
     let current: string | null = null;
     try {
@@ -58,14 +60,54 @@ async function checkDrift(files: GeneratedFile[]): Promise<boolean> {
       drifted.push(f.name);
     }
   }
-  if (drifted.length === 0) {
-    console.log(`✓ generate --check: /generated is in sync.`);
+
+  // Orphan detection: any file present under /generated that no generator
+  // emits is a stale artefact. Refusing to ship is the only correct response —
+  // generated state is supposed to be fully deterministic from sources.
+  const orphans = await findOrphans(expectedPaths);
+
+  if (drifted.length === 0 && orphans.length === 0) {
+    console.log(`✓ generate --check: /generated is in sync (${files.length} expected file(s), 0 orphans).`);
     return true;
   }
-  console.error(`✗ generate --check: ${drifted.length} generated file(s) drifted:`);
-  for (const d of drifted) console.error(`  - ${d}`);
-  console.error(`Run 'npm run generate' and commit the result.`);
+  if (drifted.length > 0) {
+    console.error(`✗ generate --check: ${drifted.length} generated file(s) drifted:`);
+    for (const d of drifted) console.error(`  - ${d}`);
+    console.error(`Run 'npm run generate' and commit the result.`);
+  }
+  if (orphans.length > 0) {
+    console.error(`✗ generate --check: ${orphans.length} orphan file(s) under /generated (no generator emits them):`);
+    for (const o of orphans) console.error(`  - ${o}`);
+    console.error(`Delete the orphans (the generator no longer owns them) and re-run 'npm run generate:check'.`);
+  }
   return false;
+}
+
+async function findOrphans(expectedPaths: Set<string>): Promise<string[]> {
+  const orphans: string[] = [];
+  const exists = await fs
+    .stat(GENERATED_DIR)
+    .then(() => true)
+    .catch(() => false);
+  if (!exists) return orphans;
+  await walk(GENERATED_DIR, async (absolute) => {
+    const rel = path.normalize(path.relative(GENERATED_DIR, absolute));
+    if (!expectedPaths.has(rel)) orphans.push(rel);
+  });
+  orphans.sort();
+  return orphans;
+}
+
+async function walk(dir: string, visit: (file: string) => Promise<void>): Promise<void> {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  for (const e of entries) {
+    const full = path.join(dir, e.name);
+    if (e.isDirectory()) {
+      await walk(full, visit);
+    } else if (e.isFile()) {
+      await visit(full);
+    }
+  }
 }
 
 function stableStringify(value: unknown): string {

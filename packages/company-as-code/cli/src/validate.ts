@@ -9,7 +9,21 @@ export interface ValidationProblem {
 }
 
 export function buildAjv(schemas: Record<string, unknown>) {
-  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  // `strict: true` surfaces ambiguous / non-portable schema constructs at load
+  // time. The framework treats schema warnings as defects.
+  //
+  // `allowUnionTypes: true` is intentional — several primitives carry fields
+  // that legitimately accept either a number or a string template (e.g.
+  // `Goal.target.value` can be a literal numeric target OR a formula-style
+  // string for derived comparators).
+  const ajv = new Ajv2020({
+    allErrors: true,
+    strict: true,
+    strictTypes: true,
+    strictTuples: true,
+    strictRequired: false,
+    allowUnionTypes: true,
+  });
   addFormats(ajv);
   for (const [name, schema] of Object.entries(schemas)) {
     ajv.addSchema(schema as object, name);
@@ -66,6 +80,10 @@ export async function validateCommand(): Promise<boolean> {
   return false;
 }
 
+function normalizeWhitespace(v: unknown): string {
+  return typeof v === "string" ? v.replace(/\s+/g, " ").trim() : JSON.stringify(v);
+}
+
 export function crossDocumentChecks(corpus: RepoCorpus): string[] {
   const errors: string[] = [];
 
@@ -85,10 +103,77 @@ export function crossDocumentChecks(corpus: RepoCorpus): string[] {
     }
   }
 
-  // 3. Standalone agent files are the source of truth for escalation policy.
-  //    Manifest-inline agent entries are summaries — the full escalation block
-  //    lives in agents/<name>.yaml. Linkage between manifest entries and
-  //    standalone files is not yet enforced here.
+  // 3. Manifest agent summaries ↔ standalone agent files must agree.
+  //    The standalone file is the source of truth. We enforce:
+  //    (a) every standalone agent's `module` resolves to a manifest path
+  //    (b) the resolved manifest lists the agent in its agents[] block
+  //    (c) overlapping fields (purpose, autonomy, cadence, runtime, schedule) agree
+  //    (d) every manifest-listed agent has a corresponding standalone file
+  const manifestByPath = new Map<string, (typeof corpus.manifests)[number]>();
+  for (const m of corpus.manifests) {
+    const modulePath = m.file.replace(/\/manifest\.ya?ml$/, "");
+    manifestByPath.set(modulePath, m);
+  }
+  for (const agent of corpus.agents) {
+    const modulePath = agent.data.module as string | undefined;
+    if (!modulePath) {
+      errors.push(`${agent.file}: standalone agent missing required 'module' field.`);
+      continue;
+    }
+    const manifest = manifestByPath.get(modulePath);
+    if (!manifest) {
+      errors.push(
+        `${agent.file}: standalone agent declares module '${modulePath}' but no manifest.yaml exists at that path.`,
+      );
+      continue;
+    }
+    const inline = ((manifest.data.agents ?? []) as Array<any>).find(
+      (a) => a.name === agent.data.name,
+    );
+    if (!inline) {
+      errors.push(
+        `${agent.file}: agent '${agent.data.name}' is not listed in ${manifest.file}'s agents[] block.`,
+      );
+      continue;
+    }
+    // Discrete fields must match byte-for-byte; the runtime classification
+    // is not allowed to drift between the manifest summary and the standalone.
+    for (const field of ["autonomy", "cadence", "runtime", "schedule"] as const) {
+      const a = (inline as any)[field];
+      const b = (agent.data as any)[field];
+      if (a !== undefined && b !== undefined && normalizeWhitespace(a) !== normalizeWhitespace(b)) {
+        errors.push(
+          `${agent.file}: field '${field}' (${JSON.stringify(b)}) does not match the manifest summary in ${manifest.file} (${JSON.stringify(a)}).`,
+        );
+      }
+    }
+    // Prose `purpose` may legitimately be terser in the manifest summary
+    // than in the standalone file. We only check that both are non-empty.
+    if (inline.purpose !== undefined && typeof inline.purpose === "string" && inline.purpose.trim().length === 0) {
+      errors.push(`${manifest.file}: agent '${agent.data.name}' has an empty purpose in the manifest summary.`);
+    }
+    if (typeof agent.data.purpose !== "string" || agent.data.purpose.trim().length === 0) {
+      errors.push(`${agent.file}: standalone agent has empty purpose.`);
+    }
+  }
+  // (d) — every name in manifest.agents[] must have a standalone file under the same module.
+  const standaloneByModuleName = new Set<string>();
+  for (const a of corpus.agents) {
+    if (a.data.module && a.data.name) {
+      standaloneByModuleName.add(`${a.data.module}::${a.data.name}`);
+    }
+  }
+  for (const m of corpus.manifests) {
+    const modulePath = m.file.replace(/\/manifest\.ya?ml$/, "");
+    for (const inline of (m.data.agents ?? []) as Array<{ name: string }>) {
+      const key = `${modulePath}::${inline.name}`;
+      if (!standaloneByModuleName.has(key)) {
+        errors.push(
+          `${m.file}: agents[] entry '${inline.name}' has no standalone file at ${modulePath}/agents/${inline.name}.yaml. The standalone file is the source of truth.`,
+        );
+      }
+    }
+  }
 
   // 4. Initiative goals/metrics references should resolve.
   const goalIds = new Set(corpus.goals.map((g) => g.data.id));

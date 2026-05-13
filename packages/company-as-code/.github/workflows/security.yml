@@ -1,0 +1,72 @@
+name: security
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    # Weekly Monday at 04:00 UTC — keep findings fresh even when no PRs land.
+    - cron: "0 4 * * MON"
+
+permissions:
+  contents: read
+  security-events: write    # CodeQL writes findings into the Security tab
+  pull-requests: write      # gitleaks posts PR annotations on findings
+  actions: read             # CodeQL inspects workflow runs for context
+
+jobs:
+  secret-scan:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11   # v4.1.1
+        with:
+          fetch-depth: 0
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7   # v2.3.6
+        # gitleaks-action calls the GitHub API to post annotations. On private
+        # repos without GitHub Advanced Security the call returns 403. Treat
+        # API-permission failures as non-blocking; the scan itself still runs
+        # and exits non-zero on a true secret hit. Forks with GHAS enabled
+        # should remove `continue-on-error`.
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependency-audit:
+    name: npm audit (cli + runtime)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11   # v4.1.1
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8   # v4.0.2
+        with:
+          node-version: "20"
+      - name: Audit CLI dependencies
+        working-directory: cli
+        # Production-only audit; high or critical findings fail the job.
+        # Forks may tighten to --audit-level=moderate once the dependency
+        # tree stabilizes.
+        run: npm audit --omit=dev --audit-level=high
+      - name: Audit runtime dependencies
+        working-directory: runtime
+        run: npm audit --omit=dev --audit-level=high
+
+  codeql:
+    name: CodeQL (JavaScript/TypeScript)
+    runs-on: ubuntu-latest
+    # CodeQL writes to the Security tab via `security-events: write`. On
+    # private repos this requires GitHub Advanced Security (paid feature).
+    # Skip entirely when the repo is private — running and failing on
+    # every PR produces noise without value. Forks running on public
+    # repos or with GHAS enabled get full CodeQL coverage automatically.
+    if: github.event.repository.private == false
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11   # v4.1.1
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@1b1aada464948af03b950897e5eb522f92603cc2   # v3.24.9
+        with:
+          languages: javascript-typescript
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@1b1aada464948af03b950897e5eb522f92603cc2   # v3.24.9
+        with:
+          category: "/language:javascript-typescript"

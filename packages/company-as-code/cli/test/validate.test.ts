@@ -61,8 +61,10 @@ describe("crossDocumentChecks", () => {
       },
     });
     const errors = crossDocumentChecks(corpus);
-    expect(errors).toHaveLength(1);
-    expect(errors[0]).toMatch(/autonomy=escalated requires an escalation block/);
+    // The agent fixture has no parent manifest, so the manifest-linkage
+    // check will also fire — we only assert that the escalation message
+    // is among the errors raised.
+    expect(errors.some((e) => /autonomy=escalated requires an escalation block/.test(e))).toBe(true);
   });
 
   it("rejects initiatives referencing undefined goals", () => {

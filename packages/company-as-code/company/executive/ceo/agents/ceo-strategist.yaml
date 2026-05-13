@@ -1,0 +1,56 @@
+apiVersion: company-as-code/v1
+kind: Agent
+
+name: ceo-strategist
+module: company/executive/ceo
+
+purpose: >
+  Generate the weekly executive brief from the three domain roll-ups
+  (finance, product-operations, sales-marketing). Flag drift against
+  approved OKRs. Human-gated; the brief is reviewed before it lands in
+  the leadership team's surface.
+
+runtime: llm
+schedule: "0 6 * * MON"
+cadence: weekly
+autonomy: human-gated
+
+inputs:
+  - name: finance-rollup
+    type: finance-rollup
+    from: company/executive/finance-ops:finance-rollup
+  - name: product-rollup
+    type: product-rollup
+    from: company/executive/product-operations:product-rollup
+  - name: gtm-rollup
+    type: gtm-rollup
+    from: company/executive/sales-marketing:gtm-rollup
+
+outputs:
+  - name: executive-brief
+    type: executive-brief
+
+tools:
+  - rollup-reader
+  - okr-reader
+
+memoryScope: company/memory/ceo-strategist
+
+observability:
+  dashboards:
+    - executive-overview
+  alerts:
+    - executive-brief-stale
+  auditTopic: ceo-strategist
+
+invariants:
+  - The brief never writes to external systems.
+  - Every recommendation cites the underlying roll-up source by name.
+  - Brief generation runs only on the declared Monday cadence; no on-demand fires.
+
+primaryUsers:
+  - ceo
+
+contacts:
+  - role: accountable
+    person: ceo

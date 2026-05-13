@@ -1,0 +1,79 @@
+{
+  "agent": {
+    "autonomy": "autonomous",
+    "cadence": "weekly",
+    "module": "company/executive/product-operations",
+    "name": "product-ops-roll-up",
+    "purpose": "Aggregate product-operations domain state (delivery throughput, platform state, security posture) into the product-rollup payload consumed by the CEO cognition node.\n",
+    "runtime": "llm",
+    "schedule": "0 5 * * MON"
+  },
+  "apiVersion": "company-as-code/v1",
+  "canonicalEvents": [],
+  "generatedFrom": "company/executive/product-operations/agents/product-ops-roll-up.yaml",
+  "invariants": [
+    "Reads only from declared consumes-interfaces.",
+    "Read-only; never writes to external systems."
+  ],
+  "kind": "ContextBundle",
+  "memoryScope": "company/memory/product-ops-roll-up",
+  "observability": {
+    "alerts": [],
+    "auditTopic": "product-ops-roll-up",
+    "dashboards": [
+      "executive-overview"
+    ]
+  },
+  "readAccess": {
+    "inputs": [
+      {
+        "from": "company/domains/product-operations/delivery:delivery-throughput",
+        "name": "delivery-throughput",
+        "type": "delivery-throughput"
+      },
+      {
+        "from": "company/domains/product-operations/platform:platform-state",
+        "name": "platform-state",
+        "type": "platform-state"
+      },
+      {
+        "from": "company/domains/product-operations/security:security-posture",
+        "name": "security-posture",
+        "type": "security-posture"
+      }
+    ],
+    "moduleConsumes": [
+      {
+        "from": "company/domains/product-operations/delivery",
+        "interface": "delivery-throughput",
+        "usage": "lead time, deployment frequency"
+      },
+      {
+        "from": "company/domains/product-operations/platform",
+        "interface": "platform-state",
+        "usage": "capacity, incident posture"
+      },
+      {
+        "from": "company/domains/product-operations/security",
+        "interface": "security-posture",
+        "usage": "open findings, control attestations"
+      }
+    ]
+  },
+  "tools": [],
+  "writeAccess": {
+    "hitlConstraints": [],
+    "moduleExposes": [
+      {
+        "interface": "product-rollup",
+        "stability": "experimental"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "product-rollup",
+        "type": "product-rollup"
+      }
+    ]
+  }
+}
