@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/interface.schema.json",
+  "title": "Interface",
+  "description": "Declared interface a module exposes to other modules. The contract; the code implements it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "owner", "stability", "operations"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "Interface" },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "owner": {
+      "type": "string",
+      "description": "Module that owns this interface."
+    },
+    "description": { "type": "string" },
+    "stability": { "type": "string", "enum": ["experimental", "stable", "deprecated"] },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "transport": {
+      "type": "string",
+      "enum": ["in-process", "http", "rpc", "event", "file", "queue"]
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "kind"],
+        "properties": {
+          "name": { "type": "string" },
+          "kind": { "type": "string", "enum": ["read", "write", "stream", "rpc"] },
+          "input": { "type": "string", "description": "Schema reference for input payload." },
+          "output": { "type": "string", "description": "Schema reference for output payload." },
+          "idempotent": { "type": "boolean", "default": false },
+          "hitl": { "type": "boolean", "default": false },
+          "dryRunSupported": { "type": "boolean", "default": false }
+        }
+      }
+    },
+    "consumers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Modules that have declared a consumes-entry against this interface.",
+      "default": []
+    },
+    "deprecatedAt": { "type": "string", "format": "date" },
+    "removeAfter": { "type": "string", "format": "date" }
+  }
+}

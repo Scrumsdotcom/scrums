@@ -1,0 +1,35 @@
+# Goal template.
+# Place at /company/goals/<id>.yaml.
+# Schema: /schemas/goal.schema.json
+apiVersion: company-as-code/v1
+kind: Goal
+
+id: GOAL-EXAMPLE-0001
+title: One-line goal title.
+description: >
+  Optional longer description.
+
+# kpi | okr | sla | target | guardrail
+type: kpi
+
+owner:
+  kind: team
+  id: TBD
+
+# Metric ID this goal tracks.
+metric: METRIC-EXAMPLE-EXAMPLE
+
+target:
+  value: 95
+  unit: "%"
+  comparator: gte    # gte | lte | gt | lt | eq | neq | between
+  # lower: 90
+  # upper: 99
+
+horizon:
+  period: quarterly  # weekly | monthly | quarterly | yearly | rolling
+  start: 2026-04-01
+  end: 2026-06-30
+
+initiatives: []
+status: draft        # draft | active | on-track | at-risk | off-track | achieved | missed | archived

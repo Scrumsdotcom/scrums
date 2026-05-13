@@ -1,0 +1,55 @@
+apiVersion: company-as-code/v1
+kind: Manifest
+name: growth
+domain: sales-marketing
+parent: domains/sales-marketing
+version: 0.1.0
+lifecycle: hardening
+purpose: >
+  Acquisition experimentation, activation, monetization loops. Owns the
+  growth-experiment-runner and customer-acquisition workflow. Initiative,
+  goal, and metric are wired through end-to-end.
+
+owns:
+  agents:
+    - growth-experiment-runner
+  workflows:
+    - customer-acquisition
+  dashboards:
+    - growth-overview
+
+consumes:
+  - interface: pipeline-state
+    from: company/domains/sales-marketing/sales
+    usage: downstream conversion signal for top-of-funnel experiments
+  - interface: customer-health
+    from: company/domains/sales-marketing/customer
+    usage: distinguish low-quality from high-quality acquired cohorts
+
+exposes:
+  - interface: growth-state
+    stability: experimental
+    description: Acquisition velocity, channel mix, experiment outcomes
+
+agents:
+  - name: growth-experiment-runner
+    purpose: Read active experiments, score them on the channel-mix model, recommend allocation shifts. Recommendations only — no autonomous spend.
+    runtime: scheduled-job
+    schedule: "0 9 * * *"
+    cadence: daily
+    autonomy: human-gated
+    outputs:
+      - allocation-recommendation
+
+invariants:
+  - No autonomous spend. Allocation recommendations require human approval before any change to channel budgets.
+  - All experiments declare a stop-loss threshold; the runner halts experiments that breach it and emits a typed event.
+
+contacts:
+  - role: accountable
+    person: head-of-growth
+
+links:
+  initiative: ../../../initiatives/INIT-GROWTH-0001-cac-payback-reduction.yaml
+  goal: ../../../goals/GOAL-GROWTH-0001-cac-payback.yaml
+  metric: ../../../metrics/METRIC-GROWTH-CAC-PAYBACK.yaml

@@ -1,0 +1,82 @@
+{
+  "agent": {
+    "autonomy": "human-gated",
+    "cadence": "daily",
+    "module": "company/domains/product-operations/platform",
+    "name": "billing-reconciler",
+    "purpose": "Reconcile canonical subscription state against the external billing system nightly. Produces a reconciliation proposal for human review. Never writes back to the external billing system.\n",
+    "runtime": "scheduled-job",
+    "schedule": "0 4 * * *"
+  },
+  "apiVersion": "company-as-code/v1",
+  "canonicalEvents": [
+    "platform.billing_reconciliation_proposed"
+  ],
+  "generatedFrom": "company/domains/product-operations/platform/agents/billing-reconciler.yaml",
+  "invariants": [
+    "Read-only against the external billing system.",
+    "All proposals require human approval before any corrective action ships.",
+    "First live correction in any new reconciliation type requires two dry-runs."
+  ],
+  "kind": "ContextBundle",
+  "memoryScope": "company/memory/billing-reconciler",
+  "observability": {
+    "alerts": [
+      "billing-reconciliation-stale"
+    ],
+    "auditTopic": "billing-reconciler",
+    "dashboards": [
+      "platform-overview"
+    ]
+  },
+  "readAccess": {
+    "inputs": [
+      {
+        "from": "company/domains/product-operations/platform:subscription-stream",
+        "name": "subscriptions",
+        "type": "canonical-subscription"
+      }
+    ],
+    "moduleConsumes": [
+      {
+        "from": "company/domains/sales-marketing/customer",
+        "interface": "customer-health",
+        "usage": "surface churn signals on identity dashboards"
+      },
+      {
+        "from": "company/domains/finance-ops/people",
+        "interface": "workforce-state",
+        "usage": "derive identity revocation triggers on offboarding"
+      }
+    ]
+  },
+  "tools": [
+    "billing-system-reader",
+    "canonical-subscription-reader"
+  ],
+  "writeAccess": {
+    "hitlConstraints": [
+      "All deploys to production go through a human approval. No schedule-only deploy path.",
+      "Sub-cognition modules (identity, billing, deployment) inherit the platform module's HITL invariants."
+    ],
+    "moduleExposes": [
+      {
+        "description": "Capacity, incident posture, deploy frequency, identity drift summary",
+        "interface": "platform-state",
+        "stability": "experimental"
+      },
+      {
+        "description": "Canonical subscription state transitions",
+        "interface": "subscription-stream",
+        "stability": "experimental"
+      }
+    ],
+    "outputs": [
+      {
+        "emitsEvent": "platform.billing_reconciliation_proposed",
+        "name": "reconciliation-proposal",
+        "type": "reconciliation-proposal"
+      }
+    ]
+  }
+}

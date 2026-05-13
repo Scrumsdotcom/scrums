@@ -1,0 +1,35 @@
+apiVersion: company-as-code/v1
+kind: Organization
+
+# Permanent canonical ID. Never changes for the lifetime of the entity.
+canonicalId: ORG-COMPANY
+
+name: Example Company Inc.
+type: company
+domain: cross-domain
+
+# Pointer into the cognition tree.
+module: company/executive/ceo
+
+status: active
+
+lifecycle:
+  createdAt: 2026-01-01
+
+# Canonical person IDs of leads. The PERSON-CFO seed in this directory is one.
+leads:
+  - PERSON-CFO
+
+mission: >
+  Operate as an AI-native business by treating the company itself as code:
+  versioned, observable, automatable, continuously improving.
+
+# External system mappings. The canonical ID above survives any of these
+# being rotated, replaced, or removed.
+externalIds:
+  - system: customer-crm
+    id: acct_000000001
+    addedAt: 2026-01-01
+  - system: hr-system
+    id: org_root_1
+    addedAt: 2026-01-01

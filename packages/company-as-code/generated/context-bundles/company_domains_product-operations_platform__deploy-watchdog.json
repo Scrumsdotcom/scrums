@@ -1,0 +1,85 @@
+{
+  "agent": {
+    "autonomy": "escalated",
+    "cadence": "event-driven",
+    "escalation": {
+      "threshold": "3 consecutive failures within 30 minutes",
+      "to": "people:platform-lead"
+    },
+    "module": "company/domains/product-operations/platform",
+    "name": "deploy-watchdog",
+    "purpose": "Detect production deploy failures within 90 seconds and notify the deployment sub-cognition. Escalates to the platform-lead after three consecutive failures.\n",
+    "runtime": "event-handler",
+    "schedule": "on-demand"
+  },
+  "apiVersion": "company-as-code/v1",
+  "canonicalEvents": [
+    "platform.deploy_failed"
+  ],
+  "generatedFrom": "company/domains/product-operations/platform/agents/deploy-watchdog.yaml",
+  "invariants": [
+    "Never writes to the deployment system; observation only.",
+    "Escalation actor and threshold are fixed in the manifest; runtime enforces."
+  ],
+  "kind": "ContextBundle",
+  "memoryScope": "company/memory/deploy-watchdog",
+  "observability": {
+    "alerts": [
+      "deploy-failure-streak"
+    ],
+    "auditTopic": "deploy-watchdog",
+    "dashboards": [
+      "deploy-frequency"
+    ]
+  },
+  "readAccess": {
+    "inputs": [
+      {
+        "from": "company/domains/product-operations/platform:platform-state",
+        "name": "deploy-events",
+        "type": "deploy-event"
+      }
+    ],
+    "moduleConsumes": [
+      {
+        "from": "company/domains/sales-marketing/customer",
+        "interface": "customer-health",
+        "usage": "surface churn signals on identity dashboards"
+      },
+      {
+        "from": "company/domains/finance-ops/people",
+        "interface": "workforce-state",
+        "usage": "derive identity revocation triggers on offboarding"
+      }
+    ]
+  },
+  "tools": [
+    "deploy-event-reader",
+    "on-call-notifier"
+  ],
+  "writeAccess": {
+    "hitlConstraints": [
+      "All deploys to production go through a human approval. No schedule-only deploy path.",
+      "Sub-cognition modules (identity, billing, deployment) inherit the platform module's HITL invariants."
+    ],
+    "moduleExposes": [
+      {
+        "description": "Capacity, incident posture, deploy frequency, identity drift summary",
+        "interface": "platform-state",
+        "stability": "experimental"
+      },
+      {
+        "description": "Canonical subscription state transitions",
+        "interface": "subscription-stream",
+        "stability": "experimental"
+      }
+    ],
+    "outputs": [
+      {
+        "emitsEvent": "platform.deploy_failed",
+        "name": "deploy-incident",
+        "type": "incident"
+      }
+    ]
+  }
+}

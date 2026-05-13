@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/initiative.schema.json",
+  "title": "Initiative",
+  "description": "Strategic change, time-bounded and decomposable. Initiatives roll up into goals and decompose into tasks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "id", "title", "status", "owner", "startDate"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "Initiative" },
+    "id": { "type": "string", "pattern": "^INIT-[A-Z0-9]+-[0-9]{4,}$" },
+    "title": { "type": "string", "minLength": 4 },
+    "summary": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "approved", "active", "paused", "complete", "abandoned"]
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["person", "team", "agent"] },
+        "id": { "type": "string" }
+      }
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["executive", "finance-ops", "product-operations", "sales-marketing", "cross-domain"]
+    },
+    "startDate": { "type": "string", "format": "date" },
+    "targetDate": { "type": "string", "format": "date" },
+    "completedAt": { "type": "string", "format": "date-time" },
+    "goals": {
+      "type": "array",
+      "description": "Goal IDs this initiative advances.",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "metrics": {
+      "type": "array",
+      "description": "Metric IDs the initiative is measured against.",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "tasks": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^TASK-[A-Z0-9]+-[0-9]{4,}$" },
+      "default": []
+    },
+    "modules": {
+      "type": "array",
+      "description": "Modules that participate in delivery.",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["description", "severity"],
+        "properties": {
+          "description": { "type": "string" },
+          "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+          "mitigation": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "date"],
+        "properties": {
+          "name": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "achieved": { "type": "boolean", "default": false }
+        }
+      },
+      "default": []
+    }
+  }
+}

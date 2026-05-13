@@ -1,0 +1,80 @@
+{
+  "agent": {
+    "autonomy": "human-gated",
+    "cadence": "daily",
+    "module": "company/domains/sales-marketing/growth",
+    "name": "growth-experiment-runner",
+    "purpose": "Score active acquisition experiments daily on the channel-mix model and recommend allocation shifts. Recommendations are human-gated — the agent never moves spend on its own.\n",
+    "runtime": "scheduled-job",
+    "schedule": "0 9 * * *"
+  },
+  "apiVersion": "company-as-code/v1",
+  "canonicalEvents": [
+    "growth.allocation_recommendation_emitted"
+  ],
+  "generatedFrom": "company/domains/sales-marketing/growth/agents/growth-experiment-runner.yaml",
+  "invariants": [
+    "No autonomous spend. Recommendations require human approval before any channel allocation changes.",
+    "Experiments that breach their stop-loss threshold are halted by the agent and an event is emitted; resumption requires human action."
+  ],
+  "kind": "ContextBundle",
+  "memoryScope": "company/memory/growth-experiment-runner",
+  "observability": {
+    "alerts": [
+      "experiment-stop-loss-breach"
+    ],
+    "auditTopic": "growth-experiment-runner",
+    "dashboards": [
+      "growth-overview"
+    ]
+  },
+  "readAccess": {
+    "inputs": [
+      {
+        "from": "company/domains/sales-marketing/sales:pipeline-state",
+        "name": "pipeline",
+        "type": "pipeline-state"
+      },
+      {
+        "from": "company/domains/sales-marketing/customer:customer-health",
+        "name": "customer-health",
+        "type": "customer-health"
+      }
+    ],
+    "moduleConsumes": [
+      {
+        "from": "company/domains/sales-marketing/sales",
+        "interface": "pipeline-state",
+        "usage": "downstream conversion signal for top-of-funnel experiments"
+      },
+      {
+        "from": "company/domains/sales-marketing/customer",
+        "interface": "customer-health",
+        "usage": "distinguish low-quality from high-quality acquired cohorts"
+      }
+    ]
+  },
+  "tools": [
+    "channel-mix-model",
+    "experiment-reader"
+  ],
+  "writeAccess": {
+    "hitlConstraints": [
+      "No autonomous spend. Allocation recommendations require human approval before any change to channel budgets."
+    ],
+    "moduleExposes": [
+      {
+        "description": "Acquisition velocity, channel mix, experiment outcomes",
+        "interface": "growth-state",
+        "stability": "experimental"
+      }
+    ],
+    "outputs": [
+      {
+        "emitsEvent": "growth.allocation_recommendation_emitted",
+        "name": "allocation-recommendation",
+        "type": "allocation-recommendation"
+      }
+    ]
+  }
+}

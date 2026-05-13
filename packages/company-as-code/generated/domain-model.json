@@ -1,0 +1,44 @@
+{
+  "generatedFrom": "/company/**/manifest.yaml (owns.tables + owns.schemas)",
+  "moduleCount": 4,
+  "ownership": [
+    {
+      "module": "company/domains/finance-ops/finance",
+      "schemas": [
+        "invoice",
+        "ledger-entry"
+      ],
+      "tables": [
+        "canonical_invoices",
+        "canonical_ledger_entries",
+        "canonical_payments"
+      ]
+    },
+    {
+      "module": "company/domains/product-operations/platform",
+      "schemas": [
+        "canonical-identity",
+        "canonical-subscription"
+      ],
+      "tables": []
+    },
+    {
+      "module": "company/domains/product-operations/platform/sub-cognition/billing",
+      "schemas": [
+        "canonical-subscription"
+      ],
+      "tables": [
+        "canonical_subscriptions"
+      ]
+    },
+    {
+      "module": "company/domains/product-operations/platform/sub-cognition/identity",
+      "schemas": [
+        "canonical-identity"
+      ],
+      "tables": [
+        "canonical_identities"
+      ]
+    }
+  ]
+}

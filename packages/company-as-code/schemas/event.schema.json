@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/event.schema.json",
+  "title": "Event",
+  "description": "Typed event ledger row. One row per state transition on a canonical entity. Event types are enum-controlled.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "id", "type", "entity", "occurredAt", "actor"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "Event" },
+    "id": {
+      "type": "string",
+      "description": "Globally unique event ID (ULID/UUID)."
+    },
+    "type": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(\\.[a-z][a-z0-9]*)+$",
+      "description": "Enum-typed event name, e.g. 'task.state_changed'. New types require a schema migration."
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canonicalId", "kind"],
+      "properties": {
+        "canonicalId": { "type": "string" },
+        "kind": { "type": "string", "description": "Canonical entity type, e.g. 'task', 'initiative', 'customer'." }
+      }
+    },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "recordedAt": { "type": "string", "format": "date-time" },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["person", "agent", "automation", "system"] },
+        "id": { "type": "string" }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "description": "Type-specific payload. Schema governed by the event type registry."
+    },
+    "from": { "type": "string", "description": "Previous state (for state-transition events)." },
+    "to": { "type": "string", "description": "New state (for state-transition events)." },
+    "correlationId": { "type": "string" },
+    "causationId": { "type": "string" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "module": { "type": "string" },
+        "workflow": { "type": "string" },
+        "agent": { "type": "string" }
+      }
+    },
+    "schemaVersion": { "type": "string", "default": "1" }
+  }
+}

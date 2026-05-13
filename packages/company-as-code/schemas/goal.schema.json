@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/goal.schema.json",
+  "title": "Goal",
+  "description": "Measurable objective: KPI, OKR, SLA, or metric target. Goals are owned and time-bounded.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "id", "title", "type", "owner", "metric", "target"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "Goal" },
+    "id": { "type": "string", "pattern": "^GOAL-[A-Z0-9]+-[0-9]{4,}$" },
+    "title": { "type": "string", "minLength": 4 },
+    "description": { "type": "string" },
+    "type": {
+      "type": "string",
+      "enum": ["kpi", "okr", "sla", "target", "guardrail"]
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["person", "team", "agent", "module"] },
+        "id": { "type": "string" }
+      }
+    },
+    "metric": {
+      "type": "string",
+      "description": "Metric ID this goal targets."
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "comparator"],
+      "properties": {
+        "value": { "type": ["number", "string"] },
+        "unit": { "type": "string" },
+        "comparator": { "type": "string", "enum": ["gte", "lte", "gt", "lt", "eq", "neq", "between"] },
+        "lower": { "type": ["number", "string"] },
+        "upper": { "type": ["number", "string"] }
+      }
+    },
+    "horizon": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "period": { "type": "string", "enum": ["weekly", "monthly", "quarterly", "yearly", "rolling"] },
+        "start": { "type": "string", "format": "date" },
+        "end": { "type": "string", "format": "date" }
+      }
+    },
+    "initiatives": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^INIT-[A-Z0-9]+-[0-9]{4,}$" },
+      "default": []
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "active", "on-track", "at-risk", "off-track", "achieved", "missed", "archived"],
+      "default": "draft"
+    },
+    "lastReviewedAt": { "type": "string", "format": "date-time" }
+  }
+}

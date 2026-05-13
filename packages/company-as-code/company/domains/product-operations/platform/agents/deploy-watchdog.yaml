@@ -1,0 +1,50 @@
+apiVersion: company-as-code/v1
+kind: Agent
+
+name: deploy-watchdog
+module: company/domains/product-operations/platform
+
+purpose: >
+  Detect production deploy failures within 90 seconds and notify the
+  deployment sub-cognition. Escalates to the platform-lead after three
+  consecutive failures.
+
+runtime: event-handler
+schedule: on-demand
+cadence: event-driven
+autonomy: escalated
+
+escalation:
+  threshold: "3 consecutive failures within 30 minutes"
+  to: people:platform-lead
+
+inputs:
+  - name: deploy-events
+    type: deploy-event
+    from: company/domains/product-operations/platform:platform-state
+
+outputs:
+  - name: deploy-incident
+    type: incident
+    emitsEvent: platform.deploy_failed
+
+tools:
+  - deploy-event-reader
+  - on-call-notifier
+
+memoryScope: company/memory/deploy-watchdog
+
+observability:
+  dashboards:
+    - deploy-frequency
+  alerts:
+    - deploy-failure-streak
+  auditTopic: deploy-watchdog
+
+invariants:
+  - Never writes to the deployment system; observation only.
+  - Escalation actor and threshold are fixed in the manifest; runtime enforces.
+
+contacts:
+  - role: accountable
+    person: platform-lead

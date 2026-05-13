@@ -1,0 +1,49 @@
+apiVersion: company-as-code/v1
+kind: Manifest
+name: finance-ops-executive
+domain: executive
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Domain executive for Finance & Ops. Rolls up state from finance, legal,
+  people, suppliers, governance, operations, infra, reporting modules and
+  exposes a finance-rollup interface to the CEO layer.
+
+owns:
+  agents:
+    - finance-ops-roll-up
+  dashboards:
+    - finance-ops-overview
+
+consumes:
+  - interface: ledger-summary
+    from: company/domains/finance-ops/finance
+    usage: P&L, cash, runway
+  - interface: workforce-state
+    from: company/domains/finance-ops/people
+    usage: headcount, attrition signals
+  - interface: compliance-state
+    from: company/domains/finance-ops/governance
+    usage: open audit items, control attestations
+
+exposes:
+  - interface: finance-rollup
+    stability: experimental
+    description: Domain-level roll-up consumed by the CEO module
+
+agents:
+  - name: finance-ops-roll-up
+    purpose: Aggregate domain-level state into a finance-rollup payload for the CEO cognition node.
+    runtime: llm
+    schedule: "0 5 * * MON"
+    cadence: weekly
+    autonomy: autonomous
+    outputs:
+      - finance-rollup
+
+invariants:
+  - Roll-up reads from declared consumes-interfaces only — no direct reads from external systems.
+
+contacts:
+  - role: accountable
+    person: cfo

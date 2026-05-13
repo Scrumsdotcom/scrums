@@ -1,0 +1,57 @@
+apiVersion: company-as-code/v1
+kind: Agent
+
+name: cash-forecaster
+module: company/domains/finance-ops/finance
+
+purpose: >
+  Produce a rolling 13-week cash forecast from canonical ledger entries plus
+  forward-looking pipeline state. Read-only — never writes to the ledger or to
+  external accounting systems.
+
+runtime: scheduled-job
+schedule: "0 7 * * *"
+cadence: daily
+autonomy: autonomous
+
+inputs:
+  - name: ledger-entries
+    type: ledger-entry
+    from: company/domains/finance-ops/finance:ledger-summary
+  - name: pipeline
+    type: pipeline-state
+    from: company/domains/sales-marketing/sales:pipeline-state
+  - name: workforce
+    type: workforce-state
+    from: company/domains/finance-ops/people:workforce-state
+
+outputs:
+  - name: cash-forecast
+    type: cash-forecast
+    emitsEvent: finance.cash_forecast_updated
+
+tools:
+  - canonical-ledger-reader
+  - pipeline-reader
+
+memoryScope: company/memory/cash-forecaster
+
+observability:
+  dashboards:
+    - finance-overview
+  alerts:
+    - cash-forecast-stale
+  auditTopic: cash-forecaster
+
+invariants:
+  - Read-only. Never writes to ledger.
+  - Writes an audit record on every run, including no-op runs.
+  - Emits finance.cash_forecast_updated only when the forecast value changes by more than 1%.
+
+primaryUsers:
+  - cfo
+  - finance-lead
+
+contacts:
+  - role: accountable
+    person: finance-lead

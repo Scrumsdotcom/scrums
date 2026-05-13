@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/integration.schema.json",
+  "title": "Integration",
+  "description": "Mapping between the coordination layer and an external system. No vendor names are canonical; integrations are pluggable.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "category", "status", "ownerModule", "mutationDirection"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "Integration" },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Local canonical name for the integration. The vendor name lives in 'system', not here."
+    },
+    "system": {
+      "type": "string",
+      "description": "Vendor / system identifier. Optional — the framework treats integrations as replaceable."
+    },
+    "category": {
+      "type": "string",
+      "enum": ["crm", "workflow-engine", "database", "project-management", "cloud", "orchestration", "ai-provider", "communication", "observability", "billing", "identity", "storage", "search", "analytics", "other"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["planned", "configured", "active", "degraded", "deprecated", "removed"]
+    },
+    "ownerModule": {
+      "type": "string",
+      "description": "Module accountable for this integration."
+    },
+    "mutationDirection": {
+      "type": "string",
+      "enum": ["read-only", "write-only", "read-write", "writeback-only"],
+      "description": "Direction of state flow between this integration and the coordination layer."
+    },
+    "canonicalIdMapping": {
+      "type": "array",
+      "description": "Which canonical entities this integration maps to which external IDs.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["entity", "externalIdField"],
+        "properties": {
+          "entity": { "type": "string", "description": "Canonical entity kind, e.g. 'customer', 'person'." },
+          "externalIdField": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "type": "string", "enum": ["api-key", "oauth", "service-account", "webhook-signature", "mtls"] },
+        "secretRef": { "type": "string", "description": "Pointer into the secret manager. Never a literal secret." },
+        "rotationPolicy": { "type": "string" }
+      }
+    },
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "url"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string" },
+          "method": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "hitlRequiredFor": {
+      "type": "array",
+      "description": "Operations against this integration that require human-in-the-loop confirmation.",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "rateLimits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requestsPerMinute": { "type": "integer", "minimum": 0 },
+        "burst": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "observability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dashboards": { "type": "array", "items": { "type": "string" } },
+        "alerts": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

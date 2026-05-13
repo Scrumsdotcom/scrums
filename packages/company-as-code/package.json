@@ -1,0 +1,13 @@
+{
+  "name": "company-as-code",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Company-as-Code seed repository. Run the reference CLI from /cli.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "install:cli": "npm --prefix cli install",
+    "validate": "npm --prefix cli run --silent validate",
+    "generate": "npm --prefix cli run --silent generate",
+    "generate:check": "npm --prefix cli run --silent generate:check"
+  }
+}

@@ -1,0 +1,54 @@
+apiVersion: company-as-code/v1
+kind: Integration
+
+# Local canonical name for the integration. Vendor-neutral.
+# Replace the underlying system without changing this name.
+name: customer-crm
+
+# Optional: vendor / system identifier. Treated as a label, not a contract.
+system: example-saas-crm
+
+category: crm
+status: planned
+
+ownerModule: company/domains/sales-marketing/sales
+
+# Coordination layer reads from the CRM and writes only via approved
+# operator actions. This direction is enforced at the workflow layer.
+mutationDirection: writeback-only
+
+canonicalIdMapping:
+  - entity: customer
+    externalIdField: account_id
+    notes: Mapping is many-to-one when accounts have been merged upstream.
+  - entity: person
+    externalIdField: contact_id
+
+auth:
+  kind: oauth
+  secretRef: secrets/customer-crm/oauth-client
+  rotationPolicy: 90 days
+
+endpoints:
+  - name: list-accounts
+    url: https://example.invalid/api/v2/accounts
+    method: GET
+  - name: update-account
+    url: https://example.invalid/api/v2/accounts/{id}
+    method: PATCH
+
+hitlRequiredFor:
+  - update-account
+  - merge-accounts
+  - close-deal
+
+rateLimits:
+  requestsPerMinute: 60
+  burst: 100
+
+observability:
+  dashboards:
+    - gtm-overview
+  alerts:
+    - customer-crm-stale
+    - customer-crm-rate-limit-breach

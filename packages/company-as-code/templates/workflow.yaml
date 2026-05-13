@@ -1,0 +1,66 @@
+# Workflow template.
+# Place at <module>/workflows/<name>.yaml.
+# Schema: /schemas/workflow.schema.json
+apiVersion: company-as-code/v1
+kind: Workflow
+
+name: example-workflow
+module: company/domains/finance-ops/finance
+
+purpose: >
+  One sentence describing what this workflow accomplishes.
+
+trigger:
+  # event | schedule | human | webhook | manual
+  kind: human
+  # actor: people:finance-lead
+  # event: finance.month_end_signaled
+  # schedule: "0 6 1 * *"
+
+# When true, this workflow is human-gated. Scheduled triggers will fail validation.
+hitl: false
+
+inputs: []
+  # - name: period
+  #   type: month
+  #   required: true
+
+outputs: []
+
+steps:
+  - id: baseline
+    kind: agent
+    agent: example-agent
+    # First step always reads current state — sync-verification protocol step 1.
+
+  - id: dry-run
+    kind: dry-run
+    agent: example-agent
+    dryRunRequired: true
+    # Step 2 — projected payload, no external mutation.
+
+  - id: confirm
+    kind: human-approval
+    approver: people:finance-lead
+    hitl: true
+    # Step 3 — operator inspects dry-run output and approves.
+
+  - id: live-write
+    kind: live-write
+    automation: post-journal-entry
+    onFailure: escalate
+    retries: 1
+    emitsEvent: finance.period_closed
+    # Step 4 — live mutation, gated by step 3.
+
+  - id: re-verify
+    kind: agent
+    agent: example-agent
+    # Step 5 — re-query baseline, confirm state matches dry-run projection.
+
+invariants:
+  # - First invocation of any new live-write goes through dry-run twice.
+
+observability:
+  dashboards: []
+  metrics: []

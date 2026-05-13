@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/manifest.schema.json",
+  "title": "Module Manifest",
+  "description": "Declarative source of truth for a module. Every module at every level of the organizational graph has a manifest.yaml at its root.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "domain", "lifecycle", "owns", "contacts"],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "company-as-code/v1",
+      "description": "Schema contract version."
+    },
+    "kind": {
+      "type": "string",
+      "const": "Manifest"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Kebab-case module identifier, unique within the parent domain."
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["executive", "finance-ops", "product-operations", "sales-marketing", "framework"],
+      "description": "Canonical domain this module belongs to."
+    },
+    "parent": {
+      "type": "string",
+      "description": "Optional parent module path (e.g. domains/product-operations/platform)."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the module manifest."
+    },
+    "lifecycle": {
+      "type": "string",
+      "enum": ["planning", "hardening", "stable", "agent-ready", "deprecated"],
+      "description": "Module lifecycle stage."
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 8,
+      "description": "One-sentence purpose statement for the module."
+    },
+    "owns": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What this module is canonically responsible for.",
+      "properties": {
+        "tables": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "agents": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "apps": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "workflows": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "dashboards": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "schemas": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "policies": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "playbooks": { "type": "array", "items": { "type": "string" }, "default": [] }
+      }
+    },
+    "consumes": {
+      "type": "array",
+      "description": "Named interfaces this module reads from other modules.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["interface", "from"],
+        "properties": {
+          "interface": { "type": "string" },
+          "from": { "type": "string", "description": "Source module path." },
+          "usage": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "exposes": {
+      "type": "array",
+      "description": "Named interfaces this module offers to others.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["interface", "stability"],
+        "properties": {
+          "interface": { "type": "string" },
+          "stability": { "type": "string", "enum": ["experimental", "stable", "deprecated"] },
+          "description": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "agents": {
+      "type": "array",
+      "description": "Autonomous units declared by this module.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "purpose", "autonomy", "cadence"],
+        "properties": {
+          "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "purpose": { "type": "string", "minLength": 8 },
+          "runtime": { "type": "string" },
+          "schedule": { "type": "string", "description": "cron expression or 'on-demand'." },
+          "cadence": { "type": "string", "enum": ["realtime", "minutely", "hourly", "daily", "weekly", "monthly", "on-demand", "event-driven"] },
+          "autonomy": { "type": "string", "enum": ["autonomous", "human-gated", "escalated"] },
+          "primaryUsers": { "type": "array", "items": { "type": "string" } },
+          "outputs": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "default": []
+    },
+    "invariants": {
+      "type": "array",
+      "description": "Declarative properties that must remain true.",
+      "items": { "type": "string", "minLength": 8 },
+      "default": []
+    },
+    "contacts": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Humans accountable for this module.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role"],
+        "properties": {
+          "role": { "type": "string" },
+          "person": { "type": "string" },
+          "team": { "type": "string" }
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "description": "References to runbooks, dashboards, plans.",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

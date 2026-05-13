@@ -1,0 +1,33 @@
+apiVersion: company-as-code/v1
+kind: Manifest
+name: identity
+domain: product-operations
+parent: domains/product-operations/platform
+version: 0.1.0
+lifecycle: hardening
+purpose: >
+  Canonical identity sub-cognition. Owns the canonical-identity table and the
+  drift detection agent inherited from the platform module.
+
+owns:
+  tables:
+    - canonical_identities
+  schemas:
+    - canonical-identity
+
+consumes:
+  - interface: platform-state
+    from: company/domains/product-operations/platform
+
+exposes:
+  - interface: identity-state
+    stability: experimental
+    description: Read-only view of canonical identity state
+
+invariants:
+  - Hard-delete of identities is forbidden; soft-delete with a tombstone only.
+  - External IdP mappings live in externalIds; never as the primary key.
+
+contacts:
+  - role: accountable
+    person: platform-lead

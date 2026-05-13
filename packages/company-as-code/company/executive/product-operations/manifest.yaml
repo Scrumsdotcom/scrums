@@ -1,0 +1,47 @@
+apiVersion: company-as-code/v1
+kind: Manifest
+name: product-operations-executive
+domain: executive
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Domain executive for Product & Operations. Aggregates delivery, platform,
+  reliability, security, and product state into a product-rollup interface.
+
+owns:
+  agents:
+    - product-ops-roll-up
+  dashboards:
+    - product-ops-overview
+
+consumes:
+  - interface: delivery-throughput
+    from: company/domains/product-operations/delivery
+    usage: lead time, deployment frequency
+  - interface: platform-state
+    from: company/domains/product-operations/platform
+    usage: capacity, incident posture
+  - interface: security-posture
+    from: company/domains/product-operations/security
+    usage: open findings, control attestations
+
+exposes:
+  - interface: product-rollup
+    stability: experimental
+
+agents:
+  - name: product-ops-roll-up
+    purpose: Aggregate domain state into the product-rollup payload.
+    runtime: llm
+    schedule: "0 5 * * MON"
+    cadence: weekly
+    autonomy: autonomous
+    outputs:
+      - product-rollup
+
+invariants:
+  - Roll-up reads from declared consumes-interfaces only.
+
+contacts:
+  - role: accountable
+    person: cto

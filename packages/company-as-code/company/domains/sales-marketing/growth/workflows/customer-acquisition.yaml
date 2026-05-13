@@ -1,0 +1,61 @@
+apiVersion: company-as-code/v1
+kind: Workflow
+
+name: customer-acquisition
+module: company/domains/sales-marketing/growth
+
+purpose: >
+  Weekly customer-acquisition allocation review: read the agent's
+  recommendation, apply approved shifts, monitor the change against the
+  CAC payback metric.
+
+trigger:
+  kind: human
+  actor: people:head-of-growth
+
+hitl: true
+
+inputs:
+  - name: week
+    type: iso-week
+    required: true
+
+outputs:
+  - name: allocation-receipt
+    type: allocation-receipt
+
+steps:
+  - id: read-recommendation
+    kind: agent
+    agent: growth-experiment-runner
+
+  - id: dry-run-allocation
+    kind: dry-run
+    automation: apply-channel-allocation
+    dryRunRequired: true
+
+  - id: approve
+    kind: human-approval
+    approver: people:head-of-growth
+    hitl: true
+
+  - id: apply
+    kind: live-write
+    automation: apply-channel-allocation
+    onFailure: escalate
+    retries: 0
+    emitsEvent: growth.allocation_applied
+
+  - id: monitor
+    kind: agent
+    agent: growth-experiment-runner
+
+invariants:
+  - HITL approval is mandatory before any allocation shift.
+  - First live allocation in any new channel requires two dry-runs.
+
+observability:
+  dashboards:
+    - growth-overview
+  metrics:
+    - METRIC-GROWTH-CAC-PAYBACK

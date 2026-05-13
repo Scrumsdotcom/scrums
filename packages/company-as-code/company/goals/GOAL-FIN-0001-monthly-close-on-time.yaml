@@ -1,0 +1,29 @@
+apiVersion: company-as-code/v1
+kind: Goal
+
+id: GOAL-FIN-0001
+title: Monthly close completes within 2 business days
+description: >
+  Once the close workflow is in steady state, every monthly close should
+  complete within 2 business days of period end.
+
+type: sla
+owner:
+  kind: team
+  id: team:finance
+
+metric: METRIC-FIN-CLOSE-ON-TIME
+
+target:
+  value: 95
+  unit: "%"
+  comparator: gte
+
+horizon:
+  period: quarterly
+  start: 2026-07-01
+  end: 2026-09-30
+
+initiatives:
+  - INIT-FIN-0001
+status: draft

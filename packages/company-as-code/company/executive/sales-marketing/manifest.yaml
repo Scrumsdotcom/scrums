@@ -1,0 +1,47 @@
+apiVersion: company-as-code/v1
+kind: Manifest
+name: sales-marketing-executive
+domain: executive
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Domain executive for Sales & Marketing. Aggregates pipeline, retention, brand,
+  growth, and revenue operations state into a gtm-rollup interface.
+
+owns:
+  agents:
+    - gtm-roll-up
+  dashboards:
+    - gtm-overview
+
+consumes:
+  - interface: pipeline-state
+    from: company/domains/sales-marketing/sales
+    usage: pipeline coverage, conversion rates
+  - interface: customer-health
+    from: company/domains/sales-marketing/customer
+    usage: retention, NPS, churn risk
+  - interface: growth-state
+    from: company/domains/sales-marketing/growth
+    usage: acquisition velocity, channel mix
+
+exposes:
+  - interface: gtm-rollup
+    stability: experimental
+
+agents:
+  - name: gtm-roll-up
+    purpose: Aggregate GTM domain state into the gtm-rollup payload.
+    runtime: llm
+    schedule: "0 5 * * MON"
+    cadence: weekly
+    autonomy: autonomous
+    outputs:
+      - gtm-rollup
+
+invariants:
+  - Roll-up reads from declared consumes-interfaces only.
+
+contacts:
+  - role: accountable
+    person: cro

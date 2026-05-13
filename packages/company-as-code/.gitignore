@@ -1,0 +1,58 @@
+# Node / TypeScript
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+.npm/
+.yarn/
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Coverage and test output
+coverage/
+.nyc_output/
+*.lcov
+
+# Environments
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# IDE / editor
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.recommended.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Temporary
+.tmp/
+.cache/
+tmp/
+
+# Secrets — never commit
+*.pem
+*.key
+secrets/
+.secrets/
+
+# Local agent memory (use the project's persistent memory layer, not local scratch)
+.local-memory/
+
+# Generated outputs are committed — do not ignore /generated
+# (CI's drift gate depends on them being in version control)

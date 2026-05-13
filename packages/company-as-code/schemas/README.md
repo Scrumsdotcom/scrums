@@ -1,0 +1,31 @@
+# JSON Schemas
+
+Framework-level JSON Schemas for every canonical Company-as-Code primitive. These define the *shape* of the operating system; they are not your company's domain. Company-level entity schemas live at [`/company/schemas`](../company/schemas).
+
+CI validates every manifest, agent, workflow, task, and registry artefact against these schemas. Changes here are framework-breaking and require an ADR.
+
+## Primitives
+
+| Schema | Purpose |
+|---|---|
+| [`manifest.schema.json`](./manifest.schema.json) | Module manifest — identity, owns/consumes/exposes, agents, invariants, contacts |
+| [`task.schema.json`](./task.schema.json) | Canonical task state machine — backlog / planned / active / blocked / review / completed / archived / failed |
+| [`agent.schema.json`](./agent.schema.json) | Autonomous unit — runtime, schedule, cadence, autonomy classification, purpose |
+| [`workflow.schema.json`](./workflow.schema.json) | Orchestration — steps, trigger, HITL declaration, dry-run requirement |
+| [`initiative.schema.json`](./initiative.schema.json) | Strategic change — time-bounded, decomposable, measurable |
+| [`goal.schema.json`](./goal.schema.json) | KPI / OKR / SLA / target with comparator and horizon |
+| [`metric.schema.json`](./metric.schema.json) | Observable quantity — ownership, lineage, freshness, formula, thresholds |
+| [`event.schema.json`](./event.schema.json) | Typed event ledger row — enum-typed, governed by registry |
+| [`audit-record.schema.json`](./audit-record.schema.json) | Runtime action audit row — actor, action, payload, dryRun flag, status |
+| [`interface.schema.json`](./interface.schema.json) | Declared module interface — operations, stability, dry-run support, HITL flags |
+| [`organization.schema.json`](./organization.schema.json) | Canonical org unit — company, unit, team, pod |
+| [`person.schema.json`](./person.schema.json) | Canonical actor — employee, contractor, supplier, AI operator, agent identity |
+| [`integration.schema.json`](./integration.schema.json) | External system mapping — canonical IDs, mutation direction, HITL surfaces |
+
+## Conventions
+
+- Every primitive carries `apiVersion: company-as-code/v1` and a `kind` discriminator
+- Canonical IDs are stable and prefixed (`TASK-…`, `INIT-…`, `GOAL-…`, `METRIC-…`, `ORG-…`, `PERSON-…`)
+- External system IDs live under `externalIds` arrays — never as primary keys
+- `additionalProperties: false` everywhere; new fields require a schema bump and an ADR
+- Schema versions move forward only — deprecate, never silently remove

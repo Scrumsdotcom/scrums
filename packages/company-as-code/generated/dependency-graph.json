@@ -1,0 +1,204 @@
+{
+  "edgeCount": 21,
+  "edges": [
+    {
+      "from": "company/domains/finance-ops/finance",
+      "interface": "workforce-state",
+      "to": "company/domains/finance-ops/people",
+      "usage": "payroll commitments factor into the cash forecast"
+    },
+    {
+      "from": "company/domains/finance-ops/finance",
+      "interface": "pipeline-state",
+      "to": "company/domains/sales-marketing/sales",
+      "usage": "forward-looking bookings used by the cash-forecaster"
+    },
+    {
+      "from": "company/domains/product-operations/platform",
+      "interface": "workforce-state",
+      "to": "company/domains/finance-ops/people",
+      "usage": "derive identity revocation triggers on offboarding"
+    },
+    {
+      "from": "company/domains/product-operations/platform",
+      "interface": "customer-health",
+      "to": "company/domains/sales-marketing/customer",
+      "usage": "surface churn signals on identity dashboards"
+    },
+    {
+      "from": "company/domains/product-operations/platform/sub-cognition/billing",
+      "interface": "platform-state",
+      "to": "company/domains/product-operations/platform"
+    },
+    {
+      "from": "company/domains/product-operations/platform/sub-cognition/deployment",
+      "interface": "platform-state",
+      "to": "company/domains/product-operations/platform"
+    },
+    {
+      "from": "company/domains/product-operations/platform/sub-cognition/identity",
+      "interface": "platform-state",
+      "to": "company/domains/product-operations/platform"
+    },
+    {
+      "from": "company/domains/sales-marketing/growth",
+      "interface": "customer-health",
+      "to": "company/domains/sales-marketing/customer",
+      "usage": "distinguish low-quality from high-quality acquired cohorts"
+    },
+    {
+      "from": "company/domains/sales-marketing/growth",
+      "interface": "pipeline-state",
+      "to": "company/domains/sales-marketing/sales",
+      "usage": "downstream conversion signal for top-of-funnel experiments"
+    },
+    {
+      "from": "company/executive/ceo",
+      "interface": "finance-rollup",
+      "to": "company/executive/finance-ops",
+      "usage": "P&L summary, runway, capital allocation"
+    },
+    {
+      "from": "company/executive/ceo",
+      "interface": "product-rollup",
+      "to": "company/executive/product-operations",
+      "usage": "delivery throughput, reliability posture, security posture"
+    },
+    {
+      "from": "company/executive/ceo",
+      "interface": "gtm-rollup",
+      "to": "company/executive/sales-marketing",
+      "usage": "pipeline, retention, growth velocity"
+    },
+    {
+      "from": "company/executive/finance-ops",
+      "interface": "ledger-summary",
+      "to": "company/domains/finance-ops/finance",
+      "usage": "P&L, cash, runway"
+    },
+    {
+      "from": "company/executive/finance-ops",
+      "interface": "compliance-state",
+      "to": "company/domains/finance-ops/governance",
+      "usage": "open audit items, control attestations"
+    },
+    {
+      "from": "company/executive/finance-ops",
+      "interface": "workforce-state",
+      "to": "company/domains/finance-ops/people",
+      "usage": "headcount, attrition signals"
+    },
+    {
+      "from": "company/executive/product-operations",
+      "interface": "delivery-throughput",
+      "to": "company/domains/product-operations/delivery",
+      "usage": "lead time, deployment frequency"
+    },
+    {
+      "from": "company/executive/product-operations",
+      "interface": "platform-state",
+      "to": "company/domains/product-operations/platform",
+      "usage": "capacity, incident posture"
+    },
+    {
+      "from": "company/executive/product-operations",
+      "interface": "security-posture",
+      "to": "company/domains/product-operations/security",
+      "usage": "open findings, control attestations"
+    },
+    {
+      "from": "company/executive/sales-marketing",
+      "interface": "customer-health",
+      "to": "company/domains/sales-marketing/customer",
+      "usage": "retention, NPS, churn risk"
+    },
+    {
+      "from": "company/executive/sales-marketing",
+      "interface": "growth-state",
+      "to": "company/domains/sales-marketing/growth",
+      "usage": "acquisition velocity, channel mix"
+    },
+    {
+      "from": "company/executive/sales-marketing",
+      "interface": "pipeline-state",
+      "to": "company/domains/sales-marketing/sales",
+      "usage": "pipeline coverage, conversion rates"
+    }
+  ],
+  "generatedFrom": "/company/**/manifest.yaml",
+  "moduleCount": 10,
+  "modules": [
+    {
+      "consumes": 2,
+      "exposes": [
+        "invoice-stream",
+        "ledger-summary"
+      ],
+      "path": "company/domains/finance-ops/finance"
+    },
+    {
+      "consumes": 2,
+      "exposes": [
+        "platform-state",
+        "subscription-stream"
+      ],
+      "path": "company/domains/product-operations/platform"
+    },
+    {
+      "consumes": 1,
+      "exposes": [
+        "subscription-state"
+      ],
+      "path": "company/domains/product-operations/platform/sub-cognition/billing"
+    },
+    {
+      "consumes": 1,
+      "exposes": [
+        "deploy-state"
+      ],
+      "path": "company/domains/product-operations/platform/sub-cognition/deployment"
+    },
+    {
+      "consumes": 1,
+      "exposes": [
+        "identity-state"
+      ],
+      "path": "company/domains/product-operations/platform/sub-cognition/identity"
+    },
+    {
+      "consumes": 2,
+      "exposes": [
+        "growth-state"
+      ],
+      "path": "company/domains/sales-marketing/growth"
+    },
+    {
+      "consumes": 3,
+      "exposes": [
+        "executive-brief"
+      ],
+      "path": "company/executive/ceo"
+    },
+    {
+      "consumes": 3,
+      "exposes": [
+        "finance-rollup"
+      ],
+      "path": "company/executive/finance-ops"
+    },
+    {
+      "consumes": 3,
+      "exposes": [
+        "product-rollup"
+      ],
+      "path": "company/executive/product-operations"
+    },
+    {
+      "consumes": 3,
+      "exposes": [
+        "gtm-rollup"
+      ],
+      "path": "company/executive/sales-marketing"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+apiVersion: company-as-code/v1
+kind: Person
+
+# Permanent canonical ID. Never changes.
+canonicalId: PERSON-CFO
+
+displayName: Example CFO
+type: employee
+status: active
+
+organizations:
+  - ORG-COMPANY
+
+roles:
+  - title: Chief Financial Officer
+    organization: ORG-COMPANY
+    since: 2026-01-01
+
+# External system identifiers that map to this person.
+# Replacing any of these systems changes a mapping, not the canonical ID.
+externalIds:
+  - system: hr-system
+    id: emp_00001
+    addedAt: 2026-01-01
+  - system: customer-crm
+    id: contact_00001
+    addedAt: 2026-01-01

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/workflow.schema.json",
+  "title": "Workflow",
+  "description": "Multi-step orchestration definition. May be triggered by event, schedule, or human action.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "module", "purpose", "steps", "trigger"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "Workflow" },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "module": { "type": "string" },
+    "purpose": { "type": "string", "minLength": 8 },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["event", "schedule", "human", "webhook", "manual"] },
+        "event": { "type": "string" },
+        "schedule": { "type": "string" },
+        "actor": { "type": "string" }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "required": { "type": "boolean", "default": true }
+        }
+      },
+      "default": []
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "kind": {
+            "type": "string",
+            "enum": ["agent", "automation", "human-approval", "wait", "branch", "emit-event", "external-call", "dry-run", "live-write"]
+          },
+          "agent": { "type": "string" },
+          "automation": { "type": "string" },
+          "approver": { "type": "string" },
+          "dryRunRequired": { "type": "boolean", "description": "When the step writes to an external surface, require a dry-run predecessor." },
+          "hitl": { "type": "boolean", "description": "Step requires a human-in-the-loop confirmation." },
+          "emitsEvent": { "type": "string" },
+          "onFailure": { "type": "string", "enum": ["retry", "escalate", "abort"] },
+          "retries": { "type": "integer", "minimum": 0, "default": 0 },
+          "timeout": { "type": "string", "description": "ISO 8601 duration." },
+          "branches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["when", "next"],
+              "properties": {
+                "when": { "type": "string" },
+                "next": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "invariants": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 8 },
+      "default": []
+    },
+    "hitl": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, the workflow as a whole is human-gated. Scheduled triggers fail validation when hitl is true."
+    },
+    "observability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dashboards": { "type": "array", "items": { "type": "string" } },
+        "metrics": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "hitl": { "const": true }
+        },
+        "required": ["hitl"]
+      },
+      "then": {
+        "properties": {
+          "trigger": {
+            "properties": {
+              "kind": { "not": { "const": "schedule" } }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

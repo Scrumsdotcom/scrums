@@ -1,0 +1,52 @@
+apiVersion: company-as-code/v1
+kind: Agent
+
+name: growth-experiment-runner
+module: company/domains/sales-marketing/growth
+
+purpose: >
+  Score active acquisition experiments daily on the channel-mix model and
+  recommend allocation shifts. Recommendations are human-gated — the agent
+  never moves spend on its own.
+
+runtime: scheduled-job
+schedule: "0 9 * * *"
+cadence: daily
+autonomy: human-gated
+
+inputs:
+  - name: pipeline
+    type: pipeline-state
+    from: company/domains/sales-marketing/sales:pipeline-state
+  - name: customer-health
+    type: customer-health
+    from: company/domains/sales-marketing/customer:customer-health
+
+outputs:
+  - name: allocation-recommendation
+    type: allocation-recommendation
+    emitsEvent: growth.allocation_recommendation_emitted
+
+tools:
+  - experiment-reader
+  - channel-mix-model
+
+memoryScope: company/memory/growth-experiment-runner
+
+observability:
+  dashboards:
+    - growth-overview
+  alerts:
+    - experiment-stop-loss-breach
+  auditTopic: growth-experiment-runner
+
+invariants:
+  - No autonomous spend. Recommendations require human approval before any channel allocation changes.
+  - Experiments that breach their stop-loss threshold are halted by the agent and an event is emitted; resumption requires human action.
+
+primaryUsers:
+  - head-of-growth
+
+contacts:
+  - role: accountable
+    person: head-of-growth
