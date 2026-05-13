@@ -48,6 +48,7 @@ These are enforced by schema, CI, or merge protection. Do not fight them.
 | End-to-end scenarios | [`docs/scenarios/`](./docs/scenarios) |
 | FAQ | [`docs/faq.md`](./docs/faq.md) |
 | Forking guide | [`docs/forking.md`](./docs/forking.md) |
+| Roadmap (shipped / in flight / considered / declined) | [`docs/roadmap.md`](./docs/roadmap.md) |
 | Canonical schemas | [`schemas/`](./schemas) |
 | Authoring templates | [`templates/`](./templates) |
 | Worked module examples | [`company/domains/finance-ops/finance/`](./company/domains/finance-ops/finance), [`company/domains/product-operations/platform/`](./company/domains/product-operations/platform), [`company/domains/sales-marketing/growth/`](./company/domains/sales-marketing/growth) |

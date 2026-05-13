@@ -4,6 +4,8 @@
 # workflows. This file is the operational expression of that enforcement —
 # how the runtime resolves an autonomy decision at invocation time.
 
+apiVersion: company-as-code/v1
+kind: AutonomyPolicy
 version: 1
 
 classes:
@@ -59,12 +61,12 @@ classes:
 promotion:
   fromHumanGatedToAutonomous:
     requires:
-      - successfulSyncVerificationInvocations: ">= 3"
-      - acceptedADR: required
-      - manifestUpdate: required
+      successfulSyncVerificationInvocations: ">= 3"
+      acceptedADR: required
+      manifestUpdate: required
   fromAutonomousToHumanGated:
     requires:
-      - manifestUpdate: required
+      manifestUpdate: required
     notes: Demoting is free; promoting is gated.
 
 # Sanity checks the runtime applies before any invocation.

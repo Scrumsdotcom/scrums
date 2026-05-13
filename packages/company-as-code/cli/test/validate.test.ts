@@ -16,6 +16,11 @@ function emptyCorpus(): RepoCorpus {
     persons: [],
     integrations: [],
     skills: [],
+    dashboards: [],
+    automations: [],
+    eventTypeRegistries: [],
+    autonomyPolicies: [],
+    escalationPolicies: [],
   };
 }
 
@@ -218,6 +223,179 @@ describe("schemaValidate", () => {
     });
     const problems = schemaValidate(corpus, ajv);
     expect(problems).toEqual([]);
+  });
+
+  it("rejects a Dashboard missing audience", async () => {
+    const schemas = await loadSchemas();
+    const ajv = buildAjv(schemas);
+    const corpus = emptyCorpus();
+    corpus.dashboards.push({
+      file: "company/dashboards/no-audience.yaml",
+      data: {
+        apiVersion: "company-as-code/v1",
+        kind: "Dashboard",
+        name: "no-audience",
+        owner: { module: "company/test" },
+        purpose: "Test dashboard missing audience",
+        refresh: "hourly",
+        panels: [{ id: "p1", title: "P1", type: "stat", metric: "x" }],
+      },
+    });
+    const problems = schemaValidate(corpus, ajv);
+    expect(problems).toHaveLength(1);
+    expect(problems[0].errors.some((e) => e.includes("audience"))).toBe(true);
+  });
+
+  it("rejects an Automation missing observability.auditTopic", async () => {
+    const schemas = await loadSchemas();
+    const ajv = buildAjv(schemas);
+    const corpus = emptyCorpus();
+    corpus.automations.push({
+      file: "company/automations/no-audit.yaml",
+      data: {
+        apiVersion: "company-as-code/v1",
+        kind: "Automation",
+        name: "no-audit",
+        owner: { module: "company/test" },
+        purpose: "Test automation missing audit topic",
+        cadence: "on-demand",
+        inputs: [{ name: "dryRun", type: "boolean" }],
+        invariants: ["Refuses without dry-run prerequisite."],
+        observability: {},
+      },
+    });
+    const problems = schemaValidate(corpus, ajv);
+    expect(problems).toHaveLength(1);
+    expect(problems[0].errors.some((e) => e.includes("auditTopic"))).toBe(true);
+  });
+
+  it("rejects an Automation that mutates state without a dryRun input", () => {
+    const corpus = emptyCorpus();
+    corpus.automations.push({
+      file: "company/automations/bad.yaml",
+      data: {
+        apiVersion: "company-as-code/v1",
+        kind: "Automation",
+        name: "bad",
+        owner: { module: "company/test" },
+        purpose: "Mutates state but no dryRun input",
+        cadence: "on-demand",
+        inputs: [{ name: "period", type: "month" }],
+        mutates: [{ canonical_table: "append-only" }],
+        invariants: ["Always writes an audit record."],
+        observability: { auditTopic: "bad" },
+      },
+    });
+    const errors = crossDocumentChecks(corpus);
+    expect(errors.some((e) => e.includes("does not declare a 'dryRun' input"))).toBe(true);
+  });
+
+  it("rejects an EventTypeRegistry with a malformed type name", async () => {
+    const schemas = await loadSchemas();
+    const ajv = buildAjv(schemas);
+    const corpus = emptyCorpus();
+    corpus.eventTypeRegistries.push({
+      file: "company/events/event-types.yaml",
+      data: {
+        apiVersion: "company-as-code/v1",
+        kind: "EventTypeRegistry",
+        version: 1,
+        events: [
+          {
+            type: "BAD_TYPE_NAME",
+            description: "Test malformed type",
+            emittingModule: "company/test",
+            status: "experimental",
+          },
+        ],
+      },
+    });
+    const problems = schemaValidate(corpus, ajv);
+    expect(problems).toHaveLength(1);
+    expect(problems[0].errors.some((e) => e.includes("/events/0/type"))).toBe(true);
+  });
+
+  it("rejects a workflow emitting an event not in the registry", () => {
+    const corpus = emptyCorpus();
+    corpus.eventTypeRegistries.push({
+      file: "company/events/event-types.yaml",
+      data: {
+        apiVersion: "company-as-code/v1",
+        kind: "EventTypeRegistry",
+        version: 1,
+        events: [
+          {
+            type: "finance.period_closed",
+            description: "Period closed",
+            emittingModule: "company/finance",
+            status: "stable",
+          },
+        ],
+      },
+    });
+    corpus.workflows.push({
+      file: "company/workflows/test.yaml",
+      data: {
+        apiVersion: "company-as-code/v1",
+        kind: "Workflow",
+        name: "test",
+        module: "company/test",
+        purpose: "Emits an event not in the registry",
+        trigger: { kind: "human" },
+        steps: [
+          { id: "go", kind: "emit-event", emitsEvent: "made.up.event_name" },
+        ],
+      },
+    });
+    const errors = crossDocumentChecks(corpus);
+    expect(errors.some((e) => e.includes("made.up.event_name"))).toBe(true);
+  });
+
+  it("rejects multiple AutonomyPolicy documents (singleton)", () => {
+    const corpus = emptyCorpus();
+    for (const file of ["company/runtime/a.yaml", "company/runtime/b.yaml"]) {
+      corpus.autonomyPolicies.push({
+        file,
+        data: {
+          apiVersion: "company-as-code/v1",
+          kind: "AutonomyPolicy",
+          version: 1,
+          classes: {
+            autonomous: { description: "Read-only.", schedulingAllowed: true, requiresHumanApproval: false },
+            "human-gated": { description: "HITL.", schedulingAllowed: false, requiresHumanApproval: true },
+            escalated: { description: "Escalates.", schedulingAllowed: true, requiresHumanApproval: false },
+          },
+        },
+      });
+    }
+    const errors = crossDocumentChecks(corpus);
+    expect(errors.some((e) => e.includes("Multiple AutonomyPolicy"))).toBe(true);
+  });
+
+  it("rejects an EscalationPolicy missing required severities", async () => {
+    const schemas = await loadSchemas();
+    const ajv = buildAjv(schemas);
+    const corpus = emptyCorpus();
+    corpus.escalationPolicies.push({
+      file: "company/runtime/escalation-policy.yaml",
+      data: {
+        apiVersion: "company-as-code/v1",
+        kind: "EscalationPolicy",
+        version: 1,
+        severities: {
+          "sev-1": {
+            description: "Critical.",
+            acknowledgeWithin: "PT5M",
+            pageMode: "continuous-until-ack",
+          },
+        },
+        roles: [{ role: "on-call", description: "Primary on-call." }],
+        channels: [{ kind: "page", target: "integrations/paging", forSeverities: ["sev-1"] }],
+      },
+    });
+    const problems = schemaValidate(corpus, ajv);
+    expect(problems).toHaveLength(1);
+    expect(problems[0].errors.some((e) => e.includes("sev-2"))).toBe(true);
   });
 
   it("accepts a minimal valid Manifest", async () => {

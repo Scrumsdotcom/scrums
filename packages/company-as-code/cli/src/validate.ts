@@ -131,5 +131,84 @@ export function crossDocumentChecks(corpus: RepoCorpus): string[] {
     }
   }
 
+  // 7. Automation invariants must include the dry-run safety statement when
+  //    the automation has any entries in `mutates[]`.
+  for (const automation of corpus.automations) {
+    const mutates = (automation.data.mutates ?? []) as unknown[];
+    const inputs = (automation.data.inputs ?? []) as Array<{ name: string }>;
+    if (mutates.length > 0) {
+      const hasDryRun = inputs.some((i) => i.name === "dryRun");
+      if (!hasDryRun) {
+        errors.push(`${automation.file}: automation mutates state but does not declare a 'dryRun' input.`);
+      }
+    }
+  }
+
+  // 8. Dashboard alert routing roles must resolve to a role defined in some EscalationPolicy.
+  //    Both primary roles and their declared fallbacks count as valid targets.
+  const escalationRoles = new Set<string>();
+  for (const ep of corpus.escalationPolicies) {
+    for (const r of (ep.data.roles ?? []) as Array<{ role: string; fallback?: Array<{ role: string }> }>) {
+      escalationRoles.add(r.role);
+      for (const fb of r.fallback ?? []) {
+        escalationRoles.add(fb.role);
+      }
+    }
+    const def = ep.data.defaults;
+    if (def?.escalatedAgentRecipient) escalationRoles.add(def.escalatedAgentRecipient);
+  }
+  // Only enforce if at least one EscalationPolicy is loaded; forks without one are unconstrained.
+  if (escalationRoles.size > 0) {
+    for (const dashboard of corpus.dashboards) {
+      for (const alert of (dashboard.data.alerts ?? []) as Array<{ id: string; routing: string }>) {
+        if (alert.routing && !escalationRoles.has(alert.routing)) {
+          errors.push(`${dashboard.file}: alert '${alert.id}' routes to '${alert.routing}' which is not a role defined in any EscalationPolicy.`);
+        }
+      }
+    }
+  }
+
+  // 9. There may be at most one AutonomyPolicy and at most one EscalationPolicy
+  //    document in the corpus (singletons). Forks may extend; the default is one.
+  if (corpus.autonomyPolicies.length > 1) {
+    const files = corpus.autonomyPolicies.map((p) => p.file).join(", ");
+    errors.push(`Multiple AutonomyPolicy documents found (${files}). The runtime expects a singleton.`);
+  }
+  if (corpus.escalationPolicies.length > 1) {
+    const files = corpus.escalationPolicies.map((p) => p.file).join(", ");
+    errors.push(`Multiple EscalationPolicy documents found (${files}). The runtime expects a singleton.`);
+  }
+
+  // 10. EventTypeRegistry should appear exactly once. Workflow.steps[].emitsEvent
+  //     and Agent.outputs[].emitsEvent should reference types from the registry.
+  if (corpus.eventTypeRegistries.length > 1) {
+    const files = corpus.eventTypeRegistries.map((p) => p.file).join(", ");
+    errors.push(`Multiple EventTypeRegistry documents found (${files}). Expected exactly one.`);
+  }
+  const registeredEventTypes = new Set<string>();
+  for (const reg of corpus.eventTypeRegistries) {
+    for (const e of (reg.data.events ?? []) as Array<{ type: string }>) {
+      registeredEventTypes.add(e.type);
+    }
+  }
+  if (registeredEventTypes.size > 0) {
+    // Workflow steps
+    for (const wf of corpus.workflows) {
+      for (const step of (wf.data.steps ?? []) as Array<{ id: string; emitsEvent?: string }>) {
+        if (step.emitsEvent && !registeredEventTypes.has(step.emitsEvent)) {
+          errors.push(`${wf.file}: workflow step '${step.id}' emits '${step.emitsEvent}' which is not in the EventTypeRegistry.`);
+        }
+      }
+    }
+    // Agent outputs
+    for (const agent of corpus.agents) {
+      for (const o of (agent.data.outputs ?? []) as Array<{ name: string; emitsEvent?: string }>) {
+        if (o.emitsEvent && !registeredEventTypes.has(o.emitsEvent)) {
+          errors.push(`${agent.file}: agent output '${o.name}' emits '${o.emitsEvent}' which is not in the EventTypeRegistry.`);
+        }
+      }
+    }
+  }
+
   return errors;
 }

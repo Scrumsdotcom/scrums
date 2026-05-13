@@ -10,48 +10,59 @@ When the schema for a canonical primitive changes in a backwards-incompatible wa
 
 ## [Unreleased]
 
-### Added — Detail pass: worked examples, scenarios, anatomy, ADRs, diagrams
+### Added — Schema completeness for runtime primitives
 
-- **Root agent navigation.** New [`AGENTS.md`](./AGENTS.md) at repo root — the canonical entry point for Claude, Codex, Cursor, Aider, Continue, Gemini, OpenAI Assistants, and any future runtime that consumes an `AGENTS.md`. New [`MAINTAINERS.md`](./MAINTAINERS.md) referenced from `SECURITY.md`.
-- **Worked example in every previously-empty `/company/` folder.**
-  - `/company/policies/` — three illustrative policy docs (`hitl-external-writes`, `data-retention`, `incident-response`).
-  - `/company/memory/cash-forecaster/` — a complete per-agent memory namespace with index and two memory entries.
-  - `/company/prompts/cash-forecast-summary.md` — a versioned prompt template wired to the agent and its memory.
-  - `/company/events/event-types.yaml` and `/company/events/payloads/cash-forecast-updated.yaml` — typed event registry + per-type payload schema.
-  - `/company/runtime/{autonomy-policy,escalation-policy}.yaml` — runtime configuration shaping how autonomy classes and escalations resolve.
-  - `/company/dashboards/{executive-overview,finance-overview,platform-overview}.yaml` — three illustrative dashboards referenced from worked module manifests.
-  - `/company/automations/{post-period-close,apply-channel-allocation}.yaml` — two automations called by the worked workflows.
-  - `/company/playbooks/incident-response.md` — cross-domain playbook.
-  - `/company/workflows/incident-response.yaml` — cross-cutting workflow.
-  - `/company/tasks/TASK-EXAMPLE-0001.yaml` — example canonical task wiring the incident workflow.
-- **Module playbooks for every worked module.** New [`production-deploy.md`](./company/domains/product-operations/platform/playbooks/production-deploy.md) under platform and [`launch-experiment.md`](./company/domains/sales-marketing/growth/playbooks/launch-experiment.md) under growth. Finance already had a playbook; all three worked modules now have full operator-facing procedures.
-- **[`/docs/anatomy/`](./docs/anatomy)** — field-by-field deep-dives on `Manifest`, `Agent`, `Workflow` covering required fields, common review failures, and the discipline behind each declaration.
-- **[`/docs/scenarios/`](./docs/scenarios)** — three end-to-end operational walkthroughs:
-  - `monthly-close.md` — how HITL + dry-run + sync-verification compose on a high-stakes financial action
-  - `launching-a-growth-experiment.md` — how the initiative → goal → metric chain drives a weekly cadence
-  - `responding-to-an-incident.md` — cross-domain coordination (platform + finance) under SEV-2 conditions
-- **[`/docs/faq.md`](./docs/faq.md)** — common questions surfaced as the framework went public.
-- **[`/docs/forking.md`](./docs/forking.md)** — explicit guide for adopting the framework as the operating substrate of your own company; what to keep vs. replace, runtime customization, cognition-layer customization, when you've outgrown the seed.
-- **ADRs 0002–0004.** Modular monolith ([0002](./docs/adr/0002-modular-monolith.md)), unidirectional mutation ([0003](./docs/adr/0003-unidirectional-mutation.md)), drift gate ([0004](./docs/adr/0004-drift-gate.md)) — the rationale behind the three load-bearing structural decisions, recorded so forks can audit which decisions they've inherited.
-- **Mermaid diagrams** in [`docs/architecture.md`](./docs/architecture.md) — the cognition tree and the sync verification protocol now render as visual diagrams on GitHub.
+- **Five new JSON Schemas** covering every illustrative YAML now shipped in the seed:
+  - [`schemas/dashboard.schema.json`](./schemas/dashboard.schema.json) — Dashboard panels, audience, refresh, alerts
+  - [`schemas/automation.schema.json`](./schemas/automation.schema.json) — Automation inputs, outputs, mutates, invariants, failure modes
+  - [`schemas/event-type-registry.schema.json`](./schemas/event-type-registry.schema.json) — the enum-controlled event-type registry (one per company)
+  - [`schemas/autonomy-policy.schema.json`](./schemas/autonomy-policy.schema.json) — runtime expression of the three autonomy classes + promotion path
+  - [`schemas/escalation-policy.schema.json`](./schemas/escalation-policy.schema.json) — severity SLAs, role bindings, channel routing
+- **Five new cross-document discipline checks** in the CLI validator:
+  - Automations that `mutates[]` state must declare a `dryRun` input
+  - Dashboard alert routing must resolve to a role in some `EscalationPolicy` (including fallbacks)
+  - `AutonomyPolicy` and `EscalationPolicy` are singletons; multiple loaded documents fail validation
+  - `EventTypeRegistry` is a singleton; multiple documents fail validation
+  - Workflow `steps[].emitsEvent` and Agent `outputs[].emitsEvent` must reference a type registered in the `EventTypeRegistry`
+- **Seven new vitest cases** (19 total, up from 12): one per new schema's failure mode, plus the new cross-document checks
+- **[`docs/roadmap.md`](./docs/roadmap.md)** — explicit roadmap separating shipped / in flight / considered / declined items, with a section dedicated to the upcoming runtime-operationalization work
 
-### Added — Skill primitive (now merged from PR #2)
+### Changed
+
+- Every illustrative YAML in `/company/**` now carries `apiVersion: company-as-code/v1` and a `kind:` discriminator and **schema-validates**. The seed has no more illustrative-only documents.
+- `/company/runtime/autonomy-policy.yaml` `promotion.*.requires` reshaped from a list of single-key objects to a flat object (matches the new schema)
+- README and `AGENTS.md` navigation include the new roadmap link
+
+### Internal
+
+- `RepoCorpus` gains five new buckets (`dashboards`, `automations`, `eventTypeRegistries`, `autonomyPolicies`, `escalationPolicies`); schema bindings and `emptyCorpus()` test helper updated in lockstep
+
+---
+
+## [0.2.0] — 2026-05-13
+
+(Merged via PRs #2 and #3; tagging deferred until the schema-completeness PR also lands.)
+
+### Added — Skill primitive (PR #2)
 
 - **Skill primitive (Tier-3 of the knowledge model).** `/schemas/skill.schema.json`, `/templates/skill.yaml`, and five worked skills under `/company/skills/` (`add-module`, `add-agent`, `add-integration`, `resolve-drift`, `sync-verification`).
 - **Cross-runtime skill adapter generators.** One canonical YAML per skill produces three machine-readable variants under `/generated/skills/`:
   - `claude/<name>/SKILL.md` — Claude Code skill format
   - `agents-md/<name>.md` — provider-neutral AGENTS.md for Codex, Cursor, Aider, Continue, …
   - `gemini/<name>.gem.json` — Gemini Gems format (also compatible with OpenAI Assistants)
-- `/generated/skill-index.json` — flat machine-readable index of every skill with autonomy class, owner, tags, related skills.
-- `Agent.skills` field — agents declare which Tier-3 skills they may invoke. Cross-document validation rejects dangling references.
-- Two additional CLI tests covering skill schema and reference resolution (12 tests total, up from 8).
+- `/generated/skill-index.json` — flat machine-readable index of every skill.
+- `Agent.skills` field — agents declare which Tier-3 skills they may invoke; cross-document validation rejects dangling references.
 
-### Changed
+### Added — Detail pass (PR #3)
 
-- `Agent` schema: new optional `skills` field. Backwards compatible — defaults to empty array.
-- Architecture doc and glossary updated to define Skill as the canonical Tier-3 artefact.
-- README header navigation now includes Anatomy, Scenarios, Forking, FAQ.
-- Architecture doc updated to surface the new generators in the registries list.
+- **Root agent navigation.** `AGENTS.md` + `MAINTAINERS.md`.
+- **Worked example in every previously-empty `/company/` folder** — policies, memory, prompts, events, runtime, dashboards, automations, playbooks, workflows, tasks.
+- **Module playbooks** for every worked module (`production-deploy`, `launch-experiment`).
+- **`/docs/anatomy/`** — field-by-field deep-dives on Manifest, Agent, Workflow.
+- **`/docs/scenarios/`** — three end-to-end walkthroughs (monthly close, growth experiment, cross-domain incident).
+- **`/docs/faq.md`** + **`/docs/forking.md`**.
+- **ADRs 0002–0004** — modular monolith, unidirectional mutation, drift gate.
+- **Mermaid diagrams** in `docs/architecture.md`.
 
 ---
 
@@ -71,4 +82,5 @@ When the schema for a canonical primitive changes in a backwards-incompatible wa
 - Author attribution: Gerald Neves, Founder & CEO at Scrums.com.
 
 [Unreleased]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.1.0...HEAD
+[0.2.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/releases/tag/v0.1.0

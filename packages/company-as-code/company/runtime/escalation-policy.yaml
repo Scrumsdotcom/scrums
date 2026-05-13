@@ -5,6 +5,8 @@
 # to canonical Person IDs at request time — the routing layer is one
 # integration away, but the policy is declared here.
 
+apiVersion: company-as-code/v1
+kind: EscalationPolicy
 version: 1
 
 # Severity → SLA pairs. Used by both incident-response and bounded-retry escalation.

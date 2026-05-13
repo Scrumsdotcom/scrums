@@ -40,10 +40,10 @@ mutates:
   - integrations/ad-channels: write   # vendor-neutral; the integration resolves to the actual channel APIs
 
 invariants:
-  - Refuses to apply more than a 25% week-over-week shift on any single channel without an explicit override.
-  - Refuses to apply if any active experiment is currently breaching its stop-loss threshold.
-  - Always preceded by a `human-approval` step in the calling workflow. The runtime enforces.
-  - Writes an audit record on every invocation; emits `growth.allocation_applied` only on `dryRun: false` success.
+  - "Refuses to apply more than a 25% week-over-week shift on any single channel without an explicit override."
+  - "Refuses to apply if any active experiment is currently breaching its stop-loss threshold."
+  - "Always preceded by a 'human-approval' step in the calling workflow. The runtime enforces."
+  - "Writes an audit record on every invocation; emits growth.allocation_applied only on dryRun=false success."
 
 failureModes:
   - description: Channel API rate-limited.

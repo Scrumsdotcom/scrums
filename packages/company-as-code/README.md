@@ -16,6 +16,7 @@ Run your company like software — observable, versioned, orchestrated, automata
 [Anatomy](./docs/anatomy) ·
 [Scenarios](./docs/scenarios) ·
 [Forking](./docs/forking.md) ·
+[Roadmap](./docs/roadmap.md) ·
 [FAQ](./docs/faq.md) ·
 [Standards](./docs/standards) ·
 [Glossary](./docs/glossary.md)

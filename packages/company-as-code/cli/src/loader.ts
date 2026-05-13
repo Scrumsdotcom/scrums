@@ -24,6 +24,11 @@ export interface RepoCorpus {
   persons: LoadedDoc[];
   integrations: LoadedDoc[];
   skills: LoadedDoc[];
+  dashboards: LoadedDoc[];
+  automations: LoadedDoc[];
+  eventTypeRegistries: LoadedDoc[];
+  autonomyPolicies: LoadedDoc[];
+  escalationPolicies: LoadedDoc[];
 }
 
 const KIND_TO_BUCKET: Record<string, keyof RepoCorpus> = {
@@ -39,6 +44,11 @@ const KIND_TO_BUCKET: Record<string, keyof RepoCorpus> = {
   Person: "persons",
   Integration: "integrations",
   Skill: "skills",
+  Dashboard: "dashboards",
+  Automation: "automations",
+  EventTypeRegistry: "eventTypeRegistries",
+  AutonomyPolicy: "autonomyPolicies",
+  EscalationPolicy: "escalationPolicies",
 };
 
 export async function loadSchemas(): Promise<Record<string, any>> {
@@ -65,6 +75,11 @@ export async function loadCorpus(): Promise<RepoCorpus> {
     persons: [],
     integrations: [],
     skills: [],
+    dashboards: [],
+    automations: [],
+    eventTypeRegistries: [],
+    autonomyPolicies: [],
+    escalationPolicies: [],
   };
 
   const patterns = ["**/*.yaml", "**/*.yml"];
@@ -108,6 +123,11 @@ const BUCKET_TO_SCHEMA: Record<keyof RepoCorpus, string> = {
   persons: "person.schema.json",
   integrations: "integration.schema.json",
   skills: "skill.schema.json",
+  dashboards: "dashboard.schema.json",
+  automations: "automation.schema.json",
+  eventTypeRegistries: "event-type-registry.schema.json",
+  autonomyPolicies: "autonomy-policy.schema.json",
+  escalationPolicies: "escalation-policy.schema.json",
 };
 
 export function schemaFor(bucket: keyof RepoCorpus): string {

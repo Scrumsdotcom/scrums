@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/escalation-policy.schema.json",
+  "title": "Escalation Policy",
+  "description": "Severity → SLA mapping; on-call role bindings; vendor-neutral channel routing. Singleton runtime configuration document.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "version", "severities", "roles", "channels"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "EscalationPolicy" },
+    "version": { "type": "integer", "minimum": 1 },
+    "severities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sev-1", "sev-2", "sev-3", "sev-4"],
+      "properties": {
+        "sev-1": { "$ref": "#/$defs/severity" },
+        "sev-2": { "$ref": "#/$defs/severity" },
+        "sev-3": { "$ref": "#/$defs/severity" },
+        "sev-4": { "$ref": "#/$defs/severity" }
+      }
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "description"],
+        "properties": {
+          "role": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "description": { "type": "string", "minLength": 4 },
+          "fallback": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["role"],
+              "properties": {
+                "role": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
+              }
+            },
+            "default": []
+          }
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "escalatedAgentThreshold": { "type": "string" },
+        "escalatedAgentRecipient": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
+      }
+    },
+    "channels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "target", "forSeverities"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["page", "chat", "email", "sms", "webhook"] },
+          "target": { "type": "string", "description": "Pointer to a /company/integrations/<name> manifest (vendor-neutral)." },
+          "forSeverities": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "enum": ["sev-1", "sev-2", "sev-3", "sev-4"] }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "severity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "acknowledgeWithin", "pageMode"],
+      "properties": {
+        "description": { "type": "string", "minLength": 4 },
+        "acknowledgeWithin": { "type": "string", "description": "ISO 8601 duration." },
+        "incidentCommanderWithin": { "type": "string", "description": "ISO 8601 duration or the literal 'best-effort' / 'not-required'." },
+        "pageMode": { "type": "string", "enum": ["continuous-until-ack", "notify", "none"] }
+      }
+    }
+  }
+}

@@ -8,6 +8,8 @@
 # Leading segment is the domain or module emitting the event.
 # Trailing segment is the past-tense state transition.
 
+apiVersion: company-as-code/v1
+kind: EventTypeRegistry
 version: 1
 events:
 

@@ -22,6 +22,11 @@ CI validates every manifest, agent, workflow, task, and registry artefact agains
 | [`person.schema.json`](./person.schema.json) | Canonical actor — employee, contractor, supplier, AI operator, agent identity |
 | [`integration.schema.json`](./integration.schema.json) | External system mapping — canonical IDs, mutation direction, HITL surfaces |
 | [`skill.schema.json`](./skill.schema.json) | Tier-3 skill — composable reusable expertise; one canonical YAML, adapters emit Claude SKILL.md + AGENTS.md + Gemini Gem |
+| [`dashboard.schema.json`](./dashboard.schema.json) | Read-only observability surface — panels, audience, refresh, alerts |
+| [`automation.schema.json`](./automation.schema.json) | Deterministic execution unit — inputs (including `dryRun`), mutates, invariants, failure modes |
+| [`event-type-registry.schema.json`](./event-type-registry.schema.json) | The enum-controlled registry of typed event names — one document for the company |
+| [`autonomy-policy.schema.json`](./autonomy-policy.schema.json) | Runtime expression of the three autonomy classes + promotion path + preflight checks |
+| [`escalation-policy.schema.json`](./escalation-policy.schema.json) | Severity SLAs, on-call role bindings, vendor-neutral channel routing |
 
 ## Conventions
 
