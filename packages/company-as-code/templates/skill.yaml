@@ -1,0 +1,84 @@
+# Skill template.
+# Place at /company/skills/<name>.yaml.
+# Schema: /schemas/skill.schema.json
+#
+# Skills are Tier-3 of the three-tier knowledge model: composable,
+# reusable expertise referenced by name. One canonical YAML source.
+# `npm run generate` emits per-runtime variants:
+#   - /generated/skills/claude/<name>/SKILL.md   (Claude Code skill format)
+#   - /generated/skills/agents-md/<name>.md       (Codex/Cursor/AGENTS.md/etc)
+#   - /generated/skills/gemini/<name>.gem.json    (Gemini Gem / OpenAI-compatible)
+
+apiVersion: company-as-code/v1
+kind: Skill
+
+name: example-skill
+version: 0.1.0
+
+# One sentence. Matches Claude SKILL.md frontmatter shape.
+description: >
+  When to invoke this skill — the condition that makes this the right move.
+
+owner:
+  module: company/domains/finance-ops/finance
+  # person: finance-lead
+
+triggers:
+  - The operator or agent encounters <specific situation>.
+  - An automated check signals <named condition>.
+
+inputs:
+  # - name: module
+  #   type: module-path
+  #   description: The module the skill operates on.
+  #   required: true
+
+outputs:
+  # - name: result
+  #   type: summary
+  #   description: One-paragraph summary of what was done.
+
+tools:
+  # - canonical-ledger-reader
+
+# autonomous | human-gated | escalated
+# Agents that invoke the skill may NARROW autonomy (more restrictive),
+# never widen it.
+autonomy: human-gated
+
+relatedSkills:
+  # - sync-verification
+
+tags:
+  - example
+
+examples:
+  # - title: Happy path
+  #   input: "module=company/domains/finance-ops/finance"
+  #   output: "validate → regenerate → drift gate green"
+
+# Markdown body. This is what the agent reads at invocation time.
+# Tier-2 in shape: numbered steps, inputs, outputs, definition of done.
+body: |
+  # Example skill
+
+  Replace this with the actual procedure.
+
+  ## When to use
+
+  Describe the trigger.
+
+  ## Steps
+
+  1. Step one.
+  2. Step two.
+  3. Step three.
+
+  ## Definition of done
+
+  - [ ] Outcome 1
+  - [ ] Outcome 2
+
+  ## Failure handling
+
+  Explain what to do when the skill fails midway.

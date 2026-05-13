@@ -43,6 +43,7 @@ This document is the architectural framing for Company-as-Code. The authoritativ
 | Organization | [`/schemas/organization.schema.json`](../schemas/organization.schema.json) | `/company/integrations/` or seeded |
 | Person | [`/schemas/person.schema.json`](../schemas/person.schema.json) | `/company/integrations/` or seeded |
 | Integration | [`/schemas/integration.schema.json`](../schemas/integration.schema.json) | `/company/integrations/` |
+| Skill | [`/schemas/skill.schema.json`](../schemas/skill.schema.json) | `/company/skills/<name>.yaml` (generators emit per-runtime variants) |
 
 ## Modular monolith discipline
 
@@ -84,6 +85,8 @@ Manifests are walked by deterministic generators that emit:
 - **`/generated/dependency-graph.json`** — module-to-module interface edges
 - **`/generated/domain-model.json`** — module ownership of tables and schemas
 - **`/generated/context-bundles/<module>__<agent>.json`** — per-agent typed runtime context, resolved from the agent declaration plus the owning module's exposes/consumes/invariants
+- **`/generated/skill-index.json`** — flat index of every defined skill with autonomy class, owner, tags, related skills
+- **`/generated/skills/{claude,agents-md,gemini}/...`** — per-runtime skill adapters generated from `/company/skills/*.yaml`
 
 CI runs `npm run generate:check` on every PR. If any generated file would change but isn't in the diff, CI fails. Hand-merging generated files is forbidden — when conflicts arise, regenerate.
 
@@ -175,9 +178,21 @@ Three tiers:
 
 - **Tier 1 — Context** — long-form narrative; lives in wiki-style documents and ADRs
 - **Tier 2 — Runtime entry-points** — numbered steps, inputs, outputs, definition-of-done; lives in tasks, workflows, runbooks
-- **Tier 3 — Skills** — composable, reusable expertise referenced by name; lives in version-controlled skill definitions
+- **Tier 3 — Skills** — composable, reusable expertise referenced by name; lives at [`/company/skills/`](../company/skills) as canonical YAML, validated by [`/schemas/skill.schema.json`](../schemas/skill.schema.json)
 
 Mixing tiers is the most common documentation failure mode. Migration from legacy wiki dumps classifies each document, extracts each tier, archives the original.
+
+### Skills as one primitive, many runtimes
+
+Skills are the most cross-cutting Tier-3 artefact. One canonical YAML at `/company/skills/<name>.yaml` is walked by the generator into per-runtime adapters under `/generated/skills/`:
+
+- **`claude/<name>/SKILL.md`** — Claude Code skill format (YAML frontmatter + markdown body)
+- **`agents-md/<name>.md`** — provider-neutral markdown for Codex, Cursor, Aider, Continue, AGENTS.md-aware tools
+- **`gemini/<name>.gem.json`** — Gemini Gems format (also a workable shape for OpenAI Assistants)
+
+Forks add a fourth adapter (LangChain hub, custom IDE rules, …) by writing one small function in `cli/src/generate.ts`. The canonical YAML never changes. The drift gate protects all generated outputs equally.
+
+Agents declare which skills they may invoke via the optional `skills:` field on the agent manifest. Cross-document validation rejects agent references to undefined skills and skill references to undefined related skills.
 
 ## AI-native design
 

@@ -64,6 +64,8 @@ Canonical Company-as-Code terms. The spec at [`/docs/spec/company-as-code-spec.m
 
 **Soft delete.** Mandatory deletion pattern. Records carry a tombstone with reason; never hard-deleted. Merges produce a "merged into" pointer.
 
+**Skill.** Tier-3 of the three-tier knowledge model: composable, reusable expertise referenced by name. One canonical YAML at `/company/skills/<name>.yaml`; the CLI generates per-runtime adapters (Claude `SKILL.md`, provider-neutral `AGENTS.md`, Gemini Gem JSON). Agents declare which skills they invoke via `skills:` on the agent manifest. Schema: [`/schemas/skill.schema.json`](../schemas/skill.schema.json).
+
 **Sub-cognition.** Recursive module structure: a module may host child modules under `sub-cognition/<name>/`, each with its own manifest.
 
 **Sync verification protocol.** Five-step protocol for state-mutating syncs: baseline → dry-run → confirm counts → live → re-verify. Same five steps every time.

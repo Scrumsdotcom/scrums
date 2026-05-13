@@ -106,6 +106,7 @@ Every node has scoped memory, scoped tools, scoped workflows, scoped dashboards,
 | **Agent** | autonomous execution unit (AI or automation) |
 | **Event** | state transition in the typed ledger |
 | **Metric** | observable quantity with lineage and freshness |
+| **Skill** | reusable Tier-3 technique; one canonical YAML, generated per runtime (Claude, Gemini, Codex/AGENTS.md) |
 
 Schemas live in [`/schemas`](./schemas) and are enforced by CI.
 
@@ -216,6 +217,7 @@ The system is designed for AI participation from the ground up:
 - **Autonomy classification** (`autonomous` / `human-gated` / `escalated`) is declared per action and enforced by the runtime.
 - **Adversarial verification posture** — recalled information is a claim until checked against current state.
 - **Three-tier knowledge model** — context (narrative), entry-points (runtime steps), skills (reusable techniques).
+- **One skill primitive, every runtime.** Each Tier-3 skill is one YAML at [`/company/skills/`](./company/skills). The CLI generates per-runtime adapters: Claude `SKILL.md`, provider-neutral `AGENTS.md` (Codex / Cursor / Aider / Continue), and Gemini Gem JSON. Forks add a fourth runtime in one small generator function.
 
 See [`docs/architecture.md#ai-native-design`](./docs/architecture.md) for the full picture.
 

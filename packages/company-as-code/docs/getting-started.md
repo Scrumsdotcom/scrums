@@ -135,6 +135,7 @@ You're done.
 - **An escalating agent**: set `autonomy: escalated` and declare an `escalation` block with `threshold` and `to`.
 - **A goal → metric chain**: write the metric first (`/templates/metric.yaml`), then the goal (`/templates/goal.yaml`) referencing the metric ID, then optionally an initiative referencing the goal.
 - **A new external system**: declare an `Integration` (`/schemas/integration.schema.json`), don't add it as a hardcoded reference in business logic.
+- **A new reusable technique**: write a skill at `/company/skills/<name>.yaml`. `npm run generate` emits three machine-readable adapters — `SKILL.md` for Claude, `<name>.md` for Codex/Cursor/AGENTS.md, `<name>.gem.json` for Gemini. One source, every runtime.
 
 ## When something breaks
 

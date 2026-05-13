@@ -74,6 +74,12 @@
       "description": "Named tools / capabilities scoped to this agent.",
       "default": []
     },
+    "skills": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+      "description": "Tier-3 skills (by name) this agent is authorized to invoke. See /company/skills.",
+      "default": []
+    },
     "memoryScope": {
       "type": "string",
       "description": "Pointer into /company/memory namespace this agent reads/writes."

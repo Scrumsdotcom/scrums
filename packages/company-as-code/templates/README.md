@@ -14,5 +14,6 @@ Framework-level authoring templates. Annotated starting points for every canonic
 | [`playbook.md`](./playbook.md) | New runbook / SOP |
 | [`plan.md`](./plan.md) | New plan (park-friendly) |
 | [`adr.md`](./adr.md) | New Architecture Decision Record |
+| [`skill.yaml`](./skill.yaml) | New Tier-3 skill (cross-runtime, generates Claude SKILL.md + AGENTS.md + Gemini Gem) |
 
 Company-level template variants live at [`/company/templates`](../company/templates).

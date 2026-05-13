@@ -112,5 +112,24 @@ export function crossDocumentChecks(corpus: RepoCorpus): string[] {
     }
   }
 
+  // 5. Agent.skills references must resolve to a defined Skill.
+  const skillNames = new Set(corpus.skills.map((s) => s.data.name));
+  for (const agent of corpus.agents) {
+    for (const s of (agent.data.skills ?? []) as string[]) {
+      if (!skillNames.has(s)) {
+        errors.push(`${agent.file}: agent references skill '${s}' which is not defined under /company/skills.`);
+      }
+    }
+  }
+
+  // 6. Skill.relatedSkills references must resolve.
+  for (const skill of corpus.skills) {
+    for (const r of (skill.data.relatedSkills ?? []) as string[]) {
+      if (!skillNames.has(r)) {
+        errors.push(`${skill.file}: relatedSkills includes '${r}' which is not defined under /company/skills.`);
+      }
+    }
+  }
+
   return errors;
 }

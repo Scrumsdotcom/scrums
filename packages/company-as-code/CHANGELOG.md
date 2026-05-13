@@ -12,14 +12,20 @@ When the schema for a canonical primitive changes in a backwards-incompatible wa
 
 ### Added
 
-- Example canonical primitives: one `Integration`, one `Organization`, one `Person` — proving every schema has at least one worked example document.
-- Deterministic per-agent context-bundle generator (`/generated/context-bundles/<module>__<agent>.json`), emitting one bundle per agent with resolved inputs, outputs, tools, observability surfaces, and HITL constraints.
-- CLI unit tests via vitest covering schema violations and the cross-document discipline checks (HITL on schedule, escalated agent without escalation block, dangling goal/metric references).
+- **Skill primitive (Tier-3 of the knowledge model).** New `/schemas/skill.schema.json`, `/templates/skill.yaml`, and five worked skills under `/company/skills/` (`add-module`, `add-agent`, `add-integration`, `resolve-drift`, `sync-verification`).
+- **Cross-runtime skill adapter generators.** One canonical YAML per skill produces three machine-readable variants under `/generated/skills/`:
+  - `claude/<name>/SKILL.md` — Claude Code skill format
+  - `agents-md/<name>.md` — provider-neutral AGENTS.md for Codex, Cursor, Aider, Continue, …
+  - `gemini/<name>.gem.json` — Gemini Gems format (also compatible with OpenAI Assistants)
+- `/generated/skill-index.json` — flat machine-readable index of every skill with autonomy class, owner, tags, related skills.
+- `Agent.skills` field — agents declare which Tier-3 skills they may invoke. Cross-document validation rejects dangling references.
+- Two additional CLI tests covering skill schema and reference resolution (12 tests total, up from 8).
 
 ### Changed
 
-- README clone URL, getting-started clone URL, and CHANGELOG compare link all point at the real repository (`gez-scrumsdotcom/Company-as-Code`).
-- `cli/package.json` no longer exposes an unused `bin` entry pointing at a non-existent build artifact.
+- `Agent` schema: new optional `skills` field. Backwards compatible — defaults to empty array.
+- Architecture doc and glossary updated to define Skill as the canonical Tier-3 artefact.
+- README "AI-native by construction" section now calls out the one-skill-many-runtimes model.
 
 ---
 
@@ -32,10 +38,11 @@ When the schema for a canonical primitive changes in a backwards-incompatible wa
 - JSON Schemas for canonical primitives: manifest, task, agent, workflow, initiative, goal, metric, event, audit-record, interface, organization, person, integration.
 - Canonical `/company` directory structure across three domains (finance-ops, product-operations, sales-marketing) plus executive and top-level support directories.
 - Authoring templates for manifests, agents, workflows, tasks, initiatives, goals, metrics, playbooks, plans, and ADRs.
-- Worked examples in finance, platform, and growth modules.
-- Reference TypeScript CLI with manifest validation and deterministic generators (agent catalogue, flow registry, dependency graph, domain model).
-- CI workflows for schema validation and drift detection.
+- Worked examples in finance, platform, and growth modules; one `Integration`, one `Organization`, one `Person`.
+- Reference TypeScript CLI with manifest validation, cross-document discipline checks, vitest unit tests, and deterministic generators (agent catalogue, flow registry, dependency graph, domain model, per-agent context bundles).
+- CI workflows for schema validation, unit tests, and drift detection.
 - Architecture documentation, getting-started guide, codified standards, glossary, and ADR 0001 bootstrapping the ADR process.
+- Author attribution: Gerald Neves, Founder & CEO at Scrums.com.
 
 [Unreleased]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/releases/tag/v0.1.0

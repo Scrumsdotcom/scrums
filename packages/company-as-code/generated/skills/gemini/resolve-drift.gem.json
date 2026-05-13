@@ -1,0 +1,21 @@
+{
+  "apiVersion": "company-as-code/v1",
+  "description": "Recover when `npm run generate:check` fails on a PR. Regenerate, never hand-merge generated files.",
+  "instructions": "# Resolve drift\n\nUse this skill when the drift gate (`npm run generate:check`) fails. The fix\nis **always regeneration**, never hand-editing.\n\n## Why hand-merging is forbidden\n\nGenerated files are deterministic outputs of the manifest graph. When two PRs\ntouch different manifests, they may both regenerate the same registry, producing\na mechanical merge conflict. Hand-merging almost always produces a state that\nis neither side's correct output — which the drift gate immediately catches on\nthe next push.\n\nThe resolution path is **regeneration**, every time:\n\n## Steps\n\n1. **Sync your branch with main** (so you're regenerating from current truth).\n   ```bash\n   git fetch origin\n   git rebase origin/main          # or merge, per your branch policy\n   ```\n\n2. **Resolve any conflicts in source files first** — manifests, agents,\n   workflows, schemas. Generated files come last.\n\n3. **For generated-file conflicts: take either side, then regenerate.**\n   ```bash\n   git checkout --theirs generated/        # or --ours; doesn't matter\n   git add generated/\n   cd cli && npm run generate\n   ```\n   The regenerator's deterministic output replaces whatever you took. If both\n   sides were wrong, regeneration produces the correct result.\n\n4. **Re-stage and verify locally.**\n   ```bash\n   git add ../generated/\n   npm run generate:check\n   ```\n   Must exit zero.\n\n5. **Commit.** Use a focused commit message: `Regenerate after rebase` or\n   `Resolve registry conflict via regeneration` is plenty.\n\n6. **Push.** CI's drift gate now passes.\n\n## Definition of done\n\n- [ ] `npm run generate:check` is green locally\n- [ ] Source-file conflicts resolved as actual edits, not regeneration\n- [ ] Generated-file conflicts resolved by regeneration\n- [ ] CI drift gate is green on the latest push\n\n## Failure handling\n\n- **Drift persists after regeneration** — you likely have an inconsistent manifest:\n  a `consumes` entry pointing at an interface that doesn't exist in the producer's\n  `exposes`, or a workflow with `hitl: true` but a `schedule` trigger. Run\n  `npm run validate` first; the cross-document discipline checks will surface\n  the real issue.\n- **Regeneration produces wildly different output than expected** — diff against\n  the most recent main; if the change is large, you may have inadvertently\n  edited a manifest. Review the source-file diff with `git diff origin/main -- '*.yaml'`.\n\n## Related\n\n- Skill: `add-module`, `add-agent` — most drift originates from manifest edits.\n- Standard: `/docs/standards/merge-policy.md` — the policy this skill enforces.\n\nTools available to this skill: `cli-generate`, `shell`.\n\nDefault autonomy classification: human-gated. Invokers may narrow further; never widen.",
+  "kind": "GeminiGemAdapter",
+  "metadata": {
+    "autonomy": "human-gated",
+    "relatedSkills": [
+      "add-agent",
+      "add-module"
+    ],
+    "sourceSchema": "company-as-code/v1#Skill",
+    "sourceSkill": "resolve-drift",
+    "tags": [
+      "ci",
+      "drift",
+      "generators"
+    ]
+  },
+  "name": "resolve-drift"
+}

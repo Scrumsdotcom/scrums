@@ -1,0 +1,112 @@
+---
+name: sync-verification
+description: "Apply the canonical 5-step protocol to any state-mutating sync: baseline → dry-run → confirm counts → live → re-verify."
+---
+
+# Sync verification protocol
+
+The same five steps, every state-mutating sync, regardless of which systems
+are involved. No improvisation. Mistakes are caught in step 3, not step 5.
+
+This skill is the **canonical safety pattern** for the runtime. Every new
+write path goes through it. Promoting an agent from `human-gated` to
+`autonomous` requires recorded evidence that this protocol has been followed
+successfully N times.
+
+## When to use
+
+- Any first invocation of a state-mutating sync in production.
+- Any first invocation against a new scope (new tenant, new region).
+- After non-trivial changes to a write path.
+- When you're tempted to "just run it" — that's exactly when you must not.
+
+## The five steps
+
+### 1. Baseline
+
+Query current state. Record:
+
+- Counts (rows that would be touched)
+- IDs / canonical IDs of the affected entities
+- Hashes / aggregates of the values that would change
+
+Save the baseline to the audit log under the same correlation ID you'll use
+through all five steps. Without a baseline, step 5 has nothing to compare against.
+
+### 2. Dry-run
+
+Execute the sync with `dryRun=true`. The runtime will:
+
+- Run all validation
+- Compute the full payload it would send
+- Write an audit record marked `dryRun: true`
+- Return the payload — but mutate nothing external
+
+Inspect the audit record's intended-write payload. **Read every field.**
+If the dry-run output doesn't match expectation, stop here.
+
+### 3. Confirm counts
+
+Compare the dry-run's projected delta to the baseline:
+
+- Number of rows touched
+- Magnitude of value changes
+- Whether any unexpected entities appear in the affected set
+
+If the projected change is **wildly different** from expected (an order of
+magnitude, an unfamiliar account, a row count off by 10×), **stop**:
+
+- Open a TASK with the playbook ID in the title
+- Escalate to the owning module's accountable contact
+- Do not proceed to step 4 under any circumstances
+
+This is the step that catches the disaster. Treat it as the most important
+one — because it is.
+
+### 4. Live
+
+Only after step 3 looks correct, execute with `dryRun=false`. The first live
+run uses the **smallest possible scope**: one entity, one record, one tenant.
+
+The audit record from this step references the dry-run record from step 2
+via `causationId`, making the sequence queryable.
+
+### 5. Re-verify
+
+Re-query the baseline you captured in step 1. Confirm state shifted exactly
+as the dry-run predicted:
+
+- Counts match the projected delta
+- IDs / aggregates match
+- No collateral changes outside the projected scope
+
+If reality matches projection, the sync is verified. If it does not, open
+an incident immediately; do not run another iteration against any scope
+before resolution.
+
+## Definition of done
+
+- [ ] Baseline recorded under a stable correlation ID
+- [ ] Dry-run audit record exists, with `dryRun: true`
+- [ ] Count confirmation is recorded (manual approval or automated check)
+- [ ] Live audit record exists, with `dryRun: false` and `causationId` pointing at step 2
+- [ ] Re-verification audit record matches the dry-run projection
+- [ ] All five audit rows share a correlation ID — the audit log reads as a queryable narrative
+
+## Failure handling
+
+- **Dry-run fails** — fix the cause; do not bypass to a live run.
+- **Counts wildly off** — escalate. Never override the discrepancy in the moment.
+- **Live succeeds but re-verify mismatches** — incident, not retry. Mismatches
+  are a defect, not a flake.
+- **Re-verify passes but a stakeholder reports unexpected state** — review the
+  correlation ID's audit narrative; the protocol either tells you exactly what
+  happened or reveals a missing baseline.
+
+## Related
+
+- Skill: `add-agent`, `add-integration` — both depend on this skill being applied
+  before any write path is promoted to autonomous.
+- Standard: `/docs/standards/security.md` — secrets policy interacts with audit
+  redaction here.
+- Spec section: "Sync verification protocol" in `docs/spec/company-as-code-spec.md`.

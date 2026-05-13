@@ -39,6 +39,12 @@ outputs: []
   #   emitsEvent: finance.cash_forecast_updated
 
 tools: []
+
+# Tier-3 skills (by name) this agent may invoke. Defined under /company/skills.
+skills: []
+  # - sync-verification
+  # - resolve-drift
+
 memoryScope: company/memory/example-agent
 
 observability:

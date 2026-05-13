@@ -20,7 +20,9 @@ export async function generateCommand(opts: GenerateOptions): Promise<boolean> {
     flowRegistry(corpus),
     dependencyGraph(corpus),
     domainModel(corpus),
+    skillIndex(corpus),
     ...contextBundles(corpus),
+    ...skillAdapters(corpus),
   ];
 
   if (opts.check) {
@@ -309,4 +311,158 @@ function bundleFor(
 
   const slug = modulePath.replace(/\//g, "_") + "__" + agent.name + ".json";
   return { name: path.posix.join("context-bundles", slug), content: stableStringify(bundle) };
+}
+
+// ---------------------------------------------------------------------------
+// Skills: one canonical YAML → three runtime adapters + one machine-readable index.
+// ---------------------------------------------------------------------------
+
+function skillIndex(corpus: RepoCorpus): GeneratedFile {
+  type Entry = {
+    name: string;
+    description: string;
+    autonomy?: string;
+    owner?: any;
+    tags: string[];
+    relatedSkills: string[];
+    declaredIn: string;
+  };
+  const entries: Entry[] = corpus.skills
+    .map((s) => ({
+      name: s.data.name as string,
+      description: (s.data.description as string).trim(),
+      autonomy: s.data.autonomy,
+      owner: s.data.owner,
+      tags: ((s.data.tags ?? []) as string[]).slice().sort(),
+      relatedSkills: ((s.data.relatedSkills ?? []) as string[]).slice().sort(),
+      declaredIn: s.file,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const out = {
+    generatedFrom: "/company/skills/*.yaml",
+    count: entries.length,
+    skills: entries,
+  };
+  return { name: "skill-index.json", content: stableStringify(out) };
+}
+
+function skillAdapters(corpus: RepoCorpus): GeneratedFile[] {
+  const files: GeneratedFile[] = [];
+  for (const skill of corpus.skills) {
+    files.push(skillAsClaude(skill.data));
+    files.push(skillAsAgentsMd(skill.data));
+    files.push(skillAsGeminiGem(skill.data));
+  }
+  files.sort((a, b) => a.name.localeCompare(b.name));
+  return files;
+}
+
+function escapeFrontmatter(value: string): string {
+  // YAML scalar safe for single-line frontmatter values.
+  const single = value.replace(/\s+/g, " ").trim();
+  if (/[":#&*!|>'%@`{}\[\],]/.test(single) || single.startsWith("-") || single.startsWith("?")) {
+    return JSON.stringify(single);
+  }
+  return single;
+}
+
+function skillAsClaude(skill: any): GeneratedFile {
+  const body = String(skill.body ?? "").trimEnd();
+  const description = escapeFrontmatter(String(skill.description ?? ""));
+  const frontmatter = `---\nname: ${skill.name}\ndescription: ${description}\n---\n\n`;
+  return {
+    name: path.posix.join("skills", "claude", String(skill.name), "SKILL.md"),
+    content: frontmatter + body + "\n",
+  };
+}
+
+function skillAsAgentsMd(skill: any): GeneratedFile {
+  const lines: string[] = [];
+  lines.push(`# Skill: ${skill.name}`);
+  lines.push("");
+  lines.push(`> ${String(skill.description ?? "").trim()}`);
+  lines.push("");
+
+  if (skill.autonomy) {
+    lines.push(`**Autonomy:** \`${skill.autonomy}\``);
+    lines.push("");
+  }
+  const triggers: string[] = skill.triggers ?? [];
+  if (triggers.length) {
+    lines.push("**Triggers**");
+    for (const t of triggers) lines.push(`- ${t}`);
+    lines.push("");
+  }
+  const inputs: any[] = skill.inputs ?? [];
+  if (inputs.length) {
+    lines.push("**Inputs**");
+    for (const i of inputs) {
+      const type = i.type ? ` (\`${i.type}\`)` : "";
+      const required = i.required === false ? " — optional" : "";
+      lines.push(`- \`${i.name}\`${type}${required}: ${i.description ?? ""}`);
+    }
+    lines.push("");
+  }
+  const outputs: any[] = skill.outputs ?? [];
+  if (outputs.length) {
+    lines.push("**Outputs**");
+    for (const o of outputs) {
+      const type = o.type ? ` (\`${o.type}\`)` : "";
+      lines.push(`- \`${o.name}\`${type}: ${o.description ?? ""}`);
+    }
+    lines.push("");
+  }
+  const tools: string[] = skill.tools ?? [];
+  if (tools.length) {
+    lines.push("**Tools**");
+    for (const t of tools.slice().sort()) lines.push(`- \`${t}\``);
+    lines.push("");
+  }
+  const related: string[] = skill.relatedSkills ?? [];
+  if (related.length) {
+    lines.push("**Related skills**");
+    for (const r of related.slice().sort()) lines.push(`- \`${r}\``);
+    lines.push("");
+  }
+  lines.push("---");
+  lines.push("");
+  lines.push(String(skill.body ?? "").trimEnd());
+  return {
+    name: path.posix.join("skills", "agents-md", `${skill.name}.md`),
+    content: lines.join("\n") + "\n",
+  };
+}
+
+function skillAsGeminiGem(skill: any): GeneratedFile {
+  // Gemini Gem-compatible shape; also a workable instruction blob for OpenAI Assistants.
+  const instructionBlocks: string[] = [];
+  instructionBlocks.push(String(skill.body ?? "").trimEnd());
+  const tools: string[] = skill.tools ?? [];
+  if (tools.length) {
+    instructionBlocks.push(
+      "Tools available to this skill: " + tools.slice().sort().map((t) => "`" + t + "`").join(", ") + ".",
+    );
+  }
+  if (skill.autonomy) {
+    instructionBlocks.push(`Default autonomy classification: ${skill.autonomy}. Invokers may narrow further; never widen.`);
+  }
+
+  const gem = {
+    apiVersion: "company-as-code/v1",
+    kind: "GeminiGemAdapter",
+    name: skill.name,
+    description: String(skill.description ?? "").trim(),
+    instructions: instructionBlocks.join("\n\n"),
+    metadata: {
+      sourceSkill: skill.name,
+      sourceSchema: "company-as-code/v1#Skill",
+      tags: ((skill.tags ?? []) as string[]).slice().sort(),
+      relatedSkills: ((skill.relatedSkills ?? []) as string[]).slice().sort(),
+      autonomy: skill.autonomy ?? null,
+    },
+  };
+  return {
+    name: path.posix.join("skills", "gemini", `${skill.name}.gem.json`),
+    content: stableStringify(gem),
+  };
 }

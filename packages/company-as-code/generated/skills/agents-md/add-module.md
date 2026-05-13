@@ -1,0 +1,110 @@
+# Skill: add-module
+
+> Bootstrap a new Company-as-Code module from scratch: copy the manifest template, fill it in, validate, regenerate, commit.
+
+**Autonomy:** `human-gated`
+
+**Triggers**
+- A new domain capability is being declared (e.g. a sub-domain that previously had no manifest).
+- An organizational placeholder folder is being promoted into a real module.
+- An ADR has been accepted that introduces a new module.
+
+**Inputs**
+- `parentPath` (`module-path`): Path under /company/domains/<domain>/ where the new module will live.
+- `moduleName` (`kebab-case`): New module's identifier (matches the schema's name field).
+
+**Outputs**
+- `manifestPath` (`file-path`): Path to the new manifest.yaml, validated and ready to commit.
+
+**Tools**
+- `cli-generate`
+- `cli-validate`
+- `shell`
+
+**Related skills**
+- `add-agent`
+- `resolve-drift`
+
+---
+
+# Add a module
+
+Use this skill to bootstrap a new Company-as-Code module. A module is a folder
+that owns business logic and declares it in a `manifest.yaml`. Folders without
+manifests are organizational placeholders; this skill turns one into a real module.
+
+## When to use
+
+- You are about to write code or declare agents under a folder that has no manifest.
+- You are promoting a placeholder (typically an empty README-only folder) into a
+  module with declared `owns` / `consumes` / `exposes`.
+
+## Inputs
+
+- `parentPath` — where the new module lives, e.g. `company/domains/finance-ops`.
+- `moduleName` — kebab-case, unique within the parent domain.
+
+## Steps
+
+1. **Copy the template.**
+   ```bash
+   cp templates/module-manifest.yaml <parentPath>/<moduleName>/manifest.yaml
+   ```
+
+2. **Fill in the manifest.**
+   - `name`: the kebab-case identifier
+   - `domain`: one of `executive | finance-ops | product-operations | sales-marketing | framework`
+   - `lifecycle`: start with `planning`
+   - `purpose`: one sentence
+   - `owns`: the tables / agents / workflows this module is canonically responsible for (lists may be empty initially)
+   - `consumes`: named interfaces the module reads from other modules
+   - `exposes`: interfaces the module offers to others
+   - `contacts`: at minimum, an `accountable` contact
+
+3. **Add a `README.md`** in the new module's folder. A short paragraph pointing
+   to the manifest and the worked story is enough — see existing modules for shape.
+
+4. **Validate.**
+   ```bash
+   cd cli && npm run validate
+   ```
+   Resolve any schema errors before continuing. Errors include the file path and
+   the failing field.
+
+5. **Regenerate.**
+   ```bash
+   npm run generate
+   ```
+   This walks the new manifest and updates `/generated/agent-catalogue.json`,
+   `/generated/flow-registry.json`, `/generated/dependency-graph.json`,
+   `/generated/domain-model.json`, and any per-agent context bundles.
+
+6. **Drift gate.**
+   ```bash
+   npm run generate:check
+   ```
+   Must exit zero before commit.
+
+## Definition of done
+
+- [ ] `<parentPath>/<moduleName>/manifest.yaml` exists, validates, and has an accountable contact
+- [ ] `<parentPath>/<moduleName>/README.md` exists
+- [ ] `npm run validate` is green
+- [ ] `npm run generate:check` is green
+- [ ] Generated registries that changed are staged alongside the manifest
+
+## Failure handling
+
+- **Schema error on `manifest.yaml`** — read the error path; the CLI prints
+  `instancePath` and `message` for every violation.
+- **Drift gate fails** — run `npm run generate` and commit the regenerated files.
+  Never hand-merge.
+- **Manifest references an interface that does not exist** — either declare the
+  interface in the producer module's `exposes`, or remove the `consumes` entry
+  until that interface is real. Do not consume an undeclared interface.
+
+## Related
+
+- Skill: `add-agent` — once the module exists, declare its first agent.
+- Skill: `resolve-drift` — if the drift gate trips during this process.
+- Standard: `/docs/standards/code-organization.md` for what goes where.

@@ -21,6 +21,7 @@ CI validates every manifest, agent, workflow, task, and registry artefact agains
 | [`organization.schema.json`](./organization.schema.json) | Canonical org unit — company, unit, team, pod |
 | [`person.schema.json`](./person.schema.json) | Canonical actor — employee, contractor, supplier, AI operator, agent identity |
 | [`integration.schema.json`](./integration.schema.json) | External system mapping — canonical IDs, mutation direction, HITL surfaces |
+| [`skill.schema.json`](./skill.schema.json) | Tier-3 skill — composable reusable expertise; one canonical YAML, adapters emit Claude SKILL.md + AGENTS.md + Gemini Gem |
 
 ## Conventions
 

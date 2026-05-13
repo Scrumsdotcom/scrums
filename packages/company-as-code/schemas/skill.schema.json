@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/skill.schema.json",
+  "title": "Skill",
+  "description": "Tier-3 knowledge primitive: composable, reusable expertise referenced by name. One canonical YAML source; adapter generators emit per-runtime variants (Claude SKILL.md, provider-neutral AGENTS.md, Gemini Gem JSON).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "description", "body"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "Skill" },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Kebab-case skill identifier. Unique across the company."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 8,
+      "description": "One-sentence 'when to use this skill'. Matches Claude SKILL.md frontmatter shape."
+    },
+    "body": {
+      "type": "string",
+      "minLength": 16,
+      "description": "Markdown instructions read by the agent at invocation. Tier-2 in shape (numbered steps, inputs, outputs, definition of done)."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the skill. Bump when the technique changes, not when an instance does."
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "module": { "type": "string" },
+        "person": { "type": "string" }
+      }
+    },
+    "triggers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Plain-language conditions under which an agent or operator should invoke this skill.",
+      "default": []
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" },
+          "required": { "type": "boolean", "default": true }
+        }
+      },
+      "default": []
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "tools": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Named runtime tools / capabilities the skill exercises.",
+      "default": []
+    },
+    "autonomy": {
+      "type": "string",
+      "enum": ["autonomous", "human-gated", "escalated"],
+      "description": "Default autonomy for an agent invoking this skill. Agents may narrow further; never widen."
+    },
+    "relatedSkills": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+      "default": []
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title"],
+        "properties": {
+          "title": { "type": "string" },
+          "input": { "type": "string" },
+          "output": { "type": "string" }
+        }
+      },
+      "default": []
+    }
+  }
+}

@@ -23,6 +23,7 @@ export interface RepoCorpus {
   organizations: LoadedDoc[];
   persons: LoadedDoc[];
   integrations: LoadedDoc[];
+  skills: LoadedDoc[];
 }
 
 const KIND_TO_BUCKET: Record<string, keyof RepoCorpus> = {
@@ -37,6 +38,7 @@ const KIND_TO_BUCKET: Record<string, keyof RepoCorpus> = {
   Organization: "organizations",
   Person: "persons",
   Integration: "integrations",
+  Skill: "skills",
 };
 
 export async function loadSchemas(): Promise<Record<string, any>> {
@@ -62,6 +64,7 @@ export async function loadCorpus(): Promise<RepoCorpus> {
     organizations: [],
     persons: [],
     integrations: [],
+    skills: [],
   };
 
   const patterns = ["**/*.yaml", "**/*.yml"];
@@ -104,6 +107,7 @@ const BUCKET_TO_SCHEMA: Record<keyof RepoCorpus, string> = {
   organizations: "organization.schema.json",
   persons: "person.schema.json",
   integrations: "integration.schema.json",
+  skills: "skill.schema.json",
 };
 
 export function schemaFor(bucket: keyof RepoCorpus): string {
