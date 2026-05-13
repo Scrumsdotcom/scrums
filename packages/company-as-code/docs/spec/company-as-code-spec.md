@@ -684,6 +684,57 @@ Agents can:
 
 ---
 
+## CANONICAL STATE LADDER (the substrate)
+
+Company-as-Code is a distributed orchestration system. The substrate structures the company as canonical, queryable entities synchronizing state across unreliable nodes — humans, agents, and SaaS tools — under finite energy and attention constraints.
+
+The architecture treats the company as the same class of system as a biological organism, a software runtime, or a functioning civilization: distributed actors trying to reduce entropy by keeping shared state coherent, while operating with bounded compute, bounded memory, and lossy communication.
+
+This is not metaphor. It is the operating substrate.
+
+### Every entity has the same ladder
+
+Every entity in the system — service line, org, talent, agent run, deal, contract, task — has:
+
+- a canonical identifier
+- a canonical state
+- a place in a three-level state ladder
+
+### The three levels
+
+- **L1 — Universal lifecycle bucket.** One of: `pending`, `active`, `resolved`, `terminated`. The same enum for every entity, every domain. Framework-owned and fixed.
+- **L2 — Domain-native journey stage.** The recognizable per-entity journey (e.g. `lead → qualified → proposal → won` for a deal; `backlog → planned → active → review → completed` for a task). Module-owned.
+- **L3 — Operational substate.** Fine-grained operational reality under an L2 stage (e.g. `proposal.awaiting-legal-review`). Module-owned.
+
+Every L2 stage declares the L1 bucket it belongs to. Every L3 substate inherits L1 from its L2 parent. An entity's L1 is a deterministic projection of its L2 — never independently asserted.
+
+### L1 is a garbage collector for reality
+
+The L1 layer defines the company's **working set**:
+
+- `pending` and `active` are reachable. These entities compete for attention.
+- `resolved` and `terminated` are archived. These entities are no longer load-bearing on working memory.
+
+This makes "what is the company doing right now?" a single deterministic query across every domain. It makes stuck-pending entities, terminal failure modes, and orphaned active entities detectable generically — the same way a runtime detects unreachable objects, or a cell detects misfolded proteins.
+
+### Mutation flows downward
+
+- Workflows, agents, dashboards, and humans all read from this single substrate.
+- Every system mutation flows downward from the canonical layer to projections — CRM, work management, finance, PSA, and other SaaS tools.
+- State never originates downstream.
+
+### The discipline
+
+- Every entity declares its full state ladder.
+- Every state declares its L1 bucket.
+- Entities without canonical state and bucket assignment do not exist in the substrate.
+- L1 transitions emit typed events in the ledger.
+- Recursive composability: the same three-level ladder applies at every level of the cognition tree — modules, sub-modules, agent runs, sub-tasks. The ladder is universally derived, not domain-specific.
+
+The result is a company that can be reasoned about, swept, queried, and operated on the same primitives as any well-designed distributed system — because that is what it is.
+
+---
+
 ## OPERATIONAL RUNTIME MODEL
 
 Humans and AI operate on the same runtime.
@@ -1161,6 +1212,7 @@ Prioritize:
 
 ### Additional principles drawn from operating the framework
 
+- **every entity sits on the canonical state ladder** — L1 universal lifecycle bucket, L2 domain-native journey, L3 operational substate; no canonical state means no presence in the substrate
 - **declare before code** — manifests, interfaces, and invariants are stated explicitly before implementation
 - **coordinate, don't replicate** — the coordination layer holds the minimum state needed to orchestrate; authoritative data stays at its source
 - **one writer per field** — unidirectional mutation flow is the default; bidirectional sync is a special case that requires a documented protocol

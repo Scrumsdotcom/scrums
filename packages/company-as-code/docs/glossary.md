@@ -64,13 +64,19 @@ Canonical Company-as-Code terms. The spec at [`/docs/spec/company-as-code-spec.m
 
 **Soft delete.** Mandatory deletion pattern. Records carry a tombstone with reason; never hard-deleted. Merges produce a "merged into" pointer.
 
+**State ladder.** The three-level canonical state machine every entity in the substrate declares. **L1** = universal lifecycle bucket (`pending` / `active` / `resolved` / `terminated`), fixed by the framework. **L2** = domain-native journey stage, owned by the module. **L3** = operational substate under an L2 stage, owned by the module. Every L2 stage maps to exactly one L1 bucket; L3 inherits L1 from its L2 parent.
+
+**Substrate.** The canonical state layer of Company-as-Code. Holds the state ladder, canonical IDs, and orchestration metadata for every operational entity. Mutation flows downward from the substrate to projections (CRM, work management, finance, PSA); state never originates downstream. Entities without canonical state and L1 bucket assignment do not exist in the substrate.
+
+**Working set.** The reachable portion of the substrate — every entity with L1 in `pending` or `active`. Functions as the company's garbage-collected attention surface: `resolved` and `terminated` entities are archived and no longer load-bearing. Stuck-pending and orphaned-active detection are generic queries against the working set.
+
 **Skill.** Tier-3 of the three-tier knowledge model: composable, reusable expertise referenced by name. One canonical YAML at `/company/skills/<name>.yaml`; the CLI generates per-runtime adapters (Claude `SKILL.md`, provider-neutral `AGENTS.md`, Gemini Gem JSON). Agents declare which skills they invoke via `skills:` on the agent manifest. Schema: [`/schemas/skill.schema.json`](../schemas/skill.schema.json).
 
 **Sub-cognition.** Recursive module structure: a module may host child modules under `sub-cognition/<name>/`, each with its own manifest.
 
 **Sync verification protocol.** Five-step protocol for state-mutating syncs: baseline → dry-run → confirm counts → live → re-verify. Same five steps every time.
 
-**Task.** Canonical unit of execution. State machine: `backlog | planned | active | blocked | review | completed | archived | failed`. Schema: [`/schemas/task.schema.json`](../schemas/task.schema.json).
+**Task.** Canonical unit of execution. L2 state machine: `backlog | planned | active | blocked | review | completed | archived | failed`. L1 mapping: `backlog`/`planned` → `pending`; `active`/`blocked`/`review` → `active`; `completed` → `resolved`; `archived`/`failed` → `terminated`. Schema: [`/schemas/task.schema.json`](../schemas/task.schema.json).
 
 **Three-tier knowledge model.** Documentation stratified into: Tier 1 Context (long-form narrative), Tier 2 Runtime Entry-Points (numbered steps with definition-of-done), Tier 3 Skills (composable reusable expertise).
 

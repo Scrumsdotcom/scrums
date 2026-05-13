@@ -45,6 +45,73 @@ This document is the architectural framing for Company-as-Code. The authoritativ
 | Integration | [`/schemas/integration.schema.json`](../schemas/integration.schema.json) | `/company/integrations/` |
 | Skill | [`/schemas/skill.schema.json`](../schemas/skill.schema.json) | `/company/skills/<name>.yaml` (generators emit per-runtime variants) |
 
+## Canonical state ladder
+
+Company-as-Code is a distributed orchestration system. The substrate exists to keep canonical state coherent across unreliable nodes — humans, agents, and SaaS tools — under finite energy and attention constraints. Every operational entity in the system declares a three-level state ladder. The ladder is universal: the same shape applies to a service line, an org, a person, an agent run, a deal, a contract, a task, or any new primitive a fork introduces.
+
+### Three levels
+
+| Level | Name | Shape | Owner |
+|---|---|---|---|
+| **L1** | Universal lifecycle bucket | One of `pending`, `active`, `resolved`, `terminated` | Framework (fixed enum) |
+| **L2** | Domain-native journey stage | Per-entity enum; recognizable to the domain | Module owning the entity |
+| **L3** | Operational substate | Per-L2-stage enum; fine-grained operational reality | Module owning the entity |
+
+Every L2 stage is mapped to exactly one L1 bucket. Every L3 substate inherits its L1 bucket from its L2 parent. An entity's L1 is therefore a deterministic projection of its L2 — never independently asserted.
+
+```mermaid
+flowchart LR
+    P[pending<br/><i>reachable, not started</i>] --> A[active<br/><i>in flight, attention-worthy</i>]
+    A --> R[resolved<br/><i>completed, archived</i>]
+    A --> T[terminated<br/><i>failed, cancelled, dropped</i>]
+    P --> T
+    P --> R
+
+    style P fill:#fef
+    style A fill:#ffe
+    style R fill:#efe
+    style T fill:#fee
+```
+
+### L1 as a garbage collector for reality
+
+The L1 layer defines the company's **working set**:
+
+- `pending` + `active` = reachable. These entities compete for attention, capacity, and follow-up.
+- `resolved` + `terminated` = archived. These entities are no longer load-bearing on working memory.
+
+This makes "what is the company doing right now?" a single deterministic query: `select * where l1 in ('pending', 'active')`, across every domain. The same query produces:
+
+- **Stuck-pending detection** — entities in `pending` past their expected reach-time (the equivalent of an unreached pointer).
+- **Orphaned active detection** — entities in `active` with no owner, no recent event, or no downstream work.
+- **Terminal-failure sweep** — entities that crossed into `terminated` without an explanation event.
+
+These are domain-agnostic. The runtime detects them the same way a language runtime detects unreachable objects, or a cell detects misfolded proteins.
+
+### Worked example — Task
+
+The canonical `Task` state machine maps as follows:
+
+| L2 (task `state`) | L1 (lifecycle bucket) |
+|---|---|
+| `backlog`, `planned` | `pending` |
+| `active`, `blocked`, `review` | `active` |
+| `completed` | `resolved` |
+| `archived`, `failed` | `terminated` |
+
+The L2 enum is what the operator sees in the work-management projection. The L1 bucket is what the runtime, dashboards, and sweepers query.
+
+### Discipline
+
+- Every entity schema declares its full state ladder.
+- Every L2 stage declares its L1 bucket — explicitly, in the schema.
+- An entity without canonical state and bucket assignment does not exist in the substrate.
+- L1 transitions are observable: every move between buckets emits a typed event in the ledger.
+- Workflows, agents, dashboards, and humans read from this ladder — they never invent parallel state.
+- Mutation flows **downward**: the canonical layer is the source; CRM, work management, finance, PSA, and other SaaS tools are projections. State never originates downstream.
+
+The state ladder is not a feature of any single entity. It is the operating substrate that makes the company a queryable, sweepable, recursively-composable system — the same primitives as any well-designed distributed runtime.
+
 ## Modular monolith discipline
 
 The repository is a modular monolith. The discipline:

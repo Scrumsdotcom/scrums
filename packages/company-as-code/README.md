@@ -115,6 +115,33 @@ Every node has scoped memory, scoped tools, scoped workflows, scoped dashboards,
 
 Schemas live in [`/schemas`](./schemas) and are enforced by CI.
 
+### The company is a single canonical state machine
+
+Company-as-Code is a **distributed orchestration system**. The substrate structures the company as canonical, queryable entities synchronizing state across unreliable nodes — humans, agents, and SaaS tools — under finite energy and attention constraints. The architecture treats the company as the same class of system as a biological organism, a software runtime, or a functioning civilization: distributed actors trying to reduce entropy by keeping shared state coherent, while operating with bounded compute, bounded memory, and lossy communication. This is not metaphor — it is the operating substrate.
+
+Every entity in the system — service line, org, talent, agent run, deal, contract, task — has a canonical identifier, a canonical state, and a place in a **three-level state ladder**:
+
+| Level | Name | Cardinality | Purpose |
+|---|---|---|---|
+| **L1** | Universal lifecycle bucket | 4 values: `pending` / `active` / `resolved` / `terminated` | The company's working set. Same enum for every entity, every domain. |
+| **L2** | Domain-native journey stage | Per entity type | The recognizable journey for the entity (e.g. deal: `lead → qualified → proposal → won`). |
+| **L3** | Operational substate | Per L2 stage | The fine-grained operational reality (e.g. `proposal.awaiting-legal-review`). |
+
+The L1 layer functions as a **garbage collector for reality**: it defines the company's working set.
+
+- Anything in `pending` or `active` is reachable and competes for attention.
+- Anything in `resolved` or `terminated` is archived and no longer load-bearing on working memory.
+
+This makes **"what is the company doing right now?"** a single deterministic query across every domain. Stuck-pending entities, terminal failure modes, and orphaned active entities become detectable generically — the same way a runtime detects unreachable objects or a cell detects misfolded proteins.
+
+Workflows, agents, dashboards, and humans all read from this single substrate. Every system mutation flows **downward** from the canonical layer to projections (CRM, work management, finance, PSA, and other SaaS tools); state never originates downstream. The discipline is uniform:
+
+- every entity declares its full state ladder
+- every state declares its L1 bucket
+- entities without canonical state and bucket assignment **do not exist in the substrate**
+
+The result is a company that can be reasoned about, swept, queried, and operated on the same primitives as any well-designed distributed system — because that is what it is.
+
 ---
 
 ## The discipline (the parts most frameworks skip)
