@@ -28,6 +28,10 @@ export interface AuditRecord {
   correlationId?: string;
   causationId?: string;
   targetSystem?: string;
+  /** W3C trace ID linking this audit row to the typed-event ledger. */
+  traceId?: string;
+  /** W3C span ID of the step span that produced this row. */
+  spanId?: string;
 }
 
 export interface TypedEvent {
@@ -46,6 +50,10 @@ export interface TypedEvent {
   causationId?: string;
   source?: { module?: string; workflow?: string; agent?: string };
   schemaVersion?: string;
+  /** W3C trace ID linking this event to the audit log. */
+  traceId?: string;
+  /** W3C span ID of the step span that emitted this event. */
+  spanId?: string;
 }
 
 export interface WorkflowStep {
@@ -95,6 +103,8 @@ export interface ExecutionContext {
   triggerActor: string;
   dryRun: boolean;
   inputs: Record<string, unknown>;
+  /** W3C trace ID for the whole execution. Every audit row + event carries it. */
+  traceId: string;
 }
 
 export interface StepResult {

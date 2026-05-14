@@ -58,10 +58,17 @@ classes:
 # When an agent has accumulated reliability evidence on a `human-gated` path,
 # it may be promoted to `autonomous` via an ADR per
 # /company/policies/hitl-external-writes.md.
+#
+# Shadow Mode reads this `requires` block as its promotion bar. Comparison-
+# expression values (">= N") are auto-checked against the agent's accumulated
+# reliability evidence; `required` values are manual gates the promotion ADR
+# clears. See /docs/shadow-mode.md.
 promotion:
   fromHumanGatedToAutonomous:
     requires:
       successfulSyncVerificationInvocations: ">= 3"
+      shadowModeDays: ">= 14"
+      shadowAgreementRate: ">= 0.95"
       acceptedADR: required
       manifestUpdate: required
   fromAutonomousToHumanGated:

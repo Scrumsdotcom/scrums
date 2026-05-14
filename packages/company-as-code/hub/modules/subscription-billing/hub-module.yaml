@@ -1,0 +1,50 @@
+apiVersion: company-as-code/v1
+kind: HubModule
+
+name: subscription-billing
+version: 0.1.0
+
+summary: A subscription-billing integration module — vendor-neutral billing system mapping with writeback-only HITL gates.
+
+description: >
+  The subscription-billing module scaffolds the coordination surface for a
+  recurring-revenue billing system: a manifest, and a vendor-neutral Integration
+  declaration that maps canonical customer and subscription IDs to whatever
+  billing provider the company runs. Mutation direction is writeback-only and
+  every state-changing endpoint is HITL-gated, per the framework's unidirectional
+  mutation flow. Swap the underlying provider without touching the canonical name.
+
+category: integration
+maturity: experimental
+frameworkVersion: company-as-code/v1
+
+provenance:
+  author: Company-as-Code maintainers
+  license: Apache-2.0
+  sourceUrl: https://github.com/company-as-code/company-as-code
+
+targetDomain: finance-ops
+
+scaffolds:
+  - path: manifest.yaml
+    kind: Manifest
+    description: Billing coordination module manifest.
+  - path: README.md
+    kind: Doc
+    description: Module overview and post-import checklist.
+  - path: integrations/billing-provider.yaml
+    kind: Integration
+    description: Vendor-neutral billing-provider integration — writeback-only, HITL-gated mutations.
+
+consumes:
+  - interface: workforce-state
+    reason: Optional — seat-based plans reconcile against canonical headcount.
+
+tags:
+  - billing
+  - subscriptions
+  - revenue
+  - integration
+
+relatedModules:
+  - standard-hr

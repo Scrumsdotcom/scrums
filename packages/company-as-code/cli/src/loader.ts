@@ -133,3 +133,14 @@ const BUCKET_TO_SCHEMA: Record<keyof RepoCorpus, string> = {
 export function schemaFor(bucket: keyof RepoCorpus): string {
   return BUCKET_TO_SCHEMA[bucket];
 }
+
+/**
+ * Resolve the schema file name for a primitive `kind` string. Used outside the
+ * corpus loader (e.g. the hub, which validates payload files by their kind).
+ * Returns undefined for kinds with no validatable schema (Doc, Asset, prose).
+ */
+export function schemaForKind(kind: string): string | undefined {
+  const bucket = KIND_TO_BUCKET[kind];
+  if (!bucket) return undefined;
+  return BUCKET_TO_SCHEMA[bucket];
+}

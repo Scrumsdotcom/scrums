@@ -185,6 +185,11 @@ flowchart TD
 
 > Bold-bordered nodes are the worked example modules in this seed. Dashed-bordered nodes are sub-cognition modules under their parent.
 
+> **Live version:** this static diagram has a real-time, interactive twin — the
+> **Visual Cognition Graph**. `cac-host graph serve` renders the same picture
+> generated from the manifests and overlaid with live audit / event / HITL
+> activity per module. See [`/docs/cognition-graph.md`](./cognition-graph.md).
+
 Each node supports scoped memory, tools, workflows, dashboards, observability, permissions, tasks, automation, context windows.
 
 A folder without a manifest declares no logic — it is an organizational placeholder. A folder with a manifest is a real module subject to the discipline above.

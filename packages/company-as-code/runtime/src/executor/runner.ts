@@ -1,6 +1,7 @@
 import { ulid } from "ulid";
 import type { AuditSink, EventSink } from "../sinks/types.js";
 import type { RepoIndex } from "../loader/repo.js";
+import { activeTraceContext, runInSpan } from "../observability/tracing.js";
 import type {
   AuditRecord,
   ExecutionContext,
@@ -21,6 +22,7 @@ export interface ApprovalProvider {
   prompt(args: {
     correlationId: string;
     workflow: string;
+    module: string;
     step: WorkflowStep;
     audit: AuditSink;
     triggerActor: string;
@@ -95,79 +97,111 @@ export class WorkflowExecutor {
     }
 
     const now = this.deps.now ?? (() => new Date());
-    const correlationId = `${workflow.name}-${ulid().toLowerCase()}`;
-    const ctx: ExecutionContext = {
-      correlationId,
-      workflowName: workflow.name,
-      modulePath: workflow.module,
-      startedAt: now().toISOString(),
-      triggerActor: args.triggerActor,
-      dryRun: !!args.dryRunOnly,
-      inputs: args.inputs ?? {},
-    };
 
-    await this.recordAudit({
-      action: "workflow.started",
-      actor: { kind: "person", id: args.triggerActor },
-      workflow: workflow.name,
-      module: workflow.module,
-      ctx,
-      input: { inputs: ctx.inputs, dryRunOnly: ctx.dryRun },
-      status: "success",
-    });
+    // The whole execution runs inside a root span. Its trace ID is stamped
+    // onto every audit row and typed event below — that single ID is the
+    // join between the audit log ("what we did") and the event ledger
+    // ("what happened"). `cac-host trace <id>` reads the join back out.
+    return runInSpan(
+      `workflow ${workflow.module}::${workflow.name}`,
+      {
+        "cac.workflow": workflow.name,
+        "cac.module": workflow.module,
+        "cac.dry_run": !!args.dryRunOnly,
+        "cac.trigger.actor": args.triggerActor,
+      },
+      async (rootTc) => {
+        const correlationId = `${workflow.name}-${ulid().toLowerCase()}`;
+        const ctx: ExecutionContext = {
+          correlationId,
+          workflowName: workflow.name,
+          modulePath: workflow.module,
+          startedAt: now().toISOString(),
+          triggerActor: args.triggerActor,
+          dryRun: !!args.dryRunOnly,
+          inputs: args.inputs ?? {},
+          traceId: rootTc.traceId,
+        };
 
-    const results: StepResult[] = [];
-    const branches = new Map<string, string>(); // step id -> next step id (from branch steps)
-
-    let i = 0;
-    while (i < workflow.steps.length) {
-      const step = workflow.steps[i];
-      const next = branches.get(step.id);
-      if (next) {
-        // The branch step decided to jump elsewhere.
-        const targetIdx = workflow.steps.findIndex((s) => s.id === next);
-        if (targetIdx === -1) {
-          results.push({ stepId: step.id, status: "failure", message: `branch target '${next}' not found` });
-          break;
-        }
-        i = targetIdx;
-        continue;
-      }
-      const result = await this.runStep(workflow, step, ctx);
-      results.push(result);
-      if (result.status === "failure" || result.status === "blocked") {
         await this.recordAudit({
-          action: "workflow.halted",
+          action: "workflow.started",
+          actor: { kind: "person", id: args.triggerActor },
+          workflow: workflow.name,
+          module: workflow.module,
+          ctx,
+          input: { inputs: ctx.inputs, dryRunOnly: ctx.dryRun },
+          status: "success",
+        });
+
+        const results: StepResult[] = [];
+        const branches = new Map<string, string>(); // step id -> next step id (from branch steps)
+
+        let i = 0;
+        while (i < workflow.steps.length) {
+          const step = workflow.steps[i];
+          const next = branches.get(step.id);
+          if (next) {
+            // The branch step decided to jump elsewhere.
+            const targetIdx = workflow.steps.findIndex((s) => s.id === next);
+            if (targetIdx === -1) {
+              results.push({ stepId: step.id, status: "failure", message: `branch target '${next}' not found` });
+              break;
+            }
+            i = targetIdx;
+            continue;
+          }
+          const result = await this.runStep(workflow, step, ctx);
+          results.push(result);
+          if (result.status === "failure" || result.status === "blocked") {
+            await this.recordAudit({
+              action: "workflow.halted",
+              actor: { kind: "system", id: "runtime-host" },
+              workflow: workflow.name,
+              module: workflow.module,
+              ctx,
+              status: "failure",
+              output: { atStep: step.id, reason: result.message ?? result.status },
+            });
+            return { ctx, results };
+          }
+          // Branch decisions stash the next jump for the next loop iteration.
+          if (step.kind === "branch" && result.output && typeof result.output === "object") {
+            const nextId = (result.output as any).next as string | undefined;
+            if (nextId) branches.set(step.id, nextId);
+          }
+          i += 1;
+        }
+
+        await this.recordAudit({
+          action: "workflow.completed",
           actor: { kind: "system", id: "runtime-host" },
           workflow: workflow.name,
           module: workflow.module,
           ctx,
-          status: "failure",
-          output: { atStep: step.id, reason: result.message ?? result.status },
+          status: "success",
+          output: { steps: results.length },
         });
         return { ctx, results };
-      }
-      // Branch decisions stash the next jump for the next loop iteration.
-      if (step.kind === "branch" && result.output && typeof result.output === "object") {
-        const nextId = (result.output as any).next as string | undefined;
-        if (nextId) branches.set(step.id, nextId);
-      }
-      i += 1;
-    }
-
-    await this.recordAudit({
-      action: "workflow.completed",
-      actor: { kind: "system", id: "runtime-host" },
-      workflow: workflow.name,
-      module: workflow.module,
-      ctx,
-      status: "success",
-      output: { steps: results.length },
-    });
-    return { ctx, results };
+      },
+    );
   }
 
   private async runStep(
+    workflow: WorkflowDoc,
+    step: WorkflowStep,
+    ctx: ExecutionContext,
+  ): Promise<StepResult> {
+    // Each step gets its own child span. The span ID lands on the step's
+    // audit row and any event it emits, so a trace fans out into per-step
+    // detail without losing the workflow-level grouping.
+    return runInSpan(
+      `step ${step.id} (${step.kind})`,
+      { "cac.step.id": step.id, "cac.step.kind": step.kind },
+      async () => this.runStepInner(workflow, step, ctx),
+    );
+  }
+
+  private async runStepInner(
     workflow: WorkflowDoc,
     step: WorkflowStep,
     ctx: ExecutionContext,
@@ -248,6 +282,7 @@ export class WorkflowExecutor {
         const decision = await this.deps.approval.prompt({
           correlationId: ctx.correlationId,
           workflow: workflow.name,
+          module: workflow.module,
           step,
           audit: this.deps.audit,
           triggerActor: ctx.triggerActor,
@@ -338,6 +373,16 @@ export class WorkflowExecutor {
 
   private async emitEvent(event: TypedEvent, ctx: ExecutionContext): Promise<void> {
     if (!event.correlationId) event.correlationId = ctx.correlationId;
+    // Stamp the active span's trace context so the event ledger row joins
+    // back to the audit log on the same trace ID. Events synthesised by
+    // invokers may not carry it yet, so only fill what's missing.
+    const tc = activeTraceContext();
+    if (tc) {
+      event.traceId ??= tc.traceId;
+      event.spanId ??= tc.spanId;
+    } else {
+      event.traceId ??= ctx.traceId;
+    }
     await this.deps.events.emit(event);
   }
 
@@ -357,6 +402,7 @@ export class WorkflowExecutor {
   }): Promise<void> {
     const now = this.deps.now ?? (() => new Date());
     const startedAt = now().toISOString();
+    const tc = activeTraceContext();
     const row: AuditRecord = {
       apiVersion: "company-as-code/v1",
       kind: "AuditRecord",
@@ -376,6 +422,8 @@ export class WorkflowExecutor {
       error: args.error,
       correlationId: args.ctx.correlationId,
       targetSystem: args.targetSystem,
+      traceId: tc?.traceId ?? args.ctx.traceId,
+      spanId: tc?.spanId,
     };
     await this.deps.audit.record(row);
   }

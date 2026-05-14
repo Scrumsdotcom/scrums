@@ -55,6 +55,8 @@
         "agent": { "type": "string" }
       }
     },
-    "schemaVersion": { "type": "string", "default": "1" }
+    "schemaVersion": { "type": "string", "default": "1" },
+    "traceId": { "type": "string", "description": "W3C trace ID (32 hex chars) joining this event to the audit log." },
+    "spanId": { "type": "string", "description": "W3C span ID (16 hex chars) of the step span that emitted this event." }
   }
 }

@@ -10,6 +10,8 @@ export interface AuditSink {
   record(row: AuditRecord): Promise<void>;
   /** Return audit rows sharing a correlation ID, in startedAt order. */
   byCorrelation(correlationId: string): Promise<AuditRecord[]>;
+  /** Return audit rows sharing a W3C trace ID, in startedAt order. */
+  byTrace(traceId: string): Promise<AuditRecord[]>;
   /** Lightweight readiness check (does the underlying store accept writes). */
   ready(): Promise<boolean>;
   /** Release any held resources (file handles, connection pools). */
@@ -29,6 +31,8 @@ export interface EventSink {
   byEntity(canonicalId: string, opts?: { limit?: number }): Promise<TypedEvent[]>;
   /** Return events of a type, in occurredAt order. */
   byType(type: string, opts?: { limit?: number }): Promise<TypedEvent[]>;
+  /** Return events sharing a W3C trace ID, in occurredAt order. */
+  byTrace(traceId: string, opts?: { limit?: number }): Promise<TypedEvent[]>;
   ready(): Promise<boolean>;
   close(): Promise<void>;
 }

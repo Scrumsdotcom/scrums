@@ -1,0 +1,44 @@
+apiVersion: company-as-code/v1
+kind: Manifest
+name: subscription-billing
+domain: finance-ops
+parent: domains/finance-ops
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Coordinates the recurring-revenue billing system — canonical subscription and
+  invoice IDs, plan state, and the writeback-only mapping to the billing provider.
+
+owns:
+  tables:
+    - canonical_subscriptions
+    - canonical_billing_accounts
+  agents: []
+  workflows: []
+  dashboards: []
+  schemas:
+    - subscription
+  policies: []
+
+consumes:
+  - interface: workforce-state
+    from: company/domains/finance-ops/people-ops
+    usage: Optional — seat-based plans reconcile against canonical headcount.
+
+exposes:
+  - interface: subscription-state
+    stability: experimental
+    description: Canonical subscription and plan state, consumed by finance for revenue recognition.
+
+agents: []
+
+invariants:
+  - Mutation to the billing provider is writeback-only; the provider never writes back into the coordination layer.
+  - Every billing mutation is HITL-gated and dry-run-projected first.
+  - Canonical subscription IDs are permanent; plan changes are state transitions, not new IDs.
+
+contacts:
+  - role: accountable
+    person: TBD
+
+links: {}

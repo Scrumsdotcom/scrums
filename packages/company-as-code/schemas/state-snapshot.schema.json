@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/state-snapshot.schema.json",
+  "title": "State Snapshot",
+  "description": "An immutable, versioned checkpoint of the company's canonical coordination state — canonical entity IDs and their evolving external system mappings. Snapshots make rollback to a known-good state a first-class runtime operation. The append-only audit log and typed-event ledger are never rewound; a rollback rolls history forward by emitting a coordination.state_rolled_back event.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "id", "createdAt", "contentHash", "entityCount", "mappingCount", "entities", "mappings"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "StateSnapshot" },
+    "id": { "type": "string", "description": "Snapshot ID, e.g. 'snap-01jh...'." },
+    "label": { "type": "string", "description": "Optional human label, e.g. 'pre-billing-migration'." },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "contentHash": {
+      "type": "string",
+      "description": "sha256 of the canonical-JSON snapshot content. Equal hashes captured identical state."
+    },
+    "entityCount": { "type": "integer", "minimum": 0 },
+    "mappingCount": { "type": "integer", "minimum": 0 },
+    "entities": {
+      "type": "array",
+      "description": "Every canonical entity at snapshot time.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["canonicalId", "kind", "l1Bucket", "createdAt"],
+        "properties": {
+          "canonicalId": { "type": "string", "description": "Permanent internal ID. Never changes for the lifetime of the entity." },
+          "kind": { "type": "string", "description": "Canonical entity type, e.g. 'customer', 'task'." },
+          "l1Bucket": { "type": "string", "description": "L1 universal lifecycle bucket on the canonical state ladder." },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "tombstonedAt": { "type": "string", "format": "date-time", "description": "Set when soft-deleted. Records are never hard-deleted." },
+          "tombstoneReason": { "type": "string" },
+          "mergedInto": { "type": "string", "description": "Canonical ID this entity was merged into. Merges are reversible pointers." }
+        }
+      }
+    },
+    "mappings": {
+      "type": "array",
+      "description": "Every external-system mapping at snapshot time.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["canonicalId", "system", "externalId", "createdAt"],
+        "properties": {
+          "canonicalId": { "type": "string", "description": "The canonical entity this mapping points at." },
+          "system": { "type": "string", "description": "Canonical name of the external system, e.g. 'crm'." },
+          "externalId": { "type": "string", "description": "The ID that external system assigned to the entity." },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "rotatedAt": { "type": "string", "format": "date-time", "description": "Set when the external ID was rotated or superseded." }
+        }
+      }
+    }
+  }
+}

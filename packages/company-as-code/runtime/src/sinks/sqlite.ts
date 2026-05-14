@@ -33,10 +33,14 @@ export class SqliteSinks {
         error_json TEXT,
         correlation_id TEXT,
         causation_id TEXT,
-        target_system TEXT
+        target_system TEXT,
+        trace_id TEXT,
+        span_id TEXT
       );
       CREATE INDEX IF NOT EXISTS idx_audit_correlation
         ON audit_records(correlation_id, started_at);
+      CREATE INDEX IF NOT EXISTS idx_audit_trace
+        ON audit_records(trace_id, started_at);
 
       CREATE TABLE IF NOT EXISTS typed_events (
         id TEXT PRIMARY KEY,
@@ -55,7 +59,9 @@ export class SqliteSinks {
         source_module TEXT,
         source_workflow TEXT,
         source_agent TEXT,
-        schema_version TEXT
+        schema_version TEXT,
+        trace_id TEXT,
+        span_id TEXT
       );
       CREATE INDEX IF NOT EXISTS idx_events_entity
         ON typed_events(entity_canonical_id, occurred_at);
@@ -63,6 +69,8 @@ export class SqliteSinks {
         ON typed_events(type, occurred_at);
       CREATE INDEX IF NOT EXISTS idx_events_correlation
         ON typed_events(correlation_id, occurred_at);
+      CREATE INDEX IF NOT EXISTS idx_events_trace
+        ON typed_events(trace_id, occurred_at);
     `);
   }
 
@@ -75,12 +83,12 @@ export class SqliteSinks {
               id, actor_kind, actor_id, action, module, workflow, agent,
               started_at, completed_at, duration_ms, status, dry_run,
               input_json, output_json, error_json,
-              correlation_id, causation_id, target_system
+              correlation_id, causation_id, target_system, trace_id, span_id
             ) VALUES (
               @id, @actorKind, @actorId, @action, @module, @workflow, @agent,
               @startedAt, @completedAt, @durationMs, @status, @dryRun,
               @inputJson, @outputJson, @errorJson,
-              @correlationId, @causationId, @targetSystem
+              @correlationId, @causationId, @targetSystem, @traceId, @spanId
             )`,
           )
           .run({
@@ -102,6 +110,8 @@ export class SqliteSinks {
             correlationId: row.correlationId ?? null,
             causationId: row.causationId ?? null,
             targetSystem: row.targetSystem ?? null,
+            traceId: row.traceId ?? null,
+            spanId: row.spanId ?? null,
           });
       },
       byCorrelation: async (correlationId: string) => {
@@ -112,6 +122,16 @@ export class SqliteSinks {
              ORDER BY started_at ASC`,
           )
           .all(correlationId) as any[];
+        return rows.map(rowToAudit);
+      },
+      byTrace: async (traceId: string) => {
+        const rows = this.db
+          .prepare(
+            `SELECT * FROM audit_records
+             WHERE trace_id = ?
+             ORDER BY started_at ASC`,
+          )
+          .all(traceId) as any[];
         return rows.map(rowToAudit);
       },
       ready: async () => true,
@@ -132,14 +152,14 @@ export class SqliteSinks {
               payload_json, from_state, to_state,
               correlation_id, causation_id,
               source_module, source_workflow, source_agent,
-              schema_version
+              schema_version, trace_id, span_id
             ) VALUES (
               @id, @type, @canonicalId, @entityKind,
               @occurredAt, @recordedAt, @actorKind, @actorId,
               @payloadJson, @fromState, @toState,
               @correlationId, @causationId,
               @sourceModule, @sourceWorkflow, @sourceAgent,
-              @schemaVersion
+              @schemaVersion, @traceId, @spanId
             )`,
           )
           .run({
@@ -160,6 +180,8 @@ export class SqliteSinks {
             sourceWorkflow: event.source?.workflow ?? null,
             sourceAgent: event.source?.agent ?? null,
             schemaVersion: event.schemaVersion ?? null,
+            traceId: event.traceId ?? null,
+            spanId: event.spanId ?? null,
           });
       },
       byEntity: async (canonicalId: string, opts?: { limit?: number }) => {
@@ -184,6 +206,18 @@ export class SqliteSinks {
              LIMIT ?`,
           )
           .all(type, limit) as any[];
+        return rows.map(rowToEvent);
+      },
+      byTrace: async (traceId: string, opts?: { limit?: number }) => {
+        const limit = opts?.limit ?? 1000;
+        const rows = this.db
+          .prepare(
+            `SELECT * FROM typed_events
+             WHERE trace_id = ?
+             ORDER BY occurred_at ASC
+             LIMIT ?`,
+          )
+          .all(traceId, limit) as any[];
         return rows.map(rowToEvent);
       },
       ready: async () => true,
@@ -219,6 +253,8 @@ function rowToAudit(r: any): AuditRecord {
     correlationId: r.correlation_id ?? undefined,
     causationId: r.causation_id ?? undefined,
     targetSystem: r.target_system ?? undefined,
+    traceId: r.trace_id ?? undefined,
+    spanId: r.span_id ?? undefined,
   };
 }
 
@@ -245,5 +281,7 @@ function rowToEvent(r: any): TypedEvent {
         }
       : undefined,
     schemaVersion: r.schema_version ?? undefined,
+    traceId: r.trace_id ?? undefined,
+    spanId: r.span_id ?? undefined,
   };
 }

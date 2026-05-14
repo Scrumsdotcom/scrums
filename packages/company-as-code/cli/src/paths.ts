@@ -8,3 +8,4 @@ export const REPO_ROOT = path.resolve(here, "..", "..");
 export const SCHEMA_DIR = path.join(REPO_ROOT, "schemas");
 export const COMPANY_DIR = path.join(REPO_ROOT, "company");
 export const GENERATED_DIR = path.join(REPO_ROOT, "generated");
+export const HUB_DIR = path.join(REPO_ROOT, "hub");

@@ -43,10 +43,14 @@ export class PostgresSinks {
           error_json JSONB,
           correlation_id TEXT,
           causation_id TEXT,
-          target_system TEXT
+          target_system TEXT,
+          trace_id TEXT,
+          span_id TEXT
         );
         CREATE INDEX IF NOT EXISTS idx_audit_correlation
           ON audit_records(correlation_id, started_at);
+        CREATE INDEX IF NOT EXISTS idx_audit_trace
+          ON audit_records(trace_id, started_at);
 
         CREATE TABLE IF NOT EXISTS typed_events (
           id TEXT PRIMARY KEY,
@@ -65,7 +69,9 @@ export class PostgresSinks {
           source_module TEXT,
           source_workflow TEXT,
           source_agent TEXT,
-          schema_version TEXT
+          schema_version TEXT,
+          trace_id TEXT,
+          span_id TEXT
         );
         CREATE INDEX IF NOT EXISTS idx_events_entity
           ON typed_events(entity_canonical_id, occurred_at);
@@ -73,6 +79,8 @@ export class PostgresSinks {
           ON typed_events(type, occurred_at);
         CREATE INDEX IF NOT EXISTS idx_events_correlation
           ON typed_events(correlation_id, occurred_at);
+        CREATE INDEX IF NOT EXISTS idx_events_trace
+          ON typed_events(trace_id, occurred_at);
       `);
       this.migrated = true;
     } finally {
@@ -89,12 +97,12 @@ export class PostgresSinks {
             id, actor_kind, actor_id, action, module, workflow, agent,
             started_at, completed_at, duration_ms, status, dry_run,
             input_json, output_json, error_json,
-            correlation_id, causation_id, target_system
+            correlation_id, causation_id, target_system, trace_id, span_id
           ) VALUES (
             $1, $2, $3, $4, $5, $6, $7,
             $8, $9, $10, $11, $12,
             $13, $14, $15,
-            $16, $17, $18
+            $16, $17, $18, $19, $20
           )`,
           [
             row.id,
@@ -115,6 +123,8 @@ export class PostgresSinks {
             row.correlationId ?? null,
             row.causationId ?? null,
             row.targetSystem ?? null,
+            row.traceId ?? null,
+            row.spanId ?? null,
           ],
         );
       },
@@ -123,6 +133,14 @@ export class PostgresSinks {
         const res = await this.pool.query(
           `SELECT * FROM audit_records WHERE correlation_id = $1 ORDER BY started_at ASC`,
           [correlationId],
+        );
+        return res.rows.map(rowToAudit);
+      },
+      byTrace: async (traceId: string) => {
+        await this.ensureSchema();
+        const res = await this.pool.query(
+          `SELECT * FROM audit_records WHERE trace_id = $1 ORDER BY started_at ASC`,
+          [traceId],
         );
         return res.rows.map(rowToAudit);
       },
@@ -151,14 +169,14 @@ export class PostgresSinks {
             payload_json, from_state, to_state,
             correlation_id, causation_id,
             source_module, source_workflow, source_agent,
-            schema_version
+            schema_version, trace_id, span_id
           ) VALUES (
             $1, $2, $3, $4,
             $5, $6, $7, $8,
             $9, $10, $11,
             $12, $13,
             $14, $15, $16,
-            $17
+            $17, $18, $19
           )`,
           [
             event.id,
@@ -178,6 +196,8 @@ export class PostgresSinks {
             event.source?.workflow ?? null,
             event.source?.agent ?? null,
             event.schemaVersion ?? null,
+            event.traceId ?? null,
+            event.spanId ?? null,
           ],
         );
       },
@@ -194,6 +214,14 @@ export class PostgresSinks {
         const res = await this.pool.query(
           `SELECT * FROM typed_events WHERE type = $1 ORDER BY occurred_at ASC LIMIT $2`,
           [type, opts?.limit ?? 1000],
+        );
+        return res.rows.map(rowToEvent);
+      },
+      byTrace: async (traceId: string, opts?: { limit?: number }) => {
+        await this.ensureSchema();
+        const res = await this.pool.query(
+          `SELECT * FROM typed_events WHERE trace_id = $1 ORDER BY occurred_at ASC LIMIT $2`,
+          [traceId, opts?.limit ?? 1000],
         );
         return res.rows.map(rowToEvent);
       },
@@ -235,6 +263,8 @@ function rowToAudit(r: any): AuditRecord {
     correlationId: r.correlation_id ?? undefined,
     causationId: r.causation_id ?? undefined,
     targetSystem: r.target_system ?? undefined,
+    traceId: r.trace_id ?? undefined,
+    spanId: r.span_id ?? undefined,
   };
 }
 
@@ -261,5 +291,7 @@ function rowToEvent(r: any): TypedEvent {
         }
       : undefined,
     schemaVersion: r.schema_version ?? undefined,
+    traceId: r.trace_id ?? undefined,
+    spanId: r.span_id ?? undefined,
   };
 }

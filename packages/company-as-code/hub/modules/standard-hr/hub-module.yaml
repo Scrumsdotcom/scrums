@@ -1,0 +1,48 @@
+apiVersion: company-as-code/v1
+kind: HubModule
+
+name: standard-hr
+version: 0.1.0
+
+summary: A standard people-operations module — onboarding policy, workforce-state interface, and the manifest scaffold to grow it.
+
+description: >
+  The Standard HR Module gives a company a ready-made people-operations module:
+  a manifest that exposes a `workforce-state` interface (consumed by finance for
+  payroll-aware cash forecasting), an onboarding policy, and the structure to add
+  HR agents and workflows. Import it, fill in the contacts and lifecycle, then
+  declare your first agent with the `add-agent` skill.
+
+category: domain
+maturity: experimental
+frameworkVersion: company-as-code/v1
+
+provenance:
+  author: Company-as-Code maintainers
+  license: Apache-2.0
+  sourceUrl: https://github.com/company-as-code/company-as-code
+  maintainers:
+    - maintainers
+
+targetDomain: finance-ops
+
+scaffolds:
+  - path: manifest.yaml
+    kind: Manifest
+    description: People-operations module manifest exposing the workforce-state interface.
+  - path: README.md
+    kind: Doc
+    description: Module overview and the worked story to fill in.
+  - path: policies/onboarding.md
+    kind: Doc
+    description: Standard onboarding policy — dry-run-gated provisioning, HITL on access grants.
+
+consumes: []
+
+tags:
+  - hr
+  - people-ops
+  - onboarding
+
+relatedModules:
+  - subscription-billing

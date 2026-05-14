@@ -1,0 +1,55 @@
+apiVersion: company-as-code/v1
+kind: Integration
+
+# Local canonical name. Vendor-neutral — swap the underlying provider
+# (Stripe, Chargebee, a homegrown biller) without changing this name.
+name: billing-provider
+
+# Optional label for the system actually behind the integration today.
+system: TBD-billing-provider
+
+category: billing
+status: planned
+
+ownerModule: company/domains/finance-ops/subscription-billing
+
+# The coordination layer reads subscription state and writes back only via
+# approved operator actions. Enforced at the workflow layer.
+mutationDirection: writeback-only
+
+canonicalIdMapping:
+  - entity: subscription
+    externalIdField: subscription_id
+  - entity: billing_account
+    externalIdField: customer_id
+    notes: Many-to-one when accounts were merged upstream.
+
+auth:
+  kind: api-key
+  secretRef: secrets/billing-provider/api-key
+  rotationPolicy: 90 days
+
+endpoints:
+  - name: list-subscriptions
+    url: https://example.invalid/v1/subscriptions
+    method: GET
+  - name: update-subscription
+    url: https://example.invalid/v1/subscriptions/{id}
+    method: PATCH
+  - name: cancel-subscription
+    url: https://example.invalid/v1/subscriptions/{id}
+    method: DELETE
+
+hitlRequiredFor:
+  - update-subscription
+  - cancel-subscription
+
+rateLimits:
+  requestsPerMinute: 100
+  burst: 150
+
+observability:
+  dashboards:
+    - finance-overview
+  alerts:
+    - billing-provider-stale

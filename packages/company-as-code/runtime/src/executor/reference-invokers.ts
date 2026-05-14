@@ -72,6 +72,7 @@ export class InteractiveApprovalProvider implements ApprovalProvider {
   async prompt(args: {
     correlationId: string;
     workflow: string;
+    module: string;
     step: WorkflowStep;
     audit: AuditSink;
     triggerActor: string;

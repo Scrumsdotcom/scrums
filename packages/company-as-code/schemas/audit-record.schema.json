@@ -41,6 +41,8 @@
     },
     "correlationId": { "type": "string" },
     "causationId": { "type": "string" },
-    "targetSystem": { "type": "string", "description": "External system the action targeted, by canonical name." }
+    "targetSystem": { "type": "string", "description": "External system the action targeted, by canonical name." },
+    "traceId": { "type": "string", "description": "W3C trace ID (32 hex chars) joining this audit row to the typed-event ledger." },
+    "spanId": { "type": "string", "description": "W3C span ID (16 hex chars) of the step span that produced this row." }
   }
 }

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/hub-module.schema.json",
+  "title": "Hub Module",
+  "description": "Metadata for a community-contributed, importable module in the CaC-Hub. A hub module bundles a validated payload (manifest, workflows, agents, policies) that `cac hub add` scaffolds into a company's /company tree. The hub is how a company forks or imports shared building blocks while keeping every artefact schema-valid.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "version", "summary", "category", "maturity", "provenance", "scaffolds"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "HubModule" },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Kebab-case hub module identifier, unique within the hub."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the hub module."
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 12,
+      "description": "One-sentence description of what this module gives a company."
+    },
+    "description": {
+      "type": "string",
+      "description": "Longer prose: what the module contains, when to import it, what to fill in after."
+    },
+    "category": {
+      "type": "string",
+      "enum": ["integration", "domain", "policy", "workflow-pack", "observability", "other"],
+      "description": "What kind of building block this is."
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["experimental", "beta", "stable"],
+      "description": "How battle-tested the module is. New community contributions start experimental."
+    },
+    "frameworkVersion": {
+      "type": "string",
+      "const": "company-as-code/v1",
+      "description": "The CaC apiVersion this module's payload targets."
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["author", "license"],
+      "description": "Where the module came from — the hub is open-source and attribution matters.",
+      "properties": {
+        "author": { "type": "string", "description": "Contributing person or organization." },
+        "license": { "type": "string", "description": "SPDX license identifier, e.g. 'Apache-2.0'." },
+        "sourceUrl": { "type": "string", "description": "Upstream repository or homepage." },
+        "maintainers": { "type": "array", "items": { "type": "string" }, "default": [] }
+      }
+    },
+    "targetDomain": {
+      "type": "string",
+      "enum": ["executive", "finance-ops", "product-operations", "sales-marketing", "framework"],
+      "description": "Default domain the payload manifest belongs to. `cac hub add` derives the install path from this unless --into is given."
+    },
+    "scaffolds": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Every file in payload/ that `cac hub add` will write into the company tree.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "kind"],
+        "properties": {
+          "path": { "type": "string", "description": "Path relative to payload/, e.g. 'manifest.yaml'." },
+          "kind": {
+            "type": "string",
+            "description": "The CaC primitive kind this file declares, or 'Doc' for prose / 'Asset' for other files."
+          },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "consumes": {
+      "type": "array",
+      "description": "Framework interfaces the payload expects to already exist in the importing company. `cac hub add` warns when these are unmet.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["interface"],
+        "properties": {
+          "interface": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "relatedModules": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Other hub module names that pair well with this one.",
+      "default": []
+    }
+  }
+}

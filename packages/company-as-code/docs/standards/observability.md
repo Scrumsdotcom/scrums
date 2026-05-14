@@ -29,6 +29,16 @@ Two surfaces, not interchangeable:
 
 Every mutation writes a typed event. Every action writes an audit row.
 
+## Tracing joins the two ledgers
+
+The audit log and the event ledger are deliberately separate — but a single operation touches both, and you need to see it as one story. That join is the **trace ID**.
+
+- The reference runtime integrates OpenTelemetry natively: a root span per workflow execution, a child span per step.
+- The span's W3C trace ID is stamped onto every audit row (`AuditRecord.traceId`) and every typed event (`Event.traceId`); the step's span ID lands on both too.
+- `cac-host trace <traceId>` reads the join back out as one interleaved, time-ordered timeline.
+
+Rule: every audit row and every typed event emitted inside an execution carries that execution's trace ID. Spans are real W3C IDs even with no exporter configured — exporting spans to a collector is optional; the IDs linking the ledgers are not.
+
 ## Forbidden
 
 - Untyped event emissions ("free-text events are a code smell")

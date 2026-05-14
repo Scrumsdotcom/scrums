@@ -10,6 +10,8 @@
     "validate": "tsx src/index.ts validate",
     "generate": "tsx src/index.ts generate",
     "generate:check": "tsx src/index.ts generate --check",
+    "hub": "tsx src/index.ts hub",
+    "nl2m": "tsx src/index.ts nl2m",
     "test": "vitest run",
     "test:e2e": "tsx src/index.ts validate && tsx src/index.ts generate --check"
   },

@@ -108,3 +108,7 @@ manifests are organizational placeholders; this skill turns one into a real modu
 - Skill: `add-agent` — once the module exists, declare its first agent.
 - Skill: `resolve-drift` — if the drift gate trips during this process.
 - Standard: `/docs/standards/code-organization.md` for what goes where.
+- CaC-Hub: this skill is the from-scratch path. To import an existing,
+  community-contributed module instead, use `cac hub list` / `cac hub add`
+  (see `/docs/hub.md`). Both paths end at a schema-valid module under
+  `/company`.

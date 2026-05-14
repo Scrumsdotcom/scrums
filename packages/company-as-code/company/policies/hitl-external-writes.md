@@ -69,13 +69,27 @@ autonomy: human-gated     # or "escalated" with an escalation block
 
 ## How to request promotion to autonomous
 
-1. Open an ADR proposing the promotion.
-2. Cite the audit records (correlation IDs) for the ≥3 successful HITL invocations.
-3. Update the workflow manifest's `hitl:` field and the affected agent's `autonomy:` field.
-4. Validate, regenerate, ship in one PR.
+The reliability evidence and the ADR can be produced by hand, or accumulated
+and drafted automatically through **Shadow Mode**:
+
+1. `cac-host shadow enroll <agent>` — the agent runs in perpetual dry-run on
+   every execution, recording each invocation as reliability evidence.
+2. Operators record whether each projection matched the human action
+   (`cac-host shadow observe`).
+3. `cac-host shadow status <agent>` evaluates the accumulated evidence against
+   this policy's promotion bar (the AutonomyPolicy `requires` block).
+4. Once the automated gate is met, `cac-host shadow propose <agent> --write`
+   drafts the promotion ADR citing the evidence.
+5. Review and merge the ADR, updating the affected agent's `autonomy:` field
+   (and the workflow's `hitl:` field) in the same PR. Validate, regenerate, ship.
+
+The manual path is the same shape: open an ADR, cite the audit records
+(correlation IDs) for the ≥3 successful HITL invocations, update the manifests,
+ship in one PR.
 
 ## Related
 
+- [`/docs/shadow-mode.md`](../../docs/shadow-mode.md) — the automated evidence + ADR path
 - [`/docs/standards/security.md`](../../docs/standards/security.md)
 - [`/company/skills/sync-verification.yaml`](../skills/sync-verification.yaml)
 - ADR-0003: Unidirectional mutation flow ([`/docs/adr/0003-unidirectional-mutation.md`](../../docs/adr/0003-unidirectional-mutation.md))
