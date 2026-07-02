@@ -13,14 +13,14 @@
   "dependencies": {
     "@company-as-code/cli": "file:../cli",
     "@opentelemetry/api": "^1.9.1",
-    "@opentelemetry/resources": "^2.7.1",
-    "@opentelemetry/sdk-trace-node": "^2.7.1",
+    "@opentelemetry/resources": "^2.8.0",
+    "@opentelemetry/sdk-trace-node": "^2.8.0",
     "@opentelemetry/semantic-conventions": "^1.41.1",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
-    "better-sqlite3": "^12.10.0",
+    "better-sqlite3": "^12.11.1",
     "fast-glob": "^3.3.2",
-    "pg": "^8.21.0",
+    "pg": "^8.22.0",
     "ulid": "^3.0.2",
     "yaml": "^2.5.0"
   },
