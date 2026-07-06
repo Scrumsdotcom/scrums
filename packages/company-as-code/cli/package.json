@@ -1,12 +1,13 @@
 {
   "name": "@company-as-code/cli",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "private": true,
   "description": "Reference CLI for Company-as-Code: validation, deterministic generators, drift gate.",
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "validate": "tsx src/index.ts validate",
     "generate": "tsx src/index.ts generate",
     "generate:check": "tsx src/index.ts generate --check",

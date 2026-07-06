@@ -18,7 +18,7 @@ The CLI lives in `/cli`. The framework is the specs in `/schemas` and `/docs`. T
 npm run validate
 ```
 
-You should see something like `✓ validate: 24 document(s) OK across 11 primitive(s).` The seed ships with worked examples in three modules — finance, platform, growth.
+You should see something like `✓ validate: 46 document(s) OK across 20 primitive(s).` (exact counts move as the seed evolves). The seed ships with worked examples in three modules — finance, platform, growth — plus the executive layer, skills, events, and runtime policies.
 
 ## 3. Generate the registries
 
@@ -26,14 +26,15 @@ You should see something like `✓ validate: 24 document(s) OK across 11 primiti
 npm run generate
 ```
 
-This writes:
+This writes ~78 files under `/generated`, including:
 
-- `/generated/agent-catalogue.json`
-- `/generated/flow-registry.json`
-- `/generated/dependency-graph.json`
-- `/generated/domain-model.json`
+- `agent-catalogue.json`, `flow-registry.json`, `dependency-graph.json`, `domain-model.json` — the core registries
+- `context-bundles/` — one per-agent context bundle
+- `sdk/typescript/` and `sdk/python/` — typed SDKs projected from `/schemas`
+- `skills/` — per-runtime skill adapters (Claude, AGENTS.md, Gemini)
+- `skill-index.json`, `hub-index.json`, `cognition-graph.json`
 
-Open them. They are deterministic outputs of the manifests under `/company`.
+Open a few. They are deterministic outputs of the documents under `/company` and the schemas under `/schemas`.
 
 ## 4. Run the drift gate
 
@@ -124,6 +125,33 @@ Your new module, agent, and workflow now appear in the generated registries. The
 git add company/domains/finance-ops/people/ generated/
 git commit -m "Add people module with onboarding-checker and new-hire-setup workflow"
 ```
+
+## 10. Run a workflow through the runtime host
+
+The payoff: the same YAML you just validated is executable. The reference
+runtime host loads the manifest graph and runs workflows dry-run-first,
+writing every step to an audit ledger.
+
+```bash
+cd runtime && npm install && cd ..
+npm run host -- load --repo ..
+npm run host -- execute month-end-close \
+  --repo .. \
+  --input period=2026-04 \
+  --trigger-actor people:finance-lead \
+  --auto-approve
+```
+
+(`--repo ..` because the host script runs with `/runtime` as its working
+directory.) The execute run is **dry-run by default** — no live writes
+happen. It prints a correlation ID; read the audit narrative back with:
+
+```bash
+npm run host -- audit <correlationId>
+```
+
+See [`/runtime/README.md`](../runtime/README.md) for live-write gating, HITL
+approvals, tracing, and snapshots.
 
 You're done.
 

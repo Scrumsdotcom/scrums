@@ -8,6 +8,7 @@ Numbered, dated, status-tracked records of architectural decisions. Use [`/templ
 | [0002](./0002-modular-monolith.md) | Modular monolith as the canonical structure | Accepted |
 | [0003](./0003-unidirectional-mutation.md) | Unidirectional mutation flow | Accepted |
 | [0004](./0004-drift-gate.md) | Generated registries + drift gate | Accepted |
+| [0005](./0005-cac-hub-in-repo-registry.md) | CaC-Hub as an in-repo module registry | Accepted |
 
 ## Adding an ADR
 

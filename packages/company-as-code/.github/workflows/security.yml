@@ -11,8 +11,8 @@ on:
 permissions:
   contents: read
   security-events: write    # CodeQL writes findings into the Security tab
-  pull-requests: write      # gitleaks posts PR annotations on findings
   actions: read             # CodeQL inspects workflow runs for context
+  pull-requests: read       # gitleaks lists the PR's commits to scope the scan (comments stay disabled)
 
 jobs:
   secret-scan:
@@ -23,15 +23,14 @@ jobs:
         with:
           fetch-depth: 0
       - name: Run gitleaks
-        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e   # v2.3.6
-        # gitleaks-action calls the GitHub API to post annotations. On private
-        # repos without GitHub Advanced Security the call returns 403. Treat
-        # API-permission failures as non-blocking; the scan itself still runs
-        # and exits non-zero on a true secret hit. Forks with GHAS enabled
-        # should remove `continue-on-error`.
-        continue-on-error: true
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e   # v3.0.0
+        # This step is BLOCKING: a secret hit fails the workflow. PR comments
+        # are disabled (they need GitHub Advanced Security on private repos
+        # and a `pull-requests: write` grant) so annotation-API failures
+        # can't mask a real finding behind a green check.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: "false"
 
   dependency-audit:
     name: npm audit (cli + runtime)

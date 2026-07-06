@@ -52,12 +52,13 @@ observability:
   alerts: []
   auditTopic: example-agent
 
-invariants:
+invariants: []
   # - Writes audit records for every invocation.
   # - Never writes to external systems autonomously.
 
+# Role or team names (strings).
 primaryUsers:
-  - role: TBD
+  - TBD
 
 contacts:
   - role: accountable

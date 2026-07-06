@@ -257,7 +257,7 @@ See [`docs/architecture.md#ai-native-design`](./docs/architecture.md) for the fu
 
 ## Project status
 
-**Current release:** `v0.1.0` — initial public seed. v0.2.0 and v0.3.0 work in flight (see [CHANGELOG](./CHANGELOG.md) and [roadmap](./docs/roadmap.md)).
+**Current release:** `v0.5.0` (see [CHANGELOG](./CHANGELOG.md) for the full release history and [roadmap](./docs/roadmap.md) for what's next).
 
 This is a **seed repository**. It ships:
 

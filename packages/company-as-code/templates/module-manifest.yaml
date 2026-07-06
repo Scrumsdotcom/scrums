@@ -31,17 +31,17 @@ owns:
   policies: []
   playbooks: []
 
-consumes:
+consumes: []
   # - interface: ledger-summary
   #   from: company/domains/finance-ops/finance
   #   usage: P&L roll-up
 
-exposes:
+exposes: []
   # - interface: my-module-state
   #   stability: experimental   # experimental | stable | deprecated
   #   description: Short description of what this exposes
 
-agents:
+agents: []
   # - name: example-agent
   #   purpose: One-sentence purpose.
   #   runtime: llm
@@ -51,7 +51,7 @@ agents:
   #   primaryUsers: []
   #   outputs: []
 
-invariants:
+invariants: []
   # - No autonomous writeback to external systems.
   # - All metrics this module owns publish daily by 06:00 UTC.
 

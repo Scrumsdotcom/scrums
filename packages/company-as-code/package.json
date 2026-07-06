@@ -1,6 +1,6 @@
 {
   "name": "company-as-code",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "private": true,
   "description": "Company-as-Code seed repository. Run the reference CLI from /cli; the reference runtime host from /runtime.",
   "license": "Apache-2.0",

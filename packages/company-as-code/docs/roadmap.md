@@ -4,7 +4,7 @@ What's in the framework today, what's coming, and what's intentionally NOT in sc
 
 This file is updated through PRs like any other artefact. Disagreements about scope go through an ADR.
 
-> **Snapshot date:** 2026-05-14 (post canonical-state-ladder docs)
+> **Snapshot date:** 2026-07-02 (post v0.5.0, enforcement-gap pass in flight)
 
 ---
 
@@ -48,12 +48,10 @@ This file is updated through PRs like any other artefact. Disagreements about sc
 
 ## In flight
 
-### PR #4 — Schema completeness for runtime primitives
-- JSON Schemas for `Dashboard`, `Automation`, `EventTypeRegistry`, `AutonomyPolicy`, `EscalationPolicy`.
-- Cross-document discipline checks: automations that mutate state must declare `dryRun` input; dashboard alert routing must resolve in escalation-policy; workflow/agent `emitsEvent` must reference a type in the registry; AutonomyPolicy and EscalationPolicy are singletons.
-- This roadmap document.
-
-After PR #4 lands, **every YAML in `/company/**` is machine-validated** — there are no more illustrative-only documents.
+### Enforcement-gap pass (declared rules become enforced rules)
+- **Now:** fail-closed `kind:` validation, working branch execution in the runtime, event-schema ↔ registry pattern alignment, Python SDK required-field enforcement, strict CLI flag parsing, blocking secret scan, schema-valid authoring templates, CI typechecking, reconciled version story.
+- **Next:** autonomy/HITL enforcement at execution time, the referential-integrity check suite (consumes→exposes, workflow step targets, `owns[]`, memoryScopes, dashboards), one-writer-per-field as a schema-representable and validated invariant, declared failure semantics (`onFailure`/`retries`/`timeout`), an installable repo-agnostic CLI.
+- **Later:** the L1/L2/L3 state ladder encoded in schemas; typed context bundles, agent-attached skills, nested cognition graph, and an MCP entry point for the AI-native layer.
 
 ---
 
@@ -88,8 +86,12 @@ The framework specifies dashboard shape; rendering is out of scope. Forks pick G
 ### Multi-language CLI ports
 The reference CLI is TypeScript. Go / Python / Rust ports would be welcome contributions but are not on the maintained roadmap.
 
-### A "marketplace" / public registry of forks, modules, skills
+### A hosted public registry of forks, modules, skills
 Belongs to community growth, not v1. May happen if adoption signals warrant it.
+Note: v0.5.0 shipped **CaC-Hub**, an *in-repo* module registry (`/hub/modules`,
+`cac hub`). That is deliberately not this item — there is no hosted service, no
+network fetch, no third-party publishing. [ADR-0005](./adr/0005-cac-hub-in-repo-registry.md)
+records the distinction and the partial reversal.
 
 ### Visual workflow editor
 The framework is declarative; visual editing is an interface concern. Out of scope.

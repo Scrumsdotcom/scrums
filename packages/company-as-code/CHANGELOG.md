@@ -10,6 +10,49 @@ When the schema for a canonical primitive changes in a backwards-incompatible wa
 
 ## [Unreleased]
 
+### Fixed — Enforcement-gap pass (declared rules become enforced rules)
+
+- **Unrecognized or missing `kind:` now fails validation.** Previously a one-character typo (`kind: Agnet`) silently dropped the document from the corpus and validation passed. The loader reports every unclassified `/company` YAML; intentional non-primitive YAML opts out with a `# cac:ignore` pragma. `Event`, `StateSnapshot`, and `ShadowEnrollment` kinds are now classified and schema-validated.
+- **Runtime branch steps actually jump.** The executor's branch bookkeeping looked up the decision under the wrong step ID, so every workflow fell through sequentially while the audit ledger recorded `branchedTo`. Branch decisions now take effect immediately, unknown targets halt with an audited failure, and a max-iterations guard stops branch cycles. Covered by three new executor tests.
+- **`event.schema.json` accepts registered event types.** Its `type` pattern rejected snake_case segments, i.e. every type in the shipped registry including its own documented example. Both schemas now share an identical `$defs.eventType` (equality enforced by test), and a test validates a sample Event row for every registered type.
+- **Python SDK enforces required fields.** Generated TypedDicts dropped `total=False` (which made every `NotRequired` marker a no-op and let `{}` type-check as a valid document). Non-object `$defs` now emit as aliases in both SDK targets, and comment-only TypedDict bodies get an explicit `pass` (the generated `escalation_policy.py` previously did not parse).
+- **Strict CLI flag parsing.** All subcommands parse flags with `node:util` `parseArgs` (`strict: true`): `cac generate --chek` now exits non-zero instead of silently running the write-mode generator, string options refuse to swallow a following flag as their value, and `cac hub add --into` refuses destinations that resolve outside `/company`. Added `cac version`.
+- **Secret scan is blocking.** Removed `continue-on-error` from the gitleaks CI step (PR annotations disabled instead); dropped the `pull-requests: write` grant. `SECURITY.md` no longer claims pre-commit hooks that don't exist.
+- **Authoring templates validate as shipped.** Five of eight YAML templates failed their own schemas (null bodies where arrays are required; the workflow template's `human` trigger missing its `actor`; the dry-run step missing `automation`). All templates now pass, and a new test validates every template in CI.
+- **Getting-started walkthrough is truthful end-to-end**: corrected stale document counts and the generated-file inventory, and added step 10 running `month-end-close` through the runtime host dry-run (commands verified).
+- **CI typechecks both packages** (`tsc --noEmit`) and exercises Node 20/22/24 (better-sqlite3 is a native addon; only Node 20 was covered).
+- **Version story reconciled**: CHANGELOG backfilled for the v0.4/v0.5 cycles, README status line corrected, roadmap contradictions resolved (ADR-0005 records the CaC-Hub scope decision), release checklist added.
+
+---
+
+## [0.5.0] — 2026-05-14
+
+Two roadmap cycles (v0.4.0 and v0.5.0) shipped together in PR #13; they are
+recorded as one release. There is no separate v0.4.0 tag.
+
+### Added — v0.4.0 cycle: schema-driven SDKs, tracing, snapshotting, HITL inbox
+
+- **Schema-driven SDKs.** The CLI projects every JSON Schema into type-safe SDKs under `/generated/sdk/typescript` (interfaces + a `CompanyDocument` discriminated union) and `/generated/sdk/python` (TypedDicts). Drift-gated like every other generated artefact.
+- **Native OpenTelemetry tracing.** The runtime opens a root span per workflow execution and a child span per step; the W3C trace ID is stamped onto both the audit log and the typed-event ledger. `cac-host trace <id>` prints the interleaved timeline.
+- **Versioned state snapshotting.** `cac-host snapshot create / list / show / rollback` checkpoints canonical state into a content-hashed row and atomically restores it. Ledgers are never rewound; a rollback is itself an event.
+- **Native HITL inbox + dashboard.** `--queue-approvals` routes `human-approval` steps through a durable inbox; humans resolve dry-run projections from the CLI or the `cac-host inbox serve` web dashboard, with their canonical Person ID recorded.
+- New schema: `StateSnapshot`. New event types: `coordination.state_snapshot_created`, `coordination.state_rolled_back`. `AuditRecord` + `Event` gained `traceId` / `spanId`.
+
+### Added — v0.5.0 cycle: ecosystem & experience
+
+- **CaC-Hub module registry.** `hub/modules/*` holds importable modules (`HubModule` schema wrapping a schema-valid `payload/`). `cac hub list / show / add / validate`; `cac hub add` is dry-run by default. `/generated/hub-index.json` is generated + drift-gated. Ships with `standard-hr` and `subscription-billing`. See ADR-0005 for how this relates to the "marketplace" non-goal.
+- **NL2M (Natural Language to Manifest).** `cac nl2m "<prose>"` drafts a linked, schema-valid Initiative + Goal + Metric triple — deterministic heuristic parser, dry-run by default, `nl2m: review` markers on every inferred field. See `/docs/nl2m.md`.
+- **Visual Cognition Graph.** `cac generate` emits `/generated/cognition-graph.json`; `cac-host graph serve` renders it interactively, overlaid with live audit/event/HITL activity. See `/docs/cognition-graph.md`.
+- **Shadow Mode for agents.** `cac-host shadow enroll <agent>` forces perpetual `dryRun: true`, recording reliability evidence (`ShadowEnrollment` schema); `shadow status` evaluates it against the AutonomyPolicy promotion bar; `shadow propose` drafts the promotion ADR. See `/docs/shadow-mode.md`.
+
+### Docs
+
+- **Canonical state ladder** (L1 executive rollup / L2 operating state / L3 module detail) documented as the company substrate (PR #12). Schema representation is roadmapped, not yet enforced.
+
+---
+
+## [0.3.0] — 2026-05-13
+
 ### Added — Hardening pass: drift orphans, conditional schemas, supply-chain CI, governance matrix
 
 - **Drift gate flags orphans.** `cli/src/generate.ts` `checkDrift` now walks `/generated/**` and fails when any file present is not emitted by a generator. Stale artefacts can no longer hide.
@@ -82,7 +125,7 @@ When the schema for a canonical primitive changes in a backwards-incompatible wa
 
 ## [0.2.0] — 2026-05-13
 
-(Merged via PRs #2 and #3; tagging deferred until the schema-completeness PR also lands.)
+(Merged via PRs #2 and #3.)
 
 ### Added — Skill primitive (PR #2)
 
@@ -122,6 +165,8 @@ When the schema for a canonical primitive changes in a backwards-incompatible wa
 - Architecture documentation, getting-started guide, codified standards, glossary, and ADR 0001 bootstrapping the ADR process.
 - Author attribution: Gerald Neves, Founder & CEO at Scrums.com.
 
-[Unreleased]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.1.0...HEAD
-[0.2.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.3.0...v0.5.0
+[0.3.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/releases/tag/v0.1.0

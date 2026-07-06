@@ -54,7 +54,7 @@ Out of scope:
 This is also the place where the project's operational security posture is summarized. Detailed standards live in [`docs/standards/security.md`](./docs/standards/security.md).
 
 - **No force-push to protected branches.** Branch protection is configured at the platform level. History-rewriting pushes are rejected.
-- **No secrets in the repository.** Secrets live in the secret store declared per integration. Pre-commit hooks scan for common secret patterns; CI re-scans on push.
+- **No secrets in the repository.** Secrets live in the secret store declared per integration. CI runs a blocking gitleaks scan on every pull request and push to main. Contributors are encouraged to also run [gitleaks](https://github.com/gitleaks/gitleaks) locally (`gitleaks git --pre-commit --staged`) before committing; the repository does not ship a managed pre-commit hook.
 - **HITL by default for irreversible writes.** External-system writes go through human approval unless promoted to autonomous through a recorded policy update.
 - **Dry-run first.** Every new write path runs in dry-run before the first live execution. The audit log records the dry-run.
 - **Dependency review.** Pull requests that add or upgrade dependencies are reviewed for supply-chain risk.

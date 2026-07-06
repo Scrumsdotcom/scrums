@@ -20,7 +20,7 @@ unit: "%"
 formula: >
   (closed_on_time / total_closes) over the last 90 days.
 
-lineage:
+lineage: []
   # - source: company/domains/finance-ops/finance
   #   field: month_end_status
   #   transformation: count where status='closed-on-time'

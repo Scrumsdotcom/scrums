@@ -13,7 +13,8 @@ purpose: >
 trigger:
   # event | schedule | human | webhook | manual
   kind: human
-  # actor: people:finance-lead
+  # `human` triggers require an actor; `event` an event; `schedule` a cron.
+  actor: people:finance-lead
   # event: finance.month_end_signaled
   # schedule: "0 6 1 * *"
 
@@ -35,7 +36,7 @@ steps:
 
   - id: dry-run
     kind: dry-run
-    agent: example-agent
+    automation: post-journal-entry
     dryRunRequired: true
     # Step 2 — projected payload, no external mutation.
 
@@ -58,7 +59,7 @@ steps:
     agent: example-agent
     # Step 5 — re-query baseline, confirm state matches dry-run projection.
 
-invariants:
+invariants: []
   # - First invocation of any new live-write goes through dry-run twice.
 
 observability:
