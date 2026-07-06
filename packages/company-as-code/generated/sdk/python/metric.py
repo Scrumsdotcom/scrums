@@ -5,18 +5,18 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class MetricOwner(TypedDict, total=False):
+class MetricOwner(TypedDict):
     module: str
     person: NotRequired[str]
 
 
-class MetricLineageItem(TypedDict, total=False):
+class MetricLineageItem(TypedDict):
     source: str
     field: NotRequired[str]
     transformation: NotRequired[str]
 
 
-class MetricFreshness(TypedDict, total=False):
+class MetricFreshness(TypedDict):
     """ISO 8601 duration."""
     expectedLag: str
     """ISO 8601 duration. Past this, alert."""
@@ -24,19 +24,19 @@ class MetricFreshness(TypedDict, total=False):
     lastObservedAt: NotRequired[str]
 
 
-class MetricThresholdsItem(TypedDict, total=False):
+class MetricThresholdsItem(TypedDict):
     level: Literal["info", "warning", "critical"]
     comparator: Literal["gte", "lte", "gt", "lt", "eq", "neq"]
     value: Union[float, str]
 
 
-class MetricHistory(TypedDict, total=False):
+class MetricHistory(TypedDict):
     """ISO 8601 duration."""
     retention: NotRequired[str]
     grain: NotRequired[Literal["minute", "hour", "day", "week", "month"]]
 
 
-class Metric(TypedDict, total=False):
+class Metric(TypedDict):
     """Typed observable quantity with declared ownership, lineage, freshness, formula, and thresholds."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Metric"]

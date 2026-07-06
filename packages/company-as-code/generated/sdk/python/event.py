@@ -5,31 +5,35 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class EventEntity(TypedDict, total=False):
+# Dotted, lowercase + snake_case event type. Leading segment is the emitting domain or module. Kept byte-identical with event-type-registry.schema.json#/$defs/eventType (enforced by test).
+EventType = str
+
+
+class EventEntity(TypedDict):
     canonicalId: str
     """Canonical entity type, e.g. 'task', 'initiative', 'customer'."""
     kind: str
 
 
-class EventActor(TypedDict, total=False):
+class EventActor(TypedDict):
     kind: Literal["person", "agent", "automation", "system"]
     id: str
 
 
-class EventSource(TypedDict, total=False):
+class EventSource(TypedDict):
     module: NotRequired[str]
     workflow: NotRequired[str]
     agent: NotRequired[str]
 
 
-class Event(TypedDict, total=False):
+class Event(TypedDict):
     """Typed event ledger row. One row per state transition on a canonical entity. Event types are enum-controlled."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Event"]
     """Globally unique event ID (ULID/UUID)."""
     id: str
     """Enum-typed event name, e.g. 'task.state_changed'. New types require a schema migration."""
-    type: str
+    type: "EventType"
     entity: "EventEntity"
     occurredAt: str
     recordedAt: NotRequired[str]

@@ -5,18 +5,18 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class AuditRecordActor(TypedDict, total=False):
+class AuditRecordActor(TypedDict):
     kind: Literal["person", "agent", "automation", "system"]
     id: str
 
 
-class AuditRecordError(TypedDict, total=False):
+class AuditRecordError(TypedDict):
     code: NotRequired[str]
     message: NotRequired[str]
     stack: NotRequired[str]
 
 
-class AuditRecord(TypedDict, total=False):
+class AuditRecord(TypedDict):
     """One row per orchestration action. Loose schema for what happened in the runtime — debugging, post-hoc reasoning, compliance."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["AuditRecord"]

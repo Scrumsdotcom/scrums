@@ -5,24 +5,24 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class InitiativeOwner(TypedDict, total=False):
+class InitiativeOwner(TypedDict):
     kind: Literal["person", "team", "agent"]
     id: str
 
 
-class InitiativeRisksItem(TypedDict, total=False):
+class InitiativeRisksItem(TypedDict):
     description: str
     severity: Literal["low", "medium", "high", "critical"]
     mitigation: NotRequired[str]
 
 
-class InitiativeMilestonesItem(TypedDict, total=False):
+class InitiativeMilestonesItem(TypedDict):
     name: str
     date: str
     achieved: NotRequired[bool]
 
 
-class Initiative(TypedDict, total=False):
+class Initiative(TypedDict):
     """Strategic change, time-bounded and decomposable. Initiatives roll up into goals and decompose into tasks."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Initiative"]

@@ -5,27 +5,27 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class DashboardOwner(TypedDict, total=False):
+class DashboardOwner(TypedDict):
     module: str
     person: NotRequired[str]
 
 
-class DashboardPanelsItemThresholdsWarning(TypedDict, total=False):
+class DashboardPanelsItemThresholdsWarning(TypedDict):
     comparator: Literal["gt", "gte", "lt", "lte", "eq", "neq"]
     value: Union[float, str]
 
 
-class DashboardPanelsItemThresholdsCritical(TypedDict, total=False):
+class DashboardPanelsItemThresholdsCritical(TypedDict):
     comparator: Literal["gt", "gte", "lt", "lte", "eq", "neq"]
     value: Union[float, str]
 
 
-class DashboardPanelsItemThresholds(TypedDict, total=False):
+class DashboardPanelsItemThresholds(TypedDict):
     warning: NotRequired["DashboardPanelsItemThresholdsWarning"]
     critical: NotRequired["DashboardPanelsItemThresholdsCritical"]
 
 
-class DashboardPanelsItem(TypedDict, total=False):
+class DashboardPanelsItem(TypedDict):
     id: str
     title: str
     type: Literal["stat", "line", "bar", "percentage", "counter", "histogram", "list", "markdown", "composite"]
@@ -41,7 +41,7 @@ class DashboardPanelsItem(TypedDict, total=False):
     elements: NotRequired[List[str]]
 
 
-class DashboardAlertsItem(TypedDict, total=False):
+class DashboardAlertsItem(TypedDict):
     id: str
     description: str
     severity: Literal["sev-1", "sev-2", "sev-3", "sev-4"]
@@ -49,7 +49,7 @@ class DashboardAlertsItem(TypedDict, total=False):
     routing: str
 
 
-class Dashboard(TypedDict, total=False):
+class Dashboard(TypedDict):
     """Read-only observability surface. Declares the metrics, audience, refresh cadence, and panel layout. Dashboards never trigger writes; control surfaces are workflows."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Dashboard"]

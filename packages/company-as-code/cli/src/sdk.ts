@@ -157,7 +157,14 @@ function tsFile(fileName: string, schema: JsonSchema): GeneratedFile {
   for (const [defKey, defSchema] of Object.entries(schema.$defs ?? {})) {
     const defName = pascal(defKey);
     const doc = jsDoc(defSchema.description);
-    blocks.push(`${doc}export interface ${defName} ${tsType(defSchema)}`);
+    const rendered = tsType(defSchema);
+    // Non-object $defs (e.g. constrained strings) become type aliases —
+    // `interface X string` is not valid TypeScript.
+    if (rendered.startsWith("{")) {
+      blocks.push(`${doc}export interface ${defName} ${rendered}`);
+    } else {
+      blocks.push(`${doc}export type ${defName} = ${rendered};`);
+    }
   }
 
   const doc = jsDoc(schema.description);
@@ -293,8 +300,26 @@ function emitPyTypedDict(name: string, schema: JsonSchema, ctx: PyContext): void
   }
 
   const doc = pyDoc(schema.description, "    ");
-  const body = fields.length ? fields.join("\n") : "    pass";
-  ctx.blocks.push(`class ${name}(TypedDict, total=False):\n${doc}${body}`);
+  // Comment lines are not statements — a class whose keys all fell back to
+  // comments (e.g. hyphenated keys like `sev-1`) still needs a `pass`.
+  if (!fields.some((f) => !f.trimStart().startsWith("#"))) {
+    fields.push("    pass");
+  }
+  const body = fields.join("\n");
+  // total stays default (True): required fields are required, and optional
+  // fields opt out individually via NotRequired. `total=False` would turn
+  // every NotRequired marker into a no-op and let an empty dict type-check
+  // as a valid document.
+  ctx.blocks.push(`class ${name}(TypedDict):\n${doc}${body}`);
+}
+
+function emitPyAlias(name: string, schema: JsonSchema, ctx: PyContext): void {
+  if (ctx.emitted.has(name)) return;
+  ctx.emitted.add(name);
+  const comment = schema.description
+    ? `# ${schema.description.replace(/\s+/g, " ").trim()}\n`
+    : "";
+  ctx.blocks.push(`${comment}${name} = ${pyType(schema, name, ctx)}`);
 }
 
 const PY_KEYWORDS = new Set([
@@ -307,9 +332,15 @@ function pyFile(fileName: string, schema: JsonSchema): GeneratedFile {
   const name = rootName(fileName, schema);
   const ctx: PyContext = { blocks: [], emitted: new Set() };
 
-  // $defs first so they are referenceable by name.
+  // $defs first so they are referenceable by name. Non-object $defs become
+  // plain aliases — a TypedDict for a constrained string would be wrong.
   for (const [defKey, defSchema] of Object.entries(schema.$defs ?? {})) {
-    emitPyTypedDict(pascal(defKey), defSchema, ctx);
+    const defName = pascal(defKey);
+    if (defSchema.properties || defSchema.type === "object") {
+      emitPyTypedDict(defName, defSchema, ctx);
+    } else {
+      emitPyAlias(defName, defSchema, ctx);
+    }
   }
   emitPyTypedDict(name, schema, ctx);
 

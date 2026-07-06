@@ -5,31 +5,31 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class SkillOwner(TypedDict, total=False):
+class SkillOwner(TypedDict):
     module: NotRequired[str]
     person: NotRequired[str]
 
 
-class SkillInputsItem(TypedDict, total=False):
+class SkillInputsItem(TypedDict):
     name: str
     type: NotRequired[str]
     description: NotRequired[str]
     required: NotRequired[bool]
 
 
-class SkillOutputsItem(TypedDict, total=False):
+class SkillOutputsItem(TypedDict):
     name: str
     type: NotRequired[str]
     description: NotRequired[str]
 
 
-class SkillExamplesItem(TypedDict, total=False):
+class SkillExamplesItem(TypedDict):
     title: str
     input: NotRequired[str]
     output: NotRequired[str]
 
 
-class Skill(TypedDict, total=False):
+class Skill(TypedDict):
     """Tier-3 knowledge primitive: composable, reusable expertise referenced by name. One canonical YAML source; adapter generators emit per-runtime variants (Claude SKILL.md, provider-neutral AGENTS.md, Gemini Gem JSON)."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Skill"]

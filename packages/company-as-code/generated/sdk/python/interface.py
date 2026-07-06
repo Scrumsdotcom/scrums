@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class InterfaceOperationsItem(TypedDict, total=False):
+class InterfaceOperationsItem(TypedDict):
     name: str
     kind: Literal["read", "write", "stream", "rpc"]
     """Schema reference for input payload."""
@@ -17,7 +17,7 @@ class InterfaceOperationsItem(TypedDict, total=False):
     dryRunSupported: NotRequired[bool]
 
 
-class Interface(TypedDict, total=False):
+class Interface(TypedDict):
     """Declared interface a module exposes to other modules. The contract; the code implements it."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Interface"]

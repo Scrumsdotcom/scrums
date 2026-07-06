@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class StateSnapshotEntitiesItem(TypedDict, total=False):
+class StateSnapshotEntitiesItem(TypedDict):
     """Permanent internal ID. Never changes for the lifetime of the entity."""
     canonicalId: str
     """Canonical entity type, e.g. 'customer', 'task'."""
@@ -20,7 +20,7 @@ class StateSnapshotEntitiesItem(TypedDict, total=False):
     mergedInto: NotRequired[str]
 
 
-class StateSnapshotMappingsItem(TypedDict, total=False):
+class StateSnapshotMappingsItem(TypedDict):
     """The canonical entity this mapping points at."""
     canonicalId: str
     """Canonical name of the external system, e.g. 'crm'."""
@@ -32,7 +32,7 @@ class StateSnapshotMappingsItem(TypedDict, total=False):
     rotatedAt: NotRequired[str]
 
 
-class StateSnapshot(TypedDict, total=False):
+class StateSnapshot(TypedDict):
     """An immutable, versioned checkpoint of the company's canonical coordination state — canonical entity IDs and their evolving external system mappings. Snapshots make rollback to a known-good state a first-class runtime operation. The append-only audit log and typed-event ledger are never rewound; a rollback rolls history forward by emitting a coordination.state_rolled_back event."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["StateSnapshot"]

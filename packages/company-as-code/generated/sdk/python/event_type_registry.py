@@ -5,9 +5,13 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class EventTypeRegistryEventsItem(TypedDict, total=False):
+# Dotted, lowercase + snake_case event type. Leading segment is the emitting domain or module. Kept byte-identical with event.schema.json#/$defs/eventType (enforced by test).
+EventType = str
+
+
+class EventTypeRegistryEventsItem(TypedDict):
     """Dotted, lowercase + snake_case. Leading segment is the emitting domain or module."""
-    type: str
+    type: "EventType"
     description: str
     emittingModule: str
     """Optional repo-relative path to the JSON-Schema-flavoured payload definition."""
@@ -17,7 +21,7 @@ class EventTypeRegistryEventsItem(TypedDict, total=False):
     removeAfter: NotRequired[str]
 
 
-class EventTypeRegistry(TypedDict, total=False):
+class EventTypeRegistry(TypedDict):
     """The enum-controlled registry of typed event names. One document for the company. Adding a new type requires a schema migration and an ADR."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["EventTypeRegistry"]

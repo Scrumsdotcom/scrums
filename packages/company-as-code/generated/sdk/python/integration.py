@@ -5,37 +5,37 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class IntegrationCanonicalIdMappingItem(TypedDict, total=False):
+class IntegrationCanonicalIdMappingItem(TypedDict):
     """Canonical entity kind, e.g. 'customer', 'person'."""
     entity: str
     externalIdField: str
     notes: NotRequired[str]
 
 
-class IntegrationAuth(TypedDict, total=False):
+class IntegrationAuth(TypedDict):
     kind: NotRequired[Literal["api-key", "oauth", "service-account", "webhook-signature", "mtls"]]
     """Pointer into the secret manager. Never a literal secret."""
     secretRef: NotRequired[str]
     rotationPolicy: NotRequired[str]
 
 
-class IntegrationEndpointsItem(TypedDict, total=False):
+class IntegrationEndpointsItem(TypedDict):
     name: str
     url: str
     method: NotRequired[str]
 
 
-class IntegrationRateLimits(TypedDict, total=False):
+class IntegrationRateLimits(TypedDict):
     requestsPerMinute: NotRequired[int]
     burst: NotRequired[int]
 
 
-class IntegrationObservability(TypedDict, total=False):
+class IntegrationObservability(TypedDict):
     dashboards: NotRequired[List[str]]
     alerts: NotRequired[List[str]]
 
 
-class Integration(TypedDict, total=False):
+class Integration(TypedDict):
     """Mapping between the coordination layer and an external system. No vendor names are canonical; integrations are pluggable."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Integration"]

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class HubModuleProvenance(TypedDict, total=False):
+class HubModuleProvenance(TypedDict):
     """Where the module came from — the hub is open-source and attribution matters."""
     """Contributing person or organization."""
     author: str
@@ -16,7 +16,7 @@ class HubModuleProvenance(TypedDict, total=False):
     maintainers: NotRequired[List[str]]
 
 
-class HubModuleScaffoldsItem(TypedDict, total=False):
+class HubModuleScaffoldsItem(TypedDict):
     """Path relative to payload/, e.g. 'manifest.yaml'."""
     path: str
     """The CaC primitive kind this file declares, or 'Doc' for prose / 'Asset' for other files."""
@@ -24,12 +24,12 @@ class HubModuleScaffoldsItem(TypedDict, total=False):
     description: NotRequired[str]
 
 
-class HubModuleConsumesItem(TypedDict, total=False):
+class HubModuleConsumesItem(TypedDict):
     interface: str
     reason: NotRequired[str]
 
 
-class HubModule(TypedDict, total=False):
+class HubModule(TypedDict):
     """Metadata for a community-contributed, importable module in the CaC-Hub. A hub module bundles a validated payload (manifest, workflows, agents, policies) that `cac hub add` scaffolds into a company's /company tree. The hub is how a company forks or imports shared building blocks while keeping every artefact schema-valid."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["HubModule"]

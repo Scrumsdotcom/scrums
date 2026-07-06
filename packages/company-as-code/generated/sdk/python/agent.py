@@ -5,36 +5,36 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class AgentEscalation(TypedDict, total=False):
+class AgentEscalation(TypedDict):
     """Required when autonomy is 'escalated'."""
     threshold: NotRequired[str]
     to: NotRequired[str]
 
 
-class AgentInputsItem(TypedDict, total=False):
+class AgentInputsItem(TypedDict):
     name: str
     type: str
     # "from": NotRequired[str]  (reserved word — access via dict)
 
 
-class AgentOutputsItem(TypedDict, total=False):
+class AgentOutputsItem(TypedDict):
     name: str
     type: str
     emitsEvent: NotRequired[str]
 
 
-class AgentObservability(TypedDict, total=False):
+class AgentObservability(TypedDict):
     dashboards: NotRequired[List[str]]
     alerts: NotRequired[List[str]]
     auditTopic: NotRequired[str]
 
 
-class AgentContactsItem(TypedDict, total=False):
+class AgentContactsItem(TypedDict):
     role: str
     person: NotRequired[str]
 
 
-class Agent(TypedDict, total=False):
+class Agent(TypedDict):
     """Autonomous execution unit. Declared in a module manifest and elaborated in /agents/<name>.yaml."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Agent"]

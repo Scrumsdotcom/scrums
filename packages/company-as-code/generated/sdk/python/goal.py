@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class GoalOwner(TypedDict, total=False):
+class GoalOwner(TypedDict):
     kind: Literal["person", "team", "agent", "module"]
     id: str
 
 
-class GoalTarget(TypedDict, total=False):
+class GoalTarget(TypedDict):
     value: Union[float, str]
     unit: NotRequired[str]
     comparator: Literal["gte", "lte", "gt", "lt", "eq", "neq", "between"]
@@ -18,13 +18,13 @@ class GoalTarget(TypedDict, total=False):
     upper: NotRequired[Union[float, str]]
 
 
-class GoalHorizon(TypedDict, total=False):
+class GoalHorizon(TypedDict):
     period: NotRequired[Literal["weekly", "monthly", "quarterly", "yearly", "rolling"]]
     start: NotRequired[str]
     end: NotRequired[str]
 
 
-class Goal(TypedDict, total=False):
+class Goal(TypedDict):
     """Measurable objective: KPI, OKR, SLA, or metric target. Goals are owned and time-bounded."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Goal"]

@@ -5,13 +5,13 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class OrganizationLifecycle(TypedDict, total=False):
+class OrganizationLifecycle(TypedDict):
     createdAt: NotRequired[str]
     dissolvedAt: NotRequired[str]
     mergedInto: NotRequired[str]
 
 
-class OrganizationExternalIdsItem(TypedDict, total=False):
+class OrganizationExternalIdsItem(TypedDict):
     """Canonical name of the external system."""
     system: str
     id: str
@@ -19,7 +19,7 @@ class OrganizationExternalIdsItem(TypedDict, total=False):
     rotatedAt: NotRequired[str]
 
 
-class Organization(TypedDict, total=False):
+class Organization(TypedDict):
     """Canonical organizational unit — company, business unit, team, pod, department. Forms the executable org graph."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Organization"]

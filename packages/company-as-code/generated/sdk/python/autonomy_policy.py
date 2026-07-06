@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class Class(TypedDict, total=False):
+class Class(TypedDict):
     description: str
     schedulingAllowed: bool
     requiresHumanApproval: bool
@@ -15,32 +15,32 @@ class Class(TypedDict, total=False):
     notes: NotRequired[str]
 
 
-class AutonomyPolicyClasses(TypedDict, total=False):
+class AutonomyPolicyClasses(TypedDict):
     autonomous: "Class"
     # "human-gated": "Class"  (reserved word — access via dict)
     escalated: "Class"
 
 
-class AutonomyPolicyPromotionFromHumanGatedToAutonomous(TypedDict, total=False):
+class AutonomyPolicyPromotionFromHumanGatedToAutonomous(TypedDict):
     requires: NotRequired[Dict[str, Union[str, bool, float]]]
 
 
-class AutonomyPolicyPromotionFromAutonomousToHumanGated(TypedDict, total=False):
+class AutonomyPolicyPromotionFromAutonomousToHumanGated(TypedDict):
     requires: NotRequired[Dict[str, Union[str, bool, float]]]
     notes: NotRequired[str]
 
 
-class AutonomyPolicyPromotion(TypedDict, total=False):
+class AutonomyPolicyPromotion(TypedDict):
     fromHumanGatedToAutonomous: NotRequired["AutonomyPolicyPromotionFromHumanGatedToAutonomous"]
     fromAutonomousToHumanGated: NotRequired["AutonomyPolicyPromotionFromAutonomousToHumanGated"]
 
 
-class AutonomyPolicyPreflightItem(TypedDict, total=False):
+class AutonomyPolicyPreflightItem(TypedDict):
     check: str
     onFailure: Literal["refuse", "warn", "audit-only"]
 
 
-class AutonomyPolicy(TypedDict, total=False):
+class AutonomyPolicy(TypedDict):
     """Operational expression of the three autonomy classes. Singleton runtime configuration document. The CLI validates that an agent's declared autonomy is consistent with this policy."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["AutonomyPolicy"]

@@ -5,27 +5,27 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class PersonRolesItem(TypedDict, total=False):
+class PersonRolesItem(TypedDict):
     title: str
     organization: NotRequired[str]
     since: NotRequired[str]
     until: NotRequired[str]
 
 
-class PersonExternalIdsItem(TypedDict, total=False):
+class PersonExternalIdsItem(TypedDict):
     system: str
     id: str
     addedAt: NotRequired[str]
 
 
-class PersonTombstone(TypedDict, total=False):
+class PersonTombstone(TypedDict):
     """Set when status transitions to soft-deleted."""
     deletedAt: NotRequired[str]
     reason: NotRequired[str]
     mergedInto: NotRequired[str]
 
 
-class Person(TypedDict, total=False):
+class Person(TypedDict):
     """Canonical actor identity. Employee, contractor, supplier, AI operator, or agent identity."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Person"]

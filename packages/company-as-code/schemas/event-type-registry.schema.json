@@ -23,8 +23,7 @@
         "required": ["type", "description", "emittingModule", "status"],
         "properties": {
           "type": {
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9]*(\\.[a-z][a-z0-9_]*)+$",
+            "$ref": "#/$defs/eventType",
             "description": "Dotted, lowercase + snake_case. Leading segment is the emitting domain or module."
           },
           "description": { "type": "string", "minLength": 8 },
@@ -41,6 +40,13 @@
           "removeAfter": { "type": "string", "format": "date" }
         }
       }
+    }
+  },
+  "$defs": {
+    "eventType": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(\\.[a-z][a-z0-9_]*)+$",
+      "description": "Dotted, lowercase + snake_case event type. Leading segment is the emitting domain or module. Kept byte-identical with event.schema.json#/$defs/eventType (enforced by test)."
     }
   }
 }

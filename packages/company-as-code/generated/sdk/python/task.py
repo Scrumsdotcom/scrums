@@ -5,45 +5,45 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class TaskOwner(TypedDict, total=False):
+class TaskOwner(TypedDict):
     kind: Literal["person", "agent", "team"]
     id: str
 
 
-class TaskSla(TypedDict, total=False):
+class TaskSla(TypedDict):
     """ISO 8601 duration."""
     respondWithin: NotRequired[str]
     """ISO 8601 duration."""
     resolveWithin: NotRequired[str]
 
 
-class TaskEscalation(TypedDict, total=False):
+class TaskEscalation(TypedDict):
     """ISO 8601 duration before escalation."""
     after: NotRequired[str]
     to: NotRequired[str]
 
 
-class TaskAutomation(TypedDict, total=False):
+class TaskAutomation(TypedDict):
     workflow: NotRequired[str]
     agent: NotRequired[str]
     trigger: NotRequired[str]
 
 
-class TaskApprovalsItem(TypedDict, total=False):
+class TaskApprovalsItem(TypedDict):
     role: str
     actor: NotRequired[str]
     decidedAt: NotRequired[str]
     decision: NotRequired[Literal["approved", "rejected", "pending"]]
 
 
-class TaskHistoryItem(TypedDict, total=False):
+class TaskHistoryItem(TypedDict):
     state: str
     at: str
     actor: NotRequired[str]
     note: NotRequired[str]
 
 
-class Task(TypedDict, total=False):
+class Task(TypedDict):
     """Canonical unit of execution. Tasks are state machines with typed transitions."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Task"]

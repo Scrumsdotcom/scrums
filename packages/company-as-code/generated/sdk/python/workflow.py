@@ -5,30 +5,30 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class WorkflowTrigger(TypedDict, total=False):
+class WorkflowTrigger(TypedDict):
     kind: Literal["event", "schedule", "human", "webhook", "manual"]
     event: NotRequired[str]
     schedule: NotRequired[str]
     actor: NotRequired[str]
 
 
-class WorkflowInputsItem(TypedDict, total=False):
+class WorkflowInputsItem(TypedDict):
     name: str
     type: str
     required: NotRequired[bool]
 
 
-class WorkflowOutputsItem(TypedDict, total=False):
+class WorkflowOutputsItem(TypedDict):
     name: str
     type: str
 
 
-class WorkflowStepsItemBranchesItem(TypedDict, total=False):
+class WorkflowStepsItemBranchesItem(TypedDict):
     when: str
     next: str
 
 
-class WorkflowStepsItem(TypedDict, total=False):
+class WorkflowStepsItem(TypedDict):
     id: str
     kind: Literal["agent", "automation", "human-approval", "wait", "branch", "emit-event", "external-call", "dry-run", "live-write"]
     agent: NotRequired[str]
@@ -46,12 +46,12 @@ class WorkflowStepsItem(TypedDict, total=False):
     branches: NotRequired[List["WorkflowStepsItemBranchesItem"]]
 
 
-class WorkflowObservability(TypedDict, total=False):
+class WorkflowObservability(TypedDict):
     dashboards: NotRequired[List[str]]
     metrics: NotRequired[List[str]]
 
 
-class Workflow(TypedDict, total=False):
+class Workflow(TypedDict):
     """Multi-step orchestration definition. May be triggered by event, schedule, or human action."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Workflow"]

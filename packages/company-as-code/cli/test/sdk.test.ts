@@ -58,4 +58,41 @@ describe("schema-driven SDK generator", () => {
     expect(goalPy.content).toContain("from __future__ import annotations");
     expect(goalPy.content).toMatch(/description: NotRequired\[str\]/);
   });
+
+  it("enforces required fields in Python — never total=False, required fields bare", async () => {
+    const schemas = await loadSchemas();
+    const files = sdkFiles(schemas);
+    const pyFiles = files.filter((f) => f.name.endsWith(".py"));
+    expect(pyFiles.length).toBeGreaterThan(0);
+    for (const f of pyFiles) {
+      // total=False silently turns NotRequired into a no-op and lets an
+      // empty dict type-check as a valid document.
+      expect(f.content, f.name).not.toContain("total=False");
+    }
+    const goalPy = files.find((f) => f.name === "sdk/python/goal.py")!;
+    // Required fields must be bare (enforced), not NotRequired.
+    expect(goalPy.content).toMatch(/^    id: str$/m);
+    expect(goalPy.content).not.toMatch(/id: NotRequired\[str\]/);
+  });
+
+  it("emits `pass` when every key of a TypedDict falls back to a comment", async () => {
+    const schemas = await loadSchemas();
+    const files = sdkFiles(schemas);
+    // escalation-policy severities are keyed `sev-1`..`sev-4` — hyphens are
+    // not valid Python identifiers, so all fields become comments and the
+    // class body needs an explicit `pass` to parse.
+    const py = files.find((f) => f.name === "sdk/python/escalation_policy.py")!;
+    expect(py.content).toMatch(/class EscalationPolicySeverities\(TypedDict\):\n(    #[^\n]*\n)+    pass\n/);
+  });
+
+  it("projects non-object $defs as aliases, not interfaces/TypedDicts", async () => {
+    const schemas = await loadSchemas();
+    const files = sdkFiles(schemas);
+    const eventTs = files.find((f) => f.name === "sdk/typescript/event.ts")!;
+    expect(eventTs.content).toContain("export type EventType = string;");
+    expect(eventTs.content).not.toContain("export interface EventType");
+    const eventPy = files.find((f) => f.name === "sdk/python/event.py")!;
+    expect(eventPy.content).toContain("EventType = str");
+    expect(eventPy.content).not.toContain("class EventType(TypedDict)");
+  });
 });

@@ -1,6 +1,9 @@
 // Generated from /schemas/event.schema.json — do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
+/** Dotted, lowercase + snake_case event type. Leading segment is the emitting domain or module. Kept byte-identical with event-type-registry.schema.json#/$defs/eventType (enforced by test). */
+export type EventType = string;
+
 /** Typed event ledger row. One row per state transition on a canonical entity. Event types are enum-controlled. */
 export interface Event {
   apiVersion: "company-as-code/v1";
@@ -8,7 +11,7 @@ export interface Event {
   /** Globally unique event ID (ULID/UUID). */
   id: string;
   /** Enum-typed event name, e.g. 'task.state_changed'. New types require a schema migration. */
-  type: string;
+  type: EventType;
   entity: {
     canonicalId: string;
     /** Canonical entity type, e.g. 'task', 'initiative', 'customer'. */

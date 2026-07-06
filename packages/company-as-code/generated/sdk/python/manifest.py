@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class ModuleManifestOwns(TypedDict, total=False):
+class ModuleManifestOwns(TypedDict):
     """What this module is canonically responsible for."""
     tables: NotRequired[List[str]]
     agents: NotRequired[List[str]]
@@ -17,19 +17,19 @@ class ModuleManifestOwns(TypedDict, total=False):
     playbooks: NotRequired[List[str]]
 
 
-class ModuleManifestConsumesItem(TypedDict, total=False):
+class ModuleManifestConsumesItem(TypedDict):
     interface: str
     # "from": str  (reserved word — access via dict)
     usage: NotRequired[str]
 
 
-class ModuleManifestExposesItem(TypedDict, total=False):
+class ModuleManifestExposesItem(TypedDict):
     interface: str
     stability: Literal["experimental", "stable", "deprecated"]
     description: NotRequired[str]
 
 
-class ModuleManifestAgentsItem(TypedDict, total=False):
+class ModuleManifestAgentsItem(TypedDict):
     name: str
     purpose: str
     runtime: NotRequired[str]
@@ -41,13 +41,13 @@ class ModuleManifestAgentsItem(TypedDict, total=False):
     outputs: NotRequired[List[str]]
 
 
-class ModuleManifestContactsItem(TypedDict, total=False):
+class ModuleManifestContactsItem(TypedDict):
     role: str
     person: NotRequired[str]
     team: NotRequired[str]
 
 
-class ModuleManifest(TypedDict, total=False):
+class ModuleManifest(TypedDict):
     """Declarative source of truth for a module. Every module at every level of the organizational graph has a manifest.yaml at its root."""
     """Schema contract version."""
     apiVersion: Literal["company-as-code/v1"]

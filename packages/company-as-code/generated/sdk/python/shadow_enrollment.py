@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
-class ShadowEnrollmentEvidence(TypedDict, total=False):
+class ShadowEnrollmentEvidence(TypedDict):
     """Aggregated Reliability Evidence over the shadow ledger."""
     """Whole days since enrollment."""
     shadowDays: int
@@ -21,7 +21,7 @@ class ShadowEnrollmentEvidence(TypedDict, total=False):
     distinctTraces: int
 
 
-class ShadowEnrollmentPromotionGate(TypedDict, total=False):
+class ShadowEnrollmentPromotionGate(TypedDict):
     """Evaluation of the AutonomyPolicy promotion requirements against the evidence."""
     """Every automatically-checkable requirement is met."""
     autoMet: NotRequired[bool]
@@ -29,7 +29,7 @@ class ShadowEnrollmentPromotionGate(TypedDict, total=False):
     manualGates: NotRequired[List[str]]
 
 
-class ShadowEnrollment(TypedDict, total=False):
+class ShadowEnrollment(TypedDict):
     """An agent's enrollment in Shadow Mode plus the Reliability Evidence accumulated against it. A shadow agent runs in perpetual dry-run alongside human operators; every invocation is a row of evidence. When the evidence clears the AutonomyPolicy's promotion bar, an ADR proposal promotes the agent to autonomous."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["ShadowEnrollment"]
