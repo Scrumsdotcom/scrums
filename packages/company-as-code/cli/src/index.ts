@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { strictParse } from "./cli-args.js";
 import { validateCommand } from "./validate.js";
 import { generateCommand } from "./generate.js";
 import { hubCommand } from "./hub.js";
@@ -6,16 +10,20 @@ import { nl2mFromArgv } from "./nl2m.js";
 
 async function main() {
   const [, , cmd, ...rest] = process.argv;
-  const check = rest.includes("--check");
 
   switch (cmd) {
     case "validate": {
+      if (!strictParse("validate", rest, {})) process.exit(2);
       const ok = await validateCommand();
       process.exit(ok ? 0 : 1);
       break;
     }
     case "generate": {
-      const ok = await generateCommand({ check });
+      // Strict parsing is load-bearing here: `generate --chek` must fail,
+      // not silently run the write-mode generator instead of the CI gate.
+      const parsed = strictParse("generate", rest, { check: { type: "boolean" } });
+      if (!parsed) process.exit(2);
+      const ok = await generateCommand({ check: parsed.values.check === true });
       process.exit(ok ? 0 : 1);
       break;
     }
@@ -27,6 +35,13 @@ async function main() {
     case "nl2m": {
       const ok = await nl2mFromArgv(rest);
       process.exit(ok ? 0 : 1);
+      break;
+    }
+    case "version":
+    case "--version":
+    case "-v": {
+      console.log(await cliVersion());
+      process.exit(0);
       break;
     }
     case "help":
@@ -43,6 +58,12 @@ async function main() {
       process.exit(1);
     }
   }
+}
+
+async function cliVersion(): Promise<string> {
+  const here = path.dirname(fileURLToPath(import.meta.url));
+  const pkg = JSON.parse(await fs.readFile(path.resolve(here, "..", "package.json"), "utf8"));
+  return `cac ${pkg.version}`;
 }
 
 function printHelp(): void {
@@ -63,6 +84,7 @@ Usage:
   cac nl2m --file <path>    Read the prose from a file instead of an argument.
   cac nl2m "<prose>" --write [--owner <id>]
                             Write the drafted YAML into /company/{initiatives,goals,metrics}.
+  cac version               Print the CLI version.
 
 The generators are deterministic: identical inputs produce identical outputs.
 The check mode is the CI drift gate.`,

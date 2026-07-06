@@ -15,6 +15,7 @@ import YAML from "yaml";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { HUB_DIR, REPO_ROOT } from "./paths.js";
+import { strictParse } from "./cli-args.js";
 import { loadSchemas, schemaForKind } from "./loader.js";
 import { buildAjv } from "./validate.js";
 import type { GeneratedFile } from "./sdk.js";
@@ -265,7 +266,17 @@ export async function hubAddCommand(name: string, opts: HubAddOptions): Promise<
     : d.targetDomain === "framework"
       ? `company/${d.name}`
       : `company/domains/${d.targetDomain}/${d.name}`;
-  const destAbs = path.join(REPO_ROOT, destRel);
+  const destAbs = path.resolve(REPO_ROOT, destRel);
+
+  // Scaffolds land under /company, full stop. A --into containing `..` (or
+  // an absolute path) must not be able to write outside the company tree.
+  const companyRoot = path.resolve(REPO_ROOT, "company");
+  if (destAbs !== companyRoot && !destAbs.startsWith(companyRoot + path.sep)) {
+    console.error(
+      `hub add: destination '${destRel}' resolves outside /company. Refusing to scaffold there.`,
+    );
+    return false;
+  }
 
   // Compute the projected writes.
   const payloadDir = path.join(REPO_ROOT, m.dir, "payload");
@@ -358,14 +369,26 @@ export async function hubCommand(rest: string[]): Promise<boolean> {
       return await hubShowCommand(args[0]);
     }
     case "add": {
-      if (!args[0]) {
+      const parsed = strictParse(
+        "hub add",
+        args,
+        { write: { type: "boolean" }, into: { type: "string" } },
+        true,
+      );
+      if (!parsed) return false;
+      const [name, ...extra] = parsed.positionals;
+      if (!name) {
         console.error("hub add: missing module name");
         return false;
       }
-      const write = args.includes("--write");
-      const intoIdx = args.indexOf("--into");
-      const into = intoIdx >= 0 ? args[intoIdx + 1] : undefined;
-      return await hubAddCommand(args[0], { write, into });
+      if (extra.length > 0) {
+        console.error(`hub add: unexpected argument(s): ${extra.join(" ")}`);
+        return false;
+      }
+      return await hubAddCommand(name, {
+        write: parsed.values.write === true,
+        into: parsed.values.into as string | undefined,
+      });
     }
     case "validate":
       return await hubValidateCommand();

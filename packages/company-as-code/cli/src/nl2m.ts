@@ -17,6 +17,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import YAML from "yaml";
 import { COMPANY_DIR } from "./paths.js";
+import { strictParse } from "./cli-args.js";
 import { loadCorpus, loadSchemas } from "./loader.js";
 import { buildAjv } from "./validate.js";
 
@@ -498,30 +499,26 @@ export async function nl2mCommand(args: Nl2mArgs): Promise<boolean> {
 
 /** Parse argv tail for `cac nl2m`. Accepts positional prose or --file. */
 export async function nl2mFromArgv(rest: string[]): Promise<boolean> {
-  const write = rest.includes("--write");
-  const fileIdx = rest.indexOf("--file");
-  const ownerIdx = rest.indexOf("--owner");
-  const owner = ownerIdx >= 0 ? rest[ownerIdx + 1] : undefined;
+  const parsed = strictParse(
+    "nl2m",
+    rest,
+    {
+      write: { type: "boolean" },
+      file: { type: "string" },
+      owner: { type: "string" },
+    },
+    true,
+  );
+  if (!parsed) return false;
+  const write = parsed.values.write === true;
+  const owner = parsed.values.owner as string | undefined;
+  const file = parsed.values.file as string | undefined;
 
   let prose: string;
-  if (fileIdx >= 0) {
-    const file = rest[fileIdx + 1];
-    if (!file) {
-      console.error("nl2m: --file needs a path");
-      return false;
-    }
+  if (file !== undefined) {
     prose = await fs.readFile(path.resolve(file), "utf8");
   } else {
-    // Everything that isn't a recognised flag (or its value) is prose.
-    const skip = new Set<number>();
-    if (ownerIdx >= 0) {
-      skip.add(ownerIdx);
-      skip.add(ownerIdx + 1);
-    }
-    prose = rest
-      .map((a, i) => (a === "--write" || skip.has(i) ? "" : a))
-      .filter(Boolean)
-      .join(" ");
+    prose = parsed.positionals.join(" ");
   }
   return nl2mCommand({ prose, write, owner });
 }
