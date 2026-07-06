@@ -1,3 +1,4 @@
+# cac:ignore — JSON-Schema payload document, not a CaC primitive.
 # Payload schema for events of type `finance.cash_forecast_updated`.
 # JSON Schema-flavoured shape; the Event row itself validates against
 # /schemas/event.schema.json, and `payload` against this file.

@@ -1,6 +1,12 @@
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-import { loadCorpus, loadSchemas, schemaFor, type RepoCorpus } from "./loader.js";
+import {
+  loadCorpusWithDiagnostics,
+  loadSchemas,
+  schemaFor,
+  type RepoCorpus,
+  type UnclassifiedFile,
+} from "./loader.js";
 
 export interface ValidationProblem {
   file: string;
@@ -52,20 +58,38 @@ export function schemaValidate(
   return problems;
 }
 
+export function unclassifiedErrors(unclassified: UnclassifiedFile[]): string[] {
+  return unclassified.map((u) => {
+    switch (u.reason) {
+      case "unknown-kind":
+        return `${u.file}: unrecognized kind '${u.kind}' — the document is excluded from validation. Fix the kind, or mark intentional non-primitive YAML with a '# cac:ignore' comment.`;
+      case "missing-kind":
+        return `${u.file}: no 'kind:' field — the document is excluded from validation. Add a kind, or mark intentional non-primitive YAML with a '# cac:ignore' comment.`;
+      case "non-object":
+        return `${u.file}: does not parse to a YAML mapping — the file is excluded from validation. Mark intentional non-primitive YAML with a '# cac:ignore' comment.`;
+    }
+  });
+}
+
 export async function validateCommand(): Promise<boolean> {
   const schemas = await loadSchemas();
-  const corpus = await loadCorpus();
+  const { corpus, unclassified } = await loadCorpusWithDiagnostics();
   const ajv = buildAjv(schemas);
 
   const problems = schemaValidate(corpus, ajv);
   const totalDocs = Object.values(corpus).reduce((sum, arr) => sum + arr.length, 0);
   const crossErrors = crossDocumentChecks(corpus);
+  const unclassifiedProblems = unclassifiedErrors(unclassified);
 
-  if (problems.length === 0 && crossErrors.length === 0) {
+  if (problems.length === 0 && crossErrors.length === 0 && unclassifiedProblems.length === 0) {
     console.log(`✓ validate: ${totalDocs} document(s) OK across ${Object.keys(corpus).length} primitive(s).`);
     return true;
   }
 
+  if (unclassifiedProblems.length > 0) {
+    console.error(`✗ unclassified /company YAML (${unclassifiedProblems.length} file(s)):`);
+    for (const e of unclassifiedProblems) console.error(`  - ${e}`);
+  }
   if (problems.length > 0) {
     console.error(`✗ schema errors in ${problems.length} document(s):`);
     for (const p of problems) {

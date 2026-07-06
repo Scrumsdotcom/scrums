@@ -29,6 +29,29 @@ export interface RepoCorpus {
   eventTypeRegistries: LoadedDoc[];
   autonomyPolicies: LoadedDoc[];
   escalationPolicies: LoadedDoc[];
+  events: LoadedDoc[];
+  stateSnapshots: LoadedDoc[];
+  shadowEnrollments: LoadedDoc[];
+}
+
+/** A /company YAML file that could not be classified into a primitive bucket. */
+export interface UnclassifiedFile {
+  /** Repo-root-relative path. */
+  file: string;
+  /** The `kind:` value found, if any. */
+  kind?: string;
+  reason: "missing-kind" | "unknown-kind" | "non-object";
+}
+
+export interface CorpusLoad {
+  corpus: RepoCorpus;
+  /**
+   * Files under /company that parsed but did not classify into any bucket
+   * and do not carry a `# cac:ignore` pragma. `validate` reports each of
+   * these as an error — a one-character `kind:` typo must not silently
+   * drop a document from the enforced corpus.
+   */
+  unclassified: UnclassifiedFile[];
 }
 
 const KIND_TO_BUCKET: Record<string, keyof RepoCorpus> = {
@@ -49,7 +72,23 @@ const KIND_TO_BUCKET: Record<string, keyof RepoCorpus> = {
   EventTypeRegistry: "eventTypeRegistries",
   AutonomyPolicy: "autonomyPolicies",
   EscalationPolicy: "escalationPolicies",
+  Event: "events",
+  StateSnapshot: "stateSnapshots",
+  ShadowEnrollment: "shadowEnrollments",
 };
+
+/**
+ * A YAML file that is intentionally not a CaC primitive (e.g. a JSON-Schema
+ * payload document) opts out of corpus classification with a `# cac:ignore`
+ * comment in its first few lines.
+ */
+const IGNORE_PRAGMA = "cac:ignore";
+
+function hasIgnorePragma(text: string): boolean {
+  return text
+    .split("\n", 10)
+    .some((line) => line.startsWith("#") && line.includes(IGNORE_PRAGMA));
+}
 
 export async function loadSchemas(): Promise<Record<string, any>> {
   const files = await fg("*.schema.json", { cwd: SCHEMA_DIR });
@@ -62,6 +101,10 @@ export async function loadSchemas(): Promise<Record<string, any>> {
 }
 
 export async function loadCorpus(): Promise<RepoCorpus> {
+  return (await loadCorpusWithDiagnostics()).corpus;
+}
+
+export async function loadCorpusWithDiagnostics(): Promise<CorpusLoad> {
   const corpus: RepoCorpus = {
     manifests: [],
     agents: [],
@@ -80,7 +123,11 @@ export async function loadCorpus(): Promise<RepoCorpus> {
     eventTypeRegistries: [],
     autonomyPolicies: [],
     escalationPolicies: [],
+    events: [],
+    stateSnapshots: [],
+    shadowEnrollments: [],
   };
+  const unclassified: UnclassifiedFile[] = [];
 
   const patterns = ["**/*.yaml", "**/*.yml"];
   const ignore = ["**/node_modules/**"];
@@ -96,18 +143,32 @@ export async function loadCorpus(): Promise<RepoCorpus> {
     } catch (e) {
       throw new Error(`Failed to parse YAML in ${rel}: ${(e as Error).message}`);
     }
-    if (!parsed || typeof parsed !== "object") continue;
+    const repoRelative = path.relative(REPO_ROOT, absolute).split(path.sep).join("/");
+    if (!parsed || typeof parsed !== "object") {
+      if (!hasIgnorePragma(text)) {
+        unclassified.push({ file: repoRelative, reason: "non-object" });
+      }
+      continue;
+    }
     const kind = parsed.kind;
     const bucket = KIND_TO_BUCKET[kind];
-    if (!bucket) continue;
-    const repoRelative = path.relative(REPO_ROOT, absolute).split(path.sep).join("/");
+    if (!bucket) {
+      if (!hasIgnorePragma(text)) {
+        unclassified.push({
+          file: repoRelative,
+          kind: typeof kind === "string" ? kind : undefined,
+          reason: kind === undefined ? "missing-kind" : "unknown-kind",
+        });
+      }
+      continue;
+    }
     corpus[bucket].push({ file: repoRelative, data: parsed });
   }
 
   for (const k of Object.keys(corpus) as (keyof RepoCorpus)[]) {
     corpus[k].sort((a, b) => a.file.localeCompare(b.file));
   }
-  return corpus;
+  return { corpus, unclassified };
 }
 
 const BUCKET_TO_SCHEMA: Record<keyof RepoCorpus, string> = {
@@ -128,6 +189,9 @@ const BUCKET_TO_SCHEMA: Record<keyof RepoCorpus, string> = {
   eventTypeRegistries: "event-type-registry.schema.json",
   autonomyPolicies: "autonomy-policy.schema.json",
   escalationPolicies: "escalation-policy.schema.json",
+  events: "event.schema.json",
+  stateSnapshots: "state-snapshot.schema.json",
+  shadowEnrollments: "shadow-enrollment.schema.json",
 };
 
 export function schemaFor(bucket: keyof RepoCorpus): string {

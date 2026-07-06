@@ -21,6 +21,9 @@ function emptyCorpus(): RepoCorpus {
     eventTypeRegistries: [],
     autonomyPolicies: [],
     escalationPolicies: [],
+    events: [],
+    stateSnapshots: [],
+    shadowEnrollments: [],
   };
 }
 
