@@ -134,22 +134,27 @@ export class WorkflowExecutor {
         });
 
         const results: StepResult[] = [];
-        const branches = new Map<string, string>(); // step id -> next step id (from branch steps)
+        // Branch jumps can move execution backwards, so a cycle in the
+        // workflow graph would otherwise loop forever. The guard is generous
+        // (legitimate re-execution is fine) but finite.
+        const maxIterations = workflow.steps.length * 100;
+        let iterations = 0;
 
         let i = 0;
         while (i < workflow.steps.length) {
-          const step = workflow.steps[i];
-          const next = branches.get(step.id);
-          if (next) {
-            // The branch step decided to jump elsewhere.
-            const targetIdx = workflow.steps.findIndex((s) => s.id === next);
-            if (targetIdx === -1) {
-              results.push({ stepId: step.id, status: "failure", message: `branch target '${next}' not found` });
-              break;
-            }
-            i = targetIdx;
-            continue;
+          if (++iterations > maxIterations) {
+            await this.recordAudit({
+              action: "workflow.halted",
+              actor: { kind: "system", id: "runtime-host" },
+              workflow: workflow.name,
+              module: workflow.module,
+              ctx,
+              status: "failure",
+              output: { reason: `exceeded ${maxIterations} step executions — branch cycle suspected` },
+            });
+            return { ctx, results };
           }
+          const step = workflow.steps[i];
           const result = await this.runStep(workflow, step, ctx);
           results.push(result);
           if (result.status === "failure" || result.status === "blocked") {
@@ -164,10 +169,29 @@ export class WorkflowExecutor {
             });
             return { ctx, results };
           }
-          // Branch decisions stash the next jump for the next loop iteration.
+          // A branch step's decision takes effect immediately: execution
+          // jumps to the target step instead of falling through.
           if (step.kind === "branch" && result.output && typeof result.output === "object") {
             const nextId = (result.output as any).next as string | undefined;
-            if (nextId) branches.set(step.id, nextId);
+            if (nextId) {
+              const targetIdx = workflow.steps.findIndex((s) => s.id === nextId);
+              if (targetIdx === -1) {
+                const message = `branch target '${nextId}' not found`;
+                results.push({ stepId: step.id, status: "failure", message });
+                await this.recordAudit({
+                  action: "workflow.halted",
+                  actor: { kind: "system", id: "runtime-host" },
+                  workflow: workflow.name,
+                  module: workflow.module,
+                  ctx,
+                  status: "failure",
+                  output: { atStep: step.id, reason: message },
+                });
+                return { ctx, results };
+              }
+              i = targetIdx;
+              continue;
+            }
           }
           i += 1;
         }

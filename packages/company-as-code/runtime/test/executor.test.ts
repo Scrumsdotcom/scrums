@@ -123,6 +123,89 @@ describe("WorkflowExecutor", () => {
     ).rejects.toThrow(/Refusing to execute/);
   });
 
+  it("branch steps actually jump: the skipped step does NOT execute", async () => {
+    const { executor } = await newExecutor();
+    const wf: WorkflowDoc = {
+      apiVersion: "company-as-code/v1",
+      kind: "Workflow",
+      name: "branchy",
+      module: "company/test",
+      purpose: "Branch jumps over the middle step.",
+      trigger: { kind: "human", actor: "people:test" },
+      steps: [
+        // Reference implementation always takes the first branch.
+        { id: "decide", kind: "branch", branches: [{ when: "always", next: "landing" }] },
+        { id: "must-be-skipped", kind: "wait" },
+        { id: "landing", kind: "wait" },
+      ],
+    };
+    const { ctx, results } = await executor.run({
+      workflow: wf,
+      triggerActor: "people:test",
+      dryRunOnly: true,
+    });
+    const executed = results.map((r) => r.stepId);
+    expect(executed).toEqual(["decide", "landing"]);
+    expect(executed).not.toContain("must-be-skipped");
+    // The audit trail must agree with what actually happened.
+    const audit = await sinks!.audit().byCorrelation(ctx.correlationId);
+    const branchRow = audit.find((r) => r.action === "step.branch");
+    expect(branchRow).toBeDefined();
+    expect((branchRow!.output as any).branchedTo).toBe("landing");
+    expect(audit.some((r) => r.action === "workflow.completed")).toBe(true);
+  });
+
+  it("halts with an audited failure when a branch targets an unknown step", async () => {
+    const { executor } = await newExecutor();
+    const wf: WorkflowDoc = {
+      apiVersion: "company-as-code/v1",
+      kind: "Workflow",
+      name: "branch-bad-target",
+      module: "company/test",
+      purpose: "Branch target does not exist.",
+      trigger: { kind: "human", actor: "people:test" },
+      steps: [
+        { id: "decide", kind: "branch", branches: [{ when: "always", next: "nowhere" }] },
+        { id: "after", kind: "wait" },
+      ],
+    };
+    const { ctx, results } = await executor.run({
+      workflow: wf,
+      triggerActor: "people:test",
+      dryRunOnly: true,
+    });
+    const failure = results.find((r) => r.status === "failure");
+    expect(failure).toBeDefined();
+    expect(failure!.message).toMatch(/branch target 'nowhere' not found/);
+    expect(results.map((r) => r.stepId)).not.toContain("after");
+    const audit = await sinks!.audit().byCorrelation(ctx.correlationId);
+    expect(audit.some((r) => r.action === "workflow.halted")).toBe(true);
+    expect(audit.some((r) => r.action === "workflow.completed")).toBe(false);
+  });
+
+  it("halts a branch cycle via the max-iterations guard", async () => {
+    const { executor } = await newExecutor();
+    const wf: WorkflowDoc = {
+      apiVersion: "company-as-code/v1",
+      kind: "Workflow",
+      name: "branch-cycle",
+      module: "company/test",
+      purpose: "Branch jumps to itself forever.",
+      trigger: { kind: "human", actor: "people:test" },
+      steps: [{ id: "loop", kind: "branch", branches: [{ when: "always", next: "loop" }] }],
+    };
+    const { ctx, results } = await executor.run({
+      workflow: wf,
+      triggerActor: "people:test",
+      dryRunOnly: true,
+    });
+    expect(results.length).toBeLessThanOrEqual(100);
+    const audit = await sinks!.audit().byCorrelation(ctx.correlationId);
+    const halted = audit.find((r) => r.action === "workflow.halted");
+    expect(halted).toBeDefined();
+    expect((halted!.output as any).reason).toMatch(/branch cycle suspected/);
+  });
+
   it("rejects emit-event for a type not in the registry", async () => {
     const { repo: _repo, executor } = await newExecutor();
     const wf: WorkflowDoc = {
