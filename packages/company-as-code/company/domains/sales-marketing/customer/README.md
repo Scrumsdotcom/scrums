@@ -1,6 +1,6 @@
 # /company/domains/sales-marketing/customer
 
-Organizational placeholder for the **customer** sub-module. No manifest is declared yet — this folder claims structure, not runtime authority.
+Organizational placeholder for the **customer** sub-module. No manifest is declared yet, this folder claims structure, not runtime authority.
 
 To activate this module:
 

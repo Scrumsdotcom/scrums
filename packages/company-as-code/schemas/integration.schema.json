@@ -16,7 +16,7 @@
     },
     "system": {
       "type": "string",
-      "description": "Vendor / system identifier. Optional — the framework treats integrations as replaceable."
+      "description": "Vendor / system identifier. Optional, the framework treats integrations as replaceable."
     },
     "category": {
       "type": "string",
@@ -28,7 +28,8 @@
     },
     "ownerModule": {
       "type": "string",
-      "description": "Module accountable for this integration."
+      "description": "Module accountable for this integration.",
+      "x-cac-ref": ["Manifest"]
     },
     "mutationDirection": {
       "type": "string",

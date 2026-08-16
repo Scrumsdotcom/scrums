@@ -19,7 +19,7 @@
       "additionalProperties": false,
       "required": ["module"],
       "properties": {
-        "module": { "type": "string" },
+        "module": { "type": "string", "x-cac-ref": ["Manifest"] },
         "person": { "type": "string" }
       }
     },

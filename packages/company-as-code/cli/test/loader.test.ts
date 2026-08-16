@@ -48,7 +48,7 @@ describe("loadCorpusWithDiagnostics", () => {
   it("allows intentional non-primitive YAML via the cac:ignore pragma", async () => {
     await writeFixture(
       "ignored.yaml",
-      "# cac:ignore — intentional non-primitive fixture\nfoo: bar\n",
+      "# cac:ignore, intentional non-primitive fixture\nfoo: bar\n",
     );
     const { unclassified } = await loadCorpusWithDiagnostics();
     expect(unclassified.find((u) => u.file.endsWith("ignored.yaml"))).toBeUndefined();

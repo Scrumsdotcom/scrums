@@ -7,7 +7,7 @@ afterEach(() => {
   store = undefined;
 });
 
-describe("SqliteStateStore — versioned state snapshotting", () => {
+describe("SqliteStateStore, versioned state snapshotting", () => {
   it("registers canonical entities and system mappings", () => {
     store = new SqliteStateStore(":memory:");
     store.registerEntity({ canonicalId: "cust-001", kind: "customer", l1Bucket: "active" });
@@ -49,7 +49,7 @@ describe("SqliteStateStore — versioned state snapshotting", () => {
     store.mapSystem({ canonicalId: "cust-001", system: "crm", externalId: "CRM-99" });
     const good = store.createSnapshot("known-good");
 
-    // A workflow "fails" — it leaves bad state behind.
+    // A workflow "fails", it leaves bad state behind.
     store.registerEntity({ canonicalId: "cust-BOGUS", kind: "customer", l1Bucket: "active" });
     store.mapSystem({ canonicalId: "cust-001", system: "crm", externalId: "CRM-WRONG" });
     expect(store.listEntities()).toHaveLength(2);
@@ -66,7 +66,7 @@ describe("SqliteStateStore — versioned state snapshotting", () => {
     expect(hashState(store.listEntities(), store.listMappings())).toBe(good.contentHash);
   });
 
-  it("rollback is itself reversible — snapshots are never deleted", () => {
+  it("rollback is itself reversible, snapshots are never deleted", () => {
     store = new SqliteStateStore(":memory:");
     store.registerEntity({ canonicalId: "a", kind: "task", l1Bucket: "open" });
     const first = store.createSnapshot("first");

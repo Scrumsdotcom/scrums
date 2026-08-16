@@ -4,7 +4,7 @@ import { loadCorpus, loadSchemas } from "../src/loader.js";
 
 /**
  * The Event schema and the EventTypeRegistry schema each carry a local
- * $defs.eventType. They must agree — a registered event type that fails the
+ * $defs.eventType. They must agree. A registered event type that fails the
  * Event row schema means every row of that type is rejected the moment a
  * fork starts validating its ledger.
  */

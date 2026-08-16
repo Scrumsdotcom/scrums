@@ -1,0 +1,48 @@
+apiVersion: company-as-code/v1
+kind: Metric
+
+id: METRIC-PLATFORM-DEPLOY-MTTR
+name: Deploy mean time to recovery
+description: >
+  Mean minutes from a failed production deploy to a healthy production state,
+  measured over a rolling 30-day window. Counts recovery by rollback and
+  recovery by roll-forward the same way; what matters is when production was
+  healthy again.
+
+owner:
+  module: company/domains/product-operations/platform
+  person: platform-lead
+
+type: duration
+unit: minutes
+
+formula: >
+  mean(healthy_at - failed_at) across production deploys whose health check
+  failed, over the last 30 days.
+
+lineage:
+  - source: company/domains/product-operations/platform
+    field: platform.deploy_failed
+    transformation: pair each deploy_failed event with the next deploy_healthy event for the same deploy ID
+
+freshness:
+  expectedLag: PT15M
+  maxLag: PT2H
+
+thresholds:
+  - level: warning
+    comparator: gt
+    value: 60
+  - level: critical
+    comparator: gt
+    value: 180
+
+dashboards:
+  - deploy-frequency
+  - platform-overview
+alerts:
+  - deploy-mttr-breach
+
+history:
+  retention: P2Y
+  grain: day

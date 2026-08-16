@@ -1,0 +1,67 @@
+# Dashboard: growth-overview
+#
+# Referenced from:
+# - company/domains/sales-marketing/growth/manifest.yaml (owns.dashboards)
+# - company/metrics/METRIC-GROWTH-CAC-PAYBACK.yaml (dashboards)
+# - company/domains/sales-marketing/growth/agents/growth-experiment-runner.yaml
+# - company/domains/sales-marketing/growth/workflows/customer-acquisition.yaml
+
+apiVersion: company-as-code/v1
+kind: Dashboard
+name: growth-overview
+
+owner:
+  module: company/domains/sales-marketing/growth
+  person: head-of-growth
+
+purpose: >
+  Acquisition economics and experiment state: CAC payback, channel mix, and
+  every experiment currently spending against a stop-loss.
+
+audience:
+  - head-of-growth
+  - cro
+  - ceo
+
+refresh: hourly
+
+panels:
+  - id: cac-payback
+    title: CAC payback (months)
+    type: stat
+    metric: METRIC-GROWTH-CAC-PAYBACK
+    thresholds:
+      warning: { comparator: gt, value: 14 }
+      critical: { comparator: gt, value: 18 }
+
+  - id: channel-mix
+    title: Spend by channel
+    type: bar
+    metric: derived/spend_by_channel
+    annotation: |
+      Allocation shifts are recommendations until a human approves them. This
+      panel shows approved allocation, not the runner's proposal.
+
+  - id: active-experiments
+    title: Active experiments
+    type: list
+    source: events/growth.experiment_started/open
+
+  - id: stop-loss-headroom
+    title: Stop-loss headroom
+    type: bar
+    metric: derived/experiment_stop_loss_headroom
+    annotation: |
+      Distance between an experiment's spend to date and its declared
+      stop-loss. Bars near zero are about to halt.
+
+alerts:
+  - id: cac-payback-degradation
+    description: CAC payback exceeded the warning threshold on the rolling window.
+    severity: sev-3
+    routing: head-of-growth
+
+  - id: experiment-stop-loss-breached
+    description: An experiment breached its declared stop-loss and was halted by the runner.
+    severity: sev-3
+    routing: head-of-growth

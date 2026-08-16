@@ -1,6 +1,6 @@
 # /company/domains/product-operations/web
 
-Organizational placeholder for the **web** sub-module. No manifest is declared yet — this folder claims structure, not runtime authority.
+Organizational placeholder for the **web** sub-module. No manifest is declared yet, this folder claims structure, not runtime authority.
 
 To activate this module:
 

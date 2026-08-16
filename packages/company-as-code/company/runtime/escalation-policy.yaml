@@ -2,7 +2,7 @@
 #
 # Defines how `escalated` agents and `human-gated` failures route through
 # the on-call hierarchy. Maps generic role identifiers (e.g. `people:on-call-platform`)
-# to canonical Person IDs at request time — the routing layer is one
+# to canonical Person IDs at request time. The routing layer is one
 # integration away, but the policy is declared here.
 
 apiVersion: company-as-code/v1
@@ -59,7 +59,7 @@ defaults:
   escalatedAgentThreshold: "3 consecutive failures within 30 minutes"
   escalatedAgentRecipient: on-call-platform
 
-# Communication channels — vendor-neutral; integrations resolve the actual delivery.
+# Communication channels: vendor-neutral; integrations resolve the actual delivery.
 channels:
   - kind: page
     target: integrations/paging-system

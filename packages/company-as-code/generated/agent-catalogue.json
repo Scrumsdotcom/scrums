@@ -6,7 +6,7 @@
       "declaredIn": "company/domains/finance-ops/finance/agents/cash-forecaster.yaml",
       "module": "company/domains/finance-ops/finance",
       "name": "cash-forecaster",
-      "purpose": "Produce a rolling 13-week cash forecast from canonical ledger entries plus forward-looking pipeline state. Read-only — never writes to the ledger or to external accounting systems.\n",
+      "purpose": "Produce a rolling 13-week cash forecast from canonical ledger entries plus forward-looking pipeline state. Read-only, never writes to the ledger or to external accounting systems.\n",
       "runtime": "scheduled-job",
       "schedule": "0 7 * * *"
     },
@@ -46,7 +46,7 @@
       "declaredIn": "company/domains/sales-marketing/growth/agents/growth-experiment-runner.yaml",
       "module": "company/domains/sales-marketing/growth",
       "name": "growth-experiment-runner",
-      "purpose": "Score active acquisition experiments daily on the channel-mix model and recommend allocation shifts. Recommendations are human-gated — the agent never moves spend on its own.\n",
+      "purpose": "Score active acquisition experiments daily on the channel-mix model and recommend allocation shifts. Recommendations are human-gated, the agent never moves spend on its own.\n",
       "runtime": "scheduled-job",
       "schedule": "0 9 * * *"
     },

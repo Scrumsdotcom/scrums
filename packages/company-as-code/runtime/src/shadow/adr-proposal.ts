@@ -8,11 +8,11 @@ import type { PromotionEvaluation } from "./evaluate.js";
  *
  * The spec's pitch: a shadow agent that has accumulated enough Reliability
  * Evidence is promoted to autonomous "via an automated ADR proposal". This
- * module is that automation — it turns the evidence into a `Proposed` ADR
+ * module is that automation. It turns the evidence into a `Proposed` ADR
  * draft, following /templates/adr.md, that a human reviews and merges.
  *
  * The proposal is the bridge: the AutonomyPolicy's promotion gate includes
- * `acceptedADR: required` and `manifestUpdate: required` — both are cleared by
+ * `acceptedADR: required` and `manifestUpdate: required`. Both are cleared by
  * reviewing and merging the ADR this generates.
  */
 
@@ -26,7 +26,7 @@ export async function nextAdrNumber(repoRoot: string): Promise<string> {
       if (m) max = Math.max(max, Number(m[1]));
     }
   } catch {
-    /* no adr dir — start at 1 */
+    /* no adr dir. Start at 1 */
   }
   return String(max + 1).padStart(4, "0");
 }
@@ -67,9 +67,9 @@ export function generateAdrProposal(input: AdrProposalInput): AdrProposal {
       return `| \`${r.key}\` | ${r.comparator} ${r.threshold} | ${r.actual} | ${r.met ? "✅ met" : "❌ not met"} |`;
     }
     if (r.kind === "manual") {
-      return `| \`${r.key}\` | ${JSON.stringify(r.raw)} | — | ⏳ manual — ${r.note} |`;
+      return `| \`${r.key}\` | ${JSON.stringify(r.raw)} | n/a | ⏳ manual: ${r.note} |`;
     }
-    return `| \`${r.key}\` | ${r.comparator ?? ""} ${r.threshold ?? ""} | — | ⚠ ${r.note} |`;
+    return `| \`${r.key}\` | ${r.comparator ?? ""} ${r.threshold ?? ""} | n/a | ⚠ ${r.note} |`;
   });
 
   const content = `# ADR ${number}: Promote ${agent} to autonomous
@@ -86,8 +86,8 @@ export function generateAdrProposal(input: AdrProposalInput): AdrProposal {
 ## Context
 
 The agent \`${agent}\`${input.agentModule ? ` (module \`${input.agentModule}\`)` : ""} has
-been running in **shadow mode** — perpetual \`dryRun: true\` alongside the human
-operators doing the real work — since ${evidence.enrolledAt}.
+been running in **shadow mode**, perpetual \`dryRun: true\` alongside the human
+operators doing the real work, since ${evidence.enrolledAt}.
 
 Shadow Mode accumulates Reliability Evidence: every shadow invocation is a
 dry-run projection recorded against a trace; when a human performs the real
@@ -109,7 +109,7 @@ ${reqRows.join("\n")}
 
 **Automated gate: ${evaluation.autoMet ? "MET ✅" : "NOT MET ❌"}**${
     evaluation.unmetAuto.length
-      ? ` — unmet: ${evaluation.unmetAuto.map((k) => `\`${k}\``).join(", ")}`
+      ? `, unmet: ${evaluation.unmetAuto.map((k) => `\`${k}\``).join(", ")}`
       : ""
   }
 
@@ -124,13 +124,13 @@ promotion bar; the agent has earned the autonomy classification.
 - **Positive**
   - The agent fires without a human-approval step, removing operator toil on a
     path it has demonstrably handled correctly.
-  - The promotion is evidence-backed and auditable — the shadow ledger is the
+  - The promotion is evidence-backed and auditable: the shadow ledger is the
     record, this ADR is the decision.
 - **Negative**
   - Autonomous execution carries more risk than gated execution. The agent must
     still respect the \`autonomous\` class's \`forbiddenActions\` (no
     \`write-external\`).
-  - If the agent regresses, demotion is the remedy — and demotion is free
+  - If the agent regresses, demotion is the remedy: and demotion is free
     (\`promotion.fromAutonomousToHumanGated\`).
 - **Neutral**
   - The shadow ledger remains; the agent can be re-enrolled for re-validation
@@ -147,7 +147,7 @@ promotion bar; the agent has earned the autonomy classification.
 
 - Update the agent's manifest: set \`autonomy: autonomous\` for \`${agent}\`
   (clears the \`manifestUpdate\` promotion gate).
-- Run \`cd cli && npm run validate && npm run generate\` — the
+- Run \`cd cli && npm run validate && npm run generate\`, the
   \`agent-catalogue\` and per-agent context bundle will reflect the new class.
 - Optionally \`cac-host shadow withdraw ${agent}\` once the promotion lands, or
   leave it enrolled for continued evidence collection.

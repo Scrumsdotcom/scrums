@@ -37,7 +37,7 @@ updates:
       runtime-dependencies:
         dependency-type: "production"
 
-  # GitHub Actions — supply chain
+  # GitHub Actions, supply chain
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

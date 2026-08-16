@@ -6,8 +6,8 @@ Every module ships its manifest, a README, and (when it carries non-trivial logi
 
 ## What every new module must include
 
-- `manifest.yaml` — schema-validated declaration
-- `README.md` — one-paragraph pointer to the manifest and the worked story
+- `manifest.yaml`: schema-validated declaration
+- `README.md`: one-paragraph pointer to the manifest and the worked story
 - A playbook for each non-trivial operational procedure the module owns
 
 ## Three-tier model

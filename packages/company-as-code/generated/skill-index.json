@@ -23,7 +23,7 @@
     {
       "autonomy": "human-gated",
       "declaredIn": "company/skills/add-integration.yaml",
-      "description": "Wire a new external system into the coordination layer through canonical IDs — no vendor names in domain logic, HITL surfaces declared explicitly.",
+      "description": "Wire a new external system into the coordination layer through canonical IDs, no vendor names in domain logic, HITL surfaces declared explicitly.",
       "name": "add-integration",
       "owner": {
         "module": "framework"

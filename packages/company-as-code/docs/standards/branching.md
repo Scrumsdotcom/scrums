@@ -6,11 +6,11 @@ Work happens on feature branches; main is protected. Branch names are descriptiv
 
 ## Naming
 
-- `feat/<short-description>` — new feature
-- `fix/<short-description>` — bug fix
-- `chore/<short-description>` — maintenance, deps, CI
-- `docs/<short-description>` — documentation only
-- `adr/<NNNN>-<short>` — ADR proposal
+- `feat/<short-description>`: new feature
+- `fix/<short-description>`: bug fix
+- `chore/<short-description>`: maintenance, deps, CI
+- `docs/<short-description>`: documentation only
+- `adr/<NNNN>-<short>`: ADR proposal
 
 ## Lifecycle
 

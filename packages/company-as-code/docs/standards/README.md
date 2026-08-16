@@ -11,4 +11,7 @@ Engineering and operational standards. Versioned, reviewable, enforceable. If a 
 | [`security.md`](./security.md) | Force-push policy, secret handling, dependency review |
 | [`observability.md`](./observability.md) | What every new agent must emit |
 | [`documentation.md`](./documentation.md) | What every new module must declare |
+| [`write-discipline.md`](./write-discipline.md) | How external write paths survive crashes and collisions |
+| [`concurrency.md`](./concurrency.md) | Session leases, fencing, deadman checks between operators |
+| [`conserved-core.md`](./conserved-core.md) | Which paths change only through a Proposal, and how that is enforced |
 | [`policy-to-control-matrix.md`](./policy-to-control-matrix.md) | Every declared rule mapped to its enforcement location (schema / CI / runtime / discipline) |

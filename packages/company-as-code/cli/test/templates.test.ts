@@ -9,7 +9,7 @@ import { REPO_ROOT } from "../src/paths.js";
 /**
  * Every authoring template under /templates must validate against its schema
  * exactly as shipped. The getting-started walkthrough's first hands-on step
- * is `cp templates/... company/... && npm run validate` — a template that
+ * is `cp templates/... company/... && npm run validate`, a template that
  * fails the project's own validator on first contact is a release blocker.
  */
 
@@ -28,7 +28,7 @@ describe("authoring templates", () => {
       const kind = doc?.kind;
       const schemaFile = kind ? schemaForKind(kind) : undefined;
       if (!schemaFile) {
-        failures.push(`${f}: kind '${kind}' has no schema — template cannot be validated`);
+        failures.push(`${f}: kind '${kind}' has no schema, template cannot be validated`);
         continue;
       }
       const validate = ajv.getSchema(schemaFile)!;

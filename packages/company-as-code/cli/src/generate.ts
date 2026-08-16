@@ -5,6 +5,9 @@ import { loadCorpus, loadSchemas, type RepoCorpus } from "./loader.js";
 import { sdkFiles } from "./sdk.js";
 import { loadHubModules, hubIndex } from "./hub.js";
 import { cognitionGraph } from "./cognition.js";
+import { companyGraph } from "./graph.js";
+import { capabilityMap, controlMatrix } from "./compliance.js";
+import { jsonLdContext } from "./jsonld.js";
 
 interface GenerateOptions {
   check: boolean;
@@ -28,6 +31,10 @@ export async function generateCommand(opts: GenerateOptions): Promise<boolean> {
     skillIndex(corpus),
     hubIndex(hubModules),
     cognitionGraph(corpus),
+    companyGraph(corpus, schemas),
+    controlMatrix(corpus),
+    capabilityMap(corpus),
+    jsonLdContext(),
     ...contextBundles(corpus),
     ...skillAdapters(corpus),
     ...sdkFiles(schemas),
@@ -70,7 +77,7 @@ async function checkDrift(files: GeneratedFile[]): Promise<boolean> {
   }
 
   // Orphan detection: any file present under /generated that no generator
-  // emits is a stale artefact. Refusing to ship is the only correct response —
+  // emits is a stale artefact. Refusing to ship is the only correct response,
   // generated state is supposed to be fully deterministic from sources.
   const orphans = await findOrphans(expectedPaths);
 
@@ -448,7 +455,7 @@ function skillAsAgentsMd(skill: any): GeneratedFile {
     lines.push("**Inputs**");
     for (const i of inputs) {
       const type = i.type ? ` (\`${i.type}\`)` : "";
-      const required = i.required === false ? " — optional" : "";
+      const required = i.required === false ? ", optional" : "";
       lines.push(`- \`${i.name}\`${type}${required}: ${i.description ?? ""}`);
     }
     lines.push("");

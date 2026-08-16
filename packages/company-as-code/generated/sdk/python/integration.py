@@ -1,4 +1,4 @@
-# Generated from /schemas/integration.schema.json — do not edit by hand.
+# Generated from /schemas/integration.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations
@@ -41,7 +41,7 @@ class Integration(TypedDict):
     kind: Literal["Integration"]
     """Local canonical name for the integration. The vendor name lives in 'system', not here."""
     name: str
-    """Vendor / system identifier. Optional — the framework treats integrations as replaceable."""
+    """Vendor / system identifier. Optional, the framework treats integrations as replaceable."""
     system: NotRequired[str]
     category: Literal["crm", "workflow-engine", "database", "project-management", "cloud", "orchestration", "ai-provider", "communication", "observability", "billing", "identity", "storage", "search", "analytics", "other"]
     status: Literal["planned", "configured", "active", "degraded", "deprecated", "removed"]

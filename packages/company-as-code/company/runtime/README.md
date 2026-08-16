@@ -25,4 +25,4 @@ The escalation policy resolves role identifiers (e.g. `on-call-platform`) to can
 
 ## Schema status
 
-The two YAMLs above are illustrative — they are not yet schema-validated. A `RuntimeConfig` schema is on the roadmap so the runtime's own configuration can be machine-validated alongside other primitives. Track via a future ADR.
+The two YAMLs above are illustrative. They are not yet schema-validated. A `RuntimeConfig` schema is on the roadmap so the runtime's own configuration can be machine-validated alongside other primitives. Track via a future ADR.

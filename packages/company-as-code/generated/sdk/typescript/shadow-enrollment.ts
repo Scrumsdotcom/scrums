@@ -1,4 +1,4 @@
-// Generated from /schemas/shadow-enrollment.schema.json — do not edit by hand.
+// Generated from /schemas/shadow-enrollment.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** An agent's enrollment in Shadow Mode plus the Reliability Evidence accumulated against it. A shadow agent runs in perpetual dry-run alongside human operators; every invocation is a row of evidence. When the evidence clears the AutonomyPolicy's promotion bar, an ADR proposal promotes the agent to autonomous. */

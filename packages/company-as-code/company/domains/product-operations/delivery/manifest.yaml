@@ -1,0 +1,34 @@
+apiVersion: company-as-code/v1
+kind: Manifest
+name: delivery
+domain: product-operations
+parent: domains/product-operations
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Delivery throughput and flow: lead time, deployment frequency, and where
+  work is queueing. The product-operations executive rolls this up, so the
+  interface is a contract rather than a report.
+
+owns:
+  tables:
+    - canonical_work_items
+  schemas:
+    - work-item
+
+consumes: []
+
+exposes:
+  - interface: delivery-throughput
+    stability: experimental
+    description: >
+      Lead time, cycle time, deployment frequency, and queue depth by module,
+      over a rolling window.
+
+invariants:
+  - Work-item state originates here; the work-management tool is a projection.
+  - Throughput figures are derived from the typed event ledger, not from a separate counter.
+
+contacts:
+  - role: accountable
+    person: cto

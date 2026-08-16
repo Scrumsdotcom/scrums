@@ -7,13 +7,13 @@
 
 ## Context
 
-A framework for organizing companies as code must commit to a structural shape. The choice constrains everything downstream — module boundaries, deployment topology, observability, the ergonomics of cross-team coordination.
+A framework for organizing companies as code must commit to a structural shape. The choice constrains everything downstream, module boundaries, deployment topology, observability, the ergonomics of cross-team coordination.
 
 Three viable shapes existed at the time of the seed build:
 
 1. **Microservices-by-default.** Each module is its own service with its own deployment.
 2. **Modular monolith.** One repository, one deployment surface, hard boundaries between modules enforced by declarative manifests rather than network calls.
-3. **Undifferentiated mass.** No structural commitment — each fork picks what it wants.
+3. **Undifferentiated mass.** No structural commitment. Each fork picks what it wants.
 
 The framework's audience includes startups (who lack operational maturity for microservices), agencies (whose engagements are short-lived), consultancies (who codify operating models that should outlive a single deployment), and AI-native companies (whose primary scaling axis is agents, not engineering headcount). All of these are better served by clear boundaries without the operational tax of running many services.
 
@@ -46,11 +46,11 @@ Forks may deploy modules as separate services later. The manifest already declar
 
 - Independent scaling of modules is not free at runtime.
 - A misbehaving module can affect the whole deployment.
-- Teams accustomed to microservices may resist the boundary discipline (the discipline doesn't enforce itself in code at runtime — it's enforced at declaration time).
+- Teams accustomed to microservices may resist the boundary discipline (the discipline doesn't enforce itself in code at runtime, it's enforced at declaration time).
 
 **Neutral**
 
-- The framework's drift gate and validator do the work of "boundary enforcement at compile time" — without compile time.
+- The framework's drift gate and validator do the work of "boundary enforcement at compile time", without compile time.
 - Migrating a module out to its own service later is a deployment change, not a redesign.
 
 ## Alternatives considered

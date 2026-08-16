@@ -92,7 +92,7 @@
       "name": "executive"
     },
     {
-      "moduleCount": 1,
+      "moduleCount": 3,
       "modules": [
         {
           "agents": [
@@ -128,13 +128,55 @@
               "trigger": "human"
             }
           ]
+        },
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "finance-ops",
+          "exposes": [
+            "compliance-state"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "governance",
+          "path": "company/domains/finance-ops/governance",
+          "purpose": "Requirements, controls, and the evidence that proves the controls run. Owns the compliance posture the finance-ops executive rolls up and the auditor reads.",
+          "workflows": []
+        },
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "finance-ops",
+          "exposes": [
+            "workforce-state"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "people",
+          "path": "company/domains/finance-ops/people",
+          "purpose": "Canonical workforce state: who is engaged, under what arrangement, at what cost, and with what access. Three modules read from here, so the module exists to hold that contract even before it holds automation.",
+          "workflows": []
         }
       ],
       "name": "finance-ops"
     },
     {
-      "moduleCount": 4,
+      "moduleCount": 6,
       "modules": [
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "product-operations",
+          "exposes": [
+            "delivery-throughput"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "delivery",
+          "path": "company/domains/product-operations/delivery",
+          "purpose": "Delivery throughput and flow: lead time, deployment frequency, and where work is queueing. The product-operations executive rolls this up, so the interface is a contract rather than a report.",
+          "workflows": []
+        },
         {
           "agents": [
             {
@@ -163,7 +205,13 @@
             "subscription-stream"
           ],
           "lifecycle": "hardening",
-          "metrics": [],
+          "metrics": [
+            {
+              "id": "METRIC-PLATFORM-DEPLOY-MTTR",
+              "name": "Deploy mean time to recovery",
+              "type": "duration"
+            }
+          ],
           "name": "platform",
           "path": "company/domains/product-operations/platform",
           "purpose": "Shared platform: identity, billing, deployment, and observability. Hosts three sub-cognition modules and the agents that operate them. Every agent declares an explicit autonomy classification.",
@@ -217,13 +265,41 @@
           "path": "company/domains/product-operations/platform/sub-cognition/identity",
           "purpose": "Canonical identity sub-cognition. Owns the canonical-identity table and the drift detection agent inherited from the platform module.",
           "workflows": []
+        },
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "product-operations",
+          "exposes": [
+            "security-posture"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "security",
+          "path": "company/domains/product-operations/security",
+          "purpose": "Security posture: open findings, their severity and age, and the technical controls that back the governance module's attestations.",
+          "workflows": []
         }
       ],
       "name": "product-operations"
     },
     {
-      "moduleCount": 1,
+      "moduleCount": 3,
       "modules": [
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "sales-marketing",
+          "exposes": [
+            "customer-health"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "customer",
+          "path": "company/domains/sales-marketing/customer",
+          "purpose": "Post-sale customer state: health, retention risk, and support posture. Read by platform (to surface churn signal on identity dashboards) and by growth (to separate high-quality from low-quality acquired cohorts).",
+          "workflows": []
+        },
         {
           "agents": [
             {
@@ -257,9 +333,56 @@
               "trigger": "human"
             }
           ]
+        },
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "sales-marketing",
+          "exposes": [
+            "pipeline-state"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "sales",
+          "path": "company/domains/sales-marketing/sales",
+          "purpose": "Canonical pipeline state: deals, their journey stage, and their forecast weight. Finance forecasts cash from it and growth measures conversion against it, so the interface is declared before the automation exists.",
+          "workflows": []
         }
       ],
       "name": "sales-marketing"
+    },
+    {
+      "moduleCount": 1,
+      "modules": [
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "framework",
+          "exposes": [
+            "runtime-posture"
+          ],
+          "lifecycle": "hardening",
+          "metrics": [
+            {
+              "id": "METRIC-RUNTIME-MTTR",
+              "name": "Incident mean time to resolution",
+              "type": "duration"
+            }
+          ],
+          "name": "runtime",
+          "path": "company/runtime",
+          "purpose": "The execution surface itself: autonomy classification, escalation routing, and the cross-domain workflows that belong to no single domain. Owning them here is what lets an incident cross module boundaries without any module claiming the incident.",
+          "workflows": [
+            {
+              "hitl": true,
+              "name": "incident-response",
+              "steps": 10,
+              "trigger": "event"
+            }
+          ]
+        }
+      ],
+      "name": "framework"
     }
   ],
   "edges": [
@@ -373,10 +496,10 @@
   "kind": "CognitionGraph",
   "stats": {
     "agentCount": 9,
-    "domainCount": 4,
+    "domainCount": 5,
     "edgeCount": 21,
-    "metricCount": 2,
-    "moduleCount": 10,
+    "metricCount": 4,
+    "moduleCount": 17,
     "workflowCount": 4
   }
 }

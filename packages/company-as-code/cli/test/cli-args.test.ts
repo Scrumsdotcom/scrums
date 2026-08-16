@@ -45,7 +45,7 @@ describe("strictParse", () => {
 
 describe("cac generate --chek (typo'd drift gate)", () => {
   it("exits non-zero without running the generator", async () => {
-    // The one command CI relies on must fail closed on a typo — before this
+    // The one command CI relies on must fail closed on a typo, before this
     // guard, `generate --chek` silently ran the WRITE-mode generator.
     await expect(
       execFileAsync("npx", ["tsx", "src/index.ts", "generate", "--chek"], { cwd: cliRoot }),

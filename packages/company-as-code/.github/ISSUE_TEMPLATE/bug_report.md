@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Something's broken — schema, CLI, generated output, or runtime invariant.
+about: Something's broken, schema, CLI, generated output, or runtime invariant.
 title: "bug: "
 labels: ["bug"]
 ---

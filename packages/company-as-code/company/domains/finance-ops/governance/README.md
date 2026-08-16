@@ -1,6 +1,6 @@
 # /company/domains/finance-ops/governance
 
-Organizational placeholder for the **governance** sub-module. No manifest is declared yet — this folder claims structure, not runtime authority.
+Organizational placeholder for the **governance** sub-module. No manifest is declared yet, this folder claims structure, not runtime authority.
 
 To activate this module:
 

@@ -8,7 +8,7 @@ npm --prefix cli run generate
 ```
 
 `cac generate --check` gates drift on these files exactly like every other
-generated artefact — if the schemas change and the SDK is not regenerated, CI
+generated artefact, if the schemas change and the SDK is not regenerated, CI
 fails.
 
 ## Why
@@ -21,9 +21,9 @@ code is a spec violation caught at compile time.
 
 ## Targets
 
-- **`typescript/`** — one `.ts` per schema exporting an `interface`, plus
+- **`typescript/`**: one `.ts` per schema exporting an `interface`, plus
   `index.ts` with a `CompanyDocument` discriminated union keyed by `kind`.
-- **`python/`** — one `.py` per schema exporting a `TypedDict` (Python 3.11+),
+- **`python/`**: one `.py` per schema exporting a `TypedDict` (Python 3.11+),
   plus `__init__.py` re-exporting every type.
 
 ## Schema → root type
@@ -34,6 +34,8 @@ code is a spec violation caught at compile time.
 | `audit-record.schema.json` | `AuditRecord` |
 | `automation.schema.json` | `Automation` |
 | `autonomy-policy.schema.json` | `AutonomyPolicy` |
+| `capability.schema.json` | `Capability` |
+| `control.schema.json` | `Control` |
 | `dashboard.schema.json` | `Dashboard` |
 | `escalation-policy.schema.json` | `EscalationPolicy` |
 | `event-type-registry.schema.json` | `EventTypeRegistry` |
@@ -47,6 +49,8 @@ code is a spec violation caught at compile time.
 | `metric.schema.json` | `Metric` |
 | `organization.schema.json` | `Organization` |
 | `person.schema.json` | `Person` |
+| `proposal.schema.json` | `Proposal` |
+| `requirement.schema.json` | `Requirement` |
 | `shadow-enrollment.schema.json` | `ShadowEnrollment` |
 | `skill.schema.json` | `Skill` |
 | `state-snapshot.schema.json` | `StateSnapshot` |

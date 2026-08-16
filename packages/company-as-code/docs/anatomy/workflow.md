@@ -10,7 +10,7 @@ Schema: [`/schemas/workflow.schema.json`](../../schemas/workflow.schema.json). T
 
 ### `apiVersion`, `kind`, `name`, `module`, `purpose`
 
-Same as the other primitives. `module:` must be the workflow's owning module — typically a domain module's `<module>/workflows/<name>.yaml`. Cross-cutting workflows live under [`/company/workflows/`](../../company/workflows) with `module: company/runtime`.
+Same as the other primitives. `module:` must be the workflow's owning module, typically a domain module's `<module>/workflows/<name>.yaml`. Cross-cutting workflows live under [`/company/workflows/`](../../company/workflows) with `module: company/runtime`.
 
 ### `trigger`
 
@@ -52,8 +52,8 @@ Boolean. When `true`, the entire workflow is human-led: at least one step must b
 
 Steps run in declared order unless a `branch` step redirects flow. Each step has:
 
-- `id` — kebab-case, unique within the workflow
-- `kind` — what kind of step (see table below)
+- `id`: kebab-case, unique within the workflow
+- `kind`: what kind of step (see table below)
 - Optional: `dryRunRequired`, `hitl`, `onFailure`, `retries`, `timeout`, `emitsEvent`, plus kind-specific fields
 
 ### Step kinds
@@ -63,7 +63,7 @@ Steps run in declared order unless a `branch` step redirects flow. Each step has
 | `agent` | Invoke a named agent | `agent: <name>` |
 | `automation` | Invoke a named automation | `automation: <name>` |
 | `human-approval` | Block until an approver records a decision | `approver: people:<role>` |
-| `wait` | Sleep or poll for an external condition | (none — body defined by runtime) |
+| `wait` | Sleep or poll for an external condition | (none, body defined by runtime) |
 | `branch` | Conditional fork | `branches: [{when, next}]` |
 | `emit-event` | Write a typed event to the ledger | `emitsEvent: <event-type>` |
 | `external-call` | Call an integration directly (rare; prefer automation) | (none beyond integration reference) |
@@ -139,7 +139,7 @@ Inputs are passed at trigger time (by the human operator, by the schedule, by th
 
 ## Invariants
 
-Same shape as other invariants — assertions about the workflow's behavior.
+Same shape as other invariants, assertions about the workflow's behavior.
 
 Almost every workflow declares:
 
@@ -174,12 +174,12 @@ After validation:
 
 ## Common review failures
 
-1. **`hitl: true` + `trigger.kind: schedule`** — rejected by the cross-document validator. Pick one: it's either human-gated, or it's scheduled. Never both.
-2. **`live-write` step without a preceding `dry-run` step** — accepted by the schema, but the policy says dry-run first. Review should ask for the dry-run.
-3. **`retries > 0` on a `live-write`** — almost always wrong. Retries for live writes mask the failure; escalation is the right response.
-4. **Branch steps with overlapping `when` conditions** — the runtime picks the first match. Make `when` conditions mutually exclusive.
-5. **Missing `emitsEvent` on a state-changing step** — the event ledger should record state transitions. If a `live-write` step doesn't `emitsEvent`, the ledger is incomplete.
-6. **Vendor names in `automation:` references** — automations are vendor-neutral. The automation name describes the operation, not the system.
+1. **`hitl: true` + `trigger.kind: schedule`**: rejected by the cross-document validator. Pick one: it's either human-gated, or it's scheduled. Never both.
+2. **`live-write` step without a preceding `dry-run` step**: accepted by the schema, but the policy says dry-run first. Review should ask for the dry-run.
+3. **`retries > 0` on a `live-write`**: almost always wrong. Retries for live writes mask the failure; escalation is the right response.
+4. **Branch steps with overlapping `when` conditions**: the runtime picks the first match. Make `when` conditions mutually exclusive.
+5. **Missing `emitsEvent` on a state-changing step**: the event ledger should record state transitions. If a `live-write` step doesn't `emitsEvent`, the ledger is incomplete.
+6. **Vendor names in `automation:` references**: automations are vendor-neutral. The automation name describes the operation, not the system.
 
 ---
 

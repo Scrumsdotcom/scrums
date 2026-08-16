@@ -11,11 +11,11 @@ import { SqliteShadowStore } from "./evidence-store.js";
  * It wraps any inner `AgentInvoker`. For an agent NOT enrolled in shadow mode
  * it is a transparent pass-through. For an agent that IS shadowing it:
  *
- *   1. forces `dryRun: true` for that invocation, regardless of the run mode —
+ *   1. forces `dryRun: true` for that invocation, regardless of the run mode,
  *      a shadow agent never writes, it only projects;
  *   2. records the invocation in the shadow ledger as a row of Reliability
  *      Evidence (agent, correlation, trace, a hash of the projection);
- *   3. strips any `emittedEvent` — a shadow agent observes, it does not change
+ *   3. strips any `emittedEvent`. A shadow agent observes, it does not change
  *      canonical state.
  *
  * Enrollment is the switch. `cac-host shadow enroll <agent>` turns it on;
@@ -49,14 +49,14 @@ export class ShadowAgentInvoker implements AgentInvoker {
       projectionHash,
     });
 
-    // Observe, do not change state — strip any emitted event.
+    // Observe, do not change state, strip any emitted event.
     return {
       output: {
         shadowMode: true,
         agent: args.agent,
         projectionHash,
         projection: result.output,
-        note: "Shadow Mode — projection recorded as reliability evidence; no event emitted, no state changed.",
+        note: "Shadow Mode, projection recorded as reliability evidence; no event emitted, no state changed.",
       },
     };
   }

@@ -1,0 +1,37 @@
+apiVersion: company-as-code/v1
+kind: Manifest
+name: governance
+domain: finance-ops
+parent: domains/finance-ops
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Requirements, controls, and the evidence that proves the controls run. Owns
+  the compliance posture the finance-ops executive rolls up and the auditor
+  reads.
+
+owns:
+  schemas:
+    - requirement
+    - control
+  policies:
+    - hitl-external-writes
+    - data-retention
+
+consumes: []
+
+exposes:
+  - interface: compliance-state
+    stability: experimental
+    description: >
+      Open findings, control attestations, coverage gaps by framework, and the
+      date each control was last verified.
+
+invariants:
+  - Every in-scope Requirement is covered by at least one Control; the coverage gate runs in CI.
+  - A Control claiming to be operating declares where its evidence lands.
+  - Requirement scope exclusions carry a written rationale; silent exclusions are findings.
+
+contacts:
+  - role: accountable
+    person: cfo

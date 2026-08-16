@@ -1,4 +1,4 @@
-# Generated from /schemas/state-snapshot.schema.json — do not edit by hand.
+# Generated from /schemas/state-snapshot.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations
@@ -33,7 +33,7 @@ class StateSnapshotMappingsItem(TypedDict):
 
 
 class StateSnapshot(TypedDict):
-    """An immutable, versioned checkpoint of the company's canonical coordination state — canonical entity IDs and their evolving external system mappings. Snapshots make rollback to a known-good state a first-class runtime operation. The append-only audit log and typed-event ledger are never rewound; a rollback rolls history forward by emitting a coordination.state_rolled_back event."""
+    """An immutable, versioned checkpoint of the company's canonical coordination state, canonical entity IDs and their evolving external system mappings. Snapshots make rollback to a known-good state a first-class runtime operation. The append-only audit log and typed-event ledger are never rewound; a rollback rolls history forward by emitting a coordination.state_rolled_back event."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["StateSnapshot"]
     """Snapshot ID, e.g. 'snap-01jh...'."""

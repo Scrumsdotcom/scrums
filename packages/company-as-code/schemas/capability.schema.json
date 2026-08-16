@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/capability.schema.json",
+  "title": "Capability",
+  "description": "Something the company must be able to do, with a declared chain of who does it. Every capability names a primary owner, an ordered fallback chain, and a final fallback that can never itself be absent. A company can lose people, agents, and whole modules without losing a capability: the chain says who picks it up and how much of it survives.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "id", "name", "description", "criticality", "primaryOwner", "finalFallback"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "Capability" },
+    "id": {
+      "type": "string",
+      "pattern": "^CAP-[A-Z0-9]+(-[A-Z0-9]+)*$",
+      "description": "Canonical, permanent capability ID (e.g. CAP-MONTH-END-CLOSE)."
+    },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "description": { "type": "string", "minLength": 16 },
+    "domain": {
+      "type": "string",
+      "enum": ["finance-ops", "product-operations", "sales-marketing", "executive", "cross-domain"]
+    },
+    "criticality": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"],
+      "description": "How badly the company degrades if this capability is unavailable. 'high' and 'critical' require at least one intermediate fallback."
+    },
+    "primaryOwner": { "$ref": "#/$defs/Holder" },
+    "fallback": {
+      "type": "array",
+      "description": "Ordered chain tried when the primary is absent, saturated, or stalled. First match wins.",
+      "items": { "$ref": "#/$defs/Holder" }
+    },
+    "finalFallback": {
+      "$ref": "#/$defs/Holder",
+      "description": "The holder that always answers. Typically a human role, because a chain that terminates in an agent can terminate in nothing."
+    },
+    "sla": {
+      "type": "string",
+      "description": "The response commitment for the capability as a whole, e.g. 'first response within 4 business hours'."
+    },
+    "requires": {
+      "type": "array",
+      "description": "Other capabilities this one depends on. Cycles are permitted (a company is a cyclic graph) but are reported by the capability map.",
+      "items": { "type": "string", "x-cac-ref": ["Capability"] }
+    },
+    "measuredBy": {
+      "type": "array",
+      "description": "Metrics that show whether the capability is actually being delivered.",
+      "items": { "type": "string", "x-cac-ref": ["Metric"] }
+    },
+    "tags": { "type": "array", "items": { "type": "string" } }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "criticality": { "enum": ["high", "critical"] } },
+        "required": ["criticality"]
+      },
+      "then": {
+        "properties": { "fallback": { "type": "array", "minItems": 1 } },
+        "required": ["fallback"]
+      }
+    }
+  ],
+  "$defs": {
+    "Holder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "delivers"],
+      "description": "One link in the ownership chain. `delivers` is the honest statement of how much of the capability this holder actually provides.",
+      "properties": {
+        "kind": { "type": "string", "enum": ["agent", "person", "team", "module", "role"] },
+        "id": { "type": "string" },
+        "delivers": {
+          "type": "string",
+          "enum": ["full", "reduced", "manual", "triage-only"],
+          "description": "'full' means no loss. 'reduced' means a documented subset. 'manual' means the automation is gone but the outcome still happens. 'triage-only' means the holder can hold the line, not close the loop."
+        },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+apiVersion: company-as-code/v1
+kind: Metric
+
+id: METRIC-RUNTIME-MTTR
+name: Incident mean time to resolution
+description: >
+  Mean hours from incident declaration to resolution across every domain,
+  measured over a rolling 90-day window. Cross-domain incidents are counted
+  once, against the runtime module, rather than once per domain involved.
+
+owner:
+  module: company/runtime
+  person: platform-lead
+
+type: duration
+unit: hours
+
+formula: >
+  mean(resolved_at - declared_at) across incidents whose L1 bucket moved from
+  active to resolved in the window.
+
+lineage:
+  - source: company/runtime
+    field: runtime.incident_declared
+    transformation: pair each incident_declared event with the incident_resolved event carrying the same incident ID
+
+freshness:
+  expectedLag: PT1H
+  maxLag: P1D
+
+thresholds:
+  - level: warning
+    comparator: gt
+    value: 8
+  - level: critical
+    comparator: gt
+    value: 24
+
+dashboards:
+  - executive-overview
+alerts:
+  - incident-mttr-breach
+
+history:
+  retention: P3Y
+  grain: week

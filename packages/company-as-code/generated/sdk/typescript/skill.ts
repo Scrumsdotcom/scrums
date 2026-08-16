@@ -1,4 +1,4 @@
-// Generated from /schemas/skill.schema.json — do not edit by hand.
+// Generated from /schemas/skill.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Tier-3 knowledge primitive: composable, reusable expertise referenced by name. One canonical YAML source; adapter generators emit per-runtime variants (Claude SKILL.md, provider-neutral AGENTS.md, Gemini Gem JSON). */

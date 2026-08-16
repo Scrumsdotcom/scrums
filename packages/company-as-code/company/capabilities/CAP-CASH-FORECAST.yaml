@@ -1,0 +1,35 @@
+apiVersion: company-as-code/v1
+kind: Capability
+
+id: CAP-CASH-FORECAST
+name: cash-forecast
+description: >
+  The company can say what its cash position will be over the next thirteen
+  weeks, and can say it on a day when the forecasting agent is unavailable.
+
+domain: finance-ops
+criticality: high
+
+primaryOwner:
+  kind: agent
+  id: cash-forecaster
+  delivers: full
+
+fallback:
+  - kind: role
+    id: finance-lead
+    delivers: manual
+    note: >
+      Same forecast, produced by hand from the canonical ledger and pipeline
+      state. Slower and weekly rather than daily; the outcome still happens.
+
+finalFallback:
+  kind: person
+  id: cfo
+  delivers: reduced
+  note: Position and runway without the weekly decomposition.
+
+sla: A current forecast is never older than seven days.
+
+measuredBy:
+  - METRIC-FIN-CLOSE-ON-TIME

@@ -1,0 +1,60 @@
+# Automation: deploy-to-prod
+#
+# Referenced from:
+# - company/domains/product-operations/platform/workflows/production-deploy.yaml
+#   (steps dry-run-deploy and deploy call this automation)
+
+apiVersion: company-as-code/v1
+kind: Automation
+name: deploy-to-prod
+
+owner:
+  module: company/domains/product-operations/platform
+
+purpose: >
+  Promote an approved build candidate to production. The same automation
+  serves the dry-run step and the live step; `dryRun` decides whether the
+  computed release plan is executed or only recorded.
+
+runtime: scheduled-job   # invoked by the production-deploy workflow, not by its own schedule
+schedule: on-demand
+cadence: on-demand
+
+inputs:
+  - name: buildId
+    type: build-reference
+    required: true
+  - name: dryRun
+    type: boolean
+    required: true
+    description: When true, the full release plan is computed and audited but nothing is promoted.
+
+outputs:
+  - name: deployReceipt
+    type: deploy-receipt
+    description: The exact release plan that was (or would be) executed, with the resulting revision.
+
+mutates:
+  - production_revision: replace
+
+invariants:
+  - "Refuses to promote if dryRun=false is invoked without a prior dryRun=true audit record under the same correlation ID."
+  - "Refuses to promote without a recorded human approval naming a canonical Person ID."
+  - "Idempotent on (buildId, dryRun=false), promoting a revision that is already live is a no-op with a typed warning."
+  - "Re-reads the current production revision immediately before promoting; a revision that moved since preflight halts the deploy."
+  - "Reads the promoted revision back after promoting; a mismatch between intent and result is a failure, not a warning."
+  - "Writes an audit record on every invocation, including dry-runs and refusals."
+
+failureModes:
+  - description: Production revision changed between preflight and promotion.
+    behavior: Halt without promoting; emit `platform.deploy_blocked` with reason `revision-moved`.
+  - description: Health check fails after promotion.
+    behavior: Emit `platform.deploy_failed`; the deploy-watchdog escalates after three consecutive failures.
+  - description: Dry-run prerequisite missing.
+    behavior: Refuse to promote; audit the refusal with reason `no-prior-dry-run`.
+
+observability:
+  auditTopic: deploy-to-prod
+  dashboards:
+    - deploy-frequency
+    - platform-overview

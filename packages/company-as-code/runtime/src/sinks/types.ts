@@ -1,9 +1,9 @@
 import type { AuditRecord, TypedEvent } from "../types.js";
 
 /**
- * AuditSink — append-only store for "what did the runtime do".
+ * AuditSink: append-only store for "what did the runtime do".
  *
- * Implementations must be append-only and total — calls never overwrite or
+ * Implementations must be append-only and total: calls never overwrite or
  * delete prior records. Queries are diagnostic, not transactional.
  */
 export interface AuditSink {
@@ -19,11 +19,11 @@ export interface AuditSink {
 }
 
 /**
- * EventSink — append-only typed event ledger.
+ * EventSink: append-only typed event ledger.
  *
  * Events are state transitions on canonical entities. The registry at
  * /company/events/event-types.yaml is the enum of allowed types; the
- * sink does not enforce membership — the validator at the dev edge does.
+ * sink does not enforce membership. The validator at the dev edge does.
  */
 export interface EventSink {
   emit(event: TypedEvent): Promise<void>;

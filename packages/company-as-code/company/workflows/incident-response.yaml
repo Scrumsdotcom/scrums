@@ -7,7 +7,7 @@ module: company/runtime
 purpose: >
   Orchestrate a declared incident from declaration through retrospective.
   Cross-cutting workflow that lives at the runtime layer because it spans
-  every module. Always human-led — the commander is a person, not an agent.
+  every module. Always human-led. The commander is a person, not an agent.
 
 trigger:
   kind: event

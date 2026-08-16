@@ -76,7 +76,7 @@ describe("SqliteHitlInbox", () => {
   });
 });
 
-describe("QueuedApprovalProvider — workflow integration", () => {
+describe("QueuedApprovalProvider, workflow integration", () => {
   function syntheticHitlWorkflow(): WorkflowDoc {
     return {
       apiVersion: "company-as-code/v1",
@@ -92,7 +92,7 @@ describe("QueuedApprovalProvider — workflow integration", () => {
 
   it("a workflow blocks on the inbox and proceeds once a human approves", async () => {
     sinks = new SqliteSinks(":memory:");
-    // Inbox shares the in-memory DB? No — :memory: is per-connection. Use a
+    // Inbox shares the in-memory DB? No, :memory: is per-connection. Use a
     // shared inbox instance for both the provider and the resolver.
     inbox = new SqliteHitlInbox(":memory:");
     const repo = await loadRepo(repoRoot);

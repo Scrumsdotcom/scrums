@@ -1,4 +1,4 @@
-// Generated from /schemas/event.schema.json — do not edit by hand.
+// Generated from /schemas/event.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Dotted, lowercase + snake_case event type. Leading segment is the emitting domain or module. Kept byte-identical with event-type-registry.schema.json#/$defs/eventType (enforced by test). */

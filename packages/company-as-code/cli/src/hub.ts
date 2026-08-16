@@ -1,11 +1,11 @@
-// CaC-Hub — the community module registry.
+// CaC-Hub, the community module registry.
 //
 // A hub module lives under hub/modules/<name>/ as a `hub-module.yaml` (metadata)
 // plus a payload/ directory of files to scaffold into a company's /company tree.
 // This module loads them, generates the registry index, and powers the
 // `cac hub` commands: list / show / add / validate.
 //
-// `cac hub add` is dry-run by default — it prints the projected file writes
+// `cac hub add` is dry-run by default. It prints the projected file writes
 // before they land, mirroring the framework's dry-run-first discipline.
 
 import fs from "node:fs/promises";
@@ -163,7 +163,7 @@ export async function validateHub(): Promise<HubProblem[]> {
     //    matching framework schema. Doc / Asset payloads are skipped.
     for (const s of (m.data?.scaffolds ?? []) as Array<{ path: string; kind: string }>) {
       const schemaFile = schemaForKind(s.kind);
-      if (!schemaFile) continue; // Doc, Asset, or unknown — not schema-validated
+      if (!schemaFile) continue; // Doc, Asset, or unknown, not schema-validated
       const abs = path.join(REPO_ROOT, m.dir, "payload", s.path);
       let parsed: any;
       try {
@@ -201,7 +201,7 @@ export async function hubListCommand(): Promise<boolean> {
     console.log("(no hub modules under /hub/modules)");
     return true;
   }
-  console.log(`CaC-Hub — ${modules.length} module(s):\n`);
+  console.log(`CaC-Hub, ${modules.length} module(s):\n`);
   for (const m of modules) {
     const d = m.data;
     console.log(`  ${String(d.name).padEnd(22)} ${String(d.version).padEnd(8)} ${String(d.category).padEnd(14)} ${d.maturity}`);
@@ -238,7 +238,7 @@ export async function hubShowCommand(name: string): Promise<boolean> {
   if ((d.consumes ?? []).length) {
     console.log(`\nconsumes (framework interfaces expected to exist):`);
     for (const c of d.consumes as Array<{ interface: string; reason?: string }>) {
-      console.log(`  ${c.interface}${c.reason ? ` — ${c.reason}` : ""}`);
+      console.log(`  ${c.interface}${c.reason ? `, ${c.reason}` : ""}`);
     }
   }
   return true;
@@ -296,7 +296,7 @@ export async function hubAddCommand(name: string, opts: HubAddOptions): Promise<
   const collisions = projected.filter((p) => p.exists);
 
   console.log(`hub add ${d.name} ${d.version} → ${destRel}`);
-  console.log(`${opts.write ? "APPLYING" : "DRY-RUN — no files written"} (${projected.length} file(s))\n`);
+  console.log(`${opts.write ? "APPLYING" : "DRY-RUN, no files written"} (${projected.length} file(s))\n`);
   for (const p of projected) {
     const mark = p.exists ? "EXISTS!" : "create ";
     console.log(`  ${mark}  ${p.to}`);
@@ -304,7 +304,7 @@ export async function hubAddCommand(name: string, opts: HubAddOptions): Promise<
   if ((d.consumes ?? []).length) {
     console.log(`\n  ⚠ this module expects these interfaces to already exist:`);
     for (const c of d.consumes as Array<{ interface: string; reason?: string }>) {
-      console.log(`      ${c.interface}${c.reason ? ` — ${c.reason}` : ""}`);
+      console.log(`      ${c.interface}${c.reason ? `, ${c.reason}` : ""}`);
     }
   }
 
@@ -343,7 +343,7 @@ export async function hubValidateCommand(): Promise<boolean> {
   if (problems.length === 0) {
     const payloadCount = modules.reduce((n, m) => n + m.payloadFiles.length, 0);
     console.log(
-      `✓ hub validate: ${modules.length} module(s), ${payloadCount} payload file(s) — all schema-valid.`,
+      `✓ hub validate: ${modules.length} module(s), ${payloadCount} payload file(s), all schema-valid.`,
     );
     return true;
   }

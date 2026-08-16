@@ -1,7 +1,7 @@
-// Generated from /schemas/organization.schema.json — do not edit by hand.
+// Generated from /schemas/organization.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
-/** Canonical organizational unit — company, business unit, team, pod, department. Forms the executable org graph. */
+/** Canonical organizational unit, company, business unit, team, pod, department. Forms the executable org graph. */
 export interface Organization {
   apiVersion: "company-as-code/v1";
   kind: "Organization";

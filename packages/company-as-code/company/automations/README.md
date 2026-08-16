@@ -1,6 +1,6 @@
 # /company/automations
 
-Non-agent automations — deterministic scripts, scheduled jobs, webhook handlers. Lives between the agent layer (autonomous reasoning) and the integration layer (external systems).
+Non-agent automations, deterministic scripts, scheduled jobs, webhook handlers. Lives between the agent layer (autonomous reasoning) and the integration layer (external systems).
 
 Every automation declares its inputs, outputs, mutation surface, invariants, and the audit topic it emits to.
 
@@ -22,14 +22,14 @@ A workflow step of `kind: dry-run` or `kind: live-write` references an automatio
 
 Every automation declares:
 
-- `purpose` — one-sentence summary
+- `purpose`: one-sentence summary
 - `inputs[]` with `dryRun: boolean` always present
 - `outputs[]`
-- `mutates[]` — which canonical tables or external integrations it writes to
-- `invariants[]` — at minimum: "Refuses to write live without a prior dry-run audit record under the same correlation ID"
-- `failureModes[]` — known failures with declared behavior
-- `observability.auditTopic` — required
+- `mutates[]`: which canonical tables or external integrations it writes to
+- `invariants[]`: at minimum: "Refuses to write live without a prior dry-run audit record under the same correlation ID"
+- `failureModes[]`: known failures with declared behavior
+- `observability.auditTopic`: required
 
 ## Schema status
 
-Automation YAMLs are illustrative — they are not yet schema-validated. An `Automation` schema is on the roadmap so automations can be machine-validated alongside other primitives. Track via a future ADR.
+Automation YAMLs are illustrative. They are not yet schema-validated. An `Automation` schema is on the roadmap so automations can be machine-validated alongside other primitives. Track via a future ADR.

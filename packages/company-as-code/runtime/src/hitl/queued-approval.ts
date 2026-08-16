@@ -10,7 +10,7 @@ import { SqliteHitlInbox } from "./inbox.js";
  * Unlike the interactive stdin provider, this one does not assume a human is
  * sitting at the same terminal as the workflow. It enqueues the dry-run
  * projection into a durable inbox and blocks, polling until a human resolves
- * the item — from the CLI (`cac-host inbox approve/reject`) or the web
+ * the item, from the CLI (`cac-host inbox approve/reject`) or the web
  * dashboard (`cac-host inbox serve`). The workflow process can be headless
  * and long-running; the human shows up whenever they show up.
  */
@@ -29,7 +29,7 @@ export class QueuedApprovalProvider implements ApprovalProvider {
     triggerActor: string;
   }): Promise<{ approved: boolean; approver: string; reason?: string }> {
     // The thing a human signs off is the most recent dry-run projection in
-    // this correlation — the "what would happen" the spec's dry-run-then-live
+    // this correlation. The "what would happen" the spec's dry-run-then-live
     // gate produces.
     const prior = await args.audit.byCorrelation(args.correlationId);
     const lastDryRun = [...prior].reverse().find((r) => r.dryRun === true);
@@ -47,7 +47,7 @@ export class QueuedApprovalProvider implements ApprovalProvider {
     });
 
     console.error(
-      `⏸  human approval queued — inbox item ${item.id}\n` +
+      `⏸  human approval queued, inbox item ${item.id}\n` +
         `   workflow: ${args.module}::${args.workflow}  step: ${args.step.id}  approver: ${item.approverRole}\n` +
         `   resolve with: cac-host inbox approve ${item.id} --approver <person>\n` +
         `             or: cac-host inbox serve   (web dashboard)`,

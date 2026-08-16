@@ -13,15 +13,15 @@ Build out the complete Company-as-Code seed repository from the master specifica
 
 ## Solution shape
 
-- **Foundation files** at repo root — README, LICENSE, CONTRIBUTING, CHANGELOG, SECURITY, CODE_OF_CONDUCT, .gitignore.
-- **Master spec** preserved verbatim at `docs/spec/company-as-code-spec.md` — the source of authority for all downstream artefacts.
-- **JSON Schemas** at `/schemas/*.schema.json` — one schema per canonical primitive, enforced by CI.
-- **Canonical directory tree** under `/company/` — three domains, executive layer, top-level support directories. Each substantial folder has a README; modules with logic carry a `manifest.yaml`.
-- **Authoring templates** at `/templates/` — annotated starting points for each primitive.
-- **Worked examples** in three modules (finance, platform, growth) — real manifests, agents, workflows wired through.
-- **Reference CLI** in TypeScript at `/cli/` — deterministic generators, validation, drift-check mode for CI.
-- **CI workflows** under `.github/` — schema validation + drift gate.
-- **Documentation** under `/docs/` — architecture, getting started, codified standards, glossary, ADRs.
+- **Foundation files** at repo root, README, LICENSE, CONTRIBUTING, CHANGELOG, SECURITY, CODE_OF_CONDUCT, .gitignore.
+- **Master spec** preserved verbatim at `docs/spec/company-as-code-spec.md`, the source of authority for all downstream artefacts.
+- **JSON Schemas** at `/schemas/*.schema.json`, one schema per canonical primitive, enforced by CI.
+- **Canonical directory tree** under `/company/`, three domains, executive layer, top-level support directories. Each substantial folder has a README; modules with logic carry a `manifest.yaml`.
+- **Authoring templates** at `/templates/`, annotated starting points for each primitive.
+- **Worked examples** in three modules (finance, platform, growth), real manifests, agents, workflows wired through.
+- **Reference CLI** in TypeScript at `/cli/`, deterministic generators, validation, drift-check mode for CI.
+- **CI workflows** under `.github/`, schema validation + drift gate.
+- **Documentation** under `/docs/`, architecture, getting started, codified standards, glossary, ADRs.
 
 Boundaries respected:
 
@@ -41,7 +41,7 @@ Boundaries respected:
 
 - The `/generated/` directory does not yet exist. It will be created by the first run of `npm run generate` once the CLI is in place. Until then, CI's drift-check will be a no-op.
 - The README references `https://github.com/your-org/company-as-code.git` as a placeholder clone URL. Update it once the project has a permanent home.
-- The spec mentions sub-domain placeholders are valid — i.e., folders without manifests are allowed. The scaffold deliberately leaves many domain sub-folders without manifests; that's not an oversight.
+- The spec mentions sub-domain placeholders are valid: i.e., folders without manifests are allowed. The scaffold deliberately leaves many domain sub-folders without manifests; that's not an oversight.
 - The CHANGELOG's `[Unreleased]` link points to a placeholder org. Fix when the repo is moved.
 
 ## What's done
@@ -49,25 +49,25 @@ Boundaries respected:
 Files written and on disk:
 
 - `LICENSE` (Apache 2.0, pre-existing)
-- `README.md` — full positioning, layout, quick start, vendor-neutrality, AI-native section
-- `CONTRIBUTING.md` — workflow, hard rules, plan-first, hand-merge prohibition, force-push prohibition
-- `CHANGELOG.md` — Unreleased section enumerating planned seed contents
-- `SECURITY.md` — reporting policy + operational security posture summary
-- `.gitignore` — Node, env files, secrets, IDE, OS; explicit note that `/generated/` is NOT ignored
-- `docs/spec/company-as-code-spec.md` — full master specification preserved verbatim
-- `docs/plans/seed-build.md` — this file
+- `README.md`: full positioning, layout, quick start, vendor-neutrality, AI-native section
+- `CONTRIBUTING.md`: workflow, hard rules, plan-first, hand-merge prohibition, force-push prohibition
+- `CHANGELOG.md`: Unreleased section enumerating planned seed contents
+- `SECURITY.md`: reporting policy + operational security posture summary
+- `.gitignore`: Node, env files, secrets, IDE, OS; explicit note that `/generated/` is NOT ignored
+- `docs/spec/company-as-code-spec.md`: full master specification preserved verbatim
+- `docs/plans/seed-build.md`: this file
 
 Task tracker state at parking time:
 
 - Tasks #1, #2, #3 completed (README, CONTRIBUTING, spec file)
-- Task #4 in progress (foundation files — `.gitignore`, `CHANGELOG`, `SECURITY` done; **`CODE_OF_CONDUCT.md` still pending**)
+- Task #4 in progress (foundation files: `.gitignore`, `CHANGELOG`, `SECURITY` done; **`CODE_OF_CONDUCT.md` still pending**)
 - Tasks #5 through #29 pending
 
 ## Phasing
 
 Each phase is a small chunk that can be picked up independently. The order matters: schemas before scaffolds, scaffolds before examples, examples before CLI verification.
 
-### Phase 0 — Finish foundation _(complete)_
+### Phase 0: Finish foundation _(complete)_
 
 - [x] `README.md`
 - [x] `CONTRIBUTING.md`
@@ -77,7 +77,7 @@ Each phase is a small chunk that can be picked up independently. The order matte
 - [x] `docs/spec/company-as-code-spec.md`
 - [x] `CODE_OF_CONDUCT.md`
 
-### Phase 1 — JSON Schemas (`/schemas/`)  _(complete)_
+### Phase 1: JSON Schemas (`/schemas/`)  _(complete)_
 
 - [x] `manifest.schema.json`
 - [x] `task.schema.json`
@@ -93,38 +93,38 @@ Each phase is a small chunk that can be picked up independently. The order matte
 - [x] `person.schema.json`
 - [x] `integration.schema.json`
 
-### Phase 2 — Canonical directory scaffold (`/company/`)  _(complete)_
+### Phase 2: Canonical directory scaffold (`/company/`)  _(complete)_
 
 - [x] Executive layer (ceo, finance-ops, product-operations, sales-marketing) with READMEs + manifests
 - [x] All three domains scaffolded with sub-module READMEs
 - [x] Top-level support dirs with READMEs
 
-### Phase 3 — Authoring templates (`/templates/`)  _(complete)_
+### Phase 3: Authoring templates (`/templates/`)  _(complete)_
 
 - [x] `module-manifest.yaml`, `agent.yaml`, `workflow.yaml`, `task.yaml`
 - [x] `initiative.yaml`, `goal.yaml`, `metric.yaml`, `playbook.md`, `plan.md`, `adr.md`
 
-### Phase 4 — Worked examples  _(complete)_
+### Phase 4: Worked examples  _(complete)_
 
-- [x] `finance-ops/finance` — manifest + cash-forecaster + month-end-close workflow + playbook + INIT/GOAL/METRIC chain
-- [x] `product-operations/platform` — manifest + 3 agents (autonomous / escalated / human-gated) + production-deploy workflow + 3 sub-cognition manifests
-- [x] `sales-marketing/growth` — manifest + growth-experiment-runner + customer-acquisition workflow + INIT/GOAL/METRIC chain
+- [x] `finance-ops/finance`, manifest + cash-forecaster + month-end-close workflow + playbook + INIT/GOAL/METRIC chain
+- [x] `product-operations/platform`, manifest + 3 agents (autonomous / escalated / human-gated) + production-deploy workflow + 3 sub-cognition manifests
+- [x] `sales-marketing/growth`, manifest + growth-experiment-runner + customer-acquisition workflow + INIT/GOAL/METRIC chain
 
-### Phase 5 — Reference CLI (`/cli/`)  _(complete)_
+### Phase 5: Reference CLI (`/cli/`)  _(complete)_
 
 - [x] `package.json`, `tsconfig.json`, npm scripts
 - [x] Ajv-based validator (schema + cross-document discipline checks)
 - [x] Generators: agent-catalogue, flow-registry, dependency-graph, domain-model
 - [x] `--check` mode wired to drift gate
 
-### Phase 6 — CI (`.github/`)  _(complete)_
+### Phase 6: CI (`.github/`)  _(complete)_
 
 - [x] `.github/workflows/validate.yml`
 - [x] `.github/workflows/generate-check.yml`
 - [x] `.github/PULL_REQUEST_TEMPLATE.md`
 - [x] `.github/ISSUE_TEMPLATE/{bug_report,feature_request}.md`
 
-### Phase 7 — Documentation (`/docs/`)  _(complete)_
+### Phase 7: Documentation (`/docs/`)  _(complete)_
 
 - [x] `architecture.md`
 - [x] `getting-started.md`
@@ -132,12 +132,12 @@ Each phase is a small chunk that can be picked up independently. The order matte
 - [x] `glossary.md`
 - [x] `adr/0001-record-architecture-decisions.md`
 
-### Phase 8 — Verify + commit  _(complete)_
+### Phase 8: Verify + commit  _(complete)_
 
-- [x] `cd cli && npm install` — 33 packages
-- [x] `npm run validate` — `✓ 24 document(s) OK across 11 primitive(s).`
-- [x] `npm run generate` — wrote 4 files to `/generated`
-- [x] `npm run generate:check` — `✓ /generated is in sync.`
+- [x] `cd cli && npm install`, 33 packages
+- [x] `npm run validate`, `✓ 24 document(s) OK across 11 primitive(s).`
+- [x] `npm run generate`, wrote 4 files to `/generated`
+- [x] `npm run generate:check`, `✓ /generated is in sync.`
 - [x] Single commit of the seed, no `Co-Authored-By` trailer.
 
 ## Open questions
@@ -148,7 +148,7 @@ Each phase is a small chunk that can be picked up independently. The order matte
 
 ## Resume cue (verbose)
 
-Open `docs/plans/seed-build.md`. The "What's done" section is the ground truth — verify with `git status` and `ls`. Then start at **Phase 0's unchecked item** (`CODE_OF_CONDUCT.md`) and proceed through phases in order. The task tracker in the running session has the same items numbered #4 through #29; if resuming in a new session, re-create the task list from the phasing above.
+Open `docs/plans/seed-build.md`. The "What's done" section is the ground truth, verify with `git status` and `ls`. Then start at **Phase 0's unchecked item** (`CODE_OF_CONDUCT.md`) and proceed through phases in order. The task tracker in the running session has the same items numbered #4 through #29; if resuming in a new session, re-create the task list from the phasing above.
 
 Critical constraints to honor on the final commit:
 

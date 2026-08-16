@@ -1,4 +1,4 @@
-# Generated from /schemas/manifest.schema.json — do not edit by hand.
+# Generated from /schemas/manifest.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations
@@ -19,7 +19,7 @@ class ModuleManifestOwns(TypedDict):
 
 class ModuleManifestConsumesItem(TypedDict):
     interface: str
-    # "from": str  (reserved word — access via dict)
+    # "from": str  (reserved word, access via dict)
     usage: NotRequired[str]
 
 

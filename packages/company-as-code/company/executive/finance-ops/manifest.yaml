@@ -42,7 +42,7 @@ agents:
       - finance-rollup
 
 invariants:
-  - Roll-up reads from declared consumes-interfaces only — no direct reads from external systems.
+  - Roll-up reads from declared consumes-interfaces only. No direct reads from external systems.
 
 contacts:
   - role: accountable

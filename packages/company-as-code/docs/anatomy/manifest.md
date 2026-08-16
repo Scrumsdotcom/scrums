@@ -10,7 +10,7 @@ Schema: [`/schemas/manifest.schema.json`](../../schemas/manifest.schema.json). T
 
 ### `apiVersion: company-as-code/v1`
 
-The schema contract version. **Always** `company-as-code/v1` for this generation of the framework. When a breaking change requires a `v2`, that's an ADR + a migration window. Never edit the bare string `v1` to test something — the validator pins to it.
+The schema contract version. **Always** `company-as-code/v1` for this generation of the framework. When a breaking change requires a `v2`, that's an ADR + a migration window. Never edit the bare string `v1` to test something, the validator pins to it.
 
 ### `kind: Manifest`
 
@@ -25,7 +25,7 @@ The name appears in:
 - Cross-document references (other modules' `consumes[].from` ends in this name)
 - The folder name on disk (must match)
 
-If you rename a module, you're renaming three things at once. There is no "alias period" for module names — pick well, then commit.
+If you rename a module, you're renaming three things at once. There is no "alias period" for module names. Pick well, then commit.
 
 ### `domain`
 
@@ -47,7 +47,7 @@ One of: `planning | hardening | stable | agent-ready | deprecated`. Documents th
 
 ### `contacts[]`
 
-At least one entry, each with a `role` (required) and optionally `person` or `team`. Every module has a human accountable for it. There is no "we'll figure out ownership later" mode — that's how modules go dark.
+At least one entry, each with a `role` (required) and optionally `person` or `team`. Every module has a human accountable for it. There is no "we'll figure out ownership later" mode, that's how modules go dark.
 
 The accountable contact appears in escalation paths declared in [`/company/runtime/escalation-policy.yaml`](../../company/runtime/escalation-policy.yaml).
 
@@ -55,7 +55,7 @@ The accountable contact appears in escalation paths declared in [`/company/runti
 
 ## The `owns` block
 
-What this module is canonically responsible for. Empty arrays are valid — a new module may not own any agents yet, but the declaration of zero-ness is itself information.
+What this module is canonically responsible for. Empty arrays are valid. A new module may not own any agents yet, but the declaration of zero-ness is itself information.
 
 ```yaml
 owns:
@@ -69,7 +69,7 @@ owns:
   playbooks: []       # runbooks / SOPs
 ```
 
-When in doubt about ownership: a thing belongs to exactly one module. Multiple modules claiming the same artefact is a code smell — extract a parent or rename.
+When in doubt about ownership: a thing belongs to exactly one module. Multiple modules claiming the same artefact is a code smell, extract a parent or rename.
 
 ---
 
@@ -157,10 +157,10 @@ The runtime references invariants in audit refusals: when a check fails, the rej
 
 Free-form pointer table for related artefacts that don't fit cleanly into other fields. Common keys:
 
-- `dashboard` — pointer to the module's primary dashboard
-- `playbook` — pointer to the canonical operational procedure
-- `runbook` — when distinct from playbook
-- `slackChannel` — for forks that use one chat integration
+- `dashboard`: pointer to the module's primary dashboard
+- `playbook`: pointer to the canonical operational procedure
+- `runbook`: when distinct from playbook
+- `slackChannel`: for forks that use one chat integration
 
 Keys are not enforced; values are URLs or repo-relative paths.
 
@@ -170,12 +170,12 @@ Keys are not enforced; values are URLs or repo-relative paths.
 
 These are the things to catch in PR review:
 
-1. **Empty `contacts[]`** — schema requires `minItems: 1`. If you see this, the PR is incomplete.
-2. **Generic `purpose`** — "Owns the finance stuff." Rewrite. The purpose should distinguish this module from every other module.
-3. **`consumes[]` pointing at a `from:` that doesn't exist** — validates (the loader doesn't enforce module presence yet), but the dependency-graph generator will show the dangling edge.
-4. **Inline `agents` summary mismatching the standalone file** — the standalone file wins; fix the manifest summary.
-5. **`lifecycle: stable` on day one** — almost always wrong. New modules start `planning` or `hardening`.
-6. **Invariants written as goals** — see "Bad invariants" above.
+1. **Empty `contacts[]`**: schema requires `minItems: 1`. If you see this, the PR is incomplete.
+2. **Generic `purpose`**: "Owns the finance stuff." Rewrite. The purpose should distinguish this module from every other module.
+3. **`consumes[]` pointing at a `from:` that doesn't exist**: validates (the loader doesn't enforce module presence yet), but the dependency-graph generator will show the dangling edge.
+4. **Inline `agents` summary mismatching the standalone file**: the standalone file wins; fix the manifest summary.
+5. **`lifecycle: stable` on day one**: almost always wrong. New modules start `planning` or `hardening`.
+6. **Invariants written as goals**: see "Bad invariants" above.
 
 ---
 

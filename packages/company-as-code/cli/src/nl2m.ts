@@ -1,16 +1,16 @@
-// NL2M — Natural Language to Manifest.
+// NL2M, Natural Language to Manifest.
 //
 // A CEO describes a company initiative in prose; NL2M turns it into a linked
 // Initiative + Goal + Metric triple, schema-valid and ready to commit.
 //
 // The reference implementation is a DETERMINISTIC heuristic parser, not an LLM
-// call — the CLI must be reproducible and testable. It extracts what it can
+// call. The CLI must be reproducible and testable. It extracts what it can
 // confidently (a target number, a direction, a domain, a horizon) and leaves
 // honest `nl2m: review` markers everywhere it had to guess. The output always
 // validates against the canonical schemas; the human (or an agent) fills the
 // review fields before the docs go live.
 //
-// Like every write path in the framework, `cac nl2m` is dry-run by default —
+// Like every write path in the framework, `cac nl2m` is dry-run by default,
 // it prints the projected files; `--write` commits them.
 
 import fs from "node:fs/promises";
@@ -65,7 +65,7 @@ export interface ParsedIntent {
   goalType: "kpi" | "okr" | "sla" | "target" | "guardrail";
   target: { value: number | string; unit?: string; comparator: string };
   horizonPeriod?: "weekly" | "monthly" | "quarterly" | "yearly" | "rolling";
-  /** Fields the parser had to guess — surfaced as review markers in output. */
+  /** Fields the parser had to guess, surfaced as review markers in output. */
   review: string[];
 }
 
@@ -92,11 +92,11 @@ export function parseProse(proseRaw: string): ParsedIntent {
   if (hits.length === 0) {
     domain = "executive";
     codeDomain = "executive";
-    review.push("domain — no domain keywords matched; defaulted to executive");
+    review.push("domain, no domain keywords matched; defaulted to executive");
   } else if (hits.length > 1 && hits[0][1] === hits[1][1]) {
     domain = "cross-domain";
     codeDomain = hits[0][0] as Exclude<Domain, "cross-domain">;
-    review.push(`domain — multiple domains tied (${hits.map((h) => h[0]).join(", ")}); set cross-domain`);
+    review.push(`domain, multiple domains tied (${hits.map((h) => h[0]).join(", ")}); set cross-domain`);
   } else {
     domain = hits[0][0] as Domain;
     codeDomain = hits[0][0] as Exclude<Domain, "cross-domain">;
@@ -112,7 +112,7 @@ export function parseProse(proseRaw: string): ParsedIntent {
   title = title.charAt(0).toUpperCase() + title.slice(1);
   if (title.length < 4) {
     title = "Untitled initiative";
-    review.push("title — could not extract a title from the prose");
+    review.push("title, could not extract a title from the prose");
   }
 
   // --- target number + direction -------------------------------------------
@@ -164,10 +164,10 @@ export function parseProse(proseRaw: string): ParsedIntent {
     }
   }
   if (value === "TBD") {
-    review.push("target.value — no target number found in the prose");
+    review.push("target.value, no target number found in the prose");
   }
   if (!directionFound) {
-    review.push("target.comparator — no direction verb found; defaulted to 'gte'");
+    review.push("target.comparator, no direction verb found; defaulted to 'gte'");
   }
 
   // Duration phrases ("9 months", "2 business days") become a duration metric
@@ -181,11 +181,11 @@ export function parseProse(proseRaw: string): ParsedIntent {
   }
   if (!unit) {
     unit = "TBD";
-    review.push("metric.unit — could not infer a unit; set 'TBD'");
+    review.push("metric.unit, could not infer a unit; set 'TBD'");
   }
 
   // --- metric name / subject -----------------------------------------------
-  // "<verb> (the) <subject phrase> to <number>"  — capture the subject.
+  // "<verb> (the) <subject phrase> to <number>"  # capture the subject.
   let metricName = "";
   const subjMatch = lower.match(
     /\b(?:reduce|cut|decrease|lower|increase|grow|raise|improve|reach|hit|boost)\s+(?:the\s+|our\s+|its\s+)?([a-z][a-z0-9 \-]{2,40}?)\s+(?:to|by|below|above|under|over)\b/i,
@@ -193,8 +193,8 @@ export function parseProse(proseRaw: string): ParsedIntent {
   if (subjMatch) {
     metricName = titleCase(subjMatch[1].trim());
   } else {
-    metricName = `${title} — primary metric`;
-    review.push("metric.name — could not isolate the metric subject; derived from the title");
+    metricName = `${title}, primary metric`;
+    review.push("metric.name, could not isolate the metric subject; derived from the title");
   }
   const metricSlug =
     slug(metricName).toUpperCase().slice(0, 32).replace(/-+$/, "") || "PRIMARY";
@@ -212,7 +212,7 @@ export function parseProse(proseRaw: string): ParsedIntent {
   else if (/\bmonth(ly)?\b/i.test(lower)) horizonPeriod = "monthly";
   else if (/\bweek(ly)?\b/i.test(lower)) horizonPeriod = "weekly";
   if (!horizonPeriod) {
-    review.push("goal.horizon — no timeframe found; left unset");
+    review.push("goal.horizon, no timeframe found; left unset");
   }
 
   return {
@@ -243,7 +243,7 @@ function slug(s: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// ID allocation — scan the existing corpus so generated IDs never collide
+// ID allocation, scan the existing corpus so generated IDs never collide
 // ---------------------------------------------------------------------------
 
 export interface AllocatedIds {
@@ -285,7 +285,7 @@ export async function allocateIds(intent: ParsedIntent): Promise<AllocatedIds> {
 }
 
 // ---------------------------------------------------------------------------
-// Synthesis — build the linked Initiative + Goal + Metric triple
+// Synthesis, build the linked Initiative + Goal + Metric triple
 // ---------------------------------------------------------------------------
 
 export interface SynthesisOptions {
@@ -329,7 +329,7 @@ export function synthesize(
     apiVersion: "company-as-code/v1",
     kind: "Goal",
     id: ids.goalId,
-    title: `${intent.title} — measurable goal`,
+    title: `${intent.title}, measurable goal`,
     description: `Auto-drafted by nl2m from the initiative prose. Review the target before activating.`,
     type: intent.goalType,
     owner: { kind: "team", id: ownerId },
@@ -351,7 +351,7 @@ export function synthesize(
     owner: { module: "TBD" },
     type: intent.metricType,
     unit: intent.metricUnit,
-    formula: "TBD — describe how this metric is computed",
+    formula: "TBD, describe how this metric is computed",
     lineage: [],
     freshness: { expectedLag: "P1D" },
   };
@@ -380,9 +380,9 @@ export function synthesize(
 function renderDoc(doc: SynthesizedDoc, intent: ParsedIntent, kind: string): string {
   const reviewForKind = intent.review.filter((r) => r.startsWith(kind.toLowerCase()) || matchesGeneric(r, kind));
   const header = [
-    `# Generated by 'cac nl2m'. This is a draft — review before committing.`,
+    `# Generated by 'cac nl2m'. This is a draft, review before committing.`,
     reviewForKind.length
-      ? `# nl2m: review the following — the parser had to guess:`
+      ? `# nl2m: review the following. The parser had to guess:`
       : `# nl2m: parser extracted every field with confidence.`,
     ...reviewForKind.map((r) => `#   - ${r}`),
     ``,
@@ -431,7 +431,7 @@ export async function nl2mCommand(args: Nl2mArgs): Promise<boolean> {
     today: args.today,
   });
 
-  // Validate every synthesized doc — nl2m output must always be schema-valid.
+  // Validate every synthesized doc, nl2m output must always be schema-valid.
   const problems: Array<{ file: string; errors: string[] }> = [];
   for (const [doc, schemaFile] of [
     [initiative, "initiative.schema.json"],
@@ -442,7 +442,7 @@ export async function nl2mCommand(args: Nl2mArgs): Promise<boolean> {
     if (errs.length) problems.push({ file: doc.file, errors: errs });
   }
   if (problems.length) {
-    console.error("✗ nl2m: synthesized documents failed schema validation (this is a bug — please report):");
+    console.error("✗ nl2m: synthesized documents failed schema validation (this is a bug, please report):");
     for (const p of problems) {
       console.error(`  ${p.file}`);
       for (const e of p.errors) console.error(`    - ${e}`);
@@ -456,16 +456,16 @@ export async function nl2mCommand(args: Nl2mArgs): Promise<boolean> {
     { doc: metric, kind: "Metric" },
   ];
 
-  console.log(`nl2m — parsed prose into a linked Initiative + Goal + Metric triple`);
+  console.log(`nl2m, parsed prose into a linked Initiative + Goal + Metric triple`);
   console.log(`  domain:    ${intent.domain}`);
   console.log(`  initiative: ${ids.initiativeId}`);
   console.log(`  goal:       ${ids.goalId}`);
   console.log(`  metric:     ${ids.metricId}`);
   console.log(
     `  ${intent.review.length} field(s) need review` +
-      (intent.review.length ? ` — see the # nl2m: review headers below` : ``),
+      (intent.review.length ? `. See the # nl2m: review headers below` : ``),
   );
-  console.log(`  mode:      ${args.write ? "WRITE" : "DRY-RUN — no files written"}\n`);
+  console.log(`  mode:      ${args.write ? "WRITE" : "DRY-RUN, no files written"}\n`);
 
   for (const { doc, kind } of rendered) {
     console.log(`# ---- ${doc.file} ----`);
@@ -477,7 +477,7 @@ export async function nl2mCommand(args: Nl2mArgs): Promise<boolean> {
     return true;
   }
 
-  // Refuse to overwrite — nl2m only creates new drafts.
+  // Refuse to overwrite, nl2m only creates new drafts.
   for (const { doc } of rendered) {
     const abs = path.join(COMPANY_DIR, "..", doc.file);
     try {
@@ -485,7 +485,7 @@ export async function nl2mCommand(args: Nl2mArgs): Promise<boolean> {
       console.error(`✗ nl2m: ${doc.file} already exists. Refusing to overwrite.`);
       return false;
     } catch {
-      /* good — does not exist */
+      /* good, does not exist */
     }
   }
   for (const { doc, kind } of rendered) {

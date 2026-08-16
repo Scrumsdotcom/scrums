@@ -1,4 +1,4 @@
-# Generated from /schemas/agent.schema.json — do not edit by hand.
+# Generated from /schemas/agent.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations
@@ -14,7 +14,7 @@ class AgentEscalation(TypedDict):
 class AgentInputsItem(TypedDict):
     name: str
     type: str
-    # "from": NotRequired[str]  (reserved word — access via dict)
+    # "from": NotRequired[str]  (reserved word, access via dict)
 
 
 class AgentOutputsItem(TypedDict):

@@ -18,8 +18,8 @@ Two fields. They are not the same thing.
 
 | Field | Meaning |
 |---|---|
-| `cadence` | The conceptual frequency — `realtime`, `minutely`, `hourly`, `daily`, `weekly`, `monthly`, `on-demand`, `event-driven` |
-| `schedule` | The mechanical when — a cron expression or the literal string `on-demand` |
+| `cadence` | The conceptual frequency, `realtime`, `minutely`, `hourly`, `daily`, `weekly`, `monthly`, `on-demand`, `event-driven` |
+| `schedule` | The mechanical when, a cron expression or the literal string `on-demand` |
 
 `cadence: daily, schedule: "0 7 * * *"` is consistent. `cadence: on-demand, schedule: "0 0 * * *"` is a contradiction and the runtime would refuse to start the agent.
 
@@ -27,7 +27,7 @@ For agents in autonomy class `human-gated`, `schedule: on-demand` is the only va
 
 ### `autonomy`
 
-One of: `autonomous | human-gated | escalated`. The most important field on the agent. The runtime enforces this — see [`/company/runtime/autonomy-policy.yaml`](../../company/runtime/autonomy-policy.yaml).
+One of: `autonomous | human-gated | escalated`. The most important field on the agent. The runtime enforces this. See [`/company/runtime/autonomy-policy.yaml`](../../company/runtime/autonomy-policy.yaml).
 
 | Class | Use when | Examples |
 |---|---|---|
@@ -82,9 +82,9 @@ skills:
 memoryScope: company/memory/cash-forecaster
 ```
 
-- `tools[]` — named runtime capabilities the agent uses. Vendor-neutral.
-- `skills[]` — Tier-3 skills the agent is authorized to invoke. The cross-document validator rejects references to undefined skills.
-- `memoryScope` — pointer into [`/company/memory/`](../../company/memory). The agent reads its own MEMORY.md index at invocation time.
+- `tools[]`: named runtime capabilities the agent uses. Vendor-neutral.
+- `skills[]`: Tier-3 skills the agent is authorized to invoke. The cross-document validator rejects references to undefined skills.
+- `memoryScope`: pointer into [`/company/memory/`](../../company/memory). The agent reads its own MEMORY.md index at invocation time.
 
 ---
 
@@ -99,7 +99,7 @@ observability:
   auditTopic: cash-forecaster
 ```
 
-Every agent declares an `auditTopic` — this is mandatory by convention (and worth promoting to schema-required in a future bump). The audit topic is the queryable namespace under which the agent's runtime audit records land.
+Every agent declares an `auditTopic`. This is mandatory by convention (and worth promoting to schema-required in a future bump). The audit topic is the queryable namespace under which the agent's runtime audit records land.
 
 `dashboards[]` and `alerts[]` are references; the dashboard YAMLs in [`/company/dashboards/`](../../company/dashboards) and the alert rules referenced by name must exist.
 
@@ -107,7 +107,7 @@ Every agent declares an `auditTopic` — this is mandatory by convention (and wo
 
 ## Invariants
 
-Same shape as module invariants — single-sentence assertions about the agent's behavior. The runtime references these in refusals.
+Same shape as module invariants, single-sentence assertions about the agent's behavior. The runtime references these in refusals.
 
 Required invariants for almost every agent:
 
@@ -140,7 +140,7 @@ contacts:
 Once an agent is declared and validation passes, `npm run generate` emits:
 
 - Row in [`/generated/agent-catalogue.json`](../../generated/agent-catalogue.json)
-- Per-agent context bundle at `/generated/context-bundles/<module-slug>__<agent>.json` — typed runtime context with resolved read/write access, tools, canonical events, HITL constraints, observability surfaces
+- Per-agent context bundle at `/generated/context-bundles/<module-slug>__<agent>.json`, typed runtime context with resolved read/write access, tools, canonical events, HITL constraints, observability surfaces
 
 The context bundle is what the agent **actually reads** at invocation time. Spot-check it after editing the agent declaration:
 
@@ -152,12 +152,12 @@ cat generated/context-bundles/company_domains_finance-ops_finance__cash-forecast
 
 ## Common review failures
 
-1. **`autonomy: escalated` without an `escalation` block** — caught by the cross-document validator.
-2. **Schedule on `human-gated`** — rejected at validation. If the agent has to run on a clock, the autonomy class is wrong.
-3. **No `auditTopic`** — accepted by current schema, but every reviewer should ask "where do this agent's audit rows land?"
-4. **Missing typed event when output mutates state** — an output that changes external state should `emitsEvent`. Otherwise the event ledger is incomplete.
-5. **Vendor name in `runtime`** — `runtime: openai-gpt-4o` is wrong; `runtime: llm` is right. The framework is vendor-neutral.
-6. **`skills:` referencing names that don't exist** — caught by the validator. Add the skill or remove the reference.
+1. **`autonomy: escalated` without an `escalation` block**: caught by the cross-document validator.
+2. **Schedule on `human-gated`**: rejected at validation. If the agent has to run on a clock, the autonomy class is wrong.
+3. **No `auditTopic`**: accepted by current schema, but every reviewer should ask "where do this agent's audit rows land?"
+4. **Missing typed event when output mutates state**: an output that changes external state should `emitsEvent`. Otherwise the event ledger is incomplete.
+5. **A model name in `runtime`**: `runtime: llm` is right. A specific model identifier is wrong, whatever the provider and however current the model is today. `runtime` says what kind of execution this is; which model serves it is a deployment decision the runtime host makes, and one that changes several times a year. A model name in a canonical document is a document that goes stale on someone else's release schedule.
+6. **`skills:` referencing names that don't exist**: caught by the validator. Add the skill or remove the reference.
 
 ---
 

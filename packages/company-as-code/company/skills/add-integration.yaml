@@ -5,7 +5,7 @@ name: add-integration
 version: 0.1.0
 
 description: >
-  Wire a new external system into the coordination layer through canonical IDs — no vendor names in domain logic, HITL surfaces declared explicitly.
+  Wire a new external system into the coordination layer through canonical IDs, no vendor names in domain logic, HITL surfaces declared explicitly.
 
 owner:
   module: framework
@@ -60,7 +60,7 @@ body: |
   # Add an integration
 
   Use this skill to wire a new external system into the coordination layer.
-  The framework names no vendor as canonical — every integration is pluggable,
+  The framework names no vendor as canonical. Every integration is pluggable,
   every external ID lives under `externalIds`, every irreversible operation is
   HITL by default.
 
@@ -72,10 +72,10 @@ body: |
 
   ## Inputs
 
-  - `integrationName` — kebab-case, vendor-neutral. The CRM is `customer-crm`,
+  - `integrationName`: kebab-case, vendor-neutral. The CRM is `customer-crm`,
     not the vendor's name.
-  - `category` — pulls from the schema's enum.
-  - `ownerModule` — the module accountable for this integration's health.
+  - `category`: pulls from the schema's enum.
+  - `ownerModule`: the module accountable for this integration's health.
 
   ## Steps
 
@@ -85,21 +85,21 @@ body: |
      ```
 
   2. **Fill in the integration manifest.**
-     - `name` — kebab-case local name; do not encode the vendor here
-     - `system` — vendor identifier (optional, treated as a label)
-     - `category` — schema enum value
-     - `status` — `planned` initially, then `configured`, then `active`
-     - `ownerModule` — accountable module
-     - `mutationDirection` — `read-only` (preferred), `write-only`, `writeback-only`,
+     - `name`: kebab-case local name; do not encode the vendor here
+     - `system`: vendor identifier (optional, treated as a label)
+     - `category`: schema enum value
+     - `status`: `planned` initially, then `configured`, then `active`
+     - `ownerModule`: accountable module
+     - `mutationDirection`: `read-only` (preferred), `write-only`, `writeback-only`,
        or `read-write` (only with a documented conflict-resolution protocol)
-     - `canonicalIdMapping` — for every canonical entity this integration touches,
+     - `canonicalIdMapping`: for every canonical entity this integration touches,
        declare which `externalIdField` carries the mapping
-     - `auth` — `kind` (api-key / oauth / service-account / mtls / webhook-signature)
+     - `auth`: `kind` (api-key / oauth / service-account / mtls / webhook-signature)
        and `secretRef` (a pointer into your secret manager, **never** a literal
        secret)
-     - `hitlRequiredFor` — operations that must go through human approval
+     - `hitlRequiredFor`: operations that must go through human approval
        (writes to billing, communications, contracts, destructive deletes)
-     - `rateLimits` — known limits, even if approximate
+     - `rateLimits`: known limits, even if approximate
 
   3. **Reference the integration from the owning module's manifest** if any agent
      or workflow consumes it. The `consumes:` block names the interface, not the
@@ -125,7 +125,7 @@ body: |
      npm run generate:check
      ```
 
-  8. **Before first live use, invoke `sync-verification`** — every operation
+  8. **Before first live use, invoke `sync-verification`**: every operation
      listed under `hitlRequiredFor` must go through the 5-step protocol on its
      first invocation against this integration.
 
@@ -144,20 +144,20 @@ body: |
 
   ## Failure handling
 
-  - **You are tempted to put the vendor name in business logic** — stop. The
+  - **You are tempted to put the vendor name in business logic**: stop. The
     integration's `name` is the contract; the `system` field is a label.
-  - **You want `mutationDirection: read-write` without a documented protocol** —
+  - **You want `mutationDirection: read-write` without a documented protocol**,
     split fields between the two systems instead. One owns the canonical value,
     the other owns a derived view. Round-trip syncs are defects.
-  - **A secret needs to live in the manifest** — it doesn't. Put the secret in
+  - **A secret needs to live in the manifest**: it doesn't. Put the secret in
     the secret manager, put the pointer in `secretRef`.
-  - **An external ID changed during a rotation** — update the canonical entity's
+  - **An external ID changed during a rotation**: update the canonical entity's
     `externalIds[].rotatedAt`; the canonical ID stays the same.
 
   ## Related
 
-  - Skill: `sync-verification` — mandatory before first live write through this
+  - Skill: `sync-verification`: mandatory before first live write through this
     integration.
-  - Standard: `/docs/standards/security.md` — secrets and dependency review.
-  - Spec section: "Canonical IDs + Evolving System Mappings" — the principle this
+  - Standard: `/docs/standards/security.md`: secrets and dependency review.
+  - Spec section: "Canonical IDs + Evolving System Mappings", the principle this
     skill operationalizes.

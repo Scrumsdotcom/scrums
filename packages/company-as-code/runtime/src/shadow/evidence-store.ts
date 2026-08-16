@@ -2,20 +2,20 @@ import Database from "better-sqlite3";
 import { ulid } from "ulid";
 
 /**
- * Shadow Mode — the reliability-evidence store.
+ * Shadow Mode: the reliability-evidence store.
  *
  * A new agent enrolls in shadow mode and runs in perpetual `dryRun: true`
  * alongside the human operators doing the real work. Every shadow invocation
  * is recorded here as a row of evidence: what the agent projected, under which
  * trace. When a human does the real action, an operator records whether the
- * agent's projection *matched* — that observation is the signal.
+ * agent's projection *matched*. That observation is the signal.
  *
  * Over weeks the rows accumulate into Reliability Evidence: how long the agent
  * has shadowed, how many runs, how often its projection agreed with the human.
  * When that evidence clears the AutonomyPolicy's promotion bar, `cac-host
  * shadow propose` drafts the ADR that promotes the agent to autonomous.
  *
- * The audit log and event ledger are untouched — shadow runs land there as
+ * The audit log and event ledger are untouched: shadow runs land there as
  * ordinary dry-run audit rows. This store is the *aggregation* layer on top.
  */
 
@@ -34,7 +34,7 @@ export interface ShadowRun {
   correlationId?: string;
   traceId?: string;
   recordedAt: string;
-  /** Hash of the agent's projected output — the "what it would have done". */
+  /** Hash of the agent's projected output. The "what it would have done". */
   projectionHash?: string;
   /** True once a human-comparison observation has been recorded. */
   observed: boolean;

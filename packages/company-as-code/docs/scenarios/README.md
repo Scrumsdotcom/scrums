@@ -1,6 +1,6 @@
 # Scenarios
 
-End-to-end operational walkthroughs. Each scenario traces a real-world flow through the primitives — module, agent, workflow, playbook, integration — so you can see how the pieces compose under load.
+End-to-end operational walkthroughs. Each scenario traces a real-world flow through the primitives (module, agent, workflow, playbook, integration) so you can see how the pieces compose under load.
 
 | Scenario | Domain(s) | Read this if you want to understand |
 |---|---|---|

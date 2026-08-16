@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://company-as-code.dev/schemas/control.schema.json",
+  "title": "Control",
+  "description": "A verifiable mechanism that keeps one or more Requirements true, plus the evidence it produces. A Control declares what it implements, how it is checked, how often, and where the proof lands. Controls whose verification is 'automated' point at a runnable check; controls that are only prose are declared 'manual' and carry a review cadence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "id", "title", "description", "implements", "owner", "verification", "severity", "status"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "kind": { "type": "string", "const": "Control" },
+    "id": {
+      "type": "string",
+      "pattern": "^CTRL-[A-Z0-9]+(-[A-Z0-9]+)*$",
+      "description": "Canonical, permanent control ID (e.g. CTRL-HITL-EXTERNAL-WRITES)."
+    },
+    "title": { "type": "string", "minLength": 4 },
+    "description": { "type": "string", "minLength": 16 },
+    "implements": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The Requirements this control covers. This is the single writer of the requirement-to-control edge; Requirements never list their controls.",
+      "items": { "type": "string", "x-cac-ref": ["Requirement"] }
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["person", "team", "module"] },
+        "id": { "type": "string" }
+      }
+    },
+    "appliesTo": {
+      "type": "array",
+      "description": "Module paths this control operates on. Empty means company-wide.",
+      "items": { "type": "string", "x-cac-ref": ["Manifest"] }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "surface", "frequency"],
+      "description": "How the control is proven to be working. A control nobody checks is a claim, not a control.",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["automated", "manual", "hybrid"],
+          "description": "'automated' requires a `check` pointing at something a machine runs."
+        },
+        "surface": {
+          "type": "string",
+          "enum": ["schema", "ci", "runtime-host", "scheduled-job", "human-review", "external-audit"],
+          "description": "Where verification executes. Vendor-neutral by construction."
+        },
+        "check": {
+          "type": "string",
+          "description": "Repo-relative pointer to the runnable check (file, function, workflow, or CLI command). Required when method is 'automated'."
+        },
+        "frequency": {
+          "type": "string",
+          "enum": ["continuous", "on-change", "daily", "weekly", "monthly", "quarterly", "annually"]
+        },
+        "failureMode": {
+          "type": "string",
+          "description": "What happens when the check fails: block the merge, page the owner, open a task, raise a finding."
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "description": "Where the proof of operation accumulates. An auditor should be able to follow each entry without asking a human where to look.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "reference"],
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": ["audit-log", "event-ledger", "ci-run", "dashboard", "document", "external-system"]
+          },
+          "reference": { "type": "string" },
+          "retention": { "type": "string", "description": "How long this evidence is kept, e.g. '7y'." }
+        }
+      }
+    },
+    "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+    "status": {
+      "type": "string",
+      "enum": ["designed", "implemented", "operating", "failing", "retired"],
+      "description": "'operating' asserts the control has run at least once and produced evidence."
+    },
+    "lastVerified": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the control was last confirmed to be working. Stale dates are a doctor finding, not a silent pass."
+    },
+    "compensatingFor": {
+      "type": "array",
+      "description": "Controls this one substitutes for when the primary mechanism is unavailable.",
+      "items": { "type": "string", "x-cac-ref": ["Control"] }
+    },
+    "tags": { "type": "array", "items": { "type": "string" } }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "verification": {
+            "type": "object",
+            "properties": { "method": { "type": "string", "const": "automated" } },
+            "required": ["method"]
+          }
+        },
+        "required": ["verification"]
+      },
+      "then": {
+        "properties": {
+          "verification": { "type": "object", "required": ["method", "surface", "frequency", "check"] }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "operating" } }, "required": ["status"] },
+      "then": { "required": ["lastVerified"] }
+    }
+  ]
+}

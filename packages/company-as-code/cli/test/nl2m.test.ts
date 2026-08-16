@@ -4,7 +4,7 @@ import path from "node:path";
 import { parseProse, allocateIds, synthesize, nl2mCommand } from "../src/nl2m.js";
 import { REPO_ROOT } from "../src/paths.js";
 
-describe("NL2M — natural language to manifest", () => {
+describe("NL2M, natural language to manifest", () => {
   it("extracts domain, direction, target and horizon from confident prose", () => {
     const intent = parseProse(
       "We want to reduce CAC payback to 9 months by Q4 so the growth engine is self-funding.",

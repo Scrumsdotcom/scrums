@@ -10,7 +10,7 @@
     "apiVersion": { "type": "string", "const": "company-as-code/v1" },
     "kind": { "type": "string", "const": "Workflow" },
     "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
-    "module": { "type": "string" },
+    "module": { "type": "string", "x-cac-ref": ["Manifest"] },
     "purpose": { "type": "string", "minLength": 8 },
     "trigger": {
       "type": "object",
@@ -77,8 +77,8 @@
             "type": "string",
             "enum": ["agent", "automation", "human-approval", "wait", "branch", "emit-event", "external-call", "dry-run", "live-write"]
           },
-          "agent": { "type": "string" },
-          "automation": { "type": "string" },
+          "agent": { "type": "string", "x-cac-ref": ["Agent"] },
+          "automation": { "type": "string", "x-cac-ref": ["Automation"] },
           "approver": { "type": "string" },
           "dryRunRequired": { "type": "boolean", "description": "When the step writes to an external surface, require a dry-run predecessor." },
           "hitl": { "type": "boolean", "description": "Step requires a human-in-the-loop confirmation." },
@@ -145,8 +145,8 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "dashboards": { "type": "array", "items": { "type": "string" } },
-        "metrics": { "type": "array", "items": { "type": "string" } }
+        "dashboards": { "type": "array", "items": { "type": "string", "x-cac-ref": ["Dashboard"] } },
+        "metrics": { "type": "array", "items": { "type": "string", "x-cac-ref": ["Metric"] } }
       }
     }
   },

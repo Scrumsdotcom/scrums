@@ -9,14 +9,14 @@ import { CognitionLiveReader } from "./live-reader.js";
  *
  * Serves a real-time, interactive version of the Mermaid diagrams in the docs:
  * the company's domains and modules as a clickable graph, with each module's
- * agents, workflows, and metrics — overlaid with LIVE activity (audit rows,
+ * agents, workflows, and metrics, overlaid with LIVE activity (audit rows,
  * typed events, pending HITL approvals) read from the runtime database.
  *
  * - GET /            the interactive single-page graph
  * - GET /api/graph   the static structure (/generated/cognition-graph.json)
  * - GET /api/live    the live overlay (CognitionLiveReader over the runtime DB)
  *
- * Dependency-free — Node's built-in http, one HTML page. Forks swap the
+ * Dependency-free: Node's built-in http, one HTML page. Forks swap the
  * front-end against the same two JSON endpoints.
  */
 
@@ -109,7 +109,7 @@ const PAGE = `<!doctype html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Company-as-Code — Visual Cognition Graph</title>
+<title>Company-as-Code, Visual Cognition Graph</title>
 <style>
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
@@ -287,7 +287,7 @@ function showPanel(path) {
   h += '<div class="row"><span>audit rows</span><b>' + act.auditRows + '</b></div>';
   h += '<div class="row"><span>dry-runs</span><b>' + act.dryRunCount + '</b></div>';
   h += '<div class="row"><span>pending approvals</span><b style="color:' + (act.pendingApprovals ? '#d33' : 'inherit') + '">' + act.pendingApprovals + '</b></div>';
-  h += '<div class="row"><span>last activity</span><span class="muted">' + esc(act.lastActivity || "—") + '</span></div>';
+  h += '<div class="row"><span>last activity</span><span class="muted">' + esc(act.lastActivity || ", ") + '</span></div>';
 
   h += '<h2>Agents (' + m.agents.length + ')</h2>';
   h += m.agents.length ? m.agents.map((a) =>

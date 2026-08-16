@@ -4,7 +4,7 @@
 
 **Do not open a public issue for security reports.**
 
-If you believe you have found a security vulnerability in Company-as-Code — in the reference CLI, the schemas, the generators, or anything else shipped from this repository — report it privately.
+If you believe you have found a security vulnerability in Company-as-Code, in the reference CLI, the schemas, the generators, or anything else shipped from this repository, report it privately.
 
 ### How to report
 

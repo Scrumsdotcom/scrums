@@ -1,4 +1,4 @@
-// Generated from /schemas/agent.schema.json — do not edit by hand.
+// Generated from /schemas/agent.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Autonomous execution unit. Declared in a module manifest and elaborated in /agents/<name>.yaml. */

@@ -1,0 +1,34 @@
+apiVersion: company-as-code/v1
+kind: Capability
+
+id: CAP-PRODUCTION-DEPLOY
+name: production-deploy
+description: >
+  The company can promote a change to production, and can stop and reverse one.
+  The approval gate is part of the capability, not an obstacle to it: a deploy
+  path nobody may authorise is not a deploy capability.
+
+domain: product-operations
+criticality: critical
+
+primaryOwner:
+  kind: module
+  id: company/domains/product-operations/platform
+  delivers: full
+
+fallback:
+  - kind: role
+    id: platform-lead
+    delivers: full
+  - kind: role
+    id: on-call-platform
+    delivers: reduced
+    note: Can roll back and can promote a hotfix; will not run a scheduled release train.
+
+finalFallback:
+  kind: person
+  id: cto
+  delivers: full
+
+measuredBy:
+  - METRIC-PLATFORM-DEPLOY-MTTR

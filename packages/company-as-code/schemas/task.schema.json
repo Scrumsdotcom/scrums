@@ -18,7 +18,8 @@
     "description": { "type": "string" },
     "module": {
       "type": "string",
-      "description": "Owning module path."
+      "description": "Owning module path.",
+      "x-cac-ref": ["Manifest"]
     },
     "state": {
       "type": "string",
@@ -65,8 +66,8 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "workflow": { "type": "string" },
-        "agent": { "type": "string" },
+        "workflow": { "type": "string", "x-cac-ref": ["Workflow"] },
+        "agent": { "type": "string", "x-cac-ref": ["Agent"] },
         "trigger": { "type": "string" }
       }
     },

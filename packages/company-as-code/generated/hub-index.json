@@ -16,7 +16,7 @@
         "subscription-billing"
       ],
       "scaffoldCount": 3,
-      "summary": "A standard people-operations module — onboarding policy, workforce-state interface, and the manifest scaffold to grow it.",
+      "summary": "A standard people-operations module, onboarding policy, workforce-state interface, and the manifest scaffold to grow it.",
       "tags": [
         "hr",
         "onboarding",
@@ -39,7 +39,7 @@
         "standard-hr"
       ],
       "scaffoldCount": 3,
-      "summary": "A subscription-billing integration module — vendor-neutral billing system mapping with writeback-only HITL gates.",
+      "summary": "A subscription-billing integration module, vendor-neutral billing system mapping with writeback-only HITL gates.",
       "tags": [
         "billing",
         "integration",

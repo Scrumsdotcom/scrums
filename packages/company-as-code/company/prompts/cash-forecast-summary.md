@@ -32,18 +32,18 @@ You are the cash-forecaster agent producing the weekly cash forecast brief for t
 
 You will receive these named values from the runtime:
 
-- `week` — ISO week label (e.g. `2026-W19`)
-- `cash_position` — current cash position, currency
-- `prev_cash_position` — cash position at the previous brief
-- `thirteen_week_low` — lowest projected cash point in the window
-- `thirteen_week_low_date` — when that low occurs
-- `runway_weeks` — implied runway at current burn
-- `top_three_outflows` — list of `[name, amount]` tuples
+- `week`: ISO week label (e.g. `2026-W19`)
+- `cash_position`: current cash position, currency
+- `prev_cash_position`: cash position at the previous brief
+- `thirteen_week_low`: lowest projected cash point in the window
+- `thirteen_week_low_date`: when that low occurs
+- `runway_weeks`: implied runway at current burn
+- `top_three_outflows`: list of `[name, amount]` tuples
 
 ## Output template
 
 ```markdown
-**Cash brief — week {{week}}**
+**Cash brief, week {{week}}**
 
 - Δ vs last week: {{signed_delta(cash_position, prev_cash_position)}} → ${{cash_position}}
 - 13-week low: ${{thirteen_week_low}} on {{thirteen_week_low_date}}
@@ -59,4 +59,4 @@ You will receive these named values from the runtime:
 
 ## Version log
 
-- **0.1.0** — initial draft.
+- **0.1.0**: initial draft.

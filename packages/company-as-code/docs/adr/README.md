@@ -9,6 +9,8 @@ Numbered, dated, status-tracked records of architectural decisions. Use [`/templ
 | [0003](./0003-unidirectional-mutation.md) | Unidirectional mutation flow | Accepted |
 | [0004](./0004-drift-gate.md) | Generated registries + drift gate | Accepted |
 | [0005](./0005-cac-hub-in-repo-registry.md) | CaC-Hub as an in-repo module registry | Accepted |
+| [0006](./0006-compliance-and-capability-layer.md) | Compliance and capability as typed primitives | Accepted |
+| [0007](./0007-typed-reference-edges.md) | Typed reference edges in the schemas | Accepted |
 
 ## Adding an ADR
 
@@ -17,4 +19,4 @@ Numbered, dated, status-tracked records of architectural decisions. Use [`/templ
 3. Status starts as `Proposed`; ratify by merging the PR that updates the status to `Accepted`.
 4. Add a row to the table above.
 
-Status transitions: Proposed → Accepted → (Deprecated | Superseded by ADR-<n>). Never delete a superseded ADR — the history is the audit trail.
+Status transitions: Proposed → Accepted → (Deprecated | Superseded by ADR-<n>). Never delete a superseded ADR. The history is the audit trail.

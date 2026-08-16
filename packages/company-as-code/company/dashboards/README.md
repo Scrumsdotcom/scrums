@@ -1,6 +1,6 @@
 # /company/dashboards
 
-Dashboard definitions — executive, operational, workflow, initiative, agent, SLA. Each dashboard declares the metrics it surfaces and the audience it serves.
+Dashboard definitions, executive, operational, workflow, initiative, agent, SLA. Each dashboard declares the metrics it surfaces and the audience it serves.
 
 Dashboards are owned by a module. The catalogue here aggregates dashboard-id → module mappings for cross-cutting discovery.
 
@@ -20,4 +20,4 @@ Dashboards are **read surfaces only**. They never trigger writes. If you need a 
 
 ## Schema status
 
-Dashboard YAMLs are illustrative — they are not yet schema-validated. A `Dashboard` schema is on the roadmap so dashboards can be machine-validated alongside other primitives. Track via a future ADR.
+Dashboard YAMLs are illustrative. They are not yet schema-validated. A `Dashboard` schema is on the roadmap so dashboards can be machine-validated alongside other primitives. Track via a future ADR.

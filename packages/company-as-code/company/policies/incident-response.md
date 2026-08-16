@@ -20,7 +20,7 @@ A declared incident triggers a coordinated response: severity classification wit
 
 ## Roles
 
-- **Incident commander.** One person. Coordinates response, makes the calls, owns communications. Often *not* the most technical person — the role is coordination.
+- **Incident commander.** One person. Coordinates response, makes the calls, owns communications. Often *not* the most technical person. The role is coordination.
 - **Operator-on-call.** Executes the technical response under the commander's direction.
 - **Communications lead.** External / customer communications; coordinated with the commander.
 - **Scribe.** Captures the timeline in the audit log; ensures every action emits a typed event.

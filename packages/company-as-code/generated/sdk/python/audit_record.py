@@ -1,4 +1,4 @@
-# Generated from /schemas/audit-record.schema.json — do not edit by hand.
+# Generated from /schemas/audit-record.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations
@@ -17,7 +17,7 @@ class AuditRecordError(TypedDict):
 
 
 class AuditRecord(TypedDict):
-    """One row per orchestration action. Loose schema for what happened in the runtime — debugging, post-hoc reasoning, compliance."""
+    """One row per orchestration action. Loose schema for what happened in the runtime, debugging, post-hoc reasoning, compliance."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["AuditRecord"]
     id: str

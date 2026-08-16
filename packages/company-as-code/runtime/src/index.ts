@@ -229,7 +229,7 @@ async function main(): Promise<void> {
         console.log(`mode:          ${ctx.dryRun ? "dry-run" : "live"}`);
         console.log(`steps:`);
         for (const r of results) {
-          console.log(`  - ${r.stepId}: ${r.status}${r.message ? ` — ${r.message}` : ""}`);
+          console.log(`  - ${r.stepId}: ${r.status}${r.message ? `, ${r.message}` : ""}`);
         }
         const halted = results.some((r) => r.status === "failure" || r.status === "blocked");
         if (halted) process.exit(2);
@@ -329,7 +329,7 @@ async function main(): Promise<void> {
           });
         }
         lines.sort((a, b) => (a.at < b.at ? -1 : a.at > b.at ? 1 : 0));
-        console.log(`trace ${id} — ${auditRows.length} audit row(s), ${eventRows.length} event(s)\n`);
+        console.log(`trace ${id}, ${auditRows.length} audit row(s), ${eventRows.length} event(s)\n`);
         for (const l of lines) {
           console.log(`${l.at}  ${l.ledger === "audit" ? "AUDIT" : "EVENT"}  ${l.text}`);
         }
@@ -362,7 +362,7 @@ async function main(): Promise<void> {
             process.exit(1);
           }
           if (!store.getEntity(id)) {
-            console.error(`state map: no canonical entity '${id}' — register it first`);
+            console.error(`state map: no canonical entity '${id}', register it first`);
             process.exit(1);
           }
           store.mapSystem({ canonicalId: id, system, externalId });
@@ -458,7 +458,7 @@ async function main(): Promise<void> {
             }
             const sinks = new SqliteSinks(dbPath);
             try {
-              // The audit + event ledgers are append-only — never rewound.
+              // The audit + event ledgers are append-only, never rewound.
               // The rollback is itself an event: history rolls forward.
               await recordRuntimeAudit(sinks, tc.traceId, tc.spanId, {
                 action: "state.rolled_back",
@@ -678,7 +678,7 @@ async function main(): Promise<void> {
           }
           const policy = await loadAutonomyPolicy(repoRoot);
           const evaluation = evaluatePromotion(ev, policy);
-          console.log(`Shadow Mode — ${agent}  [${ev.status}]`);
+          console.log(`Shadow Mode, ${agent}  [${ev.status}]`);
           console.log(`  enrolled:        ${ev.enrolledAt}`);
           console.log(`  shadowing for:   ${ev.shadowDays} day(s)`);
           console.log(`  total runs:      ${ev.totalRuns}`);
@@ -693,13 +693,13 @@ async function main(): Promise<void> {
                 `    [${r.met ? "✓" : " "}] ${r.key}  ${r.comparator} ${r.threshold}  (actual: ${r.actual})`,
               );
             } else if (r.kind === "manual") {
-              console.log(`    [ ] ${r.key}  — manual: ${r.note}`);
+              console.log(`    [ ] ${r.key}  # manual: ${r.note}`);
             } else {
-              console.log(`    [?] ${r.key}  — ${r.note}`);
+              console.log(`    [?] ${r.key}  # ${r.note}`);
             }
           }
           console.log(
-            `\n  automated gate: ${evaluation.autoMet ? "MET — run 'cac-host shadow propose " + agent + "'" : "NOT MET — unmet: " + evaluation.unmetAuto.join(", ")}`,
+            `\n  automated gate: ${evaluation.autoMet ? "MET. Run 'cac-host shadow propose " + agent + "'" : "NOT MET. Unmet: " + evaluation.unmetAuto.join(", ")}`,
           );
         } else if (sub === "observe") {
           const agent = args.rest[1];
@@ -758,8 +758,8 @@ async function main(): Promise<void> {
             number,
             today,
           });
-          console.log(`shadow propose ${agent} — automated promotion gate MET`);
-          console.log(`  ${write ? "WRITING" : "DRY-RUN — no file written"}: ${proposal.file}\n`);
+          console.log(`shadow propose ${agent}, automated promotion gate MET`);
+          console.log(`  ${write ? "WRITING" : "DRY-RUN, no file written"}: ${proposal.file}\n`);
           console.log(proposal.content);
           if (!write) {
             console.log(`\nRe-run with --write to create the ADR draft.`);
@@ -771,7 +771,7 @@ async function main(): Promise<void> {
             console.error(`✗ shadow propose: ${proposal.file} already exists. Refusing to overwrite.`);
             process.exit(1);
           } catch {
-            /* good — does not exist */
+            /* good, does not exist */
           }
           await fs.mkdir(path.dirname(abs), { recursive: true });
           await fs.writeFile(abs, proposal.content, "utf8");

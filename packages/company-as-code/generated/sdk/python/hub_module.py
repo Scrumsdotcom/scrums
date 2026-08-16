@@ -1,4 +1,4 @@
-# Generated from /schemas/hub-module.schema.json — do not edit by hand.
+# Generated from /schemas/hub-module.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations
@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Literal, NotRequired, TypedDict, Union
 
 class HubModuleProvenance(TypedDict):
-    """Where the module came from — the hub is open-source and attribution matters."""
+    """Where the module came from. The hub is open-source and attribution matters."""
     """Contributing person or organization."""
     author: str
     """SPDX license identifier, e.g. 'Apache-2.0'."""
@@ -47,7 +47,7 @@ class HubModule(TypedDict):
     maturity: Literal["experimental", "beta", "stable"]
     """The CaC apiVersion this module's payload targets."""
     frameworkVersion: NotRequired[Literal["company-as-code/v1"]]
-    """Where the module came from — the hub is open-source and attribution matters."""
+    """Where the module came from. The hub is open-source and attribution matters."""
     provenance: "HubModuleProvenance"
     """Default domain the payload manifest belongs to. `cac hub add` derives the install path from this unless --into is given."""
     targetDomain: NotRequired[Literal["executive", "finance-ops", "product-operations", "sales-marketing", "framework"]]

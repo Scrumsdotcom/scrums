@@ -4,7 +4,7 @@ This file lists the current maintainers of Company-as-Code. Security reports sho
 
 ## Lead maintainer
 
-- **Gerald Neves** — Founder & CEO, [Scrums.com](https://scrums.com)
+- **Gerald Neves**: Founder & CEO, [Scrums.com](https://scrums.com)
   - GitHub: [@gez-scrumsdotcom](https://github.com/gez-scrumsdotcom)
   - Security contact: see [`SECURITY.md`](./SECURITY.md)
 
@@ -16,10 +16,10 @@ External maintainers are added through demonstrated contribution + an ADR propos
 
 ## How to reach a maintainer
 
-- **Security vulnerabilities** — private security advisory via GitHub: *Security tab → Report a vulnerability*. See [`SECURITY.md`](./SECURITY.md).
-- **Bugs / feature requests** — open an issue using one of the templates under [`.github/ISSUE_TEMPLATE/`](./.github/ISSUE_TEMPLATE).
-- **General discussion** — GitHub Discussions when enabled, or open a draft PR with a proposal.
-- **Commercial / partnership inquiries** — Scrums.com via [scrums.com](https://scrums.com).
+- **Security vulnerabilities**: private security advisory via GitHub: *Security tab → Report a vulnerability*. See [`SECURITY.md`](./SECURITY.md).
+- **Bugs / feature requests**: open an issue using one of the templates under [`.github/ISSUE_TEMPLATE/`](./.github/ISSUE_TEMPLATE).
+- **General discussion**: GitHub Discussions when enabled, or open a draft PR with a proposal.
+- **Commercial / partnership inquiries**: Scrums.com via [scrums.com](https://scrums.com).
 
 ## Decision-making
 

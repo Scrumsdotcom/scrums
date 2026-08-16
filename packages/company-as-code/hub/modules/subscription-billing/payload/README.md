@@ -20,5 +20,5 @@ and billing-account IDs and the writeback-only mapping to the billing provider.
 
 The integration's `name` is `billing-provider`, not the vendor. The vendor is a
 `system:` label, not a contract. When you switch providers, only the mapping and
-the endpoints change — canonical subscription IDs and every downstream consumer
+the endpoints change, canonical subscription IDs and every downstream consumer
 survive untouched. This is the framework's "coordinate, don't replicate" rule.

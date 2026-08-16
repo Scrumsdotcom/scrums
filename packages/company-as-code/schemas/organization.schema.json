@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://company-as-code.dev/schemas/organization.schema.json",
   "title": "Organization",
-  "description": "Canonical organizational unit — company, business unit, team, pod, department. Forms the executable org graph.",
+  "description": "Canonical organizational unit, company, business unit, team, pod, department. Forms the executable org graph.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "canonicalId", "name", "type", "status"],
@@ -25,11 +25,13 @@
     },
     "parent": {
       "type": "string",
-      "description": "Canonical ID of parent organization."
+      "description": "Canonical ID of parent organization.",
+      "x-cac-ref": ["Organization"]
     },
     "module": {
       "type": "string",
-      "description": "Path to the module manifest representing this org unit in the cognition tree."
+      "description": "Path to the module manifest representing this org unit in the cognition tree.",
+      "x-cac-ref": ["Manifest"]
     },
     "status": {
       "type": "string",

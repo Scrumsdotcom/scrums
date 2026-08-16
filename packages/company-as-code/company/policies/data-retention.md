@@ -7,7 +7,7 @@
 
 ## Rule
 
-Every table in the coordination layer declares a retention horizon. Records beyond the horizon are **archived** (moved to cold storage with a tombstone) — never hard-deleted.
+Every table in the coordination layer declares a retention horizon. Records beyond the horizon are **archived** (moved to cold storage with a tombstone), never hard-deleted.
 
 Audit log and typed event ledger have separate retention from canonical state.
 
@@ -18,7 +18,7 @@ Audit log and typed event ledger have separate retention from canonical state.
 | Canonical state (customers, persons, organizations, contracts) | Indefinite while active; 7 years after soft-delete | Archive to cold storage; retain tombstone in primary |
 | Typed event ledger | 2 years hot, 5 years cold | Move to cold; ledger view filters to hot by default |
 | Audit log | 1 year hot, 6 years cold | Move to cold; investigations re-load on demand |
-| Per-agent context bundles | Replaced on every regeneration | None — they are deterministic outputs |
+| Per-agent context bundles | Replaced on every regeneration | None. They are deterministic outputs |
 | Generated registries | Replaced on every regeneration | None |
 | Memory layer (per-agent) | Indefinite while agent active; 1 year after agent retirement | Archive with the agent's manifest |
 
@@ -50,6 +50,6 @@ Archived records can be brought back into hot storage by:
 
 ## Related
 
-- [`/docs/standards/schema-migrations.md`](../../docs/standards/schema-migrations.md) — covers schema-level retention changes
+- [`/docs/standards/schema-migrations.md`](../../docs/standards/schema-migrations.md), covers schema-level retention changes
 - ADR-0003: Unidirectional mutation flow (records, like fields, have one writer)
 - Spec section: "Soft delete and merge patterns"

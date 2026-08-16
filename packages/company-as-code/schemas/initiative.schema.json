@@ -35,13 +35,13 @@
     "goals": {
       "type": "array",
       "description": "Goal IDs this initiative advances.",
-      "items": { "type": "string" },
+      "items": { "type": "string", "x-cac-ref": ["Goal"] },
       "default": []
     },
     "metrics": {
       "type": "array",
       "description": "Metric IDs the initiative is measured against.",
-      "items": { "type": "string" },
+      "items": { "type": "string", "x-cac-ref": ["Metric"] },
       "default": []
     },
     "tasks": {

@@ -20,30 +20,30 @@ The short version: **declare before coding, generate deterministically, never ha
 
 Before writing code for anything substantial, write a plan in `/docs/plans/<short-slug>.md`. Use the template at [`templates/plan.md`](./templates/plan.md). Plans contain:
 
-- **Status banner** — `active` / `parked` / `blocked` / `in-flight` / `complete`
-- **Goal** — one or two sentences
-- **Solution shape** — intended architecture, boundaries respected
-- **Capability check** — what's been verified about systems involved
-- **Caveats** — known unknowns, locked-in decisions
-- **Phasing** — explicit stages, effort estimates, gating conditions
+- **Status banner**: `active` / `parked` / `blocked` / `in-flight` / `complete`
+- **Goal**: one or two sentences
+- **Solution shape**: intended architecture, boundaries respected
+- **Capability check**: what's been verified about systems involved
+- **Caveats**: known unknowns, locked-in decisions
+- **Phasing**: explicit stages, effort estimates, gating conditions
 - **Open questions**
-- **Resume cue** — exactly what a fresh operator needs to read to continue
+- **Resume cue**: exactly what a fresh operator needs to read to continue
 
 Plans are park-friendly. They survive being put down for weeks and picked up by someone else.
 
 ### 2. Declare before coding
 
-A new module starts with its manifest, not its implementation. Every module — at every level of the organizational graph — has a `manifest.yaml` at its root. The manifest is the single declarative source of truth.
+A new module starts with its manifest, not its implementation. Every module (at every level of the organizational graph) has a `manifest.yaml` at its root. The manifest is the single declarative source of truth.
 
 A manifest declares:
 
-- **module identity** — name, domain, version, lifecycle status
-- **owns** — tables, agents, apps, workflows, dashboards, schemas, policies
-- **consumes** — named interfaces from other modules
-- **exposes** — interfaces this module offers to others
-- **agents** — every autonomous unit, with runtime, schedule, cadence, purpose
-- **invariants** — declarative properties that must remain true
-- **contacts** — humans accountable for the module
+- **module identity**: name, domain, version, lifecycle status
+- **owns**: tables, agents, apps, workflows, dashboards, schemas, policies
+- **consumes**: named interfaces from other modules
+- **exposes**: interfaces this module offers to others
+- **agents**: every autonomous unit, with runtime, schedule, cadence, purpose
+- **invariants**: declarative properties that must remain true
+- **contacts**: humans accountable for the module
 
 See [`templates/module-manifest.yaml`](./templates/module-manifest.yaml) and the JSON Schema at [`schemas/manifest.schema.json`](./schemas/manifest.schema.json).
 
@@ -57,7 +57,7 @@ npm run generate      # walk manifests and emit /generated/*
 npm run generate:check  # exit non-zero if generated files would change
 ```
 
-Generators are **deterministic**. Given the same inputs they produce identical outputs. CI runs `generate:check` on every PR — if your sources changed but the regenerated files aren't in the diff, the PR fails.
+Generators are **deterministic**. Given the same inputs they produce identical outputs. CI runs `generate:check` on every PR, if your sources changed but the regenerated files aren't in the diff, the PR fails.
 
 ### 4. Open the PR
 
@@ -84,7 +84,7 @@ These are enforced by schema, CI, or merge protection. Don't fight them.
 
 ### Generated files are never hand-merged
 
-When two PRs touch different manifests, they may both regenerate the same registry — producing a mechanical merge conflict in `/generated/`. **Do not hand-merge it.** Resolution:
+When two PRs touch different manifests, they may both regenerate the same registry, producing a mechanical merge conflict in `/generated/`. **Do not hand-merge it.** Resolution:
 
 1. Take either side of the conflict.
 2. Re-run `npm run generate`.
@@ -94,7 +94,7 @@ Hand-merging generated files produces a state that's neither side's correct outp
 
 ### Migrations are timestamped
 
-Schema migrations use UTC timestamps (`20260301T120000_add_canonical_id.sql`) — never sequential numbers (`0042_…`). Sequential names collide silently when multiple contributors merge in parallel.
+Schema migrations use UTC timestamps (`20260301T120000_add_canonical_id.sql`), never sequential numbers (`0042_…`). Sequential names collide silently when multiple contributors merge in parallel.
 
 ### No force-push, no secrets, no autonomous writes to irreversible surfaces
 
@@ -124,7 +124,7 @@ Codified standards live in [`docs/standards`](./docs/standards) and are CI-enfor
 - [`observability.md`](./docs/standards/observability.md)
 - [`documentation.md`](./docs/standards/documentation.md)
 
-If you want to change a rule, edit the standard. Changes go through PR review like anything else. **If a rule isn't in the repo, it isn't a rule — it's a preference.**
+If you want to change a rule, edit the standard. Changes go through PR review like anything else. **A rule that isn't in the repo is a preference.**
 
 ---
 

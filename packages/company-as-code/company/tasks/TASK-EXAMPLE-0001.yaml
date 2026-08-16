@@ -1,7 +1,7 @@
 # Example task. Schema: /schemas/task.schema.json
 #
 # Tasks usually live under their owning module (e.g. /company/domains/.../tasks/).
-# This top-level example demonstrates a cross-cutting task — coordinating the
+# This top-level example demonstrates a cross-cutting task: coordinating the
 # first incident-response dry-run after the policy lands.
 
 apiVersion: company-as-code/v1

@@ -33,47 +33,47 @@ npm run start -- trace <traceId> --db ./runtime.db
 | `cac-host state register-entity` / `state map` / `state list` | Manage canonical entities + system mappings (see State snapshotting). |
 | `cac-host snapshot create` / `list` / `show` / `rollback` | Checkpoint and roll back the canonical state. |
 | `cac-host inbox list` / `show` / `approve` / `reject` / `serve` | The Human-in-the-Loop inbox (see HITL inbox). |
-| `cac-host graph serve` | Serve the Visual Cognition Graph — interactive structure + live overlay (see Visual Cognition Graph). |
-| `cac-host shadow enroll` / `withdraw` / `list` / `status` / `observe` / `propose` | Shadow Mode — perpetual dry-run + reliability evidence + automated promotion ADR (see Shadow Mode). |
+| `cac-host graph serve` | Serve the Visual Cognition Graph, interactive structure + live overlay (see Visual Cognition Graph). |
+| `cac-host shadow enroll` / `withdraw` / `list` / `status` / `observe` / `propose` | Shadow Mode, perpetual dry-run + reliability evidence + automated promotion ADR (see Shadow Mode). |
 
 Global flags:
-- `--repo <path>` — repository root (or set `RUNTIME_REPO`)
-- `--db <path>` — SQLite file (or set `RUNTIME_DB`); defaults to `./runtime.db`
+- `--repo <path>`: repository root (or set `RUNTIME_REPO`)
+- `--db <path>`: SQLite file (or set `RUNTIME_DB`); defaults to `./runtime.db`
 
 Tracing env:
-- `CAC_TRACE_CONSOLE=1` — export OpenTelemetry spans to the console
-- `OTEL_EXPORTER_OTLP_ENDPOINT` — recognised by the OpenTelemetry SDK; a fork adds an OTLP exporter to ship spans to a collector
+- `CAC_TRACE_CONSOLE=1`: export OpenTelemetry spans to the console
+- `OTEL_EXPORTER_OTLP_ENDPOINT`: recognised by the OpenTelemetry SDK; a fork adds an OTLP exporter to ship spans to a collector
 
 ## Native tracing (OpenTelemetry)
 
-The runtime opens an OpenTelemetry root span per workflow execution and a child span per step. The span's W3C **trace ID** is stamped onto *both* ledgers — every audit row (`AuditRecord.traceId`) and every typed event (`Event.traceId`). That single ID is the join between the two surfaces the spec deliberately keeps separate:
+The runtime opens an OpenTelemetry root span per workflow execution and a child span per step. The span's W3C **trace ID** is stamped onto *both* ledgers, every audit row (`AuditRecord.traceId`) and every typed event (`Event.traceId`). That single ID is the join between the two surfaces the spec deliberately keeps separate:
 
 - the **audit log** answers *what did we do?*
 - the **typed event ledger** answers *what happened to this entity?*
 
-`cac-host trace <traceId>` reads the join back out as one interleaved, time-ordered timeline. Spans are real W3C IDs even with no exporter configured — export is optional plumbing, the IDs are what the ledgers need.
+`cac-host trace <traceId>` reads the join back out as one interleaved, time-ordered timeline. Spans are real W3C IDs even with no exporter configured, export is optional plumbing, the IDs are what the ledgers need.
 
 ## Versioned state snapshotting
 
-The coordination layer's mutable state is small by design — canonical IDs plus the evolving external-system mappings. That smallness makes it snapshottable: `cac-host snapshot create` checkpoints the *entire* canonical state into one content-hashed row; `cac-host snapshot rollback <id>` atomically restores it. If a workflow leaves bad state behind, you roll back to a known-good checkpoint.
+The coordination layer's mutable state is small by design, canonical IDs plus the evolving external-system mappings. That smallness makes it snapshottable: `cac-host snapshot create` checkpoints the *entire* canonical state into one content-hashed row; `cac-host snapshot rollback <id>` atomically restores it. If a workflow leaves bad state behind, you roll back to a known-good checkpoint.
 
-The append-only audit log and event ledger are **never rewound** — a rollback is itself an event (`coordination.state_rolled_back`), so history rolls forward. Snapshots are never deleted, so a rollback is itself reversible.
+The append-only audit log and event ledger are **never rewound**. A rollback is itself an event (`coordination.state_rolled_back`), so history rolls forward. Snapshots are never deleted, so a rollback is itself reversible.
 
 ## HITL inbox
 
-`human-approval` steps can be routed through a durable inbox instead of a stdin prompt. Run a workflow with `--queue-approvals` and the dry-run projection is enqueued; a human resolves it — recording their canonical Person ID — from the CLI (`cac-host inbox approve/reject`) or the web dashboard (`cac-host inbox serve`, default port 4000). The workflow process blocks, polling, until the item is resolved, so the runtime can be headless and long-running while the human shows up whenever they show up.
+`human-approval` steps can be routed through a durable inbox instead of a stdin prompt. Run a workflow with `--queue-approvals` and the dry-run projection is enqueued; a human resolves it (recording their canonical Person ID) from the CLI (`cac-host inbox approve/reject`) or the web dashboard (`cac-host inbox serve`, default port 4000). The workflow process blocks, polling, until the item is resolved, so the runtime can be headless and long-running while the human shows up whenever they show up.
 
 ## Visual Cognition Graph
 
-`cac-host graph serve` (default port 4100) renders the company as an interactive, real-time graph. The **structure** comes from `/generated/cognition-graph.json` (generated by the CLI from `/company/**`); the **live overlay** — per-module audit/event/HITL activity, recent events, recent traces, global totals — is read straight from the runtime database. Click a module to inspect its agents, workflows, metrics, and live activity. It is the click-through evolution of the Mermaid diagrams in the docs. See [`/docs/cognition-graph.md`](../docs/cognition-graph.md).
+`cac-host graph serve` (default port 4100) renders the company as an interactive, real-time graph. The **structure** comes from `/generated/cognition-graph.json` (generated by the CLI from `/company/**`); the **live overlay** (per-module audit/event/HITL activity, recent events, recent traces, global totals) is read straight from the runtime database. Click a module to inspect its agents, workflows, metrics, and live activity. It is the click-through evolution of the Mermaid diagrams in the docs. See [`/docs/cognition-graph.md`](../docs/cognition-graph.md).
 
 ## Shadow Mode
 
-A newly-declared agent should earn its autonomy. `cac-host shadow enroll <agent>` puts it in **Shadow Mode**: from then on, `cac-host execute` forces that agent into perpetual `dryRun: true` and records every invocation as **Reliability Evidence** — never emitting events, never changing state. Operators record whether each projection matched the human action (`shadow observe`); the evidence accumulates (`shadow status`). When it clears the bar declared in the AutonomyPolicy's `promotion.fromHumanGatedToAutonomous.requires` block, `shadow propose` drafts the ADR that promotes the agent to autonomous. See [`/docs/shadow-mode.md`](../docs/shadow-mode.md).
+A newly-declared agent should earn its autonomy. `cac-host shadow enroll <agent>` puts it in **Shadow Mode**: from then on, `cac-host execute` forces that agent into perpetual `dryRun: true` and records every invocation as **Reliability Evidence**, never emitting events, never changing state. Operators record whether each projection matched the human action (`shadow observe`); the evidence accumulates (`shadow status`). When it clears the bar declared in the AutonomyPolicy's `promotion.fromHumanGatedToAutonomous.requires` block, `shadow propose` drafts the ADR that promotes the agent to autonomous. See [`/docs/shadow-mode.md`](../docs/shadow-mode.md).
 
 ## What the runtime enforces at execution time
 
-The TypeScript CLI validates the manifest graph statically. The runtime host enforces a different set of invariants — the ones that only manifest at execution time:
+The TypeScript CLI validates the manifest graph statically. The runtime host enforces a different set of invariants, the ones that only manifest at execution time:
 
 - **`hitl: true` + `trigger.kind: schedule` is refused.** The runtime throws at workflow load.
 - **`live-write` requires a prior dry-run audit row in the same correlation.** The runtime checks the audit log before any live mutation; the step fails (not retries) if missing.
@@ -131,7 +131,7 @@ interface ApprovalProvider {
 }
 ```
 
-The reference invokers in `src/executor/reference-invokers.ts` are deliberately minimal — they exercise the executor pathway without performing real external work. Forks replace them with implementations that call their actual AI runtime, automation framework, and approval UI.
+The reference invokers in `src/executor/reference-invokers.ts` are deliberately minimal, they exercise the executor pathway without performing real external work. Forks replace them with implementations that call their actual AI runtime, automation framework, and approval UI.
 
 ## Two CLIs, one repo
 
@@ -149,7 +149,7 @@ The reference invokers in `src/executor/reference-invokers.ts` are deliberately 
 - **No daemon mode.** The host is a CLI that exits after each command. Forks wrap it in their own daemon (systemd, Kubernetes, etc.).
 - **No multi-node coordination.** SQLite is single-process; Postgres is multi-node but the reference host does not coordinate concurrent executions of the same workflow.
 - **No authz enforcement.** The next PR adds RBAC/ABAC. For now, the host trusts the `--trigger-actor` and the `ApprovalProvider`'s claimed approver ID.
-- **Tracing, not metrics.** OpenTelemetry **traces** are native (root span per execution, child span per step, trace ID on both ledgers). Metrics export is still out of scope — a fork adds a `MeterProvider` alongside the tracer. No span exporter is wired by default; set `CAC_TRACE_CONSOLE=1` or add an OTLP exporter in a fork.
+- **Tracing, not metrics.** OpenTelemetry **traces** are native (root span per execution, child span per step, trace ID on both ledgers). Metrics export is still out of scope, a fork adds a `MeterProvider` alongside the tracer. No span exporter is wired by default; set `CAC_TRACE_CONSOLE=1` or add an OTLP exporter in a fork.
 - **The HITL dashboard is a reference, not a product.** `cac-host inbox serve` is a single-page, dependency-free dashboard over Node's built-in `http`. Forks swap in their own front-end against the same JSON API; there is no auth on the API.
 
 See [`/docs/roadmap.md`](../docs/roadmap.md) for what's coming.

@@ -1,4 +1,4 @@
-// Generated from /schemas/task.schema.json — do not edit by hand.
+// Generated from /schemas/task.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Canonical unit of execution. Tasks are state machines with typed transitions. */

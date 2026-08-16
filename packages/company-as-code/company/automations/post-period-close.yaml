@@ -39,7 +39,7 @@ mutates:
 
 invariants:
   - "Refuses to post if dryRun=false is invoked without a prior dryRun=true audit record under the same correlation ID."
-  - "Idempotent on (period, dryRun=false) — re-running for the same period after a successful close is a no-op with a typed warning."
+  - "Idempotent on (period, dryRun=false), re-running for the same period after a successful close is a no-op with a typed warning."
   - "Emits finance.period_closed only on dryRun=false success."
   - "Writes an audit record on every invocation, including dry-runs and refusals."
 

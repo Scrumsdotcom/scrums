@@ -42,9 +42,9 @@ An ADR is required before:
 
 ## Alternatives considered
 
-- **Wiki documents** — not diffable, not enforceable, not discoverable from the repo. Rejected.
-- **In-code comments** — survive refactors poorly; bind decisions to a specific commit. Rejected.
-- **Issue-tracker decisions** — vendor lock-in, poor discoverability. Rejected.
+- **Wiki documents**: not diffable, not enforceable, not discoverable from the repo. Rejected.
+- **In-code comments**: survive refactors poorly; bind decisions to a specific commit. Rejected.
+- **Issue-tracker decisions**: vendor lock-in, poor discoverability. Rejected.
 
 ## Implementation notes
 

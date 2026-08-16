@@ -6,7 +6,7 @@ module: company/domains/finance-ops/finance
 
 purpose: >
   Produce a rolling 13-week cash forecast from canonical ledger entries plus
-  forward-looking pipeline state. Read-only — never writes to the ledger or to
+  forward-looking pipeline state. Read-only, never writes to the ledger or to
   external accounting systems.
 
 runtime: scheduled-job

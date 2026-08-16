@@ -12,7 +12,7 @@ owner:
 
 purpose: >
   Roll-up of the three domain executives' state. Single view for the CEO
-  and leadership team. Read-only — no autonomous external writes feed it.
+  and leadership team. Read-only. No autonomous external writes feed it.
 
 audience:
   - ceo

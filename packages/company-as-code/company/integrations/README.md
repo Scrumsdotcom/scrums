@@ -1,6 +1,6 @@
 # /company/integrations
 
-External system mappings. The framework names no vendor as canonical — every integration here is a swappable plugin.
+External system mappings. The framework names no vendor as canonical. Every integration here is a swappable plugin.
 
 Each integration declares:
 

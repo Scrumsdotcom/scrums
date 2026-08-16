@@ -1,6 +1,6 @@
 # Anatomy of the Runtime Host
 
-The TypeScript CLI under `/cli` is the **dev-side** tool — it validates manifests, generates registries, gates drift. The runtime host under `/runtime` is the **ops-side** tool — it loads the same manifests at execution time, runs workflows, and persists what happened.
+The TypeScript CLI under `/cli` is the **dev-side** tool: it validates manifests, generates registries, and gates drift. The runtime host under `/runtime` is the **ops-side** tool: it loads the same manifests at execution time, runs workflows, and persists what happened.
 
 This doc is the field-by-field walkthrough for the host. The reference implementation is in TypeScript so the rest of the framework's discipline applies; forks needing production performance can port to Go/Rust with the same schemas as the contract.
 
@@ -11,7 +11,7 @@ This doc is the field-by-field walkthrough for the host. The reference implement
 - **Loading the manifest graph.** Walks `/company/**/*.yaml`, indexes workflows / agents / automations / event-type registry.
 - **Executing workflows.** Walks `steps[]` in declared order, dispatching each step kind to a pluggable invoker.
 - **Persisting audit + event records.** Append-only stores behind two interfaces (`AuditSink` / `EventSink`); reference backends ship for SQLite and Postgres.
-- **Enforcing execution-time invariants.** The ones the static validator can't catch — most importantly, that a `live-write` is preceded by a dry-run audit row under the same correlation ID.
+- **Enforcing execution-time invariants.** The ones the static validator can't catch. Most importantly, that a `live-write` is preceded by a dry-run audit row under the same correlation ID.
 
 ## What the host does NOT own
 
@@ -47,7 +47,7 @@ These interfaces never expose UPDATE or DELETE. Append-only is a property of the
 
 ### SQLite (`SqliteSinks`)
 
-- Zero-config — pass a file path or `:memory:` for tests
+- Zero-config: pass a file path or `:memory:` for tests
 - WAL journal mode for sane crash semantics
 - Indexes on `correlation_id`, `entity_canonical_id`, `type`
 - Best fit: local development, single-node ops, CI tests
@@ -121,15 +121,15 @@ This narrative is what makes the runtime defensible. Incident retros write thems
 
 Three interfaces forks override:
 
-- **`AgentInvoker`** — calls into the fork's AI runtime. The reference invoker is read-only and returns the agent's declared inputs/outputs so the executor pathway exercises end-to-end.
-- **`AutomationInvoker`** — performs the actual mutation against the integration. The reference invoker computes a projection without external calls; forks replace with their integration client.
-- **`ApprovalProvider`** — the human-approval surface. Reference providers: `InteractiveApprovalProvider` (stdin prompt) and `AutoApprovalProvider` (tests).
+- **`AgentInvoker`**: calls into the fork's AI runtime. The reference invoker is read-only and returns the agent's declared inputs/outputs so the executor pathway exercises end-to-end.
+- **`AutomationInvoker`**: performs the actual mutation against the integration. The reference invoker computes a projection without external calls; forks replace with their integration client.
+- **`ApprovalProvider`**: the human-approval surface. Reference providers: `InteractiveApprovalProvider` (stdin prompt) and `AutoApprovalProvider` (tests).
 
-Each interface returns the data the audit log needs. Forks don't have to reinvent the audit shape — they just satisfy the interface.
+Each interface returns the data the audit log needs. Forks don't have to reinvent the audit shape, they just satisfy the interface.
 
 ## Related
 
-- [`/runtime/README.md`](../../runtime/README.md) — quick start and commands
-- [`/docs/scenarios/monthly-close.md`](../scenarios/monthly-close.md) — the worked scenario this runtime executes end-to-end
-- [`/docs/roadmap.md`](../roadmap.md) — what's coming next (authz, integration controllers)
-- [`/docs/anatomy/workflow.md`](./workflow.md) — the schema the runtime executes
+- [`/runtime/README.md`](../../runtime/README.md), quick start and commands
+- [`/docs/scenarios/monthly-close.md`](../scenarios/monthly-close.md). The worked scenario this runtime executes end-to-end
+- [`/docs/roadmap.md`](../roadmap.md), what's coming next (authz, integration controllers)
+- [`/docs/anatomy/workflow.md`](./workflow.md), the schema the runtime executes

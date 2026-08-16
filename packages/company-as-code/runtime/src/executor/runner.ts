@@ -31,7 +31,7 @@ export interface ApprovalProvider {
 
 export interface AgentInvoker {
   /**
-   * Invoke an agent (read-only in this reference implementation — agents
+   * Invoke an agent (read-only in this reference implementation, agents
    * conceptually reason / observe / propose). The invoker returns a small
    * structured output that becomes the audit record's `output`.
    */
@@ -46,7 +46,7 @@ export interface AgentInvoker {
 export interface AutomationInvoker {
   /**
    * Invoke an automation. The reference implementation never actually
-   * calls external systems — it returns a typed payload describing what
+   * calls external systems, it returns a typed payload describing what
    * *would* be written. `dryRun=true` invocations write the projected
    * payload to the audit log and stop; `dryRun=false` invocations also
    * persist the typed-event emission described by the workflow step.
@@ -99,7 +99,7 @@ export class WorkflowExecutor {
     const now = this.deps.now ?? (() => new Date());
 
     // The whole execution runs inside a root span. Its trace ID is stamped
-    // onto every audit row and typed event below — that single ID is the
+    // onto every audit row and typed event below. That single ID is the
     // join between the audit log ("what we did") and the event ledger
     // ("what happened"). `cac-host trace <id>` reads the join back out.
     return runInSpan(
@@ -150,7 +150,7 @@ export class WorkflowExecutor {
               module: workflow.module,
               ctx,
               status: "failure",
-              output: { reason: `exceeded ${maxIterations} step executions — branch cycle suspected` },
+              output: { reason: `exceeded ${maxIterations} step executions, branch cycle suspected` },
             });
             return { ctx, results };
           }
@@ -348,7 +348,7 @@ export class WorkflowExecutor {
       }
 
       case "branch": {
-        // The reference implementation does not evaluate `when:` expressions —
+        // The reference implementation does not evaluate `when:` expressions,
         // forks plug in their own predicate evaluator. We always take the
         // first branch.
         const next = step.branches?.[0]?.next;

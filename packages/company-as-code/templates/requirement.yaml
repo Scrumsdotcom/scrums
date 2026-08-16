@@ -1,0 +1,39 @@
+# Requirement template. Schema: /schemas/requirement.schema.json
+#
+# A Requirement states WHAT must be true. It never names the Controls that
+# make it true: coverage is declared one way, by the Control, so the two can
+# never disagree.
+#
+# Copy to /company/requirements/<ID>.yaml and edit.
+
+apiVersion: company-as-code/v1
+kind: Requirement
+
+# Canonical, permanent. Convention: REQ-<FRAMEWORK>-<CLAUSE>.
+id: REQ-INTERNAL-0001
+
+# Where the obligation comes from. Use 'internal' for rules you impose on
+# yourself and 'contract' for commitments made to a customer or supplier.
+framework: internal
+
+# The identifier the obligation carries in its own catalogue, verbatim.
+clause: EXAMPLE-1
+
+title: Replace with the obligation in one line
+
+statement: >
+  What the obligation actually requires, in your own words. Write it so that
+  someone can tell whether it is met without reading the source standard.
+
+owner:
+  kind: person
+  id: replace-me
+
+# Modules in scope. Omit or leave empty for company-wide.
+appliesTo: []
+
+# in-scope obligations must be covered by at least one operating Control or
+# validation fails. out-of-scope requires a scopeRationale.
+status: in-scope
+
+severity: medium

@@ -1,6 +1,6 @@
 # /company/events
 
-Typed event ledger. One row per state transition on a canonical entity. Distinct from the [audit log](../observability) — they are not interchangeable.
+Typed event ledger. One row per state transition on a canonical entity. Distinct from the [audit log](../observability). They are not interchangeable.
 
 | | Audit log | Typed event ledger |
 |---|---|---|
@@ -28,7 +28,7 @@ Validate event rows themselves against [`/schemas/event.schema.json`](../../sche
 
 ## Deprecation
 
-Event types are deprecated, not deleted. Set `status: deprecated`, leave both the registry entry and the payload schema in place, and update downstream consumers. The ledger always carries history — removing the type definition breaks historical reads.
+Event types are deprecated, not deleted. Set `status: deprecated`, leave both the registry entry and the payload schema in place, and update downstream consumers. The ledger always carries history, removing the type definition breaks historical reads.
 
 ## Worked example
 

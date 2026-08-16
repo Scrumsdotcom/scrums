@@ -8,20 +8,20 @@ This document is the architectural framing for Company-as-Code. The authoritativ
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Executive cognition  — /company/executive                      │
+│  Executive cognition  # /company/executive                      │
 │  Domain executives + CEO. Roll-up consumers, no autonomous       │
 │  external writes.                                                │
 ├─────────────────────────────────────────────────────────────────┤
-│  Domain modules  — /company/domains/<domain>/<module>           │
+│  Domain modules  # /company/domains/<domain>/<module>           │
 │  Owns tables, agents, workflows, dashboards, schemas.            │
 ├─────────────────────────────────────────────────────────────────┤
-│  Sub-cognition modules  — <module>/sub-cognition/<name>          │
+│  Sub-cognition modules  # <module>/sub-cognition/<name>          │
 │  Recursive: identity, billing, deployment under platform; etc.   │
 ├─────────────────────────────────────────────────────────────────┤
-│  Runtime + Observability  — /company/{runtime,observability,…}   │
+│  Runtime + Observability  # /company/{runtime,observability,…}   │
 │  Audit log + typed event ledger.                                 │
 ├─────────────────────────────────────────────────────────────────┤
-│  Integrations  — /company/integrations                          │
+│  Integrations  # /company/integrations                          │
 │  Pluggable. Canonical IDs in; mappings out.                      │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -44,10 +44,20 @@ This document is the architectural framing for Company-as-Code. The authoritativ
 | Person | [`/schemas/person.schema.json`](../schemas/person.schema.json) | `/company/integrations/` or seeded |
 | Integration | [`/schemas/integration.schema.json`](../schemas/integration.schema.json) | `/company/integrations/` |
 | Skill | [`/schemas/skill.schema.json`](../schemas/skill.schema.json) | `/company/skills/<name>.yaml` (generators emit per-runtime variants) |
+| Capability | [`/schemas/capability.schema.json`](../schemas/capability.schema.json) | `/company/capabilities/<id>.yaml` |
+| Requirement | [`/schemas/requirement.schema.json`](../schemas/requirement.schema.json) | `/company/requirements/<id>.yaml` |
+| Control | [`/schemas/control.schema.json`](../schemas/control.schema.json) | `/company/controls/<id>.yaml` |
+| Proposal | [`/schemas/proposal.schema.json`](../schemas/proposal.schema.json) | `/company/proposals/PROP-NNNN-<slug>.yaml` |
+
+Every reference between these documents is a **typed edge**. The referring
+field carries `x-cac-ref` in its schema, naming the primitive kinds it may
+point at, and one resolver checks all of them. A reference that points at
+nothing fails validation. See [ADR-0007](./adr/0007-typed-reference-edges.md)
+and [`/docs/interoperability.md`](./interoperability.md).
 
 ## Canonical state ladder
 
-Company-as-Code is a distributed orchestration system. The substrate exists to keep canonical state coherent across unreliable nodes — humans, agents, and SaaS tools — under finite energy and attention constraints. Every operational entity in the system declares a three-level state ladder. The ladder is universal: the same shape applies to a service line, an org, a person, an agent run, a deal, a contract, a task, or any new primitive a fork introduces.
+Company-as-Code is a distributed orchestration system. The substrate exists to keep canonical state coherent across unreliable nodes (humans, agents, and SaaS tools) under finite energy and attention constraints. Every operational entity in the system declares a three-level state ladder. The ladder is universal: the same shape applies to a service line, an org, a person, an agent run, a deal, a contract, a task, or any new primitive a fork introduces.
 
 ### Three levels
 
@@ -57,7 +67,7 @@ Company-as-Code is a distributed orchestration system. The substrate exists to k
 | **L2** | Domain-native journey stage | Per-entity enum; recognizable to the domain | Module owning the entity |
 | **L3** | Operational substate | Per-L2-stage enum; fine-grained operational reality | Module owning the entity |
 
-Every L2 stage is mapped to exactly one L1 bucket. Every L3 substate inherits its L1 bucket from its L2 parent. An entity's L1 is therefore a deterministic projection of its L2 — never independently asserted.
+Every L2 stage is mapped to exactly one L1 bucket. Every L3 substate inherits its L1 bucket from its L2 parent. An entity's L1 is therefore a deterministic projection of its L2, never independently asserted.
 
 ```mermaid
 flowchart LR
@@ -82,13 +92,13 @@ The L1 layer defines the company's **working set**:
 
 This makes "what is the company doing right now?" a single deterministic query: `select * where l1 in ('pending', 'active')`, across every domain. The same query produces:
 
-- **Stuck-pending detection** — entities in `pending` past their expected reach-time (the equivalent of an unreached pointer).
-- **Orphaned active detection** — entities in `active` with no owner, no recent event, or no downstream work.
-- **Terminal-failure sweep** — entities that crossed into `terminated` without an explanation event.
+- **Stuck-pending detection**: entities in `pending` past their expected reach-time (the equivalent of an unreached pointer).
+- **Orphaned active detection**: entities in `active` with no owner, no recent event, or no downstream work.
+- **Terminal-failure sweep**: entities that crossed into `terminated` without an explanation event.
 
 These are domain-agnostic. The runtime detects them the same way a language runtime detects unreachable objects, or a cell detects misfolded proteins.
 
-### Worked example — Task
+### Worked example: Task
 
 The canonical `Task` state machine maps as follows:
 
@@ -104,13 +114,13 @@ The L2 enum is what the operator sees in the work-management projection. The L1 
 ### Discipline
 
 - Every entity schema declares its full state ladder.
-- Every L2 stage declares its L1 bucket — explicitly, in the schema.
+- Every L2 stage declares its L1 bucket: explicitly, in the schema.
 - An entity without canonical state and bucket assignment does not exist in the substrate.
 - L1 transitions are observable: every move between buckets emits a typed event in the ledger.
-- Workflows, agents, dashboards, and humans read from this ladder — they never invent parallel state.
+- Workflows, agents, dashboards, and humans read from this ladder. They never invent parallel state.
 - Mutation flows **downward**: the canonical layer is the source; CRM, work management, finance, PSA, and other SaaS tools are projections. State never originates downstream.
 
-The state ladder is not a feature of any single entity. It is the operating substrate that makes the company a queryable, sweepable, recursively-composable system — the same primitives as any well-designed distributed runtime.
+The state ladder is not a feature of any single entity. It is the operating substrate that makes the company a queryable, sweepable, recursively-composable system, the same primitives as any well-designed distributed runtime.
 
 ## Modular monolith discipline
 
@@ -119,13 +129,13 @@ The repository is a modular monolith. The discipline:
 1. Each module owns its business logic, data, agents, and invariants. Never move logic out of the module that owns it.
 2. Cross-module communication happens only through declared interfaces. Imports from another module's internals are forbidden.
 3. Every new module requires a manifest before any code is written.
-4. Infrastructure layers contain zero business logic — capabilities only.
+4. Infrastructure layers contain zero business logic. They provide mechanisms, never rules.
 5. State mutation is unidirectional. All state changes originate from the coordination layer; downstream systems read.
 
 What's machine-enforced vs operator-enforced is laid out in [`/docs/standards/policy-to-control-matrix.md`](standards/policy-to-control-matrix.md). In summary:
 
-- (3) is enforced by **schemas + cross-document checks** — every manifest is validated; cross-doc rules catch dangling references and singleton violations.
-- (2) is surfaced by the **dependency-graph generator** — every cross-module edge appears in `/generated/dependency-graph.json` for review. Direct import enforcement at the source-code layer is fork-specific.
+- (3) is enforced by **schemas + cross-document checks**. Every manifest is validated; cross-doc rules catch dangling references and singleton violations.
+- (2) is surfaced by the **dependency-graph generator**, every cross-module edge appears in `/generated/dependency-graph.json` for review. Direct import enforcement at the source-code layer is fork-specific.
 - (1), (4), (5) are **operator discipline** today (no enforceable code-layer check); the policy-to-control matrix tracks them as candidates for elevation.
 
 ## Cognition tree
@@ -185,34 +195,34 @@ flowchart TD
 
 > Bold-bordered nodes are the worked example modules in this seed. Dashed-bordered nodes are sub-cognition modules under their parent.
 
-> **Live version:** this static diagram has a real-time, interactive twin — the
+> **Live version:** this static diagram has a real-time, interactive twin, the
 > **Visual Cognition Graph**. `cac-host graph serve` renders the same picture
 > generated from the manifests and overlaid with live audit / event / HITL
 > activity per module. See [`/docs/cognition-graph.md`](./cognition-graph.md).
 
 Each node supports scoped memory, tools, workflows, dashboards, observability, permissions, tasks, automation, context windows.
 
-A folder without a manifest declares no logic — it is an organizational placeholder. A folder with a manifest is a real module subject to the discipline above.
+A folder without a manifest declares no logic. It is an organizational placeholder. A folder with a manifest is a real module subject to the discipline above.
 
 ## Generated registries + drift gate
 
 Manifests are walked by deterministic generators that emit:
 
-- **`/generated/agent-catalogue.json`** — every autonomous unit
-- **`/generated/flow-registry.json`** — every workflow with trigger + HITL flag
-- **`/generated/dependency-graph.json`** — module-to-module interface edges
-- **`/generated/domain-model.json`** — module ownership of tables and schemas
-- **`/generated/context-bundles/<module>__<agent>.json`** — per-agent typed runtime context, resolved from the agent declaration plus the owning module's exposes/consumes/invariants
-- **`/generated/skill-index.json`** — flat index of every defined skill with autonomy class, owner, tags, related skills
-- **`/generated/skills/{claude,agents-md,gemini}/...`** — per-runtime skill adapters generated from `/company/skills/*.yaml`
+- **`/generated/agent-catalogue.json`**: every autonomous unit
+- **`/generated/flow-registry.json`**: every workflow with trigger + HITL flag
+- **`/generated/dependency-graph.json`**: module-to-module interface edges
+- **`/generated/domain-model.json`**: module ownership of tables and schemas
+- **`/generated/context-bundles/<module>__<agent>.json`**: per-agent typed runtime context, resolved from the agent declaration plus the owning module's exposes/consumes/invariants
+- **`/generated/skill-index.json`**: flat index of every defined skill with autonomy class, owner, tags, related skills
+- **`/generated/skills/{claude,agents-md,gemini}/...`**: per-runtime skill adapters generated from `/company/skills/*.yaml`
 
-CI runs `npm run generate:check` on every PR. If any generated file would change but isn't in the diff, CI fails. Hand-merging generated files is forbidden — when conflicts arise, regenerate.
+CI runs `npm run generate:check` on every PR. If any generated file would change but isn't in the diff, CI fails. Hand-merging generated files is forbidden, when conflicts arise, regenerate.
 
 ## Canonical IDs
 
 Internal IDs are permanent. External system IDs live under `externalIds` arrays and are evolutionary.
 
-- When an external tool is replaced, only the mapping changes — canonical IDs survive.
+- When an external tool is replaced, only the mapping changes, canonical IDs survive.
 - When entities are merged, canonical IDs are stable; the merge is recorded against them.
 - Soft-delete with a tombstone is mandatory. Hard-delete is forbidden.
 
@@ -230,15 +240,15 @@ Every field has exactly one writer. Bidirectional sync is a defect, not a featur
 
 - A sync into the coordination layer flows one direction.
 - A writeback to an external system is one direction and gated by an explicit operational action (typically HITL).
-- Round-trip fields require an explicit conflict-resolution protocol — written down, not implied.
+- Round-trip fields require an explicit conflict-resolution protocol, written down, not implied.
 
 ## Autonomy classification
 
 Every executable action declares its autonomy:
 
-- **autonomous** — fires without human intervention (read-only syncs, validation, registry generation)
-- **human-gated** — requires explicit human action (writebacks, irreversible changes, financial actions)
-- **escalated** — fires autonomously up to a threshold, then escalates (retries, error budgets, dunning)
+- **autonomous**: fires without human intervention (read-only syncs, validation, registry generation)
+- **human-gated**: requires explicit human action (writebacks, irreversible changes, financial actions)
+- **escalated**: fires autonomously up to a threshold, then escalates (retries, error budgets, dunning)
 
 The classification is declarative in the manifest. The runtime enforces it. Schedules attached to `human-gated` workflows fail validation.
 
@@ -259,7 +269,7 @@ Human-in-the-loop is a declaration on the manifest, the agent, or the workflow. 
 
 - The manifest declares: "this writeback fires only from human action in this admin surface"
 - The agent declaration declares: "cadence: on-demand; never scheduled"
-- The runtime enforces the declaration — schedules attached to an HITL-declared workflow fail validation
+- The runtime enforces the declaration: schedules attached to an HITL-declared workflow fail validation
 
 ## Audit log + typed event ledger
 
@@ -290,11 +300,11 @@ flowchart LR
     style C fill:#ffd
 ```
 
-1. **Baseline** — query current state, record counts/IDs/hashes
-2. **Dry-run** — execute with `dryRun=true`, inspect projected payload
-3. **Confirm counts** — compare projected delta to baseline; stop if wildly off
-4. **Live** — execute with `dryRun=false`, smallest possible scope
-5. **Re-verify** — re-query baseline, confirm state shifted as predicted
+1. **Baseline**: query current state, record counts/IDs/hashes
+2. **Dry-run**: execute with `dryRun=true`, inspect projected payload
+3. **Confirm counts**: compare projected delta to baseline; stop if wildly off
+4. **Live**: execute with `dryRun=false`, smallest possible scope
+5. **Re-verify**: re-query baseline, confirm state shifted as predicted
 
 The audit log captures this as a queryable narrative under a single correlation ID. Agents that follow this protocol are auditable in the same way humans are.
 
@@ -308,9 +318,9 @@ Everything emits logs, events, traces, metrics, alerts. Metrics declare ownershi
 
 Three tiers:
 
-- **Tier 1 — Context** — long-form narrative; lives in wiki-style documents and ADRs
-- **Tier 2 — Runtime entry-points** — numbered steps, inputs, outputs, definition-of-done; lives in tasks, workflows, runbooks
-- **Tier 3 — Skills** — composable, reusable expertise referenced by name; lives at [`/company/skills/`](../company/skills) as canonical YAML, validated by [`/schemas/skill.schema.json`](../schemas/skill.schema.json)
+- **Tier 1, Context**: long-form narrative; lives in wiki-style documents and ADRs
+- **Tier 2, Runtime entry-points**: numbered steps, inputs, outputs, definition-of-done; lives in tasks, workflows, runbooks
+- **Tier 3, Skills**: composable, reusable expertise referenced by name; lives at [`/company/skills/`](../company/skills) as canonical YAML, validated by [`/schemas/skill.schema.json`](../schemas/skill.schema.json)
 
 Mixing tiers is the most common documentation failure mode. Migration from legacy wiki dumps classifies each document, extracts each tier, archives the original.
 
@@ -318,9 +328,9 @@ Mixing tiers is the most common documentation failure mode. Migration from legac
 
 Skills are the most cross-cutting Tier-3 artefact. One canonical YAML at `/company/skills/<name>.yaml` is walked by the generator into per-runtime adapters under `/generated/skills/`:
 
-- **`claude/<name>/SKILL.md`** — Claude Code skill format (YAML frontmatter + markdown body)
-- **`agents-md/<name>.md`** — provider-neutral markdown for Codex, Cursor, Aider, Continue, AGENTS.md-aware tools
-- **`gemini/<name>.gem.json`** — Gemini Gems format (also a workable shape for OpenAI Assistants)
+- **`claude/<name>/SKILL.md`**: Claude Code skill format (YAML frontmatter + markdown body)
+- **`agents-md/<name>.md`**: provider-neutral markdown for Codex, Cursor, Aider, Continue, AGENTS.md-aware tools
+- **`gemini/<name>.gem.json`**: Gemini Gems format (also a workable shape for OpenAI Assistants)
 
 Forks add a fourth adapter (LangChain hub, custom IDE rules, …) by writing one small function in `cli/src/generate.ts`. The canonical YAML never changes. The drift gate protects all generated outputs equally.
 
@@ -328,9 +338,9 @@ Agents declare which skills they may invoke via the optional `skills:` field on 
 
 ## AI-native design
 
-- **Structured context bundles** are generated per agent — typed, scoped, deterministic
+- **Structured context bundles** are generated per agent, typed, scoped, deterministic
 - **Persistent agent memory** is a versioned layer distinct from documentation
-- **Adversarial verification posture** — recalled information is a claim until checked against current state
+- **Adversarial verification posture**: recalled information is a claim until checked against current state
 - **Autonomy classification** is declared and enforced per action
 
 The context-bundle pipeline is to AI runtimes what the build system is to compiled software.

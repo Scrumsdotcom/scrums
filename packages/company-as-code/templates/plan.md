@@ -22,7 +22,7 @@ The intended architecture. The boundaries it respects. Where logic lives, where 
 
 ## Capability check
 
-What has been verified about the systems involved? List the evidence — not opinions.
+What has been verified about the systems involved? List the evidence, not opinions.
 
 - [ ] Module `<X>` has a manifest
 - [ ] Interface `<Y>` is declared and stable
@@ -36,12 +36,12 @@ Known unknowns, locked-in design decisions, things not to re-debate.
 
 Explicit stages, each small enough to be picked up independently.
 
-### Phase 0 — <short name>
+### Phase 0: <short name>
 
 - [ ] Task 1
 - [ ] Task 2
 
-### Phase 1 — <short name>
+### Phase 1: <short name>
 
 - [ ] Task 1
 

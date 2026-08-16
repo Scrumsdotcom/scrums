@@ -8,7 +8,7 @@ import type { WorkflowDoc } from "../types.js";
  * Runtime-side loader.
  *
  * The dev-side CLI under /cli has its own loader that walks the whole corpus
- * for validation purposes. The runtime host needs a narrower lookup —
+ * for validation purposes. The runtime host needs a narrower lookup,
  * fetch a specific workflow by name + module, plus the related agent /
  * automation declarations.
  *

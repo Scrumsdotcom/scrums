@@ -14,8 +14,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # better-sqlite3 is a native addon — exercise every supported major.
-        node-version: ["20", "22", "24"]
+        # better-sqlite3 is a native addon, exercise every supported major.
+        # Node 20 left maintenance in April 2026; the floor is 22.
+        node-version: ["22", "24"]
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0   # v7.0.0
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e   # v6.4.0
@@ -37,6 +38,11 @@ jobs:
       - name: Unit tests (CLI)
         working-directory: cli
         run: npm test
+      - name: Standing health inspection
+        working-directory: cli
+        # Findings fail the job; warnings report and pass. Forks wanting the
+        # tighter gate add --strict here.
+        run: npm run doctor
 
       - name: Install runtime host
         working-directory: runtime
@@ -47,6 +53,6 @@ jobs:
       - name: Unit tests (runtime host)
         working-directory: runtime
         run: npm test
-      - name: Runtime host smoke — load the manifest graph
+      - name: Runtime host smoke, load the manifest graph
         working-directory: runtime
         run: npx tsx src/index.ts load --repo ..

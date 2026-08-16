@@ -1,39 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { buildAjv, schemaValidate } from "../src/validate.js";
-import { loadSchemas, type RepoCorpus } from "../src/loader.js";
+import { emptyCorpus, loadSchemas } from "../src/loader.js";
 
 /**
- * Negative fixtures — adversarial documents that *should* fail validation.
+ * Negative fixtures: adversarial documents that *should* fail validation.
  *
  * These guard against regressions in the schemas themselves: if a schema is
  * loosened by accident, the corresponding negative fixture starts to pass
  * and the test goes red.
  */
 
-function emptyCorpus(): RepoCorpus {
-  return {
-    manifests: [],
-    agents: [],
-    workflows: [],
-    tasks: [],
-    initiatives: [],
-    goals: [],
-    metrics: [],
-    interfaces: [],
-    organizations: [],
-    persons: [],
-    integrations: [],
-    skills: [],
-    dashboards: [],
-    automations: [],
-    eventTypeRegistries: [],
-    autonomyPolicies: [],
-    escalationPolicies: [],
-    events: [],
-    stateSnapshots: [],
-    shadowEnrollments: [],
-  };
-}
 
 describe("negative fixtures (must fail validation)", () => {
   it("workflow with trigger.kind=schedule but no schedule field", async () => {

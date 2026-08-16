@@ -10,15 +10,20 @@ Company-as-Code separates **framework-level** content (rarely edited in a fork) 
 
 | Path | Edit in a fork? |
 |---|---|
-| `/schemas/*.schema.json` | Rarely — these are the framework contract |
-| `/templates/*.yaml`, `/templates/*.md` | Rarely — these are framework-level authoring starters |
-| `/cli/` | Optional — you can use as-is, or port to your stack |
-| `/runtime/` | Optional — reference runtime host. Replace pluggable invokers (`AgentInvoker`, `AutomationInvoker`, `ApprovalProvider`) with your real implementations, or write your own runtime against the same schemas |
-| `/docs/spec/company-as-code-spec.md` | Treat as upstream — don't edit; track upstream changes |
+| `/schemas/*.schema.json` | Rarely. These are the framework contract |
+| `/templates/*.yaml`, `/templates/*.md` | Rarely. These are framework-level authoring starters |
+| `/cli/` | Optional. You can use as-is, or port to your stack |
+| `/runtime/` | Optional, reference runtime host. Replace pluggable invokers (`AgentInvoker`, `AutomationInvoker`, `ApprovalProvider`) with your real implementations, or write your own runtime against the same schemas |
+| `/docs/spec/company-as-code-spec.md` | Treat as upstream, don't edit; track upstream changes |
 | `/docs/standards/`, `/docs/architecture.md` | Edit if your fork changes a standard (record via ADR) |
 | `/docs/adr/` | Add your own ADRs as `0010-…`, `0011-…` (leave 0001-0004 in place as bootstrap history) |
-| `/company/**` | **Yes** — this is your company; replace everything under here |
-| `/company/templates/` | **Yes** — your in-house starters |
+| `/company/**` | **Yes**. This is your company; replace everything under here |
+| `/company/requirements/`, `/company/controls/` | **Yes**, and start small. One real obligation with one real control beats a full framework mapping nobody maintains |
+| `/company/capabilities/` | **Yes**. Start with the two or three functions whose loss would hurt most |
+| `/company/proposals/` | **Yes**. Delete `PROP-0001`; it records a change to upstream, not to you |
+| `/.github/CODEOWNERS` | **Yes**. Replace the handle, then enable branch protection. Without branch protection the file is documentation, not a gate |
+| `/NOTICE`, `/CITATION.cff`, `/GOVERNANCE.md`, `/SUPPORT.md` | **Yes**. Keep the upstream attributions in `NOTICE` if you keep the patterns |
+| `/company/templates/` | **Yes**, your in-house starters |
 | `/AGENTS.md`, `/README.md` | Adapt the README; keep AGENTS.md largely as-is and add your fork-specific section at the bottom |
 | `/MAINTAINERS.md`, `/CODE_OF_CONDUCT.md` | Replace with your own |
 | `/SECURITY.md` | Replace reporting channels |
@@ -31,12 +36,13 @@ Company-as-Code separates **framework-level** content (rarely edited in a fork) 
 
 The smallest fork that actually operationalizes something:
 
-1. **Replace `/company/`.** Delete the worked examples and the `/company/skills/` examples; build your real first module — usually whichever team most needs operational discipline. Use the [`add-module`](../company/skills/add-module.yaml) skill.
+1. **Replace `/company/`.** Delete the worked examples and the `/company/skills/` examples; build your real first module, usually whichever team most needs operational discipline. Use the [`add-module`](../company/skills/add-module.yaml) skill.
 2. **Declare your integrations.** Use the [`add-integration`](../company/skills/add-integration.yaml) skill. Start with read-only mappings.
 3. **Wire one workflow end-to-end.** Pick your highest-stakes operational sync. Apply the [`sync-verification`](../company/skills/sync-verification.yaml) protocol. Ship it `human-gated`.
 4. **Run `npm run validate`, `npm run generate`, `npm run generate:check`.** Commit the regenerated outputs.
-5. **Set up CI** by copying `.github/workflows/{validate,generate-check}.yml` into your fork (already there if you forked).
+5. **Set up CI** by copying `.github/workflows/{validate,generate-check,security}.yml` into your fork (already there if you forked).
 6. **Lock the merge method** to squash-only in repo settings.
+7. **Claim the conserved core.** Put your handle in `.github/CODEOWNERS`, enable branch protection with code-owner review on those paths, and run `npm run doctor` to confirm the gate exists. Doctor reports a missing `CODEOWNERS` as a finding, which is the one thing in this list that is easy to skip and expensive to have skipped.
 
 That's the minimum. Everything else is incremental.
 
@@ -47,7 +53,7 @@ That's the minimum. Everything else is incremental.
 Track the upstream `gez-scrumsdotcom/Company-as-Code` repo. When a framework-level change lands upstream:
 
 - Schema additions: usually safe to take wholesale. Re-validate your `/company/` content; new optional fields are backwards compatible.
-- Schema deletions: never silent — they ship with an ADR and a deprecation window. Take action within the window.
+- Schema deletions: never silent: they ship with an ADR and a deprecation window. Take action within the window.
 - Generator changes: regenerate `/generated/` and commit; the drift gate will tell you if anything broke.
 - Standards changes: read the ADR; adapt your fork's standards if needed.
 
@@ -63,7 +69,7 @@ The framework specifies contracts; the **runtime is your choice**. To deploy Com
 - **An audit log.** Same; can be the same table or a separate one. Audit rows are loose-schema; events are tight-schema.
 - **A scheduler / job runner.** For autonomous and escalated agents.
 - **An approval surface.** UI or CLI where human-gated approvals are captured. Approvals must produce an audit row with the approver's canonical Person ID.
-- **A secret store.** Integration manifests reference secrets via `secretRef` — point at your secret manager.
+- **A secret store.** Integration manifests reference secrets via `secretRef`, point at your secret manager.
 - **A paging integration.** For the `escalation-policy.yaml` channel routing.
 - **An observability stack.** Dashboards consume metrics with declared lineage. Pick your visualization layer.
 
@@ -102,13 +108,13 @@ Signals that you've gone deep enough on the framework that the next step is **yo
 - You've shipped a runtime that other forks would benefit from
 - You've published a vendor adapter that the community wants to consume
 
-When that happens, consider contributing back upstream — the framework is permissively licensed but a vibrant community is what makes a reference implementation valuable. See [`MAINTAINERS.md`](../MAINTAINERS.md) for the contribution path.
+When that happens, consider contributing back upstream. The framework is permissively licensed but a vibrant community is what makes a reference implementation valuable. See [`MAINTAINERS.md`](../MAINTAINERS.md) for the contribution path.
 
 ---
 
 ## Related
 
-- [`/AGENTS.md`](../AGENTS.md) — the root navigation for AI agents and operators
-- [`/docs/getting-started.md`](./getting-started.md) — your first manifest, your first agent
-- [`/docs/anatomy/`](./anatomy) — field-by-field for the primitives
-- [`/docs/scenarios/`](./scenarios) — three end-to-end walkthroughs
+- [`/AGENTS.md`](../AGENTS.md), the root navigation for AI agents and operators
+- [`/docs/getting-started.md`](./getting-started.md), your first manifest, your first agent
+- [`/docs/anatomy/`](./anatomy), field-by-field for the primitives
+- [`/docs/scenarios/`](./scenarios), three end-to-end walkthroughs

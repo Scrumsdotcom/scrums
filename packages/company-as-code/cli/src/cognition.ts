@@ -1,6 +1,6 @@
 // Cognition graph generator.
 //
-// Produces /generated/cognition-graph.json — the *structural* graph of the
+// Produces /generated/cognition-graph.json, the *structural* graph of the
 // company: domains -> modules -> agents / workflows / metrics, with the
 // module-to-module dependency edges. It is the static skeleton the runtime's
 // `cac-host graph serve` renders as an interactive, real-time diagram, overlaid

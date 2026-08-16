@@ -32,6 +32,10 @@ export interface RepoCorpus {
   events: LoadedDoc[];
   stateSnapshots: LoadedDoc[];
   shadowEnrollments: LoadedDoc[];
+  requirements: LoadedDoc[];
+  controls: LoadedDoc[];
+  capabilities: LoadedDoc[];
+  proposals: LoadedDoc[];
 }
 
 /** A /company YAML file that could not be classified into a primitive bucket. */
@@ -48,7 +52,7 @@ export interface CorpusLoad {
   /**
    * Files under /company that parsed but did not classify into any bucket
    * and do not carry a `# cac:ignore` pragma. `validate` reports each of
-   * these as an error — a one-character `kind:` typo must not silently
+   * these as an error. A one-character `kind:` typo must not silently
    * drop a document from the enforced corpus.
    */
   unclassified: UnclassifiedFile[];
@@ -75,7 +79,75 @@ const KIND_TO_BUCKET: Record<string, keyof RepoCorpus> = {
   Event: "events",
   StateSnapshot: "stateSnapshots",
   ShadowEnrollment: "shadowEnrollments",
+  Requirement: "requirements",
+  Control: "controls",
+  Capability: "capabilities",
+  Proposal: "proposals",
 };
+
+/**
+ * The field that carries each primitive's identity. Typed references
+ * (`x-cac-ref` in the schemas) resolve against these values, so this map is
+ * what makes the whole corpus a traversable graph rather than a pile of
+ * strings.
+ *
+ * `Manifest` is the exception: a module's identity is its path, derived from
+ * the file location, because a module is a place in the organizational graph
+ * rather than a document with an ID.
+ */
+const IDENTITY_FIELD: Partial<Record<keyof RepoCorpus, "id" | "name" | "canonicalId">> = {
+  agents: "name",
+  workflows: "name",
+  tasks: "id",
+  initiatives: "id",
+  goals: "id",
+  metrics: "id",
+  interfaces: "name",
+  organizations: "canonicalId",
+  persons: "canonicalId",
+  integrations: "name",
+  skills: "name",
+  dashboards: "name",
+  automations: "name",
+  eventTypeRegistries: "name",
+  autonomyPolicies: "name",
+  escalationPolicies: "name",
+  events: "id",
+  stateSnapshots: "id",
+  shadowEnrollments: "id",
+  requirements: "id",
+  controls: "id",
+  capabilities: "id",
+  proposals: "id",
+};
+
+/** `company/domains/x/y/manifest.yaml` -> `company/domains/x/y`. */
+export function modulePathOf(manifestFile: string): string {
+  return manifestFile.replace(/\/manifest\.ya?ml$/, "");
+}
+
+/**
+ * Index of every canonical identifier in the corpus, keyed by primitive kind.
+ * Built once and consumed by the reference resolver and the graph generator.
+ */
+export function identityIndex(corpus: RepoCorpus): Map<string, Map<string, string>> {
+  const index = new Map<string, Map<string, string>>();
+  for (const [kind, bucket] of Object.entries(KIND_TO_BUCKET) as [string, keyof RepoCorpus][]) {
+    const byId = new Map<string, string>();
+    if (bucket === "manifests") {
+      for (const doc of corpus.manifests) byId.set(modulePathOf(doc.file), doc.file);
+    } else {
+      const field = IDENTITY_FIELD[bucket];
+      if (!field) continue;
+      for (const doc of corpus[bucket]) {
+        const value = doc.data?.[field];
+        if (typeof value === "string") byId.set(value, doc.file);
+      }
+    }
+    index.set(kind, byId);
+  }
+  return index;
+}
 
 /**
  * A YAML file that is intentionally not a CaC primitive (e.g. a JSON-Schema
@@ -104,29 +176,19 @@ export async function loadCorpus(): Promise<RepoCorpus> {
   return (await loadCorpusWithDiagnostics()).corpus;
 }
 
+/**
+ * An empty corpus with one bucket per primitive. Exported because tests build
+ * partial corpora by hand: deriving them from this constructor means adding a
+ * primitive cannot leave a test file behind with a missing bucket.
+ */
+export function emptyCorpus(): RepoCorpus {
+  return Object.fromEntries(
+    Object.values(KIND_TO_BUCKET).map((bucket) => [bucket, [] as LoadedDoc[]]),
+  ) as unknown as RepoCorpus;
+}
+
 export async function loadCorpusWithDiagnostics(): Promise<CorpusLoad> {
-  const corpus: RepoCorpus = {
-    manifests: [],
-    agents: [],
-    workflows: [],
-    tasks: [],
-    initiatives: [],
-    goals: [],
-    metrics: [],
-    interfaces: [],
-    organizations: [],
-    persons: [],
-    integrations: [],
-    skills: [],
-    dashboards: [],
-    automations: [],
-    eventTypeRegistries: [],
-    autonomyPolicies: [],
-    escalationPolicies: [],
-    events: [],
-    stateSnapshots: [],
-    shadowEnrollments: [],
-  };
+  const corpus: RepoCorpus = emptyCorpus();
   const unclassified: UnclassifiedFile[] = [];
 
   const patterns = ["**/*.yaml", "**/*.yml"];
@@ -192,6 +254,10 @@ const BUCKET_TO_SCHEMA: Record<keyof RepoCorpus, string> = {
   events: "event.schema.json",
   stateSnapshots: "state-snapshot.schema.json",
   shadowEnrollments: "shadow-enrollment.schema.json",
+  requirements: "requirement.schema.json",
+  controls: "control.schema.json",
+  capabilities: "capability.schema.json",
+  proposals: "proposal.schema.json",
 };
 
 export function schemaFor(bucket: keyof RepoCorpus): string {

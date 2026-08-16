@@ -1,4 +1,4 @@
-# Generated from /schemas/escalation-policy.schema.json — do not edit by hand.
+# Generated from /schemas/escalation-policy.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations
@@ -15,10 +15,10 @@ class Severity(TypedDict):
 
 
 class EscalationPolicySeverities(TypedDict):
-    # "sev-1": "Severity"  (reserved word — access via dict)
-    # "sev-2": "Severity"  (reserved word — access via dict)
-    # "sev-3": "Severity"  (reserved word — access via dict)
-    # "sev-4": "Severity"  (reserved word — access via dict)
+    # "sev-1": "Severity"  (reserved word, access via dict)
+    # "sev-2": "Severity"  (reserved word, access via dict)
+    # "sev-3": "Severity"  (reserved word, access via dict)
+    # "sev-4": "Severity"  (reserved word, access via dict)
     pass
 
 

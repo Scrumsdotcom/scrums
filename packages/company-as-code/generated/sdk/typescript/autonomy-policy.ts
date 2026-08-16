@@ -1,4 +1,4 @@
-// Generated from /schemas/autonomy-policy.schema.json — do not edit by hand.
+// Generated from /schemas/autonomy-policy.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 export interface Class {

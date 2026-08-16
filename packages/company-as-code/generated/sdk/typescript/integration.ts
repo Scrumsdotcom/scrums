@@ -1,4 +1,4 @@
-// Generated from /schemas/integration.schema.json — do not edit by hand.
+// Generated from /schemas/integration.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Mapping between the coordination layer and an external system. No vendor names are canonical; integrations are pluggable. */
@@ -7,7 +7,7 @@ export interface Integration {
   kind: "Integration";
   /** Local canonical name for the integration. The vendor name lives in 'system', not here. */
   name: string;
-  /** Vendor / system identifier. Optional — the framework treats integrations as replaceable. */
+  /** Vendor / system identifier. Optional, the framework treats integrations as replaceable. */
   system?: string;
   category: "crm" | "workflow-engine" | "database" | "project-management" | "cloud" | "orchestration" | "ai-provider" | "communication" | "observability" | "billing" | "identity" | "storage" | "search" | "analytics" | "other";
   status: "planned" | "configured" | "active" | "degraded" | "deprecated" | "removed";

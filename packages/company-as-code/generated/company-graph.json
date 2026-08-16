@@ -1,0 +1,1604 @@
+{
+  "edgeCount": 165,
+  "edges": [
+    {
+      "from": "Agent:billing-reconciler",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Agent:billing-reconciler",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:platform-overview"
+    },
+    {
+      "from": "Agent:cash-forecaster",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/domains/finance-ops/finance"
+    },
+    {
+      "from": "Agent:cash-forecaster",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:finance-overview"
+    },
+    {
+      "from": "Agent:ceo-strategist",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/executive/ceo"
+    },
+    {
+      "from": "Agent:ceo-strategist",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:executive-overview"
+    },
+    {
+      "from": "Agent:deploy-watchdog",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Agent:deploy-watchdog",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:deploy-frequency"
+    },
+    {
+      "from": "Agent:finance-ops-roll-up",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/executive/finance-ops"
+    },
+    {
+      "from": "Agent:finance-ops-roll-up",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:executive-overview"
+    },
+    {
+      "from": "Agent:growth-experiment-runner",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/domains/sales-marketing/growth"
+    },
+    {
+      "from": "Agent:growth-experiment-runner",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:growth-overview"
+    },
+    {
+      "from": "Agent:gtm-roll-up",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/executive/sales-marketing"
+    },
+    {
+      "from": "Agent:gtm-roll-up",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:executive-overview"
+    },
+    {
+      "from": "Agent:identity-drift-detector",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Agent:identity-drift-detector",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:platform-overview"
+    },
+    {
+      "from": "Agent:product-ops-roll-up",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/executive/product-operations"
+    },
+    {
+      "from": "Agent:product-ops-roll-up",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:executive-overview"
+    },
+    {
+      "from": "Capability:CAP-CASH-FORECAST",
+      "origin": "reference",
+      "relation": "fallback",
+      "to": "Party:role:finance-lead"
+    },
+    {
+      "from": "Capability:CAP-CASH-FORECAST",
+      "origin": "reference",
+      "relation": "finalFallback",
+      "to": "Party:person:cfo"
+    },
+    {
+      "from": "Capability:CAP-CASH-FORECAST",
+      "origin": "reference",
+      "relation": "measuredBy[]",
+      "to": "Metric:METRIC-FIN-CLOSE-ON-TIME"
+    },
+    {
+      "from": "Capability:CAP-CASH-FORECAST",
+      "origin": "reference",
+      "relation": "primaryOwner",
+      "to": "Agent:cash-forecaster"
+    },
+    {
+      "from": "Capability:CAP-COMPLIANCE-ATTESTATION",
+      "origin": "reference",
+      "relation": "fallback",
+      "to": "Party:role:finance-lead"
+    },
+    {
+      "from": "Capability:CAP-COMPLIANCE-ATTESTATION",
+      "origin": "reference",
+      "relation": "finalFallback",
+      "to": "Party:person:cfo"
+    },
+    {
+      "from": "Capability:CAP-COMPLIANCE-ATTESTATION",
+      "origin": "reference",
+      "relation": "primaryOwner",
+      "to": "Manifest:company/domains/finance-ops/governance"
+    },
+    {
+      "from": "Capability:CAP-EXPERIMENT-ALLOCATION",
+      "origin": "reference",
+      "relation": "fallback",
+      "to": "Party:role:head-of-growth"
+    },
+    {
+      "from": "Capability:CAP-EXPERIMENT-ALLOCATION",
+      "origin": "reference",
+      "relation": "finalFallback",
+      "to": "Party:person:cro"
+    },
+    {
+      "from": "Capability:CAP-EXPERIMENT-ALLOCATION",
+      "origin": "reference",
+      "relation": "measuredBy[]",
+      "to": "Metric:METRIC-GROWTH-CAC-PAYBACK"
+    },
+    {
+      "from": "Capability:CAP-EXPERIMENT-ALLOCATION",
+      "origin": "reference",
+      "relation": "primaryOwner",
+      "to": "Agent:growth-experiment-runner"
+    },
+    {
+      "from": "Capability:CAP-INCIDENT-COMMAND",
+      "origin": "reference",
+      "relation": "fallback",
+      "to": "Party:role:finance-lead"
+    },
+    {
+      "from": "Capability:CAP-INCIDENT-COMMAND",
+      "origin": "reference",
+      "relation": "fallback",
+      "to": "Party:role:platform-lead"
+    },
+    {
+      "from": "Capability:CAP-INCIDENT-COMMAND",
+      "origin": "reference",
+      "relation": "finalFallback",
+      "to": "Party:person:cto"
+    },
+    {
+      "from": "Capability:CAP-INCIDENT-COMMAND",
+      "origin": "reference",
+      "relation": "measuredBy[]",
+      "to": "Metric:METRIC-RUNTIME-MTTR"
+    },
+    {
+      "from": "Capability:CAP-INCIDENT-COMMAND",
+      "origin": "reference",
+      "relation": "primaryOwner",
+      "to": "Party:role:on-call-platform"
+    },
+    {
+      "from": "Capability:CAP-INCIDENT-COMMAND",
+      "origin": "reference",
+      "relation": "requires[]",
+      "to": "Capability:CAP-PRODUCTION-DEPLOY"
+    },
+    {
+      "from": "Capability:CAP-PRODUCTION-DEPLOY",
+      "origin": "reference",
+      "relation": "fallback",
+      "to": "Party:role:on-call-platform"
+    },
+    {
+      "from": "Capability:CAP-PRODUCTION-DEPLOY",
+      "origin": "reference",
+      "relation": "fallback",
+      "to": "Party:role:platform-lead"
+    },
+    {
+      "from": "Capability:CAP-PRODUCTION-DEPLOY",
+      "origin": "reference",
+      "relation": "finalFallback",
+      "to": "Party:person:cto"
+    },
+    {
+      "from": "Capability:CAP-PRODUCTION-DEPLOY",
+      "origin": "reference",
+      "relation": "measuredBy[]",
+      "to": "Metric:METRIC-PLATFORM-DEPLOY-MTTR"
+    },
+    {
+      "from": "Capability:CAP-PRODUCTION-DEPLOY",
+      "origin": "reference",
+      "relation": "primaryOwner",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Control:CTRL-DRY-RUN-BEFORE-LIVE",
+      "origin": "reference",
+      "relation": "implements[]",
+      "to": "Requirement:REQ-INTERNAL-EVIDENCE-BEFORE-LIVE"
+    },
+    {
+      "from": "Control:CTRL-DRY-RUN-BEFORE-LIVE",
+      "origin": "reference",
+      "relation": "implements[]",
+      "to": "Requirement:REQ-SOC2-CC8-1"
+    },
+    {
+      "from": "Control:CTRL-DRY-RUN-BEFORE-LIVE",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Manifest:company/domains/finance-ops/governance"
+    },
+    {
+      "from": "Control:CTRL-HITL-EXTERNAL-WRITES",
+      "origin": "reference",
+      "relation": "implements[]",
+      "to": "Requirement:REQ-EU-AI-ACT-ART-14"
+    },
+    {
+      "from": "Control:CTRL-HITL-EXTERNAL-WRITES",
+      "origin": "reference",
+      "relation": "implements[]",
+      "to": "Requirement:REQ-INTERNAL-IRREVERSIBLE-WRITES"
+    },
+    {
+      "from": "Control:CTRL-HITL-EXTERNAL-WRITES",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Manifest:company/domains/finance-ops/governance"
+    },
+    {
+      "from": "Control:CTRL-IDENTITY-DRIFT-DETECTION",
+      "origin": "reference",
+      "relation": "appliesTo[]",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Control:CTRL-IDENTITY-DRIFT-DETECTION",
+      "origin": "reference",
+      "relation": "implements[]",
+      "to": "Requirement:REQ-SOC2-CC6-1"
+    },
+    {
+      "from": "Control:CTRL-IDENTITY-DRIFT-DETECTION",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Control:CTRL-PRODUCTION-CHANGE-GATE",
+      "origin": "reference",
+      "relation": "appliesTo[]",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Control:CTRL-PRODUCTION-CHANGE-GATE",
+      "origin": "reference",
+      "relation": "implements[]",
+      "to": "Requirement:REQ-SOC2-CC8-1"
+    },
+    {
+      "from": "Control:CTRL-PRODUCTION-CHANGE-GATE",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Control:CTRL-RUNTIME-ACTIVITY-LEDGER",
+      "origin": "reference",
+      "relation": "implements[]",
+      "to": "Requirement:REQ-GDPR-ART-32"
+    },
+    {
+      "from": "Control:CTRL-RUNTIME-ACTIVITY-LEDGER",
+      "origin": "reference",
+      "relation": "implements[]",
+      "to": "Requirement:REQ-ISO27001-A-8-15"
+    },
+    {
+      "from": "Control:CTRL-RUNTIME-ACTIVITY-LEDGER",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Manifest:company/runtime"
+    },
+    {
+      "from": "Control:CTRL-SECRET-AND-DEPENDENCY-SCAN",
+      "origin": "reference",
+      "relation": "implements[]",
+      "to": "Requirement:REQ-GDPR-ART-32"
+    },
+    {
+      "from": "Control:CTRL-SECRET-AND-DEPENDENCY-SCAN",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Manifest:company/domains/product-operations/security"
+    },
+    {
+      "from": "Dashboard:deploy-frequency",
+      "origin": "reference",
+      "relation": "owner.module",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Dashboard:executive-overview",
+      "origin": "reference",
+      "relation": "owner.module",
+      "to": "Manifest:company/executive/ceo"
+    },
+    {
+      "from": "Dashboard:finance-overview",
+      "origin": "reference",
+      "relation": "owner.module",
+      "to": "Manifest:company/domains/finance-ops/finance"
+    },
+    {
+      "from": "Dashboard:growth-overview",
+      "origin": "reference",
+      "relation": "owner.module",
+      "to": "Manifest:company/domains/sales-marketing/growth"
+    },
+    {
+      "from": "Dashboard:platform-overview",
+      "origin": "reference",
+      "relation": "owner.module",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Goal:GOAL-FIN-0001",
+      "origin": "reference",
+      "relation": "metric",
+      "to": "Metric:METRIC-FIN-CLOSE-ON-TIME"
+    },
+    {
+      "from": "Goal:GOAL-FIN-0001",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:team:team:finance"
+    },
+    {
+      "from": "Goal:GOAL-GROWTH-0001",
+      "origin": "reference",
+      "relation": "metric",
+      "to": "Metric:METRIC-GROWTH-CAC-PAYBACK"
+    },
+    {
+      "from": "Goal:GOAL-GROWTH-0001",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:team:team:growth"
+    },
+    {
+      "from": "Initiative:INIT-FIN-0001",
+      "origin": "reference",
+      "relation": "goals[]",
+      "to": "Goal:GOAL-FIN-0001"
+    },
+    {
+      "from": "Initiative:INIT-FIN-0001",
+      "origin": "reference",
+      "relation": "metrics[]",
+      "to": "Metric:METRIC-FIN-CLOSE-ON-TIME"
+    },
+    {
+      "from": "Initiative:INIT-FIN-0001",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:team:team:finance"
+    },
+    {
+      "from": "Initiative:INIT-GROWTH-0001",
+      "origin": "reference",
+      "relation": "goals[]",
+      "to": "Goal:GOAL-GROWTH-0001"
+    },
+    {
+      "from": "Initiative:INIT-GROWTH-0001",
+      "origin": "reference",
+      "relation": "metrics[]",
+      "to": "Metric:METRIC-GROWTH-CAC-PAYBACK"
+    },
+    {
+      "from": "Initiative:INIT-GROWTH-0001",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:team:team:growth"
+    },
+    {
+      "from": "Integration:customer-crm",
+      "origin": "reference",
+      "relation": "ownerModule",
+      "to": "Manifest:company/domains/sales-marketing/sales"
+    },
+    {
+      "from": "Manifest:company/domains/finance-ops/finance",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/finance-ops/people"
+    },
+    {
+      "from": "Manifest:company/domains/finance-ops/finance",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/sales-marketing/sales"
+    },
+    {
+      "from": "Manifest:company/domains/finance-ops/finance",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Agent:cash-forecaster"
+    },
+    {
+      "from": "Manifest:company/domains/finance-ops/finance",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Workflow:month-end-close"
+    },
+    {
+      "from": "Manifest:company/domains/product-operations/platform/sub-cognition/billing",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Manifest:company/domains/product-operations/platform/sub-cognition/deployment",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Manifest:company/domains/product-operations/platform/sub-cognition/identity",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Manifest:company/domains/product-operations/platform",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/finance-ops/people"
+    },
+    {
+      "from": "Manifest:company/domains/product-operations/platform",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/sales-marketing/customer"
+    },
+    {
+      "from": "Manifest:company/domains/product-operations/platform",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Agent:billing-reconciler"
+    },
+    {
+      "from": "Manifest:company/domains/product-operations/platform",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Agent:deploy-watchdog"
+    },
+    {
+      "from": "Manifest:company/domains/product-operations/platform",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Agent:identity-drift-detector"
+    },
+    {
+      "from": "Manifest:company/domains/product-operations/platform",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Workflow:production-deploy"
+    },
+    {
+      "from": "Manifest:company/domains/sales-marketing/growth",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/sales-marketing/customer"
+    },
+    {
+      "from": "Manifest:company/domains/sales-marketing/growth",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/sales-marketing/sales"
+    },
+    {
+      "from": "Manifest:company/domains/sales-marketing/growth",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Agent:growth-experiment-runner"
+    },
+    {
+      "from": "Manifest:company/domains/sales-marketing/growth",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Workflow:customer-acquisition"
+    },
+    {
+      "from": "Manifest:company/executive/ceo",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/executive/finance-ops"
+    },
+    {
+      "from": "Manifest:company/executive/ceo",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/executive/product-operations"
+    },
+    {
+      "from": "Manifest:company/executive/ceo",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/executive/sales-marketing"
+    },
+    {
+      "from": "Manifest:company/executive/ceo",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Agent:ceo-strategist"
+    },
+    {
+      "from": "Manifest:company/executive/ceo",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Organization:ORG-COMPANY"
+    },
+    {
+      "from": "Manifest:company/executive/finance-ops",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/finance-ops/finance"
+    },
+    {
+      "from": "Manifest:company/executive/finance-ops",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/finance-ops/governance"
+    },
+    {
+      "from": "Manifest:company/executive/finance-ops",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/finance-ops/people"
+    },
+    {
+      "from": "Manifest:company/executive/finance-ops",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Agent:finance-ops-roll-up"
+    },
+    {
+      "from": "Manifest:company/executive/product-operations",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/product-operations/delivery"
+    },
+    {
+      "from": "Manifest:company/executive/product-operations",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Manifest:company/executive/product-operations",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/product-operations/security"
+    },
+    {
+      "from": "Manifest:company/executive/product-operations",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Agent:product-ops-roll-up"
+    },
+    {
+      "from": "Manifest:company/executive/sales-marketing",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/sales-marketing/customer"
+    },
+    {
+      "from": "Manifest:company/executive/sales-marketing",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/sales-marketing/growth"
+    },
+    {
+      "from": "Manifest:company/executive/sales-marketing",
+      "origin": "reference",
+      "relation": "consumes[].from",
+      "to": "Manifest:company/domains/sales-marketing/sales"
+    },
+    {
+      "from": "Manifest:company/executive/sales-marketing",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Agent:gtm-roll-up"
+    },
+    {
+      "from": "Manifest:company/runtime",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Task:TASK-EXAMPLE-0001"
+    },
+    {
+      "from": "Manifest:company/runtime",
+      "origin": "containment",
+      "relation": "contains",
+      "to": "Workflow:incident-response"
+    },
+    {
+      "from": "Metric:METRIC-FIN-CLOSE-ON-TIME",
+      "origin": "reference",
+      "relation": "dashboards[]",
+      "to": "Dashboard:finance-overview"
+    },
+    {
+      "from": "Metric:METRIC-FIN-CLOSE-ON-TIME",
+      "origin": "reference",
+      "relation": "owner.module",
+      "to": "Manifest:company/domains/finance-ops/finance"
+    },
+    {
+      "from": "Metric:METRIC-GROWTH-CAC-PAYBACK",
+      "origin": "reference",
+      "relation": "dashboards[]",
+      "to": "Dashboard:growth-overview"
+    },
+    {
+      "from": "Metric:METRIC-GROWTH-CAC-PAYBACK",
+      "origin": "reference",
+      "relation": "owner.module",
+      "to": "Manifest:company/domains/sales-marketing/growth"
+    },
+    {
+      "from": "Metric:METRIC-PLATFORM-DEPLOY-MTTR",
+      "origin": "reference",
+      "relation": "dashboards[]",
+      "to": "Dashboard:deploy-frequency"
+    },
+    {
+      "from": "Metric:METRIC-PLATFORM-DEPLOY-MTTR",
+      "origin": "reference",
+      "relation": "dashboards[]",
+      "to": "Dashboard:platform-overview"
+    },
+    {
+      "from": "Metric:METRIC-PLATFORM-DEPLOY-MTTR",
+      "origin": "reference",
+      "relation": "owner.module",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Metric:METRIC-RUNTIME-MTTR",
+      "origin": "reference",
+      "relation": "dashboards[]",
+      "to": "Dashboard:executive-overview"
+    },
+    {
+      "from": "Metric:METRIC-RUNTIME-MTTR",
+      "origin": "reference",
+      "relation": "owner.module",
+      "to": "Manifest:company/runtime"
+    },
+    {
+      "from": "Organization:ORG-COMPANY",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/executive/ceo"
+    },
+    {
+      "from": "Person:PERSON-CFO",
+      "origin": "reference",
+      "relation": "organizations[]",
+      "to": "Organization:ORG-COMPANY"
+    },
+    {
+      "from": "Proposal:PROP-0001",
+      "origin": "reference",
+      "relation": "author",
+      "to": "Party:person:ceo"
+    },
+    {
+      "from": "Requirement:REQ-EU-AI-ACT-ART-14",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:person:ceo"
+    },
+    {
+      "from": "Requirement:REQ-GDPR-ART-32",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:person:cfo"
+    },
+    {
+      "from": "Requirement:REQ-INTERNAL-EVIDENCE-BEFORE-LIVE",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:person:cto"
+    },
+    {
+      "from": "Requirement:REQ-INTERNAL-IRREVERSIBLE-WRITES",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:person:cto"
+    },
+    {
+      "from": "Requirement:REQ-ISO27001-A-8-15",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:person:cfo"
+    },
+    {
+      "from": "Requirement:REQ-SOC2-CC6-1",
+      "origin": "reference",
+      "relation": "appliesTo[]",
+      "to": "Manifest:company/domains/finance-ops/people"
+    },
+    {
+      "from": "Requirement:REQ-SOC2-CC6-1",
+      "origin": "reference",
+      "relation": "appliesTo[]",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Requirement:REQ-SOC2-CC6-1",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:person:cto"
+    },
+    {
+      "from": "Requirement:REQ-SOC2-CC8-1",
+      "origin": "reference",
+      "relation": "appliesTo[]",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Requirement:REQ-SOC2-CC8-1",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:person:cto"
+    },
+    {
+      "from": "Skill:add-agent",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:add-module"
+    },
+    {
+      "from": "Skill:add-agent",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:resolve-drift"
+    },
+    {
+      "from": "Skill:add-agent",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:sync-verification"
+    },
+    {
+      "from": "Skill:add-integration",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:add-module"
+    },
+    {
+      "from": "Skill:add-integration",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:sync-verification"
+    },
+    {
+      "from": "Skill:add-module",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:add-agent"
+    },
+    {
+      "from": "Skill:add-module",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:resolve-drift"
+    },
+    {
+      "from": "Skill:resolve-drift",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:add-agent"
+    },
+    {
+      "from": "Skill:resolve-drift",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:add-module"
+    },
+    {
+      "from": "Skill:sync-verification",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:add-agent"
+    },
+    {
+      "from": "Skill:sync-verification",
+      "origin": "reference",
+      "relation": "relatedSkills[]",
+      "to": "Skill:add-integration"
+    },
+    {
+      "from": "Task:TASK-EXAMPLE-0001",
+      "origin": "reference",
+      "relation": "automation.workflow",
+      "to": "Workflow:incident-response"
+    },
+    {
+      "from": "Task:TASK-EXAMPLE-0001",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/runtime"
+    },
+    {
+      "from": "Task:TASK-EXAMPLE-0001",
+      "origin": "reference",
+      "relation": "owner",
+      "to": "Party:team:team:platform"
+    },
+    {
+      "from": "Workflow:customer-acquisition",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/domains/sales-marketing/growth"
+    },
+    {
+      "from": "Workflow:customer-acquisition",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:growth-overview"
+    },
+    {
+      "from": "Workflow:customer-acquisition",
+      "origin": "reference",
+      "relation": "observability.metrics[]",
+      "to": "Metric:METRIC-GROWTH-CAC-PAYBACK"
+    },
+    {
+      "from": "Workflow:customer-acquisition",
+      "origin": "reference",
+      "relation": "steps[].agent",
+      "to": "Agent:growth-experiment-runner"
+    },
+    {
+      "from": "Workflow:customer-acquisition",
+      "origin": "reference",
+      "relation": "steps[].automation",
+      "to": "Automation:apply-channel-allocation"
+    },
+    {
+      "from": "Workflow:incident-response",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/runtime"
+    },
+    {
+      "from": "Workflow:incident-response",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:executive-overview"
+    },
+    {
+      "from": "Workflow:incident-response",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:platform-overview"
+    },
+    {
+      "from": "Workflow:incident-response",
+      "origin": "reference",
+      "relation": "observability.metrics[]",
+      "to": "Metric:METRIC-RUNTIME-MTTR"
+    },
+    {
+      "from": "Workflow:month-end-close",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/domains/finance-ops/finance"
+    },
+    {
+      "from": "Workflow:month-end-close",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:finance-overview"
+    },
+    {
+      "from": "Workflow:month-end-close",
+      "origin": "reference",
+      "relation": "observability.metrics[]",
+      "to": "Metric:METRIC-FIN-CLOSE-ON-TIME"
+    },
+    {
+      "from": "Workflow:month-end-close",
+      "origin": "reference",
+      "relation": "steps[].agent",
+      "to": "Agent:cash-forecaster"
+    },
+    {
+      "from": "Workflow:month-end-close",
+      "origin": "reference",
+      "relation": "steps[].automation",
+      "to": "Automation:post-period-close"
+    },
+    {
+      "from": "Workflow:production-deploy",
+      "origin": "reference",
+      "relation": "module",
+      "to": "Manifest:company/domains/product-operations/platform"
+    },
+    {
+      "from": "Workflow:production-deploy",
+      "origin": "reference",
+      "relation": "observability.dashboards[]",
+      "to": "Dashboard:deploy-frequency"
+    },
+    {
+      "from": "Workflow:production-deploy",
+      "origin": "reference",
+      "relation": "observability.metrics[]",
+      "to": "Metric:METRIC-PLATFORM-DEPLOY-MTTR"
+    },
+    {
+      "from": "Workflow:production-deploy",
+      "origin": "reference",
+      "relation": "steps[].agent",
+      "to": "Agent:deploy-watchdog"
+    },
+    {
+      "from": "Workflow:production-deploy",
+      "origin": "reference",
+      "relation": "steps[].automation",
+      "to": "Automation:deploy-to-prod"
+    },
+    {
+      "from": "Workflow:production-deploy",
+      "origin": "reference",
+      "relation": "steps[].automation",
+      "to": "Automation:pre-flight-checks"
+    }
+  ],
+  "edgesByRelation": {
+    "appliesTo[]": 5,
+    "author": 1,
+    "automation.workflow": 1,
+    "consumes[].from": 21,
+    "contains": 15,
+    "dashboards[]": 5,
+    "fallback": 7,
+    "finalFallback": 5,
+    "goals[]": 2,
+    "implements[]": 9,
+    "measuredBy[]": 4,
+    "metric": 2,
+    "metrics[]": 2,
+    "module": 15,
+    "observability.dashboards[]": 14,
+    "observability.metrics[]": 4,
+    "organizations[]": 1,
+    "owner": 18,
+    "owner.module": 9,
+    "ownerModule": 1,
+    "primaryOwner": 5,
+    "relatedSkills[]": 11,
+    "requires[]": 1,
+    "steps[].agent": 3,
+    "steps[].automation": 4
+  },
+  "generatedFrom": "/company/**/*.yaml + x-cac-ref annotations in /schemas",
+  "nodeCount": 89,
+  "nodes": [
+    {
+      "file": "company/domains/product-operations/platform/agents/billing-reconciler.yaml",
+      "id": "Agent:billing-reconciler",
+      "kind": "Agent",
+      "label": "billing-reconciler",
+      "module": "company/domains/product-operations/platform"
+    },
+    {
+      "file": "company/domains/finance-ops/finance/agents/cash-forecaster.yaml",
+      "id": "Agent:cash-forecaster",
+      "kind": "Agent",
+      "label": "cash-forecaster",
+      "module": "company/domains/finance-ops/finance"
+    },
+    {
+      "file": "company/executive/ceo/agents/ceo-strategist.yaml",
+      "id": "Agent:ceo-strategist",
+      "kind": "Agent",
+      "label": "ceo-strategist",
+      "module": "company/executive/ceo"
+    },
+    {
+      "file": "company/domains/product-operations/platform/agents/deploy-watchdog.yaml",
+      "id": "Agent:deploy-watchdog",
+      "kind": "Agent",
+      "label": "deploy-watchdog",
+      "module": "company/domains/product-operations/platform"
+    },
+    {
+      "file": "company/executive/finance-ops/agents/finance-ops-roll-up.yaml",
+      "id": "Agent:finance-ops-roll-up",
+      "kind": "Agent",
+      "label": "finance-ops-roll-up",
+      "module": "company/executive/finance-ops"
+    },
+    {
+      "file": "company/domains/sales-marketing/growth/agents/growth-experiment-runner.yaml",
+      "id": "Agent:growth-experiment-runner",
+      "kind": "Agent",
+      "label": "growth-experiment-runner",
+      "module": "company/domains/sales-marketing/growth"
+    },
+    {
+      "file": "company/executive/sales-marketing/agents/gtm-roll-up.yaml",
+      "id": "Agent:gtm-roll-up",
+      "kind": "Agent",
+      "label": "gtm-roll-up",
+      "module": "company/executive/sales-marketing"
+    },
+    {
+      "file": "company/domains/product-operations/platform/agents/identity-drift-detector.yaml",
+      "id": "Agent:identity-drift-detector",
+      "kind": "Agent",
+      "label": "identity-drift-detector",
+      "module": "company/domains/product-operations/platform"
+    },
+    {
+      "file": "company/executive/product-operations/agents/product-ops-roll-up.yaml",
+      "id": "Agent:product-ops-roll-up",
+      "kind": "Agent",
+      "label": "product-ops-roll-up",
+      "module": "company/executive/product-operations"
+    },
+    {
+      "file": "company/automations/apply-channel-allocation.yaml",
+      "id": "Automation:apply-channel-allocation",
+      "kind": "Automation",
+      "label": "apply-channel-allocation"
+    },
+    {
+      "file": "company/automations/deploy-to-prod.yaml",
+      "id": "Automation:deploy-to-prod",
+      "kind": "Automation",
+      "label": "deploy-to-prod"
+    },
+    {
+      "file": "company/automations/post-period-close.yaml",
+      "id": "Automation:post-period-close",
+      "kind": "Automation",
+      "label": "post-period-close"
+    },
+    {
+      "file": "company/automations/pre-flight-checks.yaml",
+      "id": "Automation:pre-flight-checks",
+      "kind": "Automation",
+      "label": "pre-flight-checks"
+    },
+    {
+      "file": "company/runtime/autonomy-policy.yaml",
+      "id": "AutonomyPolicy:company/runtime/autonomy-policy.yaml",
+      "kind": "AutonomyPolicy",
+      "label": "company/runtime/autonomy-policy.yaml"
+    },
+    {
+      "file": "company/capabilities/CAP-CASH-FORECAST.yaml",
+      "id": "Capability:CAP-CASH-FORECAST",
+      "kind": "Capability",
+      "label": "cash-forecast"
+    },
+    {
+      "file": "company/capabilities/CAP-COMPLIANCE-ATTESTATION.yaml",
+      "id": "Capability:CAP-COMPLIANCE-ATTESTATION",
+      "kind": "Capability",
+      "label": "compliance-attestation"
+    },
+    {
+      "file": "company/capabilities/CAP-EXPERIMENT-ALLOCATION.yaml",
+      "id": "Capability:CAP-EXPERIMENT-ALLOCATION",
+      "kind": "Capability",
+      "label": "experiment-allocation"
+    },
+    {
+      "file": "company/capabilities/CAP-INCIDENT-COMMAND.yaml",
+      "id": "Capability:CAP-INCIDENT-COMMAND",
+      "kind": "Capability",
+      "label": "incident-command"
+    },
+    {
+      "file": "company/capabilities/CAP-PRODUCTION-DEPLOY.yaml",
+      "id": "Capability:CAP-PRODUCTION-DEPLOY",
+      "kind": "Capability",
+      "label": "production-deploy"
+    },
+    {
+      "file": "company/controls/CTRL-DRY-RUN-BEFORE-LIVE.yaml",
+      "id": "Control:CTRL-DRY-RUN-BEFORE-LIVE",
+      "kind": "Control",
+      "label": "A live write requires a prior dry-run under the same correlation"
+    },
+    {
+      "file": "company/controls/CTRL-HITL-EXTERNAL-WRITES.yaml",
+      "id": "Control:CTRL-HITL-EXTERNAL-WRITES",
+      "kind": "Control",
+      "label": "Human-in-the-loop declarations are enforced, not documented"
+    },
+    {
+      "file": "company/controls/CTRL-IDENTITY-DRIFT-DETECTION.yaml",
+      "id": "Control:CTRL-IDENTITY-DRIFT-DETECTION",
+      "kind": "Control",
+      "label": "Divergence between canonical and external identity state is detected hourly"
+    },
+    {
+      "file": "company/controls/CTRL-PRODUCTION-CHANGE-GATE.yaml",
+      "id": "Control:CTRL-PRODUCTION-CHANGE-GATE",
+      "kind": "Control",
+      "label": "Production changes pass preflight, a dry-run, and a named approver"
+    },
+    {
+      "file": "company/controls/CTRL-RUNTIME-ACTIVITY-LEDGER.yaml",
+      "id": "Control:CTRL-RUNTIME-ACTIVITY-LEDGER",
+      "kind": "Control",
+      "label": "Every runtime action writes an audit row and every state change a typed event"
+    },
+    {
+      "file": "company/controls/CTRL-SECRET-AND-DEPENDENCY-SCAN.yaml",
+      "id": "Control:CTRL-SECRET-AND-DEPENDENCY-SCAN",
+      "kind": "Control",
+      "label": "Credentials and vulnerable dependencies are blocked at the merge boundary"
+    },
+    {
+      "file": "company/dashboards/deploy-frequency.yaml",
+      "id": "Dashboard:deploy-frequency",
+      "kind": "Dashboard",
+      "label": "deploy-frequency"
+    },
+    {
+      "file": "company/dashboards/executive-overview.yaml",
+      "id": "Dashboard:executive-overview",
+      "kind": "Dashboard",
+      "label": "executive-overview"
+    },
+    {
+      "file": "company/dashboards/finance-overview.yaml",
+      "id": "Dashboard:finance-overview",
+      "kind": "Dashboard",
+      "label": "finance-overview"
+    },
+    {
+      "file": "company/dashboards/growth-overview.yaml",
+      "id": "Dashboard:growth-overview",
+      "kind": "Dashboard",
+      "label": "growth-overview"
+    },
+    {
+      "file": "company/dashboards/platform-overview.yaml",
+      "id": "Dashboard:platform-overview",
+      "kind": "Dashboard",
+      "label": "platform-overview"
+    },
+    {
+      "file": "company/runtime/escalation-policy.yaml",
+      "id": "EscalationPolicy:company/runtime/escalation-policy.yaml",
+      "kind": "EscalationPolicy",
+      "label": "company/runtime/escalation-policy.yaml"
+    },
+    {
+      "file": "company/events/event-types.yaml",
+      "id": "EventTypeRegistry:company/events/event-types.yaml",
+      "kind": "EventTypeRegistry",
+      "label": "company/events/event-types.yaml"
+    },
+    {
+      "file": "company/goals/GOAL-FIN-0001-monthly-close-on-time.yaml",
+      "id": "Goal:GOAL-FIN-0001",
+      "kind": "Goal",
+      "label": "Monthly close completes within 2 business days"
+    },
+    {
+      "file": "company/goals/GOAL-GROWTH-0001-cac-payback.yaml",
+      "id": "Goal:GOAL-GROWTH-0001",
+      "kind": "Goal",
+      "label": "Blended CAC payback ≤ 12 months"
+    },
+    {
+      "file": "company/initiatives/INIT-FIN-0001-monthly-close-automation.yaml",
+      "id": "Initiative:INIT-FIN-0001",
+      "kind": "Initiative",
+      "label": "Automate monthly close to two business days"
+    },
+    {
+      "file": "company/initiatives/INIT-GROWTH-0001-cac-payback-reduction.yaml",
+      "id": "Initiative:INIT-GROWTH-0001",
+      "kind": "Initiative",
+      "label": "Reduce CAC payback to 12 months"
+    },
+    {
+      "file": "company/integrations/example-crm.yaml",
+      "id": "Integration:customer-crm",
+      "kind": "Integration",
+      "label": "customer-crm"
+    },
+    {
+      "file": "company/domains/finance-ops/finance/manifest.yaml",
+      "id": "Manifest:company/domains/finance-ops/finance",
+      "kind": "Manifest",
+      "label": "finance"
+    },
+    {
+      "file": "company/domains/finance-ops/governance/manifest.yaml",
+      "id": "Manifest:company/domains/finance-ops/governance",
+      "kind": "Manifest",
+      "label": "governance"
+    },
+    {
+      "file": "company/domains/finance-ops/people/manifest.yaml",
+      "id": "Manifest:company/domains/finance-ops/people",
+      "kind": "Manifest",
+      "label": "people"
+    },
+    {
+      "file": "company/domains/product-operations/delivery/manifest.yaml",
+      "id": "Manifest:company/domains/product-operations/delivery",
+      "kind": "Manifest",
+      "label": "delivery"
+    },
+    {
+      "file": "company/domains/product-operations/platform/manifest.yaml",
+      "id": "Manifest:company/domains/product-operations/platform",
+      "kind": "Manifest",
+      "label": "platform"
+    },
+    {
+      "file": "company/domains/product-operations/platform/sub-cognition/billing/manifest.yaml",
+      "id": "Manifest:company/domains/product-operations/platform/sub-cognition/billing",
+      "kind": "Manifest",
+      "label": "billing"
+    },
+    {
+      "file": "company/domains/product-operations/platform/sub-cognition/deployment/manifest.yaml",
+      "id": "Manifest:company/domains/product-operations/platform/sub-cognition/deployment",
+      "kind": "Manifest",
+      "label": "deployment"
+    },
+    {
+      "file": "company/domains/product-operations/platform/sub-cognition/identity/manifest.yaml",
+      "id": "Manifest:company/domains/product-operations/platform/sub-cognition/identity",
+      "kind": "Manifest",
+      "label": "identity"
+    },
+    {
+      "file": "company/domains/product-operations/security/manifest.yaml",
+      "id": "Manifest:company/domains/product-operations/security",
+      "kind": "Manifest",
+      "label": "security"
+    },
+    {
+      "file": "company/domains/sales-marketing/customer/manifest.yaml",
+      "id": "Manifest:company/domains/sales-marketing/customer",
+      "kind": "Manifest",
+      "label": "customer"
+    },
+    {
+      "file": "company/domains/sales-marketing/growth/manifest.yaml",
+      "id": "Manifest:company/domains/sales-marketing/growth",
+      "kind": "Manifest",
+      "label": "growth"
+    },
+    {
+      "file": "company/domains/sales-marketing/sales/manifest.yaml",
+      "id": "Manifest:company/domains/sales-marketing/sales",
+      "kind": "Manifest",
+      "label": "sales"
+    },
+    {
+      "file": "company/executive/ceo/manifest.yaml",
+      "id": "Manifest:company/executive/ceo",
+      "kind": "Manifest",
+      "label": "ceo"
+    },
+    {
+      "file": "company/executive/finance-ops/manifest.yaml",
+      "id": "Manifest:company/executive/finance-ops",
+      "kind": "Manifest",
+      "label": "finance-ops-executive"
+    },
+    {
+      "file": "company/executive/product-operations/manifest.yaml",
+      "id": "Manifest:company/executive/product-operations",
+      "kind": "Manifest",
+      "label": "product-operations-executive"
+    },
+    {
+      "file": "company/executive/sales-marketing/manifest.yaml",
+      "id": "Manifest:company/executive/sales-marketing",
+      "kind": "Manifest",
+      "label": "sales-marketing-executive"
+    },
+    {
+      "file": "company/runtime/manifest.yaml",
+      "id": "Manifest:company/runtime",
+      "kind": "Manifest",
+      "label": "runtime"
+    },
+    {
+      "file": "company/metrics/METRIC-FIN-CLOSE-ON-TIME.yaml",
+      "id": "Metric:METRIC-FIN-CLOSE-ON-TIME",
+      "kind": "Metric",
+      "label": "Monthly close on-time rate"
+    },
+    {
+      "file": "company/metrics/METRIC-GROWTH-CAC-PAYBACK.yaml",
+      "id": "Metric:METRIC-GROWTH-CAC-PAYBACK",
+      "kind": "Metric",
+      "label": "Blended CAC payback (months)"
+    },
+    {
+      "file": "company/metrics/METRIC-PLATFORM-DEPLOY-MTTR.yaml",
+      "id": "Metric:METRIC-PLATFORM-DEPLOY-MTTR",
+      "kind": "Metric",
+      "label": "Deploy mean time to recovery"
+    },
+    {
+      "file": "company/metrics/METRIC-RUNTIME-MTTR.yaml",
+      "id": "Metric:METRIC-RUNTIME-MTTR",
+      "kind": "Metric",
+      "label": "Incident mean time to resolution"
+    },
+    {
+      "file": "company/integrations/seeds/ORG-COMPANY.yaml",
+      "id": "Organization:ORG-COMPANY",
+      "kind": "Organization",
+      "label": "Example Company Inc.",
+      "module": "company/executive/ceo"
+    },
+    {
+      "file": "company/requirements/REQ-EU-AI-ACT-ART-14.yaml",
+      "id": "Party:person:ceo",
+      "kind": "Party",
+      "label": "ceo"
+    },
+    {
+      "file": "company/requirements/REQ-GDPR-ART-32.yaml",
+      "id": "Party:person:cfo",
+      "kind": "Party",
+      "label": "cfo"
+    },
+    {
+      "file": "company/capabilities/CAP-EXPERIMENT-ALLOCATION.yaml",
+      "id": "Party:person:cro",
+      "kind": "Party",
+      "label": "cro"
+    },
+    {
+      "file": "company/requirements/REQ-INTERNAL-EVIDENCE-BEFORE-LIVE.yaml",
+      "id": "Party:person:cto",
+      "kind": "Party",
+      "label": "cto"
+    },
+    {
+      "file": "company/capabilities/CAP-CASH-FORECAST.yaml",
+      "id": "Party:role:finance-lead",
+      "kind": "Party",
+      "label": "finance-lead"
+    },
+    {
+      "file": "company/capabilities/CAP-EXPERIMENT-ALLOCATION.yaml",
+      "id": "Party:role:head-of-growth",
+      "kind": "Party",
+      "label": "head-of-growth"
+    },
+    {
+      "file": "company/capabilities/CAP-INCIDENT-COMMAND.yaml",
+      "id": "Party:role:on-call-platform",
+      "kind": "Party",
+      "label": "on-call-platform"
+    },
+    {
+      "file": "company/capabilities/CAP-INCIDENT-COMMAND.yaml",
+      "id": "Party:role:platform-lead",
+      "kind": "Party",
+      "label": "platform-lead"
+    },
+    {
+      "file": "company/initiatives/INIT-FIN-0001-monthly-close-automation.yaml",
+      "id": "Party:team:team:finance",
+      "kind": "Party",
+      "label": "team:finance"
+    },
+    {
+      "file": "company/initiatives/INIT-GROWTH-0001-cac-payback-reduction.yaml",
+      "id": "Party:team:team:growth",
+      "kind": "Party",
+      "label": "team:growth"
+    },
+    {
+      "file": "company/tasks/TASK-EXAMPLE-0001.yaml",
+      "id": "Party:team:team:platform",
+      "kind": "Party",
+      "label": "team:platform"
+    },
+    {
+      "file": "company/integrations/seeds/PERSON-CFO.yaml",
+      "id": "Person:PERSON-CFO",
+      "kind": "Person",
+      "label": "Example CFO"
+    },
+    {
+      "file": "company/proposals/PROP-0001-compliance-and-capability-layer.yaml",
+      "id": "Proposal:PROP-0001",
+      "kind": "Proposal",
+      "label": "Add requirements, controls, capabilities, and proposals to the canonical structure"
+    },
+    {
+      "file": "company/requirements/REQ-EU-AI-ACT-ART-14.yaml",
+      "id": "Requirement:REQ-EU-AI-ACT-ART-14",
+      "kind": "Requirement",
+      "label": "Autonomous units operate under effective human oversight"
+    },
+    {
+      "file": "company/requirements/REQ-GDPR-ART-32.yaml",
+      "id": "Requirement:REQ-GDPR-ART-32",
+      "kind": "Requirement",
+      "label": "Technical measures appropriate to the risk of processing"
+    },
+    {
+      "file": "company/requirements/REQ-INTERNAL-EVIDENCE-BEFORE-LIVE.yaml",
+      "id": "Requirement:REQ-INTERNAL-EVIDENCE-BEFORE-LIVE",
+      "kind": "Requirement",
+      "label": "Every write path is exercised in dry-run before it runs live"
+    },
+    {
+      "file": "company/requirements/REQ-INTERNAL-IRREVERSIBLE-WRITES.yaml",
+      "id": "Requirement:REQ-INTERNAL-IRREVERSIBLE-WRITES",
+      "kind": "Requirement",
+      "label": "A human is accountable for every irreversible external write"
+    },
+    {
+      "file": "company/requirements/REQ-ISO27001-A-8-15.yaml",
+      "id": "Requirement:REQ-ISO27001-A-8-15",
+      "kind": "Requirement",
+      "label": "Activity in the operating runtime is logged and retained"
+    },
+    {
+      "file": "company/requirements/REQ-SOC2-CC6-1.yaml",
+      "id": "Requirement:REQ-SOC2-CC6-1",
+      "kind": "Requirement",
+      "label": "Logical access to systems is restricted and reviewed"
+    },
+    {
+      "file": "company/requirements/REQ-SOC2-CC8-1.yaml",
+      "id": "Requirement:REQ-SOC2-CC8-1",
+      "kind": "Requirement",
+      "label": "Changes to production are authorised, tested, and traceable"
+    },
+    {
+      "file": "company/skills/add-agent.yaml",
+      "id": "Skill:add-agent",
+      "kind": "Skill",
+      "label": "add-agent"
+    },
+    {
+      "file": "company/skills/add-integration.yaml",
+      "id": "Skill:add-integration",
+      "kind": "Skill",
+      "label": "add-integration"
+    },
+    {
+      "file": "company/skills/add-module.yaml",
+      "id": "Skill:add-module",
+      "kind": "Skill",
+      "label": "add-module"
+    },
+    {
+      "file": "company/skills/resolve-drift.yaml",
+      "id": "Skill:resolve-drift",
+      "kind": "Skill",
+      "label": "resolve-drift"
+    },
+    {
+      "file": "company/skills/sync-verification.yaml",
+      "id": "Skill:sync-verification",
+      "kind": "Skill",
+      "label": "sync-verification"
+    },
+    {
+      "file": "company/tasks/TASK-EXAMPLE-0001.yaml",
+      "id": "Task:TASK-EXAMPLE-0001",
+      "kind": "Task",
+      "label": "Run a tabletop incident-response exercise across platform + finance",
+      "module": "company/runtime"
+    },
+    {
+      "file": "company/domains/sales-marketing/growth/workflows/customer-acquisition.yaml",
+      "id": "Workflow:customer-acquisition",
+      "kind": "Workflow",
+      "label": "customer-acquisition",
+      "module": "company/domains/sales-marketing/growth"
+    },
+    {
+      "file": "company/workflows/incident-response.yaml",
+      "id": "Workflow:incident-response",
+      "kind": "Workflow",
+      "label": "incident-response",
+      "module": "company/runtime"
+    },
+    {
+      "file": "company/domains/finance-ops/finance/workflows/month-end-close.yaml",
+      "id": "Workflow:month-end-close",
+      "kind": "Workflow",
+      "label": "month-end-close",
+      "module": "company/domains/finance-ops/finance"
+    },
+    {
+      "file": "company/domains/product-operations/platform/workflows/production-deploy.yaml",
+      "id": "Workflow:production-deploy",
+      "kind": "Workflow",
+      "label": "production-deploy",
+      "module": "company/domains/product-operations/platform"
+    }
+  ],
+  "nodesByKind": {
+    "Agent": 9,
+    "Automation": 4,
+    "AutonomyPolicy": 1,
+    "Capability": 5,
+    "Control": 6,
+    "Dashboard": 5,
+    "EscalationPolicy": 1,
+    "EventTypeRegistry": 1,
+    "Goal": 2,
+    "Initiative": 2,
+    "Integration": 1,
+    "Manifest": 17,
+    "Metric": 4,
+    "Organization": 1,
+    "Party": 11,
+    "Person": 1,
+    "Proposal": 1,
+    "Requirement": 7,
+    "Skill": 5,
+    "Task": 1,
+    "Workflow": 4
+  },
+  "note": "Cyclic by construction. A company is not a DAG; edges here may form cycles and that is not an error.",
+  "orphans": [
+    "AutonomyPolicy:company/runtime/autonomy-policy.yaml",
+    "EscalationPolicy:company/runtime/escalation-policy.yaml",
+    "EventTypeRegistry:company/events/event-types.yaml"
+  ]
+}

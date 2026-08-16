@@ -1,4 +1,4 @@
-// Generated from /schemas/workflow.schema.json — do not edit by hand.
+// Generated from /schemas/workflow.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Multi-step orchestration definition. May be triggered by event, schedule, or human action. */

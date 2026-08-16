@@ -1,0 +1,33 @@
+apiVersion: company-as-code/v1
+kind: Capability
+
+id: CAP-EXPERIMENT-ALLOCATION
+name: experiment-allocation
+description: >
+  The company can decide where acquisition spend goes next week and can halt an
+  experiment that has spent through its stop-loss.
+
+domain: sales-marketing
+criticality: medium
+
+primaryOwner:
+  kind: agent
+  id: growth-experiment-runner
+  delivers: triage-only
+  note: >
+    Scores channels and recommends shifts, and halts experiments at their
+    stop-loss. It does not move budget; no autonomous spend.
+
+fallback:
+  - kind: role
+    id: head-of-growth
+    delivers: full
+    note: The approval that turns a recommendation into an allocation.
+
+finalFallback:
+  kind: person
+  id: cro
+  delivers: full
+
+measuredBy:
+  - METRIC-GROWTH-CAC-PAYBACK

@@ -1,4 +1,4 @@
-# Generated from /schemas/organization.schema.json — do not edit by hand.
+# Generated from /schemas/organization.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations
@@ -20,7 +20,7 @@ class OrganizationExternalIdsItem(TypedDict):
 
 
 class Organization(TypedDict):
-    """Canonical organizational unit — company, business unit, team, pod, department. Forms the executable org graph."""
+    """Canonical organizational unit, company, business unit, team, pod, department. Forms the executable org graph."""
     apiVersion: Literal["company-as-code/v1"]
     kind: Literal["Organization"]
     """Permanent internal ID. Never changes for the lifetime of the entity."""

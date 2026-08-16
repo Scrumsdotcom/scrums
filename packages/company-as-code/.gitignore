@@ -45,7 +45,7 @@ logs/
 .cache/
 tmp/
 
-# Secrets — never commit
+# Secrets, never commit
 *.pem
 *.key
 secrets/
@@ -54,12 +54,15 @@ secrets/
 # Local agent memory (use the project's persistent memory layer, not local scratch)
 .local-memory/
 
-# Runtime host local database (SQLite) — operational state, never commit
+# Runtime host local database (SQLite), operational state, never commit
 runtime.db
 runtime.db-journal
 runtime.db-wal
 runtime.db-shm
 runtime/runtime.db*
 
-# Generated outputs are committed — do not ignore /generated
+# Generated outputs are committed, do not ignore /generated
 # (CI's drift gate depends on them being in version control)
+
+# Branch-local working material. Deleted with the branch; never merged.
+/.branch-workspace/

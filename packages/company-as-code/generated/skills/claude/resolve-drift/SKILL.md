@@ -13,7 +13,7 @@ is **always regeneration**, never hand-editing.
 Generated files are deterministic outputs of the manifest graph. When two PRs
 touch different manifests, they may both regenerate the same registry, producing
 a mechanical merge conflict. Hand-merging almost always produces a state that
-is neither side's correct output — which the drift gate immediately catches on
+is neither side's correct output, which the drift gate immediately catches on
 the next push.
 
 The resolution path is **regeneration**, every time:
@@ -26,7 +26,7 @@ The resolution path is **regeneration**, every time:
    git rebase origin/main          # or merge, per your branch policy
    ```
 
-2. **Resolve any conflicts in source files first** — manifests, agents,
+2. **Resolve any conflicts in source files first**: manifests, agents,
    workflows, schemas. Generated files come last.
 
 3. **For generated-file conflicts: take either side, then regenerate.**
@@ -59,16 +59,16 @@ The resolution path is **regeneration**, every time:
 
 ## Failure handling
 
-- **Drift persists after regeneration** — you likely have an inconsistent manifest:
+- **Drift persists after regeneration**: you likely have an inconsistent manifest:
   a `consumes` entry pointing at an interface that doesn't exist in the producer's
   `exposes`, or a workflow with `hitl: true` but a `schedule` trigger. Run
   `npm run validate` first; the cross-document discipline checks will surface
   the real issue.
-- **Regeneration produces wildly different output than expected** — diff against
+- **Regeneration produces wildly different output than expected**: diff against
   the most recent main; if the change is large, you may have inadvertently
   edited a manifest. Review the source-file diff with `git diff origin/main -- '*.yaml'`.
 
 ## Related
 
-- Skill: `add-module`, `add-agent` — most drift originates from manifest edits.
-- Standard: `/docs/standards/merge-policy.md` — the policy this skill enforces.
+- Skill: `add-module`, `add-agent`: most drift originates from manifest edits.
+- Standard: `/docs/standards/merge-policy.md`: the policy this skill enforces.

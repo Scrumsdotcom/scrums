@@ -1,6 +1,6 @@
 # /company/domains/sales-marketing/brand
 
-Organizational placeholder for the **brand** sub-module. No manifest is declared yet — this folder claims structure, not runtime authority.
+Organizational placeholder for the **brand** sub-module. No manifest is declared yet, this folder claims structure, not runtime authority.
 
 To activate this module:
 

@@ -1,4 +1,4 @@
-# Generated from /schemas/autonomy-policy.schema.json — do not edit by hand.
+# Generated from /schemas/autonomy-policy.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations
@@ -17,7 +17,7 @@ class Class(TypedDict):
 
 class AutonomyPolicyClasses(TypedDict):
     autonomous: "Class"
-    # "human-gated": "Class"  (reserved word — access via dict)
+    # "human-gated": "Class"  (reserved word, access via dict)
     escalated: "Class"
 
 

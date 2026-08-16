@@ -26,7 +26,7 @@
     "primaryEmail": { "type": "string", "format": "email" },
     "organizations": {
       "type": "array",
-      "items": { "type": "string", "description": "Canonical organization IDs." },
+      "items": { "type": "string", "description": "Canonical organization IDs.", "x-cac-ref": ["Organization"] },
       "default": []
     },
     "roles": {

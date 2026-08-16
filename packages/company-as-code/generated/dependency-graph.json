@@ -126,7 +126,7 @@
     }
   ],
   "generatedFrom": "/company/**/manifest.yaml",
-  "moduleCount": 10,
+  "moduleCount": 17,
   "modules": [
     {
       "consumes": 2,
@@ -135,6 +135,27 @@
         "ledger-summary"
       ],
       "path": "company/domains/finance-ops/finance"
+    },
+    {
+      "consumes": 0,
+      "exposes": [
+        "compliance-state"
+      ],
+      "path": "company/domains/finance-ops/governance"
+    },
+    {
+      "consumes": 0,
+      "exposes": [
+        "workforce-state"
+      ],
+      "path": "company/domains/finance-ops/people"
+    },
+    {
+      "consumes": 0,
+      "exposes": [
+        "delivery-throughput"
+      ],
+      "path": "company/domains/product-operations/delivery"
     },
     {
       "consumes": 2,
@@ -166,11 +187,32 @@
       "path": "company/domains/product-operations/platform/sub-cognition/identity"
     },
     {
+      "consumes": 0,
+      "exposes": [
+        "security-posture"
+      ],
+      "path": "company/domains/product-operations/security"
+    },
+    {
+      "consumes": 0,
+      "exposes": [
+        "customer-health"
+      ],
+      "path": "company/domains/sales-marketing/customer"
+    },
+    {
       "consumes": 2,
       "exposes": [
         "growth-state"
       ],
       "path": "company/domains/sales-marketing/growth"
+    },
+    {
+      "consumes": 0,
+      "exposes": [
+        "pipeline-state"
+      ],
+      "path": "company/domains/sales-marketing/sales"
     },
     {
       "consumes": 3,
@@ -199,6 +241,13 @@
         "gtm-rollup"
       ],
       "path": "company/executive/sales-marketing"
+    },
+    {
+      "consumes": 0,
+      "exposes": [
+        "runtime-posture"
+      ],
+      "path": "company/runtime"
     }
   ]
 }

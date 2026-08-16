@@ -10,7 +10,7 @@ module: company/domains/finance-ops/finance
 purpose: >
   One sentence describing what this agent does and why it exists.
 
-# Abstract runtime label — no vendor names.
+# Abstract runtime label: no vendor names.
 # e.g. llm | scheduled-job | event-handler | rule-engine
 runtime: llm
 

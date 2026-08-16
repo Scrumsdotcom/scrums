@@ -4,7 +4,7 @@ kind: HubModule
 name: standard-hr
 version: 0.1.0
 
-summary: A standard people-operations module — onboarding policy, workforce-state interface, and the manifest scaffold to grow it.
+summary: A standard people-operations module, onboarding policy, workforce-state interface, and the manifest scaffold to grow it.
 
 description: >
   The Standard HR Module gives a company a ready-made people-operations module:
@@ -35,7 +35,7 @@ scaffolds:
     description: Module overview and the worked story to fill in.
   - path: policies/onboarding.md
     kind: Doc
-    description: Standard onboarding policy — dry-run-gated provisioning, HITL on access grants.
+    description: Standard onboarding policy, dry-run-gated provisioning, HITL on access grants.
 
 consumes: []
 

@@ -4,7 +4,7 @@ kind: HubModule
 name: subscription-billing
 version: 0.1.0
 
-summary: A subscription-billing integration module — vendor-neutral billing system mapping with writeback-only HITL gates.
+summary: A subscription-billing integration module, vendor-neutral billing system mapping with writeback-only HITL gates.
 
 description: >
   The subscription-billing module scaffolds the coordination surface for a
@@ -34,11 +34,11 @@ scaffolds:
     description: Module overview and post-import checklist.
   - path: integrations/billing-provider.yaml
     kind: Integration
-    description: Vendor-neutral billing-provider integration — writeback-only, HITL-gated mutations.
+    description: Vendor-neutral billing-provider integration, writeback-only, HITL-gated mutations.
 
 consumes:
   - interface: workforce-state
-    reason: Optional — seat-based plans reconcile against canonical headcount.
+    reason: Optional, seat-based plans reconcile against canonical headcount.
 
 tags:
   - billing

@@ -1,7 +1,7 @@
 # Runtime autonomy policy.
 #
 # The runtime enforces the autonomy classifications declared on agents and
-# workflows. This file is the operational expression of that enforcement —
+# workflows. This file is the operational expression of that enforcement,
 # how the runtime resolves an autonomy decision at invocation time.
 
 apiVersion: company-as-code/v1
@@ -23,7 +23,7 @@ classes:
 
   human-gated:
     description: Requires explicit human action to fire. Writes to external systems, financial actions, communications, irreversible changes.
-    schedulingAllowed: false   # the schema-level invariant — schedules fail validation
+    schedulingAllowed: false   # the schema-level invariant, schedules fail validation
     requiresHumanApproval: true
     permittedActions:
       - read

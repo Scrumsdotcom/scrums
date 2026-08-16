@@ -1,4 +1,4 @@
-// Generated from /schemas/dashboard.schema.json — do not edit by hand.
+// Generated from /schemas/dashboard.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Read-only observability surface. Declares the metrics, audience, refresh cadence, and panel layout. Dashboards never trigger writes; control surfaces are workflows. */

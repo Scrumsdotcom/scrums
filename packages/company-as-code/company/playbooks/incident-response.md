@@ -13,9 +13,9 @@ Any time a SEV-1, SEV-2, SEV-3, or SEV-4 incident is declared per [`/company/pol
 
 ## Inputs
 
-- **Declared severity** — one of `sev-1 | sev-2 | sev-3 | sev-4`
-- **Originating signal** — what triggered the incident (alert ID, customer report, audit-log anomaly, agent escalation)
-- **Affected modules** — at minimum one; cross-domain incidents commonly touch platform + one of finance / sales-marketing
+- **Declared severity**: one of `sev-1 | sev-2 | sev-3 | sev-4`
+- **Originating signal**: what triggered the incident (alert ID, customer report, audit-log anomaly, agent escalation)
+- **Affected modules**: at minimum one; cross-domain incidents commonly touch platform + one of finance / sales-marketing
 
 ## Definition of done
 
@@ -32,7 +32,7 @@ Any time a SEV-1, SEV-2, SEV-3, or SEV-4 incident is declared per [`/company/pol
 
 ### 0. Classify
 
-The originating signal lands as either an alert or a human-filed task. The first responder classifies severity per the table in [`/company/policies/incident-response.md`](../policies/incident-response.md). Misclassification is corrected by the commander once assigned — re-classification is itself an audit row.
+The originating signal lands as either an alert or a human-filed task. The first responder classifies severity per the table in [`/company/policies/incident-response.md`](../policies/incident-response.md). Misclassification is corrected by the commander once assigned, re-classification is itself an audit row.
 
 ### 1. Declare
 
@@ -53,11 +53,11 @@ The runtime opens a TASK with the incident ID in the title.
 
 ### 3. Stabilize
 
-This is the technical response and is **module-specific**. The playbook does not prescribe the fix — the affected module's playbooks do. The commander's job here is coordination, not implementation:
+This is the technical response and is **module-specific**. The playbook does not prescribe the fix. The affected module's playbooks do. The commander's job here is coordination, not implementation:
 
 - Decide which module's playbook is primary.
 - Authorize HITL writes per [`/company/policies/hitl-external-writes.md`](../policies/hitl-external-writes.md). Authorizations are recorded.
-- Defer non-essential changes — the goal is to stop the bleeding, not improve the system.
+- Defer non-essential changes: the goal is to stop the bleeding, not improve the system.
 
 ### 4. Communicate
 
@@ -86,9 +86,9 @@ Within 7 days (SEV-1 / SEV-2 mandatory; SEV-3 default-yes):
 
 ## Failure handling
 
-- **Commander becomes unavailable mid-incident** — escalate per [`escalation-policy.yaml`](../runtime/escalation-policy.yaml) (`fallback` for the commander role). The handoff is itself an audit row.
-- **A required HITL approver is unreachable** — escalate to the role's first fallback. Do not bypass the approval; the policy is uniform under stress.
-- **The audit log is unavailable** — pause non-emergency actions; emergency actions proceed and are reconciled into the audit log after recovery, with a typed `audit.reconciled_after_outage` event.
+- **Commander becomes unavailable mid-incident**: escalate per [`escalation-policy.yaml`](../runtime/escalation-policy.yaml) (`fallback` for the commander role). The handoff is itself an audit row.
+- **A required HITL approver is unreachable**: escalate to the role's first fallback. Do not bypass the approval; the policy is uniform under stress.
+- **The audit log is unavailable**: pause non-emergency actions; emergency actions proceed and are reconciled into the audit log after recovery, with a typed `audit.reconciled_after_outage` event.
 
 ## Observability
 

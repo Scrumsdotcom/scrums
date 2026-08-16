@@ -31,7 +31,7 @@ const POLICY = {
   },
 };
 
-describe("SqliteShadowStore — reliability evidence", () => {
+describe("SqliteShadowStore, reliability evidence", () => {
   it("enrolls an agent and reports it as shadowing", () => {
     store = new SqliteShadowStore(":memory:");
     const e = store.enroll("cash-forecaster");
@@ -153,7 +153,7 @@ describe("promotion gate evaluation", () => {
     const result = evaluatePromotion(ev, POLICY);
     expect(result.autoMet).toBe(true);
     expect(result.unmetAuto).toEqual([]);
-    // manual gates are still surfaced — the ADR clears them
+    // manual gates are still surfaced, the ADR clears them
     expect(result.manualGates).toEqual(["acceptedADR", "manifestUpdate"]);
   });
 });

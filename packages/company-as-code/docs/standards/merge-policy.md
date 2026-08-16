@@ -6,8 +6,8 @@ Every change goes through PR. The drift gate must be green. Generated files are 
 
 ## Required checks before merge
 
-- [ ] `npm run validate` — passes
-- [ ] `npm run generate:check` — passes (no drift)
+- [ ] `npm run validate`, passes
+- [ ] `npm run generate:check`, passes (no drift)
 - [ ] At least one human review
 - [ ] If a new module: manifest is in the same PR
 - [ ] If a new interface: declared in the producer's `exposes`, referenced from any consumer's `consumes`

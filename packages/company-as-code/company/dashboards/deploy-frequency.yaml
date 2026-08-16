@@ -1,0 +1,67 @@
+# Dashboard: deploy-frequency
+#
+# Referenced from:
+# - company/domains/product-operations/platform/manifest.yaml (owns.dashboards)
+# - company/domains/product-operations/platform/agents/deploy-watchdog.yaml
+# - company/domains/product-operations/platform/workflows/production-deploy.yaml
+
+apiVersion: company-as-code/v1
+kind: Dashboard
+name: deploy-frequency
+
+owner:
+  module: company/domains/product-operations/platform
+  person: platform-lead
+
+purpose: >
+  Deploy flow and its failure modes: how often production changes, how long a
+  failed deploy takes to recover, and how many deploys stalled waiting on a
+  human approval that never came.
+
+audience:
+  - platform-lead
+  - cto
+
+refresh: realtime
+
+panels:
+  - id: deploys-per-day
+    title: Deploys per day
+    type: line
+    metric: derived/deploys_per_day
+    horizon: P30D
+
+  - id: deploy-mttr
+    title: Deploy MTTR
+    type: stat
+    metric: METRIC-PLATFORM-DEPLOY-MTTR
+    thresholds:
+      warning: { comparator: gt, value: 60 }
+      critical: { comparator: gt, value: 180 }
+
+  - id: failure-rate
+    title: Deploy failure rate
+    type: percentage
+    metric: derived/deploy_failure_rate
+    thresholds:
+      warning: { comparator: gt, value: 10 }
+      critical: { comparator: gt, value: 25 }
+
+  - id: approval-queue-age
+    title: Oldest deploy awaiting approval
+    type: stat
+    metric: derived/deploy_approval_queue_age
+    annotation: |
+      Production deploys are human-gated by declaration. A growing queue here
+      is a staffing signal, not a reason to relax the gate.
+
+alerts:
+  - id: deploy-mttr-breach
+    description: Deploy MTTR exceeded the critical threshold on the rolling window.
+    severity: sev-2
+    routing: on-call-platform
+
+  - id: deploy-approval-stalled
+    description: A production deploy has waited on human approval for longer than the escalation window.
+    severity: sev-3
+    routing: platform-lead

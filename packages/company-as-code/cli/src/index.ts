@@ -7,6 +7,7 @@ import { validateCommand } from "./validate.js";
 import { generateCommand } from "./generate.js";
 import { hubCommand } from "./hub.js";
 import { nl2mFromArgv } from "./nl2m.js";
+import { doctorCommand } from "./doctor.js";
 
 async function main() {
   const [, , cmd, ...rest] = process.argv;
@@ -24,6 +25,13 @@ async function main() {
       const parsed = strictParse("generate", rest, { check: { type: "boolean" } });
       if (!parsed) process.exit(2);
       const ok = await generateCommand({ check: parsed.values.check === true });
+      process.exit(ok ? 0 : 1);
+      break;
+    }
+    case "doctor": {
+      const parsed = strictParse("doctor", rest, { strict: { type: "boolean" } });
+      if (!parsed) process.exit(2);
+      const ok = await doctorCommand({ strict: parsed.values.strict === true });
       process.exit(ok ? 0 : 1);
       break;
     }
@@ -74,6 +82,8 @@ Usage:
   cac validate              Validate every manifest, agent, workflow, initiative, goal, metric.
   cac generate              Run deterministic generators. Writes /generated/*.
   cac generate --check      Run generators in check-only mode. Exits non-zero on drift.
+  cac doctor                Standing health inspection. Findings fail; warnings report.
+  cac doctor --strict       Promote warnings to findings.
   cac hub list              List CaC-Hub modules available to import.
   cac hub show <name>       Show one hub module's metadata and scaffold inventory.
   cac hub add <name>        Dry-run: print the files that would be scaffolded into /company.

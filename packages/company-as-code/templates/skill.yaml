@@ -17,7 +17,7 @@ version: 0.1.0
 
 # One sentence. Matches Claude SKILL.md frontmatter shape.
 description: >
-  When to invoke this skill — the condition that makes this the right move.
+  When to invoke this skill. The condition that makes this the right move.
 
 owner:
   module: company/domains/finance-ops/finance

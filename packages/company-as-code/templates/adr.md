@@ -7,7 +7,7 @@
 
 ## Context
 
-What forces are at play? What constraint or change prompted this decision? Cite evidence — incident IDs, plan files, prior ADRs.
+What forces are at play? What constraint or change prompted this decision? Cite evidence, incident IDs, plan files, prior ADRs.
 
 ## Decision
 

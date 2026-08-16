@@ -1,6 +1,6 @@
 {
   "name": "@company-as-code/cli",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "description": "Reference CLI for Company-as-Code: validation, deterministic generators, drift gate.",
   "license": "Apache-2.0",
@@ -11,6 +11,7 @@
     "validate": "tsx src/index.ts validate",
     "generate": "tsx src/index.ts generate",
     "generate:check": "tsx src/index.ts generate --check",
+    "doctor": "tsx src/index.ts doctor",
     "hub": "tsx src/index.ts hub",
     "nl2m": "tsx src/index.ts nl2m",
     "test": "vitest run",
@@ -29,6 +30,6 @@
     "vitest": "^4.1.10"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   }
 }

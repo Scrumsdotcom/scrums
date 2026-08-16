@@ -6,7 +6,7 @@ module: company/domains/sales-marketing/growth
 
 purpose: >
   Score active acquisition experiments daily on the channel-mix model and
-  recommend allocation shifts. Recommendations are human-gated — the agent
+  recommend allocation shifts. Recommendations are human-gated, the agent
   never moves spend on its own.
 
 runtime: scheduled-job

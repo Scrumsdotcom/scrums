@@ -3,7 +3,7 @@
 // Reads the canonical JSON Schemas under /schemas and emits type-safe SDK
 // surfaces for multiple languages under /generated/sdk/<lang>. The point is
 // that a "Company Agent" can be written in any supported language while
-// staying strictly typed against the CaC spec — the schemas are the single
+// staying strictly typed against the CaC spec. The schemas are the single
 // source of truth, the SDK is a deterministic projection of them.
 //
 // Supported targets: TypeScript (interfaces + a discriminated `CompanyDocument`
@@ -118,7 +118,7 @@ function tsType(schema: JsonSchema): string {
     case "null":
       return "null";
     default:
-      // No declared type — `input`/`output` on AuditRecord are intentionally
+      // No declared type, `input`/`output` on AuditRecord are intentionally
       // open. Represent as `unknown` so consumers must narrow.
       return "unknown";
   }
@@ -150,7 +150,7 @@ function tsFile(fileName: string, schema: JsonSchema): GeneratedFile {
   const name = rootName(fileName, schema);
   const blocks: string[] = [];
   blocks.push(
-    `// Generated from /schemas/${fileName} — do not edit by hand.\n` +
+    `// Generated from /schemas/${fileName}, do not edit by hand.\n` +
       `// Regenerate with \`npm --prefix cli run generate\`.`,
   );
 
@@ -158,7 +158,7 @@ function tsFile(fileName: string, schema: JsonSchema): GeneratedFile {
     const defName = pascal(defKey);
     const doc = jsDoc(defSchema.description);
     const rendered = tsType(defSchema);
-    // Non-object $defs (e.g. constrained strings) become type aliases —
+    // Non-object $defs (e.g. constrained strings) become type aliases,
     // `interface X string` is not valid TypeScript.
     if (rendered.startsWith("{")) {
       blocks.push(`${doc}export interface ${defName} ${rendered}`);
@@ -178,7 +178,7 @@ function tsFile(fileName: string, schema: JsonSchema): GeneratedFile {
 
 function tsIndex(entries: Array<{ fileName: string; typeName: string }>): GeneratedFile {
   const lines: string[] = [
-    "// Generated SDK barrel — do not edit by hand.",
+    "// Generated SDK barrel, do not edit by hand.",
     "// Regenerate with `npm --prefix cli run generate`.",
     "",
   ];
@@ -281,7 +281,7 @@ function emitPyTypedDict(name: string, schema: JsonSchema, ctx: PyContext): void
   const required = new Set(schema.required ?? []);
   const props = schema.properties ?? {};
 
-  // Resolve property types first — this hoists nested TypedDicts ahead of us.
+  // Resolve property types first, this hoists nested TypedDicts ahead of us.
   const fields: string[] = [];
   for (const [key, propSchema] of Object.entries(props)) {
     const childHint = name + pascal(key);
@@ -293,14 +293,14 @@ function emitPyTypedDict(name: string, schema: JsonSchema, ctx: PyContext): void
     if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(key) && !PY_KEYWORDS.has(key)) {
       fields.push(`${doc}    ${key}: ${annotated}`);
     } else {
-      // Fall back to a comment — class syntax can't express this key. The
+      // Fall back to a comment, class syntax can't express this key. The
       // value still type-checks via .get() access in consumer code.
-      fields.push(`    # "${key}": ${annotated}  (reserved word — access via dict)`);
+      fields.push(`    # "${key}": ${annotated}  (reserved word, access via dict)`);
     }
   }
 
   const doc = pyDoc(schema.description, "    ");
-  // Comment lines are not statements — a class whose keys all fell back to
+  // Comment lines are not statements, a class whose keys all fell back to
   // comments (e.g. hyphenated keys like `sev-1`) still needs a `pass`.
   if (!fields.some((f) => !f.trimStart().startsWith("#"))) {
     fields.push("    pass");
@@ -333,7 +333,7 @@ function pyFile(fileName: string, schema: JsonSchema): GeneratedFile {
   const ctx: PyContext = { blocks: [], emitted: new Set() };
 
   // $defs first so they are referenceable by name. Non-object $defs become
-  // plain aliases — a TypedDict for a constrained string would be wrong.
+  // plain aliases. A TypedDict for a constrained string would be wrong.
   for (const [defKey, defSchema] of Object.entries(schema.$defs ?? {})) {
     const defName = pascal(defKey);
     if (defSchema.properties || defSchema.type === "object") {
@@ -345,7 +345,7 @@ function pyFile(fileName: string, schema: JsonSchema): GeneratedFile {
   emitPyTypedDict(name, schema, ctx);
 
   const header = [
-    `# Generated from /schemas/${fileName} — do not edit by hand.`,
+    `# Generated from /schemas/${fileName}, do not edit by hand.`,
     "# Regenerate with `npm --prefix cli run generate`.",
     "# Requires Python 3.11+ (uses typing.NotRequired).",
     "from __future__ import annotations",
@@ -363,7 +363,7 @@ function pyFile(fileName: string, schema: JsonSchema): GeneratedFile {
 
 function pyInit(entries: Array<{ fileName: string; typeName: string }>): GeneratedFile {
   const lines: string[] = [
-    "# Generated SDK package init — do not edit by hand.",
+    "# Generated SDK package init, do not edit by hand.",
     "# Regenerate with `npm --prefix cli run generate`.",
     "",
   ];
@@ -421,7 +421,7 @@ npm --prefix cli run generate
 \`\`\`
 
 \`cac generate --check\` gates drift on these files exactly like every other
-generated artefact — if the schemas change and the SDK is not regenerated, CI
+generated artefact, if the schemas change and the SDK is not regenerated, CI
 fails.
 
 ## Why
@@ -434,9 +434,9 @@ code is a spec violation caught at compile time.
 
 ## Targets
 
-- **\`typescript/\`** — one \`.ts\` per schema exporting an \`interface\`, plus
+- **\`typescript/\`**: one \`.ts\` per schema exporting an \`interface\`, plus
   \`index.ts\` with a \`CompanyDocument\` discriminated union keyed by \`kind\`.
-- **\`python/\`** — one \`.py\` per schema exporting a \`TypedDict\` (Python 3.11+),
+- **\`python/\`**: one \`.py\` per schema exporting a \`TypedDict\` (Python 3.11+),
   plus \`__init__.py\` re-exporting every type.
 
 ## Schema → root type

@@ -1,4 +1,4 @@
-// Generated from /schemas/metric.schema.json — do not edit by hand.
+// Generated from /schemas/metric.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Typed observable quantity with declared ownership, lineage, freshness, formula, and thresholds. */

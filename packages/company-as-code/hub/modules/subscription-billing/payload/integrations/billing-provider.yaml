@@ -1,7 +1,7 @@
 apiVersion: company-as-code/v1
 kind: Integration
 
-# Local canonical name. Vendor-neutral — swap the underlying provider
+# Local canonical name. Vendor-neutral: swap the underlying provider
 # (Stripe, Chargebee, a homegrown biller) without changing this name.
 name: billing-provider
 

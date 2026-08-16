@@ -11,10 +11,10 @@ The framework spans many modules and many external systems. Every system that mu
 
 The two viable extremes:
 
-1. **Free mutation** — any module, any integration may write any field at any time. Conflicts resolved at read time. Lowest authoring cost; highest debugging cost.
-2. **Single writer per field** — every field has exactly one writer; everything else reads. Highest authoring discipline; lowest debugging cost.
+1. **Free mutation**: any module, any integration may write any field at any time. Conflicts resolved at read time. Lowest authoring cost; highest debugging cost.
+2. **Single writer per field**: every field has exactly one writer; everything else reads. Highest authoring discipline; lowest debugging cost.
 
-Forks of the framework span industries (finance-heavy, ops-heavy, communications-heavy) and stages (small startup, mid-stage SaaS, complex consultancy). The framework must commit to a default that scales — and the scaling axis that matters is **debuggability under unfamiliar incident conditions**, not authoring convenience on day one.
+Forks of the framework span industries (finance-heavy, ops-heavy, communications-heavy) and stages (small startup, mid-stage SaaS, complex consultancy). The framework must commit to a default that scales, and the scaling axis that matters is **debuggability under unfamiliar incident conditions**, not authoring convenience on day one.
 
 ## Decision
 
@@ -27,10 +27,10 @@ Mutation flow is **unidirectional** by default:
 
 The integration manifest's `mutationDirection` field captures this for external systems:
 
-- `read-only` — preferred for most integrations
-- `write-only` — for systems we author into without reading back
-- `writeback-only` — for systems where the coordination layer is authoritative and writes flow outward
-- `read-write` — only with a documented conflict-resolution protocol
+- `read-only`: preferred for most integrations
+- `write-only`: for systems we author into without reading back
+- `writeback-only`: for systems where the coordination layer is authoritative and writes flow outward
+- `read-write`: only with a documented conflict-resolution protocol
 
 ## Consequences
 
@@ -43,17 +43,17 @@ The integration manifest's `mutationDirection` field captures this for external 
 
 **Negative**
 
-- Authoring is more demanding — every field needs an explicit owner.
+- Authoring is more demanding: every field needs an explicit owner.
 - "Quick" two-way syncs become explicit protocols, which slows down some integrations.
 - Migrating an existing bidirectional integration into the framework requires picking a primary and recording a protocol for the secondary.
 
 **Neutral**
 
-- Most apparent bidirectional needs can be solved by splitting fields between systems — one owns the canonical value, the other owns a derived view.
+- Most apparent bidirectional needs can be solved by splitting fields between systems. One owns the canonical value, the other owns a derived view.
 
 ## Alternatives considered
 
-- **Free mutation.** Rejected. The framework's audience includes operationally-stretched startups and consultancies — the debugging cost of free mutation falls disproportionately on the people least able to absorb it.
+- **Free mutation.** Rejected. The framework's audience includes operationally-stretched startups and consultancies. The debugging cost of free mutation falls disproportionately on the people least able to absorb it.
 - **Last-write-wins conflict resolution.** Rejected as a default. LWW is a valid strategy for specific surfaces, but as a framework default it produces silent data loss.
 - **CRDTs.** Rejected as too specific. The framework cannot pick a CRDT library on behalf of every fork; forks that need CRDTs can adopt them per-field.
 

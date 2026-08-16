@@ -4,16 +4,20 @@
 
 **An open-source operating system for AI-native organizations.**
 
-Run your company like software — observable, versioned, orchestrated, automatable, continuously improving.
+Run your company like software: observable, versioned, orchestrated, automatable, continuously improving.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
+[![Scrums.com | SEOP](https://img.shields.io/badge/Scrums.com-SEOP-6E4AFF.svg)](https://scrums.com)
 [![Status: Seed](https://img.shields.io/badge/status-seed-orange.svg)](#project-status)
 [![CI](https://img.shields.io/badge/CI-validate%20%2B%20drift%20gate-success.svg)](./.github/workflows/validate.yml)
 
 [Concepts](#core-concepts) ·
 [Architecture](./docs/architecture.md) ·
 [Getting Started](./docs/getting-started.md) ·
+[Adoption](./docs/adoption.md) ·
 [Anatomy](./docs/anatomy) ·
+[Compliance](./docs/compliance.md) ·
+[Capabilities](./docs/capabilities.md) ·
 [Scenarios](./docs/scenarios) ·
 [Forking](./docs/forking.md) ·
 [Roadmap](./docs/roadmap.md) ·
@@ -31,18 +35,13 @@ A company is a distributed system. Every organization already contains state, qu
 
 **Company-as-Code externalizes them into the repository.** It transforms organizations into:
 
-- **executable systems** — operations run from declarations, not from heroics
-- **observable systems** — every action emits logs, events, traces, metrics
-- **orchestrated systems** — humans and agents operate on the same runtime
-- **AI-native systems** — agents are first-class citizens with scoped memory, tools, and authority
-- **continuously improving systems** — retrospectives and bottleneck analysis are runtime primitives, not afterthoughts
+- **executable systems**: operations run from declarations, not from heroics
+- **observable systems**: every action emits logs, events, traces, metrics
+- **orchestrated systems**: humans and agents operate on the same runtime
+- **AI-native systems**: agents are first-class citizens with scoped memory, tools, and authority
+- **continuously improving systems**: retrospectives and bottleneck analysis are runtime primitives, not afterthoughts
 
-This is not project management software. This is:
-
-- an **executable organizational graph**
-- an **AI-native operational runtime**
-- a **coordination layer** for humans and agents
-- **infrastructure** for modern companies
+What the repository holds is an **executable organizational graph**, an **AI-native operational runtime**, a **coordination layer** for humans and agents, and **infrastructure** for modern companies. Project management software tracks work items; this describes the system that produces them.
 
 Think GitOps for organizations · Kubernetes for companies · Terraform for operations · DevOps for business execution.
 
@@ -75,7 +74,7 @@ Subdomains, pods, temporary teams, initiatives, contractors, and autonomous agen
 
 ### The repository is an executable organizational graph
 
-The folder structure represents **operational authority**, **execution responsibility**, **information boundaries**, **delegated cognition**, and **runtime orchestration** — not payroll hierarchy. See [`docs/architecture.md`](./docs/architecture.md) for the full canonical structure.
+The folder structure represents **operational authority**, **execution responsibility**, **information boundaries**, **delegated cognition**, and **runtime orchestration**, not payroll hierarchy. See [`docs/architecture.md`](./docs/architecture.md) for the full canonical structure.
 
 ### Cognition is recursively composable
 
@@ -106,20 +105,24 @@ Every node has scoped memory, scoped tools, scoped workflows, scoped dashboards,
 | **Person** | employee / contractor / supplier / agent identity |
 | **Initiative** | strategic change with measurable outcome |
 | **Goal** | KPI / OKR / SLA / metric objective |
-| **Task** | unit of execution — canonical state machine |
+| **Task** | unit of execution, canonical state machine |
 | **Workflow** | orchestration, multi-step execution |
 | **Agent** | autonomous execution unit (AI or automation) |
 | **Event** | state transition in the typed ledger |
 | **Metric** | observable quantity with lineage and freshness |
-| **Skill** | reusable Tier-3 technique; one canonical YAML, generated per runtime (Claude, Gemini, Codex/AGENTS.md) |
+| **Skill** | reusable Tier-3 technique; one canonical YAML, generated per runtime |
+| **Capability** | something the company must be able to do, with an ordered chain of who does it when the owner cannot |
+| **Requirement** | an obligation: a certification clause, a regulation article, a contract, a self-imposed rule |
+| **Control** | the verified mechanism that keeps a Requirement true, and the evidence it produces |
+| **Proposal** | the mutation queue for the conserved core, with a ruling quoted verbatim |
 
 Schemas live in [`/schemas`](./schemas) and are enforced by CI.
 
 ### The company is a single canonical state machine
 
-Company-as-Code is a **distributed orchestration system**. The substrate structures the company as canonical, queryable entities synchronizing state across unreliable nodes — humans, agents, and SaaS tools — under finite energy and attention constraints. The architecture treats the company as the same class of system as a biological organism, a software runtime, or a functioning civilization: distributed actors trying to reduce entropy by keeping shared state coherent, while operating with bounded compute, bounded memory, and lossy communication. This is not metaphor — it is the operating substrate.
+Company-as-Code is a **distributed orchestration system**. The substrate structures the company as canonical, queryable entities synchronizing state across unreliable nodes (humans, agents, and SaaS tools) under finite energy and attention constraints. The architecture treats the company as the same class of system as a biological organism, a software runtime, or a functioning civilization: distributed actors trying to reduce entropy by keeping shared state coherent, while operating with bounded compute, bounded memory, and lossy communication. This is not metaphor. It is the operating substrate.
 
-Every entity in the system — service line, org, talent, agent run, deal, contract, task — has a canonical identifier, a canonical state, and a place in a **three-level state ladder**:
+Every entity in the system (service line, org, talent, agent run, deal, contract, task) has a canonical identifier, a canonical state, and a place in a **three-level state ladder**:
 
 | Level | Name | Cardinality | Purpose |
 |---|---|---|---|
@@ -132,7 +135,7 @@ The L1 layer functions as a **garbage collector for reality**: it defines the co
 - Anything in `pending` or `active` is reachable and competes for attention.
 - Anything in `resolved` or `terminated` is archived and no longer load-bearing on working memory.
 
-This makes **"what is the company doing right now?"** a single deterministic query across every domain. Stuck-pending entities, terminal failure modes, and orphaned active entities become detectable generically — the same way a runtime detects unreachable objects or a cell detects misfolded proteins.
+This makes **"what is the company doing right now?"** a single deterministic query across every domain. Stuck-pending entities, terminal failure modes, and orphaned active entities become detectable generically, the same way a runtime detects unreachable objects or a cell detects misfolded proteins.
 
 Workflows, agents, dashboards, and humans all read from this single substrate. Every system mutation flows **downward** from the canonical layer to projections (CRM, work management, finance, PSA, and other SaaS tools); state never originates downstream. The discipline is uniform:
 
@@ -140,26 +143,31 @@ Workflows, agents, dashboards, and humans all read from this single substrate. E
 - every state declares its L1 bucket
 - entities without canonical state and bucket assignment **do not exist in the substrate**
 
-The result is a company that can be reasoned about, swept, queried, and operated on the same primitives as any well-designed distributed system — because that is what it is.
+The result is a company that can be reasoned about, swept, queried, and operated on the same primitives as any well-designed distributed system, because that is what it is.
 
 ---
 
-## The discipline (the parts most frameworks skip)
+## The discipline
 
-These are the rules that make Company-as-Code work in practice. They're enforced by schema, generators, and CI — not by convention.
+These are the rules that make Company-as-Code work in practice. Schema, generators, and CI enforce them; convention does not.
 
 - **Modular monolith discipline.** Each module owns its logic. Cross-module talk goes through declared interfaces. No imports from another module's internals.
 - **Module manifests.** Every module has a `manifest.yaml` declaring what it `owns`, `consumes`, `exposes`, and the agents and invariants attached to it. No code without a manifest.
 - **Generated registries.** Manifests are walked by deterministic generators that emit an agent catalogue, flow registry, dependency graph, and per-agent context bundles. CI fails if generated files drift from sources.
 - **Canonical IDs forever.** Internal IDs are permanent. External system IDs are evolutionary mappings. Vendor swaps don't touch your domain model.
-- **Coordinate, don't replicate.** The coordination layer holds canonical IDs, state machines, and orchestration metadata — not a copy of every SaaS database.
+- **Coordinate, don't replicate.** The coordination layer holds canonical IDs, state machines, and orchestration metadata, not a copy of every SaaS database.
 - **One writer per field.** Mutation flow is unidirectional. Bidirectional sync is a defect, not a feature.
 - **Dry-run is mandatory.** Every write path supports `dryRun=true` and uses it by default on first invocations.
-- **HITL is declarative.** "Human-in-the-loop" is a declared invariant on the manifest, enforced by the runtime — not a comment in prose.
+- **HITL is declarative.** "Human-in-the-loop" is a declared invariant on the manifest, enforced by the runtime, not a comment in prose.
 - **Audit log + typed event ledger.** Two distinct surfaces: what we did (audit) vs. what happened to the entity (typed events).
 - **Sync verification protocol.** Baseline → dry-run → confirm counts → live → re-verify. Every state-mutating sync, the same five steps.
 - **Plan-first, park-friendly.** Non-trivial work begins with a written plan that survives context loss. Resume from the plan, not from memory.
 - **Verify before trust.** Recalled context is a claim until verified against current state.
+- **Every reference is typed.** Reference fields declare the primitive kind they point at, so the whole corpus is one traversable graph and a dangling reference fails the build.
+- **Obligations fail the build, not the audit.** An in-scope Requirement with no operating Control is a CI failure.
+- **Fallback chains terminate in something that cannot be absent.** Never in an agent.
+- **The conserved core changes through a ruling.** Spec, standards, schemas, and policies move via a Proposal with the decider's words quoted verbatim.
+- **Write paths are built for interruption.** Deterministic references, evidence stamped into the target system, recovery by re-running.
 
 Each of these is expanded in [`docs/architecture.md`](./docs/architecture.md) and codified as enforceable rules in [`docs/standards`](./docs/standards).
 
@@ -168,37 +176,41 @@ Each of these is expanded in [`docs/architecture.md`](./docs/architecture.md) an
 ## Repository layout
 
 ```
-/                                — root: README, LICENSE, CONTRIBUTING, CHANGELOG
-├── /company                     — the organization itself, as code
-│   ├── /executive               — CEO + domain-level cognition
+/                                # root: README, LICENSE, CONTRIBUTING, CHANGELOG
+├── /company                     # the organization itself, as code
+│   ├── /executive               # CEO + domain-level cognition
 │   ├── /domains
 │   │   ├── /finance-ops
 │   │   ├── /product-operations
 │   │   └── /sales-marketing
-│   ├── /initiatives             — strategic programs
-│   ├── /goals                   — KPIs / OKRs / SLAs
-│   ├── /metrics                 — typed metric definitions
-│   ├── /tasks                   — canonical task state machines
-│   ├── /workflows               — orchestration definitions
-│   ├── /agents                  — autonomous units
-│   ├── /runtime                 — execution surface, autonomy classifications
-│   ├── /events                  — typed event ledger schema
-│   ├── /observability           — logs / traces / alerts wiring
-│   ├── /dashboards              — executive, operational, agent dashboards
-│   ├── /playbooks               — runbooks, SOPs
-│   ├── /policies                — invariants, HITL declarations, security posture
-│   ├── /schemas                 — domain entity schemas
-│   ├── /memory                  — persistent agent memory layer
-│   ├── /prompts                 — versioned prompt templates
-│   ├── /automations             — non-agent workflow automations
-│   ├── /integrations            — external-system mappings (vendor-agnostic)
-│   └── /templates               — starting points for new artefacts
-├── /schemas                     — JSON Schemas for every canonical primitive
-├── /templates                   — authoring templates (manifests, agents, etc.)
-├── /cli                         — TypeScript reference CLI: validate + generate
-├── /docs                        — architecture, getting-started, standards, ADRs
-├── /.github                     — CI workflows, PR templates, drift gates
-└── /generated                   — committed generator outputs (do not hand-edit)
+│   ├── /initiatives             # strategic programs
+│   ├── /goals                   # KPIs / OKRs / SLAs
+│   ├── /metrics                 # typed metric definitions
+│   ├── /capabilities            # what the company must be able to do, and who does it when the owner cannot
+│   ├── /tasks                   # canonical task state machines
+│   ├── /workflows               # orchestration definitions
+│   ├── /agents                  # autonomous units
+│   ├── /runtime                 # execution surface, autonomy classifications
+│   ├── /events                  # typed event ledger schema
+│   ├── /observability           # logs / traces / alerts wiring
+│   ├── /dashboards              # executive, operational, agent dashboards
+│   ├── /playbooks               # runbooks, SOPs
+│   ├── /policies                # invariants, HITL declarations, security posture
+│   ├── /requirements            # obligations: certification clauses, regulations, contracts
+│   ├── /controls                # the verified mechanisms that keep them true
+│   ├── /proposals               # the mutation queue for the conserved core
+│   ├── /schemas                 # domain entity schemas
+│   ├── /memory                  # persistent agent memory layer
+│   ├── /prompts                 # versioned prompt templates
+│   ├── /automations             # non-agent workflow automations
+│   ├── /integrations            # external-system mappings (vendor-agnostic)
+│   └── /templates               # starting points for new artefacts
+├── /schemas                     # JSON Schemas for every canonical primitive
+├── /templates                   # authoring templates (manifests, agents, etc.)
+├── /cli                         # TypeScript reference CLI: validate + generate
+├── /docs                        # architecture, getting-started, standards, ADRs
+├── /.github                     # CI workflows, PR templates, drift gates
+└── /generated                   # committed generator outputs (do not hand-edit)
 ```
 
 The top-level `/schemas` and `/templates` are framework-level (define the shape). The `/company/schemas` and `/company/templates` are company-level (your domain entities and your in-house starting points). Forks should rarely touch the former.
@@ -213,7 +225,7 @@ git clone https://github.com/gez-scrumsdotcom/Company-as-Code.git
 cd Company-as-Code
 npm install --prefix cli
 
-# 2. Validate every manifest, agent, workflow, and schema
+# 2. Validate every document, and resolve every typed reference
 npm run validate
 
 # 3. Run the generators (idempotent)
@@ -221,9 +233,17 @@ npm run generate
 
 # 4. Check for drift (CI runs the same command)
 npm run generate:check
+
+# 5. Standing health inspection: rotted links, stale controls,
+#    unwatched autonomous agents, modules with nobody accountable
+npm run doctor
 ```
 
-The CLI is one reference implementation. The framework is the specs in [`/schemas`](./schemas) and [`/docs`](./docs) — implement the generators in Go, Python, or Rust if you prefer.
+New to the pattern? [`docs/adoption.md`](./docs/adoption.md) is the honest
+version of how to start: federate rather than migrate, and get one real
+process running truthfully before scaffolding anything.
+
+The CLI is one reference implementation. The framework is the specs in [`/schemas`](./schemas) and [`/docs`](./docs). Implement the generators in Go, Python, or Rust if you prefer.
 
 See [`docs/getting-started.md`](./docs/getting-started.md) for a longer walkthrough including writing your first module manifest, declaring your first agent, and wiring your first workflow.
 
@@ -244,28 +264,41 @@ Everything is **abstract, replaceable, interoperable**. Integrations live in [`/
 
 The system is designed for AI participation from the ground up:
 
-- **Structured context bundles** are generated per agent — typed, scoped, deterministic. No raw-prose context.
+- **Structured context bundles** are generated per agent, typed, scoped, deterministic. No raw-prose context.
 - **Persistent agent memory** is a versioned layer distinct from documentation.
 - **Autonomy classification** (`autonomous` / `human-gated` / `escalated`) is declared per action and enforced by the runtime.
-- **Adversarial verification posture** — recalled information is a claim until checked against current state.
-- **Three-tier knowledge model** — context (narrative), entry-points (runtime steps), skills (reusable techniques).
-- **One skill primitive, every runtime.** Each Tier-3 skill is one YAML at [`/company/skills/`](./company/skills). The CLI generates per-runtime adapters: Claude `SKILL.md`, provider-neutral `AGENTS.md` (Codex / Cursor / Aider / Continue), and Gemini Gem JSON. Forks add a fourth runtime in one small generator function.
+- **Adversarial verification posture**: recalled information is a claim until checked against current state.
+- **Three-tier knowledge model**: context (narrative), entry-points (runtime steps), skills (reusable techniques).
+- **One skill primitive, every runtime.** Each Tier-3 skill is one YAML at [`/company/skills/`](./company/skills). The CLI generates per-runtime adapters: Claude `SKILL.md`, provider-neutral `AGENTS.md` for any tool that reads one, and Gemini Gem JSON. Forks add a fourth runtime in one small generator function.
+- **No model names in canonical documents.** An agent declares `runtime: llm`. Which model serves that is a deployment decision made by the runtime host, not a fact recorded in the company's source of truth. Model names in canonical documents are the fastest way to build something that is stale within a quarter.
 
 See [`docs/architecture.md#ai-native-design`](./docs/architecture.md) for the full picture.
 
 ---
 
+## Interoperable by construction
+
+- **Typed reference edges.** Every cross-document reference is annotated in the schema with the primitive kind it points at. One resolver checks all of them; a dangling reference fails the build. See [ADR-0007](./docs/adr/0007-typed-reference-edges.md).
+- **A cyclic company graph.** [`/generated/company-graph.json`](./generated/company-graph.json) is derived from those annotations, so no edge list is hand-maintained. It is cyclic on purpose: a company is not a DAG, and forcing acyclicity means deleting real edges.
+- **A JSON-LD context.** [`/generated/context.jsonld`](./generated/context.jsonld) maps the primitives onto schema.org, the W3C Organization ontology, PROV-O, OSCAL, and SKOS, so an external system can consume an export without a bespoke adapter.
+- **Schema-driven SDKs.** TypeScript interfaces and Python `TypedDict`s, generated and drift-gated.
+
+See [`docs/interoperability.md`](./docs/interoperability.md).
+
+---
+
 ## Project status
 
-**Current release:** `v0.5.0` (see [CHANGELOG](./CHANGELOG.md) for the full release history and [roadmap](./docs/roadmap.md) for what's next).
+**Current release:** `v0.6.0` (see [CHANGELOG](./CHANGELOG.md) for the full release history and [roadmap](./docs/roadmap.md) for what's next).
 
 This is a **seed repository**. It ships:
 
 - the complete canonical structure
-- JSON Schemas for every primitive
-- a working TypeScript CLI with validation + generators
+- JSON Schemas for every primitive, with typed reference edges between them
+- a working TypeScript CLI: validation, deterministic generators, drift gate, and a standing health inspection (`cac doctor`)
 - a reference TypeScript **runtime host** that loads the manifest graph and executes workflows with audit + event persistence (SQLite or Postgres)
-- CI workflows enforcing schema validity, unit tests, and zero generator drift
+- a compliance layer where an uncovered obligation fails CI rather than surfacing at audit time
+- CI workflows enforcing schema validity, unit tests, zero generator drift, blocking secret scanning, and dependency audit
 - worked examples across all three canonical domains
 - documentation of the architecture, standards, and operating discipline
 
@@ -281,19 +314,33 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the contribution workflow. The sh
 2. **Declare before coding.** New modules ship their manifest in the same PR.
 3. **Generators run on every PR.** Drift between sources and generated files fails CI.
 4. **One writer per field.** If you're proposing a bidirectional sync, write the conflict-resolution protocol first.
-5. **Standards live in the repo.** If you want to change a rule, change it in [`/docs/standards`](./docs/standards) — CI will enforce the new version.
+5. **Standards live in the repo.** If you want to change a rule, change it in [`/docs/standards`](./docs/standards). CI will enforce the new version.
+
+---
+
+## Contributing, governance, support
+
+| | |
+|---|---|
+| How to contribute | [`CONTRIBUTING.md`](./CONTRIBUTING.md) |
+| Who decides what, and how it is recorded | [`GOVERNANCE.md`](./GOVERNANCE.md) |
+| Where each kind of question goes | [`SUPPORT.md`](./SUPPORT.md) |
+| Reporting a vulnerability | [`SECURITY.md`](./SECURITY.md) |
+| Community expectations | [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) |
+| Maintainers | [`MAINTAINERS.md`](./MAINTAINERS.md) |
 
 ---
 
 ## License
 
 [Apache License 2.0](./LICENSE). Fork, adapt, deploy, sell. Patent grant included.
+Attributions for patterns adopted from neighbouring projects are in [`NOTICE`](./NOTICE).
 
 ---
 
 ## Author
 
-Created by **Gerald Neves**, Founder & CEO at [Scrums.com](https://scrums.com) — the all-in-one **Software Engineering Orchestration Platform (SEOP)**.
+Created by **Gerald Neves**, Founder & CEO at [Scrums.com](https://scrums.com), the all-in-one **Software Engineering Orchestration Platform (SEOP)**.
 
 Company-as-Code is the open-source operating-system pattern behind SEOP's view of how modern, AI-native organizations should be designed, observed, and run.
 

@@ -43,7 +43,7 @@
       "hitl": true,
       "module": "company/runtime",
       "name": "incident-response",
-      "purpose": "Orchestrate a declared incident from declaration through retrospective. Cross-cutting workflow that lives at the runtime layer because it spans every module. Always human-led — the commander is a person, not an agent.\n",
+      "purpose": "Orchestrate a declared incident from declaration through retrospective. Cross-cutting workflow that lives at the runtime layer because it spans every module. Always human-led. The commander is a person, not an agent.\n",
       "steps": 10,
       "trigger": {
         "event": "runtime.incident_declared",

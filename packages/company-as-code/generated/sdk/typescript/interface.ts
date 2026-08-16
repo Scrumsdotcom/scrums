@@ -1,4 +1,4 @@
-// Generated from /schemas/interface.schema.json — do not edit by hand.
+// Generated from /schemas/interface.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Declared interface a module exposes to other modules. The contract; the code implements it. */

@@ -4,7 +4,7 @@
     "cadence": "daily",
     "module": "company/domains/sales-marketing/growth",
     "name": "growth-experiment-runner",
-    "purpose": "Score active acquisition experiments daily on the channel-mix model and recommend allocation shifts. Recommendations are human-gated — the agent never moves spend on its own.\n",
+    "purpose": "Score active acquisition experiments daily on the channel-mix model and recommend allocation shifts. Recommendations are human-gated, the agent never moves spend on its own.\n",
     "runtime": "scheduled-job",
     "schedule": "0 9 * * *"
   },

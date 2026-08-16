@@ -1,6 +1,6 @@
 ---
 name: cfo-format-preference
-description: CFO prefers concise weekly briefs — ≤ 5 bullets, no narrative paragraphs
+description: CFO prefers concise weekly briefs, ≤ 5 bullets, no narrative paragraphs
 metadata:
   type: feedback
   recordedAt: 2026-03-21

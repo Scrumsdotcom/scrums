@@ -84,7 +84,7 @@ events:
     status: stable
 
   - type: coordination.agent_shadow_enrolled
-    description: An agent was enrolled in Shadow Mode — it now runs in perpetual dry-run alongside human operators, accumulating reliability evidence.
+    description: An agent was enrolled in Shadow Mode. It now runs in perpetual dry-run alongside human operators, accumulating reliability evidence.
     emittingModule: company/runtime
     status: stable
 

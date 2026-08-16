@@ -33,7 +33,7 @@ exposes:
 
 agents:
   - name: growth-experiment-runner
-    purpose: Read active experiments, score them on the channel-mix model, recommend allocation shifts. Recommendations only — no autonomous spend.
+    purpose: Read active experiments, score them on the channel-mix model, recommend allocation shifts. Recommendations only, no autonomous spend.
     runtime: scheduled-job
     schedule: "0 9 * * *"
     cadence: daily

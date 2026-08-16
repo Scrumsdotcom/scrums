@@ -1,6 +1,6 @@
 # /company/domains/sales-marketing/revenue-operations
 
-Organizational placeholder for the **revenue-operations** sub-module. No manifest is declared yet — this folder claims structure, not runtime authority.
+Organizational placeholder for the **revenue-operations** sub-module. No manifest is declared yet, this folder claims structure, not runtime authority.
 
 To activate this module:
 

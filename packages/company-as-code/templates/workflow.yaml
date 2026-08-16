@@ -32,19 +32,19 @@ steps:
   - id: baseline
     kind: agent
     agent: example-agent
-    # First step always reads current state — sync-verification protocol step 1.
+    # First step always reads current state, sync-verification protocol step 1.
 
   - id: dry-run
     kind: dry-run
     automation: post-journal-entry
     dryRunRequired: true
-    # Step 2 — projected payload, no external mutation.
+    # Step 2, projected payload, no external mutation.
 
   - id: confirm
     kind: human-approval
     approver: people:finance-lead
     hitl: true
-    # Step 3 — operator inspects dry-run output and approves.
+    # Step 3, operator inspects dry-run output and approves.
 
   - id: live-write
     kind: live-write
@@ -52,12 +52,12 @@ steps:
     onFailure: escalate
     retries: 1
     emitsEvent: finance.period_closed
-    # Step 4 — live mutation, gated by step 3.
+    # Step 4, live mutation, gated by step 3.
 
   - id: re-verify
     kind: agent
     agent: example-agent
-    # Step 5 — re-query baseline, confirm state matches dry-run projection.
+    # Step 5, re-query baseline, confirm state matches dry-run projection.
 
 invariants: []
   # - First invocation of any new live-write goes through dry-run twice.

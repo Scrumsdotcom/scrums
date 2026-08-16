@@ -1,4 +1,4 @@
-// Generated from /schemas/hub-module.schema.json — do not edit by hand.
+// Generated from /schemas/hub-module.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Metadata for a community-contributed, importable module in the CaC-Hub. A hub module bundles a validated payload (manifest, workflows, agents, policies) that `cac hub add` scaffolds into a company's /company tree. The hub is how a company forks or imports shared building blocks while keeping every artefact schema-valid. */
@@ -19,7 +19,7 @@ export interface HubModule {
   maturity: "experimental" | "beta" | "stable";
   /** The CaC apiVersion this module's payload targets. */
   frameworkVersion?: "company-as-code/v1";
-  /** Where the module came from — the hub is open-source and attribution matters. */
+  /** Where the module came from. The hub is open-source and attribution matters. */
   provenance: {
     /** Contributing person or organization. */
     author: string;

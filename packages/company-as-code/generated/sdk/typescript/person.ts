@@ -1,4 +1,4 @@
-// Generated from /schemas/person.schema.json — do not edit by hand.
+// Generated from /schemas/person.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Canonical actor identity. Employee, contractor, supplier, AI operator, or agent identity. */

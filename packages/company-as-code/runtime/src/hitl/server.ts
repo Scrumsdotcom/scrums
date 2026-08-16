@@ -3,7 +3,7 @@ import type { AddressInfo } from "node:net";
 import { SqliteHitlInbox } from "./inbox.js";
 
 /**
- * The HITL dashboard — a specialised "Inbox" surface for human operators.
+ * The HITL dashboard: a specialised "Inbox" surface for human operators.
  *
  * A world-class company OS does not make a human tail a log to find what
  * needs sign-off. This is a dedicated queue: every dry-run projection waiting
@@ -141,7 +141,7 @@ const PAGE = `<!doctype html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Company-as-Code — HITL Inbox</title>
+<title>Company-as-Code, HITL Inbox</title>
 <style>
   :root { color-scheme: light dark; }
   body { font: 14px/1.5 ui-sans-serif, system-ui, sans-serif; margin: 0; padding: 0 0 4rem; }
@@ -201,7 +201,7 @@ function itemCard(it, isPending) {
       + '</div>';
   } else {
     controls = '<div class="meta"><span><b>' + esc(it.status) + '</b> by ' + esc(it.resolvedBy || '?')
-      + ' at ' + esc(it.resolvedAt || '?') + (it.reason ? ' — ' + esc(it.reason) : '') + '</span></div>';
+      + ' at ' + esc(it.resolvedAt || '?') + (it.reason ? ', ' + esc(it.reason) : '') + '</span></div>';
   }
   return '<div class="item ' + it.status + '">'
     + '<div class="meta">' + meta + '</div>'

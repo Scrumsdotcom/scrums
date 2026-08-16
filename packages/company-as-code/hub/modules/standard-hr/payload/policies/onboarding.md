@@ -11,7 +11,7 @@ projected as a dry-run, reviewed by a human, then provisioned.
 ## Sequence
 
 1. **Issue canonical ID.** A `canonical_workers` row is created. The canonical
-   worker ID is permanent — rehires reuse it.
+   worker ID is permanent, rehires reuse it.
 2. **Dry-run provisioning.** The onboarding workflow computes the full set of
    accounts, group memberships, and access grants it *would* create, and writes
    a single audit record with that projection.
@@ -32,4 +32,4 @@ projected as a dry-run, reviewed by a human, then provisioned.
 
 - Autonomous account creation.
 - Provisioning before the canonical worker ID exists.
-- Skipping the dry-run on "obvious" cases — the dry-run is the audit trail.
+- Skipping the dry-run on "obvious" cases: the dry-run is the audit trail.

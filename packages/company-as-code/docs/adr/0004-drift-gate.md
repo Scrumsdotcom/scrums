@@ -34,10 +34,10 @@ Each has tradeoffs:
 
 **Generators run at build time, outputs are committed, CI runs a drift gate.**
 
-- Generators are **deterministic** — given the same inputs they produce byte-identical outputs.
+- Generators are **deterministic**: given the same inputs they produce byte-identical outputs.
 - Generated outputs live under `/generated/`, committed alongside their sources.
 - CI runs `npm run generate:check` on every PR. If any generated file would change but isn't in the diff, CI fails.
-- Hand-merging generated files is forbidden — the resolution path is regeneration.
+- Hand-merging generated files is forbidden: the resolution path is regeneration.
 
 ## Consequences
 
@@ -52,7 +52,7 @@ Each has tradeoffs:
 
 - Generated files are part of the working tree, which can produce mechanical merge conflicts when two PRs touch different manifests.
 - Generated outputs are large and noisy in `git log`. (Mitigated by clear naming under `/generated/`.)
-- The first regeneration after a generator change can be a sweeping diff. (This is a feature — the diff is exactly the impact of the change.)
+- The first regeneration after a generator change can be a sweeping diff. (This is a feature. The diff is exactly the impact of the change.)
 
 **Neutral**
 

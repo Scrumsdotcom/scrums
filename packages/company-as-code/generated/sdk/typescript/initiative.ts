@@ -1,4 +1,4 @@
-// Generated from /schemas/initiative.schema.json — do not edit by hand.
+// Generated from /schemas/initiative.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Strategic change, time-bounded and decomposable. Initiatives roll up into goals and decompose into tasks. */

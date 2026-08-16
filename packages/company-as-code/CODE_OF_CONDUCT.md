@@ -15,7 +15,7 @@ Examples of behavior that contributes to a positive environment:
 - Giving and gracefully accepting constructive feedback
 - Accepting responsibility and apologizing to those affected by our mistakes
 - Focusing on what is best not just for us as individuals, but for the overall community
-- Citing sources, evidence, and prior art when proposing changes — the project favors verifiable claims over assertions
+- Citing sources, evidence, and prior art when proposing changes, the project favors verifiable claims over assertions
 
 Examples of unacceptable behavior:
 
@@ -27,7 +27,7 @@ Examples of unacceptable behavior:
 
 ## Scope
 
-This Code of Conduct applies within all community spaces — issues, pull requests, discussions, code comments, commit messages, and any other project surface — and also applies when an individual is officially representing the community in public spaces.
+This Code of Conduct applies within all community spaces, issues, pull requests, discussions, code comments, commit messages, and any other project surface, and also applies when an individual is officially representing the community in public spaces.
 
 ## Enforcement
 

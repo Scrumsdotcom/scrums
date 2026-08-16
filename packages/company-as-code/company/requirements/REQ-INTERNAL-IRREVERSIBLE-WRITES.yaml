@@ -1,0 +1,23 @@
+apiVersion: company-as-code/v1
+kind: Requirement
+
+id: REQ-INTERNAL-IRREVERSIBLE-WRITES
+framework: internal
+clause: CAC-1
+title: A human is accountable for every irreversible external write
+statement: >
+  Any action that changes the outside world in a way the company cannot
+  silently undo, money moving, a contract signed, a message sent, a public
+  surface changed, must be attributable to a named human who authorised it,
+  and that authorisation must be recorded before the action fires.
+
+owner:
+  kind: person
+  id: cto
+
+status: in-scope
+severity: critical
+
+references:
+  - company/policies/hitl-external-writes.md
+  - docs/spec/company-as-code-spec.md

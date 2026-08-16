@@ -17,6 +17,6 @@ People-operations module. Owns the canonical workforce record and exposes
 
 ## Worked story
 
-_Replace this section with how people-ops actually runs in your company —
+_Replace this section with how people-ops actually runs in your company,
 who owns it, what the onboarding cadence is, which external HR system holds
 authoritative data and which fields this module coordinates._

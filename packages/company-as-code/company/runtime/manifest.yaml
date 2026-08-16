@@ -1,0 +1,38 @@
+apiVersion: company-as-code/v1
+kind: Manifest
+name: runtime
+domain: framework
+version: 0.1.0
+lifecycle: hardening
+purpose: >
+  The execution surface itself: autonomy classification, escalation routing,
+  and the cross-domain workflows that belong to no single domain. Owning them
+  here is what lets an incident cross module boundaries without any module
+  claiming the incident.
+
+owns:
+  workflows:
+    - incident-response
+  policies:
+    - autonomy-policy
+    - escalation-policy
+    - incident-response
+
+consumes: []
+
+exposes:
+  - interface: runtime-posture
+    stability: experimental
+    description: >
+      Autonomy class distribution, open escalations, HITL queue depth, and
+      workflow reliability over a rolling window.
+
+invariants:
+  - Autonomy classification is declared per action and enforced by the runtime host, never assumed.
+  - Cross-domain workflows declare an incident commander before they can advance past triage.
+
+contacts:
+  - role: accountable
+    person: cto
+  - role: operations
+    person: platform-lead

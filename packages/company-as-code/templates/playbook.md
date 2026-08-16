@@ -13,8 +13,8 @@ A short paragraph or bullet list describing the trigger. Specifically: what stat
 
 ## Inputs
 
-- `<input>` — short description
-- `<input>` — short description
+- `<input>`: short description
+- `<input>`: short description
 
 ## Definition of done
 
@@ -26,7 +26,7 @@ Bulleted, checkable outcomes. The playbook is complete when every item is true.
 
 ## Steps
 
-1. **Baseline.** Query current state. Record counts, IDs, or hashes — whatever this run would change.
+1. **Baseline.** Query current state. Record counts, IDs, or hashes, whatever this run would change.
 2. **Dry-run.** Execute the relevant agent/workflow with `dryRun=true`. Inspect the audit record's projected payload.
 3. **Confirm counts.** Compare the dry-run's projected delta to the baseline. If the number of rows or amounts is wildly different from expected, stop and escalate.
 4. **Live.** Execute with `dryRun=false`. Begin with the smallest possible scope.

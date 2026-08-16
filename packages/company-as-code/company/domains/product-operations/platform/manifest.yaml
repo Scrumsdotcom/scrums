@@ -63,7 +63,7 @@ agents:
       - identity-drift-event
 
   - name: billing-reconciler
-    purpose: Reconcile canonical subscription state against external billing system; proposes adjustments — never writes them.
+    purpose: Reconcile canonical subscription state against external billing system; proposes adjustments, never writes them.
     runtime: scheduled-job
     schedule: "0 4 * * *"
     cadence: daily

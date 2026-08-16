@@ -27,7 +27,8 @@
     },
     "metric": {
       "type": "string",
-      "description": "Metric ID this goal targets."
+      "description": "Metric ID this goal targets.",
+      "x-cac-ref": ["Metric"]
     },
     "target": {
       "type": "object",

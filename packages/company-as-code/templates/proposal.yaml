@@ -1,0 +1,54 @@
+# Proposal template. Schema: /schemas/proposal.schema.json
+#
+# Changing the conserved core (spec, standards, schemas, policies, autonomy)
+# goes through a Proposal. Anyone may write one; writing costs nothing and
+# carries no authority. Applying one needs a recorded ruling.
+#
+# Copy to /company/proposals/PROP-NNNN-<slug>.yaml and edit.
+
+apiVersion: company-as-code/v1
+kind: Proposal
+
+id: PROP-0002
+title: Replace with what changes, in one line
+
+# draft | open | accepted | rejected | applied | withdrawn | superseded
+status: draft
+opened: 2026-01-01
+
+author:
+  kind: person
+  id: replace-me
+
+targets:
+  - path: docs/standards/example.md
+    surface: standard
+    change: One line on what changes in this file.
+
+reason: >
+  The friction that forced this proposal. Describe the problem, not the
+  solution: the solution is the rest of the document.
+
+evidence:
+  - What makes the reason a fact rather than an opinion. Incident IDs, audit
+    references, failing runs, dated observations.
+
+benefit: What improves, stated so someone could disagree with it.
+
+validation: >
+  How anyone will know afterwards whether this worked. A proposal with no
+  falsifiable validation is a preference.
+
+rollback: >
+  How the change is undone, and what is lost by undoing it.
+
+# Required once status is accepted, rejected, or applied. Rulings are made by
+# humans; an agent may draft the wording but may not be the actor.
+#
+# ruling:
+#   decision: accepted
+#   actor:
+#     kind: person
+#     id: replace-me
+#   date: 2026-01-01
+#   verbatim: The decider's own words, quoted.

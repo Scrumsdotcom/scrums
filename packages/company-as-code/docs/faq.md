@@ -10,15 +10,15 @@ Company-as-Code is a **framework + reference implementation** for treating a com
 
 ## Is this an "AI startup" project?
 
-No. AI is **first-class** but not the point. The framework is equally useful for an organization with zero AI agents — the discipline (manifests, declared interfaces, canonical IDs, unidirectional mutation, HITL, audit + event ledger) is what's load-bearing. AI happens to slot in naturally because the runtime treats human and AI execution as the same kind of thing.
+No. AI is **first-class** but not the point. The framework is equally useful for an organization with zero AI agents, the discipline (manifests, declared interfaces, canonical IDs, unidirectional mutation, HITL, audit + event ledger) is what's load-bearing. AI happens to slot in naturally because the runtime treats human and AI execution as the same kind of thing.
 
 ## Can I use this without writing TypeScript?
 
-Yes. The framework is the **schemas and the discipline**, not the CLI. Port the generators to Go, Python, Rust, or anything else — the test is whether `npm run generate:check` and your reimplementation produce byte-identical output. We will gladly link to community reimplementations.
+Yes. The framework is the **schemas and the discipline**, not the CLI. Port the generators to Go, Python, Rust, or anything else. The test is whether `npm run generate:check` and your reimplementation produce byte-identical output. We will gladly link to community reimplementations.
 
 ## Why a modular monolith and not microservices?
 
-Most companies don't have the operational maturity to run microservices well — and the spec optimizes for **operational clarity over architectural fashion**. The modular monolith discipline gives you the boundaries you'd want from microservices (declared interfaces, owned data, invariants per module) without the network costs of having actually split them. When a module genuinely needs to be its own service, the manifest already declared the interface; the migration is mechanical.
+Most companies don't have the operational maturity to run microservices well, and the spec optimizes for **operational clarity over architectural fashion**. The modular monolith discipline gives you the boundaries you'd want from microservices (declared interfaces, owned data, invariants per module) without the network costs of having actually split them. When a module genuinely needs to be its own service, the manifest already declared the interface; the migration is mechanical.
 
 ## Why is `/generated/` committed?
 
@@ -26,15 +26,15 @@ So that a fresh clone carries the resolved view of the whole organization withou
 
 ## What's the difference between an Agent, an Automation, and a Workflow?
 
-- **Agent** — reasons. Observes, plans, decides, escalates. Typically AI-backed. Declared per module under `agents/`.
-- **Automation** — executes. Takes typed inputs, produces typed outputs, has well-known failure modes. Deterministic. Declared under `/company/automations/`.
-- **Workflow** — orchestrates. Sequences agent invocations, automation runs, human approvals, and event emissions.
+- **Agent**: reasons. Observes, plans, decides, escalates. Typically AI-backed. Declared per module under `agents/`.
+- **Automation**: executes. Takes typed inputs, produces typed outputs, has well-known failure modes. Deterministic. Declared under `/company/automations/`.
+- **Workflow**: orchestrates. Sequences agent invocations, automation runs, human approvals, and event emissions.
 
 A workflow step of `kind: agent` calls an agent. A step of `kind: dry-run` or `kind: live-write` calls an automation. A step of `kind: human-approval` blocks until an operator records a decision.
 
 ## Why is `human-gated` the default for external writes?
 
-Because the cost of a wrong-but-fast autonomous write (sent the wrong email, posted the wrong invoice, deployed the wrong build) is much higher than the cost of a slower-because-human write. The framework can promote a path to autonomous after evidence accumulates — see [`/company/policies/hitl-external-writes.md`](../company/policies/hitl-external-writes.md).
+Because the cost of a wrong-but-fast autonomous write (sent the wrong email, posted the wrong invoice, deployed the wrong build) is much higher than the cost of a slower-because-human write. The framework can promote a path to autonomous after evidence accumulates. See [`/company/policies/hitl-external-writes.md`](../company/policies/hitl-external-writes.md).
 
 ## How do I add support for a vendor that isn't already declared?
 
@@ -64,17 +64,31 @@ Company-as-Code is the **open-source operating-system pattern** behind Scrums.co
 
 Yes. The Apache 2.0 license includes a patent grant. Fork, adapt, deploy. Sell derivative products. The framework is permissively licensed and that is not going to change.
 
+## Do I have to model compliance to use this?
+
+No. Requirements and Controls are two primitives among two dozen, and a fork
+with none of them validates fine. The coverage gate only fires on requirements
+you have declared as in-scope.
+
+The reason to reach for them is that they turn an obligation into something CI
+can fail on. If you are heading toward a certification, or you already have
+controls that live in a spreadsheet, moving them here means the spreadsheet
+cannot silently stop matching the systems. See [`/docs/compliance.md`](./compliance.md).
+
+## Why can a Capability's fallback chain never end in an agent?
+
+Because an agent can be unavailable in ways a person cannot. Credentials
+expire, a rate limit bites, a refactor deletes the declaration, a provider has
+an outage. A chain exists to answer "and then what," so its last link has to be
+something that cannot itself disappear: a person, a team, or a role.
+
+The check is enforced at validation, not left to review.
+
 ## What's the roadmap?
 
-A few directions worth knowing:
-
-- Schemas for the remaining primitives that currently ship as illustrative YAML (`Policy`, `Dashboard`, `RuntimeConfig`, `EventType`, `Automation`).
-- Additional skill adapters as runtimes emerge.
-- A reference dashboard implementation (vendor-neutral; Grafana-shape).
-- Migration guides from common SaaS patterns into the canonical model.
-- A registry of community-published modules and skills.
-
-The roadmap itself will eventually live as a plan in `/docs/plans/`.
+[`/docs/roadmap.md`](./roadmap.md), which tracks shipped, in flight, considered,
+and explicitly declined, with the reasoning for each. It is more honest about
+what has been declined than most roadmaps, which is the useful part.
 
 ## Where do I report a security issue?
 

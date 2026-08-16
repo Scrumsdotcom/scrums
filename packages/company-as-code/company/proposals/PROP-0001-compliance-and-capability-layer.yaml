@@ -1,0 +1,86 @@
+# The proposal that added the layer it is filed under.
+#
+# The canonical repository structure is a conserved surface: it lives in the
+# spec, and the spec is the source of authority. Adding four folders to it is
+# therefore not an ordinary edit. This is what the ruling looked like.
+
+apiVersion: company-as-code/v1
+kind: Proposal
+
+id: PROP-0001
+title: Add requirements, controls, capabilities, and proposals to the canonical structure
+
+status: applied
+opened: 2026-08-16
+appliedOn: 2026-08-16
+
+author:
+  kind: person
+  id: ceo
+
+targets:
+  - path: docs/spec/company-as-code-spec.md
+    surface: spec
+    change: Four folders added to the canonical repository structure; a compliance section and a capability section added to the primitives.
+  - path: schemas/requirement.schema.json
+    surface: schema
+    change: New primitive.
+  - path: schemas/control.schema.json
+    surface: schema
+    change: New primitive.
+  - path: schemas/capability.schema.json
+    surface: schema
+    change: New primitive.
+  - path: schemas/proposal.schema.json
+    surface: schema
+    change: New primitive; this document is its first instance.
+
+reason: >
+  The framework could describe how work executes but not what the company was
+  obliged to be able to prove, nor who picks up a function when its owner is
+  absent. Both gaps showed up as prose in documentation, which meant neither
+  could fail a build. An audit request or a resignation would have been
+  answered by a meeting.
+
+evidence:
+  - The policy-to-control matrix in docs/standards existed as a hand-maintained Markdown table with no schema behind it and no generator reading it.
+  - Adding typed reference edges surfaced 24 dangling references in the seed, four of which pointed at modules that were consumed from but had never declared an interface.
+  - No artefact in the repository answered the question "who does this if the named owner is unavailable" for any function.
+
+benefit: >
+  Requirements and controls become documents CI can fail on: an in-scope
+  obligation with no control is a build error, not a finding at audit time.
+  Capabilities make the fallback chain explicit and machine-checkable, so a
+  chain that terminates in an agent, or repeats its own primary owner, is
+  caught at authoring time.
+
+validation: >
+  Three checks, all mechanical. Every in-scope Requirement resolves to at
+  least one Control. Every Capability chain terminates in a holder that is not
+  an agent. The generated control matrix and capability map are drift-gated
+  like every other generated artefact, so they cannot quietly stop matching
+  their sources.
+
+rollback: >
+  Delete the four schemas, the four /company folders, and the two generators;
+  revert the spec section and the loader's kind map. Nothing else reads them,
+  so removal is local. What is lost is the coverage gate: obligations return
+  to being prose, and gaps return to being discovered by an auditor rather
+  than by CI.
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-08-16
+  verbatim: >
+    Accepted. Compliance is the part every operating framework leaves as a
+    document, and it is the part that costs the most when it is only a
+    document. Ship the coverage gate with it, or we have added four folders
+    and no discipline.
+  conditions:
+    - The coverage gate ships in the same change, not as a follow-up.
+    - The eu-ai-act requirement stays 'planned' until a unit actually deploys into a use class where the obligation binds.
+
+adr: docs/adr/0006-compliance-and-capability-layer.md

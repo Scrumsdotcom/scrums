@@ -1,6 +1,6 @@
 # /company/domains/finance-ops/reporting
 
-Organizational placeholder for the **reporting** sub-module. No manifest is declared yet — this folder claims structure, not runtime authority.
+Organizational placeholder for the **reporting** sub-module. No manifest is declared yet, this folder claims structure, not runtime authority.
 
 To activate this module:
 

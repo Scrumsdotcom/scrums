@@ -4,7 +4,7 @@
     "cadence": "daily",
     "module": "company/domains/finance-ops/finance",
     "name": "cash-forecaster",
-    "purpose": "Produce a rolling 13-week cash forecast from canonical ledger entries plus forward-looking pipeline state. Read-only — never writes to the ledger or to external accounting systems.\n",
+    "purpose": "Produce a rolling 13-week cash forecast from canonical ledger entries plus forward-looking pipeline state. Read-only, never writes to the ledger or to external accounting systems.\n",
     "runtime": "scheduled-job",
     "schedule": "0 7 * * *"
   },

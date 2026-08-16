@@ -2,9 +2,9 @@
 
 Tier-3 of the three-tier knowledge model: **composable, reusable expertise referenced by name**. Distinct from:
 
-- **Tier 1 — Context** (long-form narrative, lives in ADRs and architecture docs)
-- **Tier 2 — Runtime entry-points** (numbered procedures, lives in tasks, workflows, playbooks)
-- **Tier 3 — Skills** (this directory — reusable techniques referenced by name)
+- **Tier 1, Context** (long-form narrative, lives in ADRs and architecture docs)
+- **Tier 2, Runtime entry-points** (numbered procedures, lives in tasks, workflows, playbooks)
+- **Tier 3, Skills** (this directory): reusable techniques referenced by name
 
 ## One source, many runtimes
 
@@ -29,7 +29,7 @@ skills:
   - resolve-drift
 ```
 
-Agents inherit the skill's `autonomy` floor — they may narrow it (more restrictive) but never widen it. The per-agent context bundle generator surfaces the agent's authorized skills alongside its tools.
+Agents inherit the skill's `autonomy` floor. They may narrow it (more restrictive) but never widen it. The per-agent context bundle generator surfaces the agent's authorized skills alongside its tools.
 
 ## Available skills
 
@@ -45,7 +45,7 @@ Validate against [`/schemas/skill.schema.json`](../../schemas/skill.schema.json)
 
 ## Skill rules
 
-- One YAML, one skill — no multi-doc files.
+- One YAML, one skill: no multi-doc files.
 - Bump `version:` when the technique changes. Renaming an instance does not bump the skill.
 - Generated outputs are committed (`/generated/skills/`). The drift gate protects them.
 - Skills never embed secrets, vendor names, or canonical IDs of specific entities. They describe technique, not instance.

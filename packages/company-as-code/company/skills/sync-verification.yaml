@@ -68,7 +68,7 @@ body: |
   - Any first invocation of a state-mutating sync in production.
   - Any first invocation against a new scope (new tenant, new region).
   - After non-trivial changes to a write path.
-  - When you're tempted to "just run it" — that's exactly when you must not.
+  - When you're tempted to "just run it": that's exactly when you must not.
 
   ## The five steps
 
@@ -90,7 +90,7 @@ body: |
   - Run all validation
   - Compute the full payload it would send
   - Write an audit record marked `dryRun: true`
-  - Return the payload — but mutate nothing external
+  - Return the payload: but mutate nothing external
 
   Inspect the audit record's intended-write payload. **Read every field.**
   If the dry-run output doesn't match expectation, stop here.
@@ -111,7 +111,7 @@ body: |
   - Do not proceed to step 4 under any circumstances
 
   This is the step that catches the disaster. Treat it as the most important
-  one — because it is.
+  one, because it is.
 
   ### 4. Live
 
@@ -141,22 +141,22 @@ body: |
   - [ ] Count confirmation is recorded (manual approval or automated check)
   - [ ] Live audit record exists, with `dryRun: false` and `causationId` pointing at step 2
   - [ ] Re-verification audit record matches the dry-run projection
-  - [ ] All five audit rows share a correlation ID — the audit log reads as a queryable narrative
+  - [ ] All five audit rows share a correlation ID. The audit log reads as a queryable narrative
 
   ## Failure handling
 
-  - **Dry-run fails** — fix the cause; do not bypass to a live run.
-  - **Counts wildly off** — escalate. Never override the discrepancy in the moment.
-  - **Live succeeds but re-verify mismatches** — incident, not retry. Mismatches
+  - **Dry-run fails**: fix the cause; do not bypass to a live run.
+  - **Counts wildly off**: escalate. Never override the discrepancy in the moment.
+  - **Live succeeds but re-verify mismatches**: incident, not retry. Mismatches
     are a defect, not a flake.
-  - **Re-verify passes but a stakeholder reports unexpected state** — review the
+  - **Re-verify passes but a stakeholder reports unexpected state**: review the
     correlation ID's audit narrative; the protocol either tells you exactly what
     happened or reveals a missing baseline.
 
   ## Related
 
-  - Skill: `add-agent`, `add-integration` — both depend on this skill being applied
+  - Skill: `add-agent`, `add-integration`: both depend on this skill being applied
     before any write path is promoted to autonomous.
-  - Standard: `/docs/standards/security.md` — secrets policy interacts with audit
+  - Standard: `/docs/standards/security.md`: secrets policy interacts with audit
     redaction here.
   - Spec section: "Sync verification protocol" in `docs/spec/company-as-code-spec.md`.

@@ -47,7 +47,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["author", "license"],
-      "description": "Where the module came from — the hub is open-source and attribution matters.",
+      "description": "Where the module came from. The hub is open-source and attribution matters.",
       "properties": {
         "author": { "type": "string", "description": "Contributing person or organization." },
         "license": { "type": "string", "description": "SPDX license identifier, e.g. 'Apache-2.0'." },

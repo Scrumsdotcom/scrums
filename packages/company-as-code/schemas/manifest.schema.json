@@ -69,7 +69,7 @@
         "required": ["interface", "from"],
         "properties": {
           "interface": { "type": "string" },
-          "from": { "type": "string", "description": "Source module path." },
+          "from": { "type": "string", "description": "Source module path.", "x-cac-ref": ["Manifest"] },
           "usage": { "type": "string" }
         }
       },

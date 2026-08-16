@@ -17,7 +17,7 @@ describe("schema-driven SDK generator", () => {
     for (const n of names) expect(n.startsWith("sdk/")).toBe(true);
   });
 
-  it("is deterministic — identical schemas produce byte-identical output", async () => {
+  it("is deterministic, identical schemas produce byte-identical output", async () => {
     const schemas = await loadSchemas();
     const a = sdkFiles(schemas);
     const b = sdkFiles(schemas);
@@ -59,7 +59,7 @@ describe("schema-driven SDK generator", () => {
     expect(goalPy.content).toMatch(/description: NotRequired\[str\]/);
   });
 
-  it("enforces required fields in Python — never total=False, required fields bare", async () => {
+  it("enforces required fields in Python, never total=False, required fields bare", async () => {
     const schemas = await loadSchemas();
     const files = sdkFiles(schemas);
     const pyFiles = files.filter((f) => f.name.endsWith(".py"));
@@ -78,7 +78,7 @@ describe("schema-driven SDK generator", () => {
   it("emits `pass` when every key of a TypedDict falls back to a comment", async () => {
     const schemas = await loadSchemas();
     const files = sdkFiles(schemas);
-    // escalation-policy severities are keyed `sev-1`..`sev-4` — hyphens are
+    // escalation-policy severities are keyed `sev-1`..`sev-4`, hyphens are
     // not valid Python identifiers, so all fields become comments and the
     // class body needs an explicit `pass` to parse.
     const py = files.find((f) => f.name === "sdk/python/escalation_policy.py")!;

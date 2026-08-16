@@ -1,4 +1,4 @@
-// Generated from /schemas/automation.schema.json — do not edit by hand.
+// Generated from /schemas/automation.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Deterministic execution unit between the agent layer and the integration layer. Every automation supports dryRun, declares its mutation surface, and lists known failure modes. */

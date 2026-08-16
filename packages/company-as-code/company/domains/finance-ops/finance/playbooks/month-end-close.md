@@ -13,7 +13,7 @@ The first business day after the calendar month ends, after upstream pipeline da
 
 ## Inputs
 
-- `period` — calendar month being closed (e.g. `2026-04`)
+- `period`: calendar month being closed (e.g. `2026-04`)
 - Latest canonical ledger as of `period_end + 1 day`
 - Approval from finance-lead
 
@@ -33,7 +33,7 @@ The first business day after the calendar month ends, after upstream pipeline da
 2. **Dry-run the close.** Trigger workflow step `dry-run-close`. Inspect the projected period-close journal entry. Verify accounts, sign, magnitudes.
 3. **Confirm counts.** Compare projected delta against baseline. If any account moves by >10% beyond expectation, **stop**: open a TASK with the playbook ID in the title and escalate to the CFO.
 4. **Approve.** In the admin surface, capture explicit finance-lead approval. The audit record carries the approver canonical ID.
-5. **Go live.** Trigger workflow step `live-close`. The runtime refuses to proceed without a captured approval. No retries — failure escalates to the CFO.
+5. **Go live.** Trigger workflow step `live-close`. The runtime refuses to proceed without a captured approval. No retries, failure escalates to the CFO.
 6. **Re-verify.** Run `cash-forecaster` again. Compare to dry-run projection. Drift > 0.5% on cash position is an incident.
 
 ## Failure handling

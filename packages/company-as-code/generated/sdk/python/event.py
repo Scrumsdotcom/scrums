@@ -1,4 +1,4 @@
-# Generated from /schemas/event.schema.json — do not edit by hand.
+# Generated from /schemas/event.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations
@@ -40,7 +40,7 @@ class Event(TypedDict):
     actor: "EventActor"
     """Type-specific payload. Schema governed by the event type registry."""
     payload: NotRequired[Dict[str, Any]]
-    # "from": NotRequired[str]  (reserved word — access via dict)
+    # "from": NotRequired[str]  (reserved word, access via dict)
     """New state (for state-transition events)."""
     to: NotRequired[str]
     correlationId: NotRequired[str]

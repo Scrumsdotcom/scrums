@@ -6,8 +6,8 @@ parent: domains/finance-ops
 version: 0.1.0
 lifecycle: planning
 purpose: >
-  Owns the canonical workforce record — headcount, employment lifecycle, and
-  onboarding/offboarding state — and exposes it for payroll and cash forecasting.
+  Owns the canonical workforce record, headcount, employment lifecycle, and
+  onboarding/offboarding state, and exposes it for payroll and cash forecasting.
 
 owns:
   tables:

@@ -4,15 +4,15 @@ import { ulid } from "ulid";
 /**
  * Human-in-the-loop inbox.
  *
- * The spec makes HITL a *declaration* — a workflow declares `hitl: true`, a
+ * The spec makes HITL a *declaration*: a workflow declares `hitl: true`, a
  * step declares `kind: human-approval`. This store is the operational surface
  * behind that declaration: a durable queue of dry-run projections waiting for
  * a named human to approve or reject before the live write fires.
  *
  * The queued approval provider enqueues here and blocks; a human resolves the
  * item from the CLI (`cac-host inbox approve/reject`) or the web dashboard
- * (`cac-host inbox serve`). Either way the decision — and the approver's
- * canonical Person ID — is recorded against the item.
+ * (`cac-host inbox serve`). Either way the decision, and the approver's
+ * canonical Person ID, is recorded against the item.
  */
 
 export type PendingStatus = "pending" | "approved" | "rejected";
@@ -140,7 +140,7 @@ export class SqliteHitlInbox {
   }
 
   /**
-   * Resolve a pending item. Idempotent only for the same decision — resolving
+   * Resolve a pending item. Idempotent only for the same decision, resolving
    * an already-resolved item throws, because two humans disagreeing on the
    * same projection must surface, not get silently overwritten.
    */

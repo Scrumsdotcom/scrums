@@ -17,7 +17,7 @@
       "additionalProperties": false,
       "required": ["module"],
       "properties": {
-        "module": { "type": "string" },
+        "module": { "type": "string", "x-cac-ref": ["Manifest"] },
         "person": { "type": "string" }
       }
     },
@@ -71,7 +71,7 @@
     },
     "dashboards": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": { "type": "string", "x-cac-ref": ["Dashboard"] },
       "default": []
     },
     "alerts": {

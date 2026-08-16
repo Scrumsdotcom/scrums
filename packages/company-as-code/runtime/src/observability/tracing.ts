@@ -2,7 +2,7 @@
 //
 // Every workflow execution opens a root span; every step opens a child span.
 // The span's trace ID is stamped onto both the audit record ("what we did")
-// and the typed event ("what happened") — so a single trace ID joins the two
+// and the typed event ("what happened"), so a single trace ID joins the two
 // ledgers that the spec deliberately keeps separate. `cac-host trace <id>`
 // reads that join back out as one interleaved timeline.
 //
@@ -11,7 +11,7 @@
 //   - CAC_TRACE_CONSOLE=1            -> ConsoleSpanExporter (human debugging)
 //   - OTEL_EXPORTER_OTLP_ENDPOINT=…  -> noted; install the OTLP exporter in a
 //                                       fork and add it to spanProcessors.
-// With no exporter the provider still issues real W3C trace/span IDs — the
+// With no exporter the provider still issues real W3C trace/span IDs, the
 // IDs are what the ledgers need, the export is optional plumbing.
 
 import {
@@ -37,7 +37,7 @@ let provider: NodeTracerProvider | undefined;
 
 /**
  * Register the tracer provider exactly once per process. Safe to call from
- * anywhere — repeated calls are a no-op. Returns immediately if tracing has
+ * anywhere, repeated calls are a no-op. Returns immediately if tracing has
  * already been initialised (including by a host that registered its own
  * provider).
  */

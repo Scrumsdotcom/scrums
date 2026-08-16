@@ -11,7 +11,7 @@ Every write to an external system with real-world consequences is **human-gated 
 
 - Accumulated reliability evidence (≥3 successful invocations through the sync verification protocol on the path being promoted)
 - An ADR documenting the promotion
-- An updated manifest reflecting the new autonomy class
+- An updated manifest recording the new autonomy class
 
 ## Scope
 
@@ -72,7 +72,7 @@ autonomy: human-gated     # or "escalated" with an escalation block
 The reliability evidence and the ADR can be produced by hand, or accumulated
 and drafted automatically through **Shadow Mode**:
 
-1. `cac-host shadow enroll <agent>` — the agent runs in perpetual dry-run on
+1. `cac-host shadow enroll <agent>`: the agent runs in perpetual dry-run on
    every execution, recording each invocation as reliability evidence.
 2. Operators record whether each projection matched the human action
    (`cac-host shadow observe`).
@@ -89,7 +89,7 @@ ship in one PR.
 
 ## Related
 
-- [`/docs/shadow-mode.md`](../../docs/shadow-mode.md) — the automated evidence + ADR path
+- [`/docs/shadow-mode.md`](../../docs/shadow-mode.md), the automated evidence + ADR path
 - [`/docs/standards/security.md`](../../docs/standards/security.md)
 - [`/company/skills/sync-verification.yaml`](../skills/sync-verification.yaml)
 - ADR-0003: Unidirectional mutation flow ([`/docs/adr/0003-unidirectional-mutation.md`](../../docs/adr/0003-unidirectional-mutation.md))

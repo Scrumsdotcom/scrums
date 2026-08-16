@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://company-as-code.dev/schemas/audit-record.schema.json",
   "title": "Audit Record",
-  "description": "One row per orchestration action. Loose schema for what happened in the runtime — debugging, post-hoc reasoning, compliance.",
+  "description": "One row per orchestration action. Loose schema for what happened in the runtime, debugging, post-hoc reasoning, compliance.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "actor", "action", "startedAt", "status"],

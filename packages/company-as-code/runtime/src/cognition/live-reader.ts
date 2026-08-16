@@ -9,7 +9,7 @@ import Database from "better-sqlite3";
  * straight from the runtime's SQLite database.
  *
  * It opens its own read-only-style connection (like the state store does) and
- * is deliberately tolerant — if the runtime has never executed anything, the
+ * is deliberately tolerant, if the runtime has never executed anything, the
  * tables may not exist yet, and every query simply returns zero.
  */
 

@@ -6,7 +6,7 @@ import type { ReliabilityEvidence } from "./evidence-store.js";
 /**
  * Promotion-gate evaluation.
  *
- * Shadow Mode does not invent its own promotion bar — it reads the one the
+ * Shadow Mode does not invent its own promotion bar: it reads the one the
  * company already declared, in the AutonomyPolicy's
  * `promotion.fromHumanGatedToAutonomous.requires` block. This module loads that
  * block and checks the accumulated Reliability Evidence against it.
@@ -14,9 +14,9 @@ import type { ReliabilityEvidence } from "./evidence-store.js";
  * The `requires` block is intentionally free-form (string | number | boolean
  * values). The convention this evaluator understands:
  *
- *   - a comparison-expression value (">= 3", "> 0.95", …) is an AUTO check —
+ *   - a comparison-expression value (">= 3", "> 0.95", …) is an AUTO check,
  *     the key names the evidence metric, the expression is the threshold.
- *   - a value of `required` / `true` is a MANUAL gate — something a human
+ *   - a value of `required` / `true` is a MANUAL gate, something a human
  *     must do (accept an ADR, update a manifest). `cac-host shadow propose`
  *     is the step that produces the ADR those gates point at.
  *   - any other key is reported as UNKNOWN and does not block.
@@ -98,7 +98,7 @@ export function evaluatePromotion(
           kind: "unknown",
           comparator,
           threshold,
-          met: true, // unknown metrics do not block — surfaced for the human
+          met: true, // unknown metrics do not block, surfaced for the human
           note: `no evidence metric maps to '${key}'; not auto-checked`,
         });
         continue;
@@ -121,7 +121,7 @@ export function evaluatePromotion(
           ? "run `cac-host shadow propose` to draft the ADR, then merge it"
           : key.toLowerCase().includes("manifest")
             ? "update the agent's manifest autonomy field as part of the promotion PR"
-            : "manual gate — a human must confirm this",
+            : "manual gate. A human must confirm this",
     });
   }
 

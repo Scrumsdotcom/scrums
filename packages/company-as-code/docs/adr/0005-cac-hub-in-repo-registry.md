@@ -1,6 +1,6 @@
 # ADR 0005: CaC-Hub as an in-repo module registry
 
-- **Status:** Accepted (retrospective — records a decision shipped in v0.5.0, PR #13)
+- **Status:** Accepted (retrospective, records a decision shipped in v0.5.0, PR #13)
 - **Date:** 2026-07-02
 - **Deciders:** Seed maintainers
 - **Tags:** ecosystem, scope, governance
@@ -9,7 +9,7 @@
 
 The roadmap listed *"a 'marketplace' / public registry of forks, modules,
 skills"* under **Considered later (or never)**. v0.5.0 then shipped
-**CaC-Hub** — `hub/modules/*` plus `cac hub list / show / add / validate` —
+**CaC-Hub**: `hub/modules/*` plus `cac hub list / show / add / validate`,
 without an ADR, leaving the roadmap celebrating a feature its own non-goals
 section appeared to decline. For a framework whose pitch is declared scope,
 that contradiction is worse than either decision on its own.
@@ -23,7 +23,7 @@ than the declined marketplace:
    version with it, and are reviewed through the same PR process as any other
    artefact. There is no hosted service and no network fetch.
 2. **Schema-governed.** Every module is a `HubModule` document wrapping a
-   `payload/` that validates against the framework schemas —
+   `payload/` that validates against the framework schemas,
    `cac hub validate` is part of the test suite.
 3. **Dry-run-first scaffolding.** `cac hub add` projects the writes before
    applying them, refuses collisions, and only writes under `/company`.
@@ -37,7 +37,7 @@ than the declined marketplace:
 - The roadmap's non-goal is reworded from "marketplace / public registry" to
   "hosted public registry", with CaC-Hub explicitly carved out.
 - Community module contributions are PRs against `/hub/modules`, inheriting
-  CI validation and human review — no separate trust infrastructure needed.
+  CI validation and human review, no separate trust infrastructure needed.
 - If a hosted registry ever ships, the in-repo format is its interchange
   format; nothing shipped in v0.5.0 is throwaway.
 

@@ -6,7 +6,7 @@ parent: domains/finance-ops
 version: 0.1.0
 lifecycle: planning
 purpose: >
-  Coordinates the recurring-revenue billing system — canonical subscription and
+  Coordinates the recurring-revenue billing system, canonical subscription and
   invoice IDs, plan state, and the writeback-only mapping to the billing provider.
 
 owns:
@@ -23,7 +23,7 @@ owns:
 consumes:
   - interface: workforce-state
     from: company/domains/finance-ops/people-ops
-    usage: Optional — seat-based plans reconcile against canonical headcount.
+    usage: Optional, seat-based plans reconcile against canonical headcount.
 
 exposes:
   - interface: subscription-state

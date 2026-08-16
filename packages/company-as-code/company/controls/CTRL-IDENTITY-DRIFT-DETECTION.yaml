@@ -1,0 +1,39 @@
+apiVersion: company-as-code/v1
+kind: Control
+
+id: CTRL-IDENTITY-DRIFT-DETECTION
+title: Divergence between canonical and external identity state is detected hourly
+description: >
+  The identity-drift-detector compares canonical identity state against the
+  external identity provider every hour and emits a typed event on every
+  divergence. The control establishes presence of drift; it never concludes
+  absence from an empty page of results.
+
+implements:
+  - REQ-SOC2-CC6-1
+
+owner:
+  kind: module
+  id: company/domains/product-operations/platform
+
+appliesTo:
+  - company/domains/product-operations/platform
+
+verification:
+  method: automated
+  surface: scheduled-job
+  check: company/domains/product-operations/platform/agents/identity-drift-detector.yaml
+  frequency: continuous
+  failureMode: Emits platform.identity_drift_detected and routes to on-call-platform.
+
+evidence:
+  - source: event-ledger
+    reference: platform.identity_drift_detected
+    retention: P2Y
+  - source: dashboard
+    reference: platform-overview
+    retention: P90D
+
+severity: critical
+status: operating
+lastVerified: 2026-08-16

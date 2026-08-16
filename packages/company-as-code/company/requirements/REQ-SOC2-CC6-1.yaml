@@ -1,0 +1,24 @@
+apiVersion: company-as-code/v1
+kind: Requirement
+
+id: REQ-SOC2-CC6-1
+framework: soc2
+clause: CC6.1
+title: Logical access to systems is restricted and reviewed
+statement: >
+  Access to systems holding company or customer data is granted through a
+  defined process, is proportionate to the role that holds it, and is revoked
+  when the engagement that justified it ends. Divergence between what access
+  should exist and what access does exist is detected rather than assumed
+  absent.
+
+owner:
+  kind: person
+  id: cto
+
+appliesTo:
+  - company/domains/product-operations/platform
+  - company/domains/finance-ops/people
+
+status: in-scope
+severity: critical

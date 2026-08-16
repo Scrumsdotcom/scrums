@@ -1,4 +1,4 @@
-// Generated from /schemas/manifest.schema.json — do not edit by hand.
+// Generated from /schemas/manifest.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Declarative source of truth for a module. Every module at every level of the organizational graph has a manifest.yaml at its root. */

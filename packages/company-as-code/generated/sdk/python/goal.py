@@ -1,4 +1,4 @@
-# Generated from /schemas/goal.schema.json — do not edit by hand.
+# Generated from /schemas/goal.schema.json, do not edit by hand.
 # Regenerate with `npm --prefix cli run generate`.
 # Requires Python 3.11+ (uses typing.NotRequired).
 from __future__ import annotations

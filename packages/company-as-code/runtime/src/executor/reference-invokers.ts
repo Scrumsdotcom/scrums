@@ -24,7 +24,7 @@ export class ReferenceAgentInvoker implements AgentInvoker {
         agent: args.agent,
         autonomy: decl?.autonomy ?? "unknown",
         purpose: decl?.purpose ?? "(undeclared)",
-        note: "Reference invoker — agent observed declared inputs; no real AI invocation performed.",
+        note: "Reference invoker, agent observed declared inputs; no real AI invocation performed.",
         observed: {
           inputs: decl?.inputs ?? [],
           outputs: decl?.outputs ?? [],
@@ -64,7 +64,7 @@ export class ReferenceAutomationInvoker implements AutomationInvoker {
 }
 
 /**
- * Interactive approval — reads from stdin. Used when the runtime host
+ * Interactive approval: reads from stdin. Used when the runtime host
  * runs in foreground TTY mode. Forks plug in an HTTP-backed provider
  * for an admin surface.
  */
@@ -105,7 +105,7 @@ export class InteractiveApprovalProvider implements ApprovalProvider {
 }
 
 /**
- * Auto-approve provider — used in tests and headless CI runs where the
+ * Auto-approve provider: used in tests and headless CI runs where the
  * point is to exercise the full executor pathway, not gate on a human.
  */
 export class AutoApprovalProvider implements ApprovalProvider {

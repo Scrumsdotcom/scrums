@@ -1,8 +1,8 @@
-# Company-as-Code — Master Specification
+# Company-as-Code: Master Specification
 
 This document is the canonical specification for Company-as-Code.
 
-It is the original seed prompt the repository was built from, preserved verbatim. It functions simultaneously as:
+It began as the seed prompt the repository was built from, and it now carries every decision that has been ratified since. It functions simultaneously as:
 
 - the **master system prompt** for AI agents operating on this repository
 - the **repo seed prompt** for forks and new instantiations
@@ -326,6 +326,7 @@ Strategic Scope
 ├── /initiatives
 ├── /goals
 ├── /metrics
+├── /capabilities
 ├── /tasks
 ├── /workflows
 ├── /agents
@@ -335,6 +336,9 @@ Strategic Scope
 ├── /dashboards
 ├── /playbooks
 ├── /policies
+├── /requirements
+├── /controls
+├── /proposals
 ├── /schemas
 ├── /memory
 ├── /prompts
@@ -347,14 +351,14 @@ Strategic Scope
 
 ## MODULAR MONOLITH DISCIPLINE
 
-The repository follows a modular monolith pattern. The discipline is what makes the framework work — without it the structure collapses into either a microservice tangle or an undifferentiated mass.
+The repository follows a modular monolith pattern. The discipline is what makes the framework work, without it the structure collapses into either a microservice tangle or an undifferentiated mass.
 
 ### Hard rules
 
 1. Each module owns its business logic, data access, agents, and invariants. Never move business logic out of the module that owns it.
 2. Cross-module communication happens only through declared interfaces. Never import directly from another module's internals.
 3. Every new module requires a manifest before any code is written.
-4. Infrastructure layers contain zero business logic — capabilities only.
+4. Infrastructure layers contain zero business logic. They provide mechanisms, never rules.
 5. State mutation is unidirectional. All state changes originate from the coordination layer downward; downstream systems read.
 
 ### Before adding anything new, answer
@@ -375,17 +379,17 @@ The repository follows a modular monolith pattern. The discipline is what makes 
 
 ## MODULE MANIFEST PATTERN
 
-Every module — at every level of the organizational graph — has a manifest file at its root. The manifest is the single declarative source of truth for what the module owns and consumes.
+Every module (at every level of the organizational graph) has a manifest file at its root. The manifest is the single declarative source of truth for what the module owns and consumes.
 
 ### The manifest declares
 
-- **module identity** — name, domain, version, lifecycle status (planning / hardening / stable / agent-ready / deprecated)
-- **owns** — the tables, agents, apps, workflows, dashboards, schemas, and policies the module is canonically responsible for
-- **consumes** — the named interfaces from other modules this module reads from
-- **exposes** — the named interfaces this module offers to others
-- **agents** — every autonomous unit declared here, with runtime, schedule, cadence, purpose, primary users, and outputs
-- **invariants** — declarative properties that must remain true (e.g., "no autonomous writeback to external systems")
-- **contacts** — humans accountable for the module
+- **module identity**: name, domain, version, lifecycle status (planning / hardening / stable / agent-ready / deprecated)
+- **owns**: the tables, agents, apps, workflows, dashboards, schemas, and policies the module is canonically responsible for
+- **consumes**: the named interfaces from other modules this module reads from
+- **exposes**: the named interfaces this module offers to others
+- **agents**: every autonomous unit declared here, with runtime, schedule, cadence, purpose, primary users, and outputs
+- **invariants**: declarative properties that must remain true (e.g., "no autonomous writeback to external systems")
+- **contacts**: humans accountable for the module
 
 ### Why declarative manifests
 
@@ -393,7 +397,7 @@ Every module — at every level of the organizational graph — has a manifest f
 - Manifests are machine-readable, so generators, validators, and agents can reason about the whole organization without parsing prose
 - Cross-module coupling becomes visible: if a module's consumes block doesn't reference an interface, importing from that module is a violation
 - Manifests survive refactors and personnel changes; they are how organizational knowledge persists in version control
-- Manifest changes are diffable, reviewable, and gated — the act of declaring is the act of agreeing
+- Manifest changes are diffable, reviewable, and gated. The act of declaring is the act of agreeing
 
 ### Manifest rules
 
@@ -407,19 +411,19 @@ Every module — at every level of the organizational graph — has a manifest f
 
 ## GENERATED REGISTRIES + DRIFT GATES
 
-Manifests are walked by generators that emit aggregated indexes — registries that flatten the whole organizational graph into machine-readable views.
+Manifests are walked by generators that emit aggregated indexes, registries that flatten the whole organizational graph into machine-readable views.
 
 ### What gets generated
 
-- a **flow registry** — every workflow, agent, app, and runtime artefact across all modules, with its owner module, schedule, and cadence
-- an **agent catalogue** — every autonomous unit across the organization, with capabilities and scopes
-- **per-agent context bundles** — fully-resolved runtime context for each agent, derived from manifests + canonical inputs (see structured context bundles)
-- a **domain model** — entity definitions, relationships, and the modules that own each entity
-- a **dependency graph** — which module consumes which interface from which other module
+- a **flow registry**, every workflow, agent, app, and runtime artefact across all modules, with its owner module, schedule, and cadence
+- an **agent catalogue**, every autonomous unit across the organization, with capabilities and scopes
+- **per-agent context bundles**: fully-resolved runtime context for each agent, derived from manifests + canonical inputs (see structured context bundles)
+- a **domain model**, entity definitions, relationships, and the modules that own each entity
+- a **dependency graph**, which module consumes which interface from which other module
 
 ### How generation works
 
-- Generators are deterministic — given the same inputs they produce identical outputs
+- Generators are deterministic: given the same inputs they produce identical outputs
 - Generated files are committed alongside their sources, so a clone of the repo carries the resolved view
 - Every generated file is suffixed unambiguously so humans never confuse them with hand-authored files
 - Generators are invoked through a single CLI entry point so contributors don't memorize ad-hoc commands
@@ -432,7 +436,7 @@ Manifests are walked by generators that emit aggregated indexes — registries t
 
 ### Generated artifacts are never hand-merged
 
-- When two pull requests touch different module manifests, they may both regenerate the same master index — producing a mechanical merge conflict
+- When two pull requests touch different module manifests, they may both regenerate the same master index, producing a mechanical merge conflict
 - Hand-merging is forbidden: it almost always produces a state that's neither side's correct output
 - Resolution: take either side of the conflict, re-run the generators, commit the deterministic result
 - This rule belongs in the contributor docs because it surfaces routinely
@@ -445,14 +449,14 @@ Inside the company, every entity carries a stable canonical ID. Outside the comp
 
 ### The principle
 
-- canonical IDs are permanent — they never change for the lifetime of the entity
+- canonical IDs are permanent. They never change for the lifetime of the entity
 - canonical IDs are issued by the coordination layer at the moment the entity becomes operationally real
-- system mappings (the IDs assigned by external SaaS tools) are evolutionary — they appear, change, merge, get rotated, and disappear over time
+- system mappings (the IDs assigned by external SaaS tools) are evolutionary. They appear, change, merge, get rotated, and disappear over time
 - the coordination layer stores the mapping; downstream code never depends on a specific system's IDs
 
 ### Practical consequences
 
-- when an external tool is replaced, only the mapping changes — canonical IDs survive
+- when an external tool is replaced, only the mapping changes, canonical IDs survive
 - when entities are merged (two customer records turn out to be the same company), canonical IDs are stable; the merge is recorded against them
 - every audit, event, and metric is keyed by canonical ID, not by the external system's ID
 
@@ -473,19 +477,19 @@ The coordination layer is not a copy of every SaaS system. It is the minimum sta
 
 - authoritative data stays in the system that originates it
 - the coordination layer holds canonical IDs, system mappings, state machines, and orchestration metadata
-- fields that belong to a specific SaaS tool are read on demand or mirrored sparsely — never replicated wholesale
+- fields that belong to a specific SaaS tool are read on demand or mirrored sparsely, never replicated wholesale
 - if a field can be derived from authoritative sources, it is derived, not stored
 
 ### Why this matters
 
-- full replication produces sync hell — every write becomes a multi-system reconciliation problem
+- full replication produces sync hell. Every write becomes a multi-system reconciliation problem
 - the coordination layer's job is to coordinate, not to be a database
 - the smaller the coordination layer, the easier it is to reason about, audit, and replace
 - downstream consumers (dashboards, agents, public APIs) read from the coordination layer or, when needed, directly from the authoritative system
 
 ### Anti-pattern
 
-- a "central database that mirrors everything" — this turns into the single biggest source of drift in the organization, and within a year nobody trusts it
+- a "central database that mirrors everything". This turns into the single biggest source of drift in the organization, and within a year nobody trusts it
 
 ---
 
@@ -501,14 +505,14 @@ Every field in the system has exactly one writer.
 ### How it shows up
 
 - a sync from an external system into the coordination layer is one-directional; updates flow in
-- a writeback from the coordination layer to an external system is one-directional and triggered by an explicit operational action (often a human approval — see HITL invariants)
+- a writeback from the coordination layer to an external system is one-directional and triggered by an explicit operational action (often a human approval. See HITL invariants)
 - fields that need to round-trip require a clear protocol: which side wins, under what conditions, and how conflicts are detected
 
 ### Why
 
 - unidirectional flows are reasonable to test and audit
 - bidirectional flows are nearly impossible to debug when they go wrong
-- most apparent bidirectional needs can be solved by splitting fields between the two systems — one owns the canonical value, the other owns a derived view
+- most apparent bidirectional needs can be solved by splitting fields between the two systems. One owns the canonical value, the other owns a derived view
 
 ---
 
@@ -562,7 +566,7 @@ Every node should support:
 ### Sub-domain placeholders are valid
 
 - a folder can exist for organizational signaling without claiming runtime ownership
-- not every sub-domain has a manifest — sub-domains without substantial logic remain organizational placeholders
+- not every sub-domain has a manifest, sub-domains without substantial logic remain organizational placeholders
 - this lets the cognition tree grow organically: structure can be staked out before the work to populate it arrives
 - the rule is: a folder without a manifest declares no logic; a folder with a manifest is a real module subject to the modular monolith discipline
 
@@ -682,11 +686,61 @@ Agents can:
 - generate outputs
 - trigger workflows
 
+### Capability
+
+Represents:
+
+- something the company must be able to do
+- the ordered chain of who does it
+- how much of it survives each hop down that chain
+
+A capability declares a primary owner, an ordered fallback chain, and a final
+fallback that cannot itself be absent. Every holder declares what it delivers:
+the whole capability, a documented subset, a manual version of the outcome, or
+triage only.
+
+An org chart records who owns what on a good day. A capability records what
+happens on the other days.
+
+### Requirement
+
+Represents:
+
+- a certification clause
+- a regulation article
+- a contractual commitment
+- a rule the company imposes on itself
+
+A requirement states what must be true. It never names the controls that make
+it true.
+
+### Control
+
+Represents:
+
+- the mechanism that keeps one or more requirements true
+- how that mechanism is verified, on what cadence
+- where the evidence it produces lands
+
+Coverage is declared one way, by the control. Two lists that must agree will
+eventually disagree; there is only one list.
+
+### Proposal
+
+Represents:
+
+- a proposed change to the conserved core
+- the evidence that forced it
+- the ruling that accepted or rejected it
+
+Writing a proposal is free and carries no authority. Applying one requires a
+recorded ruling from a human, quoted verbatim.
+
 ---
 
 ## CANONICAL STATE LADDER (the substrate)
 
-Company-as-Code is a distributed orchestration system. The substrate structures the company as canonical, queryable entities synchronizing state across unreliable nodes — humans, agents, and SaaS tools — under finite energy and attention constraints.
+Company-as-Code is a distributed orchestration system. The substrate structures the company as canonical, queryable entities synchronizing state across unreliable nodes (humans, agents, and SaaS tools) under finite energy and attention constraints.
 
 The architecture treats the company as the same class of system as a biological organism, a software runtime, or a functioning civilization: distributed actors trying to reduce entropy by keeping shared state coherent, while operating with bounded compute, bounded memory, and lossy communication.
 
@@ -694,7 +748,7 @@ This is not metaphor. It is the operating substrate.
 
 ### Every entity has the same ladder
 
-Every entity in the system — service line, org, talent, agent run, deal, contract, task — has:
+Every entity in the system (service line, org, talent, agent run, deal, contract, task) has:
 
 - a canonical identifier
 - a canonical state
@@ -702,11 +756,11 @@ Every entity in the system — service line, org, talent, agent run, deal, contr
 
 ### The three levels
 
-- **L1 — Universal lifecycle bucket.** One of: `pending`, `active`, `resolved`, `terminated`. The same enum for every entity, every domain. Framework-owned and fixed.
-- **L2 — Domain-native journey stage.** The recognizable per-entity journey (e.g. `lead → qualified → proposal → won` for a deal; `backlog → planned → active → review → completed` for a task). Module-owned.
-- **L3 — Operational substate.** Fine-grained operational reality under an L2 stage (e.g. `proposal.awaiting-legal-review`). Module-owned.
+- **L1, Universal lifecycle bucket.** One of: `pending`, `active`, `resolved`, `terminated`. The same enum for every entity, every domain. Framework-owned and fixed.
+- **L2, Domain-native journey stage.** The recognizable per-entity journey (e.g. `lead → qualified → proposal → won` for a deal; `backlog → planned → active → review → completed` for a task). Module-owned.
+- **L3, Operational substate.** Fine-grained operational reality under an L2 stage (e.g. `proposal.awaiting-legal-review`). Module-owned.
 
-Every L2 stage declares the L1 bucket it belongs to. Every L3 substate inherits L1 from its L2 parent. An entity's L1 is a deterministic projection of its L2 — never independently asserted.
+Every L2 stage declares the L1 bucket it belongs to. Every L3 substate inherits L1 from its L2 parent. An entity's L1 is a deterministic projection of its L2, never independently asserted.
 
 ### L1 is a garbage collector for reality
 
@@ -715,12 +769,12 @@ The L1 layer defines the company's **working set**:
 - `pending` and `active` are reachable. These entities compete for attention.
 - `resolved` and `terminated` are archived. These entities are no longer load-bearing on working memory.
 
-This makes "what is the company doing right now?" a single deterministic query across every domain. It makes stuck-pending entities, terminal failure modes, and orphaned active entities detectable generically — the same way a runtime detects unreachable objects, or a cell detects misfolded proteins.
+This makes "what is the company doing right now?" a single deterministic query across every domain. It makes stuck-pending entities, terminal failure modes, and orphaned active entities detectable generically, the same way a runtime detects unreachable objects, or a cell detects misfolded proteins.
 
 ### Mutation flows downward
 
 - Workflows, agents, dashboards, and humans all read from this single substrate.
-- Every system mutation flows downward from the canonical layer to projections — CRM, work management, finance, PSA, and other SaaS tools.
+- Every system mutation flows downward from the canonical layer to projections, CRM, work management, finance, PSA, and other SaaS tools.
 - State never originates downstream.
 
 ### The discipline
@@ -729,9 +783,9 @@ This makes "what is the company doing right now?" a single deterministic query a
 - Every state declares its L1 bucket.
 - Entities without canonical state and bucket assignment do not exist in the substrate.
 - L1 transitions emit typed events in the ledger.
-- Recursive composability: the same three-level ladder applies at every level of the cognition tree — modules, sub-modules, agent runs, sub-tasks. The ladder is universally derived, not domain-specific.
+- Recursive composability: the same three-level ladder applies at every level of the cognition tree. Modules, sub-modules, agent runs, sub-tasks. The ladder is universally derived, not domain-specific.
 
-The result is a company that can be reasoned about, swept, queried, and operated on the same primitives as any well-designed distributed system — because that is what it is.
+The result is a company that can be reasoned about, swept, queried, and operated on the same primitives as any well-designed distributed system, because that is what it is.
 
 ---
 
@@ -763,9 +817,9 @@ The runtime supports:
 
 Every executable action declares its autonomy classification.
 
-- **autonomous** — fires without human intervention (typical for read-only syncs, dry-runs, validation, registry generation)
-- **human-gated** — requires explicit human action to fire (typical for writebacks to external systems, irreversible changes, financial actions)
-- **escalated** — fires autonomously up to a threshold, then escalates (typical for retries, error budgets, dunning sequences)
+- **autonomous**: fires without human intervention (typical for read-only syncs, dry-runs, validation, registry generation)
+- **human-gated**: requires explicit human action to fire (typical for writebacks to external systems, irreversible changes, financial actions)
+- **escalated**: fires autonomously up to a threshold, then escalates (typical for retries, error budgets, dunning sequences)
 
 The classification is declarative in the manifest, not a comment in the code. The runtime enforces it.
 
@@ -778,7 +832,7 @@ Every action that mutates state has a dry-run mode.
 ### The rule
 
 - every write path accepts a `dryRun` argument
-- when `dryRun` is true, the action performs all validation, computes the full payload it would send, writes a single audit record, and returns the payload — but mutates nothing external
+- when `dryRun` is true, the action performs all validation, computes the full payload it would send, writes a single audit record, and returns the payload, but mutates nothing external
 - dry-run is the default for the first invocation of any new write path
 
 ### Why this matters
@@ -804,13 +858,13 @@ Human-in-the-loop is not a comment in documentation. It is a declared invariant 
 
 - the manifest declares: "this writeback fires only from human action in this admin surface"
 - the agent declaration declares: "cadence: on-demand; never scheduled"
-- the runtime enforces the declaration — schedules attached to an HITL-declared workflow fail validation
+- the runtime enforces the declaration, schedules attached to an HITL-declared workflow fail validation
 
 ### The principle
 
 - humans are accountable for irreversible writes
 - AI proposes, humans confirm
-- the declaration is the source of truth — code that contradicts the declaration fails CI
+- the declaration is the source of truth, code that contradicts the declaration fails CI
 
 ### Common HITL patterns
 
@@ -850,7 +904,7 @@ The runtime has two distinct logging surfaces. They are not interchangeable.
 
 - every state mutation writes a typed event
 - every action writes an audit row
-- nothing escapes both — if it's not in the audit log, it didn't happen; if it's not in the event ledger, the state didn't change
+- nothing escapes both, if it's not in the audit log, it didn't happen; if it's not in the event ledger, the state didn't change
 
 ---
 
@@ -860,7 +914,7 @@ Every state-mutating sync follows the same five-step verification protocol, rega
 
 ### The protocol
 
-1. **Baseline.** Query current state. Record counts, IDs, hashes — whatever the sync would change.
+1. **Baseline.** Query current state. Record counts, IDs, hashes, whatever the sync would change.
 2. **Dry-run.** Execute the sync with `dryRun=true`. Inspect the audit record's intended-write payload. Confirm it matches expectation.
 3. **Confirm counts.** Compare the dry-run's projected delta to the baseline. If the number of rows touched is wildly different from expected, stop.
 4. **Live.** Execute with `dryRun=false`. Begin with the smallest possible scope (one entity, one record).
@@ -868,7 +922,7 @@ Every state-mutating sync follows the same five-step verification protocol, rega
 
 ### Why a standard protocol
 
-- every operator does it the same way — no improvisation
+- every operator does it the same way, no improvisation
 - mistakes are caught in step 3, not step 5
 - the audit log naturally captures the sequence: baseline / dry-run / counts / live / re-verify becomes a queryable narrative
 - it scales to AI operators: an agent following this protocol is auditable in the same way a human is
@@ -975,7 +1029,7 @@ Documentation must connect to:
 
 Knowledge in the repository is stratified into three distinct tiers. They serve different audiences, tolerate different shapes, and have different update cadences.
 
-### Tier 1 — Context
+### Tier 1: Context
 
 - long-form narrative explaining why something exists, what it's for, how it came to be
 - tolerates loose structure, prose, history, opinions
@@ -983,7 +1037,7 @@ Knowledge in the repository is stratified into three distinct tiers. They serve 
 - read by humans onboarding, occasionally by agents needing background
 - update cadence: rarely; long-lived
 
-### Tier 2 — Runtime entry-points
+### Tier 2: Runtime entry-points
 
 - numbered steps, inputs, outputs, definition-of-done
 - lives in task descriptions, workflow definitions, and runbooks
@@ -991,7 +1045,7 @@ Knowledge in the repository is stratified into three distinct tiers. They serve 
 - read by humans and agents at execution time
 - update cadence: frequently as workflows evolve
 
-### Tier 3 — Skills
+### Tier 3: Skills
 
 - composable, reusable expertise referenced by name
 - lives in version-controlled skill definitions with metadata
@@ -1000,9 +1054,9 @@ Knowledge in the repository is stratified into three distinct tiers. They serve 
 
 ### The split matters because
 
-- context is the wrong place for runtime steps — too much narrative, no contract
-- runtime entry-points are the wrong place for context — too tight to carry history
-- skills are the wrong place for either — they're reusable techniques, not specific instances
+- context is the wrong place for runtime steps, too much narrative, no contract
+- runtime entry-points are the wrong place for context, too tight to carry history
+- skills are the wrong place for either, they're reusable techniques, not specific instances
 
 ### Migration pattern
 
@@ -1018,25 +1072,25 @@ Engineering and operational standards live in the repository, not in external wi
 
 ### What gets codified
 
-- code organization rules — where logic lives, where runtime config lives
-- schema migration conventions — naming, ordering, applied-vs-pending tracking
+- code organization rules, where logic lives, where runtime config lives
+- schema migration conventions, naming, ordering, applied-vs-pending tracking
 - branch naming and commit hygiene
-- merge and conflict-resolution rules — especially for generated files
-- security posture — force-push policy, secret handling, dependency review
-- observability requirements — what every new agent must emit
-- documentation requirements — what every new module must declare
+- merge and conflict-resolution rules, especially for generated files
+- security posture, force-push policy, secret handling, dependency review
+- observability requirements, what every new agent must emit
+- documentation requirements, what every new module must declare
 
 ### Why this beats wiki standards
 
 - standards in the repo are diffable; changes are reviewable
-- CI can enforce them — a violation becomes a build failure, not a code-review comment
+- CI can enforce them: a violation becomes a build failure, not a code-review comment
 - contributors discover them while reading the repo, not by searching elsewhere
 - they evolve via PR, which means proposed changes get discussion before adoption
 
 ### The rule
 
 - if a standard is worth enforcing, it lives in the repo
-- if it's not in the repo, it's not a standard — it's a preference
+- a rule that is not in the repo is a preference
 
 ---
 
@@ -1048,19 +1102,19 @@ Non-trivial work begins with a plan. Plans are first-class artefacts.
 
 - the act of writing a plan exposes gaps in understanding before they become bugs
 - plans are reviewable by humans and agents
-- plans survive context loss — a plan written today can be picked up next month, next quarter, or by another operator
+- plans survive context loss. A plan written today can be picked up next month, next quarter, or by another operator
 - plans turn implicit work into explicit work
 
 ### Plan structure
 
-- **status banner** — active, parked, blocked, in-flight, complete
-- **goal** — one or two sentences
-- **solution shape** — the intended architecture, with the boundaries it respects
-- **capability check** — what's been verified about the systems involved
-- **caveats** — known unknowns, locked-in design decisions, things not to re-debate
-- **phasing** — explicit stages with effort estimates and gating conditions
-- **open questions** — things parked until resumption
-- **resume cue** — exactly what a fresh operator needs to read to continue
+- **status banner**: active, parked, blocked, in-flight, complete
+- **goal**: one or two sentences
+- **solution shape**: the intended architecture, with the boundaries it respects
+- **capability check**: what's been verified about the systems involved
+- **caveats**: known unknowns, locked-in design decisions, things not to re-debate
+- **phasing**: explicit stages with effort estimates and gating conditions
+- **open questions**: things parked until resumption
+- **resume cue**: exactly what a fresh operator needs to read to continue
 
 ### Park-friendly
 
@@ -1073,7 +1127,7 @@ Non-trivial work begins with a plan. Plans are first-class artefacts.
 
 - before non-trivial work, write the plan
 - before parking work, finalize the plan so resumption is clean
-- before resuming work, verify the plan against current state — systems may have evolved while it was parked
+- before resuming work, verify the plan against current state, systems may have evolved while it was parked
 
 ---
 
@@ -1118,16 +1172,16 @@ Agents read structured runtime context, not raw prose. Every agent gets a typed 
 ### Why bundles, not raw documents
 
 - raw documents have variable structure, drift over time, and require interpretation
-- bundles are deterministic — the same manifest inputs produce the same bundle
-- bundles are typed — schemas are explicit, not inferred from prose
-- bundles are scoped — an agent only sees what it needs, reducing context-window pressure and information leakage
+- bundles are deterministic. The same manifest inputs produce the same bundle
+- bundles are typed. Schemas are explicit, not inferred from prose
+- bundles are scoped. An agent only sees what it needs, reducing context-window pressure and information leakage
 
 ### Generation pipeline
 
 - manifests declare what agents exist and what they own / consume
 - canonical inputs (domain model, interface registry, event schemas) provide shared definitions
 - the generator walks these and emits one bundle per agent, committed alongside the agent definition
-- CI verifies bundles are up to date — drift between manifest and bundle is a build failure
+- CI verifies bundles are up to date: drift between manifest and bundle is a build failure
 
 ### The principle
 
@@ -1150,25 +1204,25 @@ Agents have a memory layer that persists across conversations and sessions. Memo
 
 ### What memory is NOT for
 
-- code patterns, architecture, file paths — these can be derived from the current repo state
-- git history, recent changes — version control is authoritative
-- fix recipes for bugs that have been resolved — the fix is in the code; the commit has the context
-- ephemeral task state — that lives in tasks, not memory
+- code patterns, architecture, file paths. These can be derived from the current repo state
+- git history, recent changes, version control is authoritative
+- fix recipes for bugs that have been resolved. The fix is in the code; the commit has the context
+- ephemeral task state. That lives in tasks, not memory
 
 ### Memory hygiene
 
-- memories are atomic — one slug, one concept, one file
+- memories are atomic, one slug, one concept, one file
 - memories carry frontmatter for type and discoverability
 - an index file lists all memories with one-line hooks for fast scanning
 - memories that are wrong or outdated are removed, not amended into incoherence
-- a memory that names a specific file or symbol is a claim that it existed when the memory was written — agents verify before acting on memory recommendations
+- a memory that names a specific file or symbol is a claim that it existed when the memory was written, agents verify before acting on memory recommendations
 
 ### Why this matters
 
 - agents without persistent memory re-derive the same context every session
 - memory makes long-running collaborations coherent across operators and time
 - memory turns the agent from a fresh-context tool into a continuing collaborator
-- the memory layer is to AI runtimes what onboarding documents are to human teammates — but versioned, structured, and continually maintained
+- the memory layer is to AI runtimes what onboarding documents are to human teammates, but versioned, structured, and continually maintained
 
 ---
 
@@ -1186,14 +1240,208 @@ Agents and humans treat recalled information as a claim, not as ground truth. Ve
 
 - memory recall: when a memory names a function or flag, verify it still exists before recommending it
 - documentation: when an architecture doc describes a system, verify the system still works that way before acting on the doc
-- state checks: before mutating, query the current state — don't assume the prior dry-run is still valid
-- generated-file claims: before consuming a generated registry, verify it was regenerated recently — stale registries are wrong registries
+- state checks: before mutating, query the current state, don't assume the prior dry-run is still valid
+- generated-file claims: before consuming a generated registry, verify it was regenerated recently, stale registries are wrong registries
 
 ### The principle
 
 - the system optimizes for being correct over being fast
 - a verification step costs a query; a wrong recommendation costs trust
 - this posture is what makes autonomous execution defensible at scale
+
+---
+
+## COMPLIANCE AS CODE
+
+Every operating framework describes how work gets done. Almost none describe
+what the company is obliged to be able to prove. That gap is why a
+certification audit costs hundreds of person-hours: the evidence exists,
+scattered, and someone has to assemble it into a shape an auditor accepts.
+
+### The model
+
+- A **Requirement** states what must be true, and where the obligation comes from.
+- A **Control** states how it is kept true, how it is verified, and where the evidence lands.
+- The edge runs one way. Controls name Requirements; Requirements never name Controls.
+
+### The gate
+
+An in-scope Requirement with no operating Control fails validation. A gap
+becomes a build failure rather than an audit finding.
+
+Two explicit escape hatches exist: `planned` for an obligation the company
+intends to meet but has not yet, and `out-of-scope` with a required written
+rationale. A silent exclusion is the thing auditors look for first.
+
+### Verification is the load-bearing field
+
+A control nobody checks is a claim. Every control declares a verification
+method, a surface, and a cadence, and an automated control must point at
+something a machine actually runs. The generated matrix distinguishes
+machine-verified coverage from human promises rather than averaging them into
+a percentage.
+
+### Staleness is a separate question from coverage
+
+Validation asks whether coverage exists. The standing health inspection asks
+whether it is still real. A control whose last verification has fallen far
+behind the rest of the repository is either not running or unobserved, and
+those two states are indistinguishable from outside.
+
+---
+
+## CAPABILITY AND THE FALLBACK CHAIN
+
+Ownership answers the question on a good day. A capability answers it on the
+day the owner is unreachable, the agent's credentials expired, or the person
+who knew how to run the process left three weeks ago.
+
+### The chain
+
+Every capability declares a primary owner, an ordered fallback chain, and a
+final fallback. Each link declares what it delivers: the whole thing, a
+documented subset, a manual version of the outcome, or triage only.
+
+### The rules
+
+- The chain terminates in a holder that cannot itself be absent. The final
+  fallback is never an agent.
+- A holder may not appear twice in one chain. A repeated holder is not a
+  fallback, it just looks like one.
+- High and critical capabilities carry at least one intermediate fallback.
+- A critical capability may not terminate in a triage-only holder, because
+  nobody closes the loop.
+
+### Why the honesty field matters
+
+A chain whose links all claim to deliver the whole capability, when two of them
+cannot actually approve anything, is worse than no chain. It will be believed
+during an incident. The declared degradation is the part that makes the
+document useful rather than reassuring.
+
+---
+
+## THE CONSERVED CORE
+
+Most of the repository is free. A small part is conserved, and changing it goes
+through a Proposal with a recorded ruling.
+
+The split preserves **governance latency**: layers that change at different
+speeds must not be able to contaminate each other. Tasks change hourly.
+Playbooks change weekly. Standards change monthly. The specification changes
+rarely and deliberately. Letting a fast layer edit a slow one is how strategy
+drifts without anyone deciding to drift it.
+
+### What belongs in the conserved set
+
+A path is worth conserving when a wrong change to it is expensive and quiet:
+the damage does not surface in the next test run, it surfaces months later as a
+system that no longer behaves the way its documentation says.
+
+### Three layers of enforcement, honestly ranked
+
+1. **Compliance.** Operators read the rule and obey it. Weakest, and most often
+   mistaken for the whole system.
+2. **Review.** All work is diffs. Conserved changes are visible, detectable,
+   and reversible. This is the real guarantee.
+3. **Mechanical gate.** Code ownership plus branch protection makes the
+   boundary physical.
+
+Layer 3 without layer 2 is theatre. Layer 2 without layer 3 works until the day
+nobody reads the diff.
+
+### The ruling
+
+A ruling records the decision, the deciding person's canonical ID, the date,
+and their own words verbatim. Not a paraphrase. An agent may draft the wording.
+It may not be the actor.
+
+---
+
+## WRITE DISCIPLINE
+
+The sync verification protocol says how to run a state-mutating sync safely.
+Write discipline says how to build the write path so a crashed or colliding
+operator leaves a state a fresh run can finish.
+
+- **Deterministic references.** Every external write carries an identity
+  derived from its cause. The same cause maps to the same reference forever, so
+  a re-run detects prior work instead of repeating it.
+- **The external system is the write-ahead log.** Stamp evidence into the
+  system being mutated. Local progress state dies with the session holding it,
+  which is exactly when it is needed.
+- **Recovery is re-running the process.** Design every sequence so that
+  stopping anywhere leaves a state a fresh run can finish.
+- **Fresh pre-write reads, never cache.** An unexplained mid-run change is an
+  implicit foreign lease. Halt.
+- **Post-read every write.** A write you did not read back is a write you do
+  not know happened.
+- **Bulk pulls prove presence, never absence.** Paged lists lie at the cutoff
+  and under load. Re-verify any "does not exist" conclusion directly.
+- **Derive state from the owning side.** State lives on the record, not on
+  whatever names it from the other side of a link.
+- **Corrections supersede, never rewrite.** The company may be publicly wrong
+  and visibly repair itself. That is only possible if history is never edited.
+- **A confident-looking signal is not verification.** An empty result, an error
+  message's literal wording, a document's stated cadence: each can be mistaken
+  for ground truth because it looks authoritative.
+
+---
+
+## CONCURRENCY BETWEEN OPERATORS
+
+A company running several agents on a schedule, plus humans, plus a runtime
+host, has the same concurrency problem as any distributed system.
+
+- **The write discipline is the real boundary.** Everything else is
+  coordination on top of it. Two operators politely taking turns can still both
+  write stale data.
+- **Session leases are advisory.** An operator mutating shared state announces
+  it, with a heartbeat. Reads never need a lease. A stale lease may be broken,
+  and the break is recorded.
+- **Fencing is the rule that matters.** The holder re-reads its own lease
+  before every mutation batch. Missing or replaced means halt immediately. A
+  superseded session must never write again.
+- **Deadman checks.** A scheduled unit that stops running produces silence, not
+  an error, and silence looks identical to a healthy system with nothing to
+  report. Anything expected to report on a cadence declares that expectation,
+  and something checks the report arrived.
+
+---
+
+## THE FIVE PROPERTIES
+
+Any implementation of this pattern has to be all five of these. Dropping one
+collapses it back into documentation.
+
+1. **Queryable.** Relationships between people, modules, agents, obligations,
+   and systems can be traced without reading prose.
+2. **Versionable.** Every change is explicit, attributed, diffable, reversible.
+3. **Integrated.** State moves between the coordination layer and the systems
+   that hold the truth, in a declared direction.
+4. **Testable.** A change can be modelled before it becomes real.
+5. **Accessible.** Non-technical operators can participate.
+
+The fifth is the one every implementation of this idea underdelivers on,
+including this one. Say so plainly rather than claiming it.
+
+---
+
+## ADOPTION: FEDERATE, DO NOT MIGRATE
+
+The most common way to fail at this is to treat it as a migration.
+
+Systems keep running and keep owning their data. The repository starts as the
+coordination layer above them: it records which system is authoritative for
+what, holds the canonical IDs, and runs one real process end to end.
+
+**A company is on Company-as-Code the day one real decision flows through the
+loop. Not the day its data moves.**
+
+Structure without content is the failure mode this framework is most likely to
+produce, because the structure is the easy part. A folder without a manifest
+declares no logic, which is legitimate. A repository that is entirely such
+folders declares nothing at all.
 
 ---
 
@@ -1212,18 +1460,26 @@ Prioritize:
 
 ### Additional principles drawn from operating the framework
 
-- **every entity sits on the canonical state ladder** — L1 universal lifecycle bucket, L2 domain-native journey, L3 operational substate; no canonical state means no presence in the substrate
-- **declare before code** — manifests, interfaces, and invariants are stated explicitly before implementation
-- **coordinate, don't replicate** — the coordination layer holds the minimum state needed to orchestrate; authoritative data stays at its source
-- **one writer per field** — unidirectional mutation flow is the default; bidirectional sync is a special case that requires a documented protocol
-- **dry-run first** — every write path supports dry-run; first invocations always go through it
-- **HITL invariants are declarative** — human-in-the-loop is a property of the system, not a convention in prose
-- **typed events over free text** — state transitions emit enum-typed events; free-text event logs are a code smell
-- **canonical IDs are permanent** — internal IDs survive system migrations, vendor switches, and entity merges
-- **standards live in the repo** — if a rule isn't versioned, it isn't enforceable
-- **verify before trust** — recalled context is a claim until verified against current state
-- **plans before non-trivial work** — write the plan, park-friendly; resume from the plan, not from memory
-- **migrations are timestamped** — never sequential filenames in a multi-contributor environment
+- **every entity sits on the canonical state ladder**: L1 universal lifecycle bucket, L2 domain-native journey, L3 operational substate; no canonical state means no presence in the substrate
+- **declare before code**: manifests, interfaces, and invariants are stated explicitly before implementation
+- **coordinate, don't replicate**: the coordination layer holds the minimum state needed to orchestrate; authoritative data stays at its source
+- **one writer per field**: unidirectional mutation flow is the default; bidirectional sync is a special case that requires a documented protocol
+- **dry-run first**: every write path supports dry-run; first invocations always go through it
+- **HITL invariants are declarative**: human-in-the-loop is a property of the system, not a convention in prose
+- **typed events over free text**: state transitions emit enum-typed events; free-text event logs are a code smell
+- **canonical IDs are permanent**: internal IDs survive system migrations, vendor switches, and entity merges
+- **standards live in the repo**: if a rule isn't versioned, it isn't enforceable
+- **verify before trust**: recalled context is a claim until verified against current state
+- **plans before non-trivial work**: write the plan, park-friendly; resume from the plan, not from memory
+- **migrations are timestamped**: never sequential filenames in a multi-contributor environment
+- **one writer per edge, not just per field**: a reference is declared from one side only; two lists that must agree eventually disagree
+- **every reference is typed**: a reference field names the kind it points at, so the corpus is a traversable graph rather than documents that mention each other
+- **the graph is cyclic**: a company is not a DAG; an implementation that forces acyclicity either deletes real edges or refuses to draw them
+- **obligations fail the build, not the audit**: an uncovered requirement is a build failure
+- **fallback chains terminate in something that cannot be absent**: never in an agent
+- **conserved surfaces change through a ruling**: recorded, attributed, quoted verbatim
+- **write paths are built for interruption**: deterministic references, evidence in the target system, recovery by re-running
+- **absence is never inferred from an empty page**: bulk pulls prove presence only
 
 ---
 
@@ -1234,7 +1490,7 @@ These are failure modes the framework has been deliberately shaped to prevent.
 ### Nothing built on dirty data
 
 - do not automate processes that operate on uncleaned source data
-- automation amplifies whatever shape the data is in — including its errors
+- automation amplifies whatever shape the data is in, including its errors
 - before automating, normalize the data; the normalization itself often reveals the real problem
 - the discipline: clean first, automate second
 
@@ -1270,12 +1526,32 @@ These are failure modes the framework has been deliberately shaped to prevent.
 ### No replication as a substitute for coordination
 
 - mirroring an external system's full state into the coordination layer is a code smell
-- the coordination layer is for canonical IDs, state machines, and orchestration metadata — not for being a second copy
+- the coordination layer is for canonical IDs, state machines, and orchestration metadata, not for being a second copy
 
 ### No tribal-knowledge runbooks
 
 - if an operational procedure is not in the repo, it does not exist
 - "ask the person who knows" is an organizational debt to be paid down, not a process
+
+### No untyped references
+
+- a reference field that does not name the kind it points at cannot be resolved, so nothing checks it
+- untyped references accumulate silently; the only way to find them is to build the resolver, at which point you find all of them at once
+
+### No compliance as prose
+
+- a control that exists only in a document cannot fail a build
+- a coverage matrix maintained by hand disagrees with reality within a quarter, and nobody notices until an auditor asks
+
+### No fallback chain that terminates in an agent
+
+- an agent can lose credentials, hit a limit, or be removed in a refactor
+- the last link in a chain must be something that cannot itself be absent
+
+### No structure ahead of content
+
+- scaffolding all three domains and thirty subdirectories on day one produces a repository that describes nothing
+- add the second module when a second module actually consumes something
 
 ---
 

@@ -1,0 +1,49 @@
+# Control template. Schema: /schemas/control.schema.json
+#
+# A Control is the mechanism that keeps a Requirement true, plus the evidence
+# it produces. A control nobody checks is a claim, so `verification` is
+# required and an automated control must point at something a machine runs.
+#
+# Copy to /company/controls/<ID>.yaml and edit.
+
+apiVersion: company-as-code/v1
+kind: Control
+
+id: CTRL-EXAMPLE-0001
+
+title: Replace with what the control does, in one line
+
+description: >
+  How the mechanism works, concretely enough that a reader can predict what
+  happens when it fires and what happens when it fails.
+
+# The obligations this control covers. At least one.
+implements:
+  - REQ-INTERNAL-0001
+
+owner:
+  kind: module
+  id: company/domains/finance-ops/governance
+
+appliesTo: []
+
+verification:
+  # automated | manual | hybrid. 'automated' requires `check`.
+  method: automated
+  # Where verification runs: schema | ci | runtime-host | scheduled-job |
+  # human-review | external-audit.
+  surface: ci
+  check: path/to/the/runnable/check
+  frequency: on-change
+  failureMode: What happens when the check fails.
+
+evidence:
+  - source: ci-run
+    reference: .github/workflows/validate.yml
+    retention: P1Y
+
+severity: medium
+
+# 'operating' asserts the control has run and produced evidence, and requires
+# a lastVerified date.
+status: implemented

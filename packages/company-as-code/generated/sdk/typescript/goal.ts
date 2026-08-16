@@ -1,4 +1,4 @@
-// Generated from /schemas/goal.schema.json — do not edit by hand.
+// Generated from /schemas/goal.schema.json, do not edit by hand.
 // Regenerate with `npm --prefix cli run generate`.
 
 /** Measurable objective: KPI, OKR, SLA, or metric target. Goals are owned and time-bounded. */

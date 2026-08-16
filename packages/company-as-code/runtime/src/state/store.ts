@@ -8,13 +8,13 @@ import { ulid } from "ulid";
  * The coordination layer's mutable state is small by design (see the spec's
  * "coordinate, don't replicate"): canonical IDs and the evolving system
  * mappings that point them at external SaaS records. That smallness is what
- * makes snapshotting tractable — we can checkpoint the *entire* canonical
+ * makes snapshotting tractable. We can checkpoint the *entire* canonical
  * state of the company into one row and roll back to it atomically.
  *
  * What this store holds:
- *   - canonical_entities — the permanent internal IDs + their L1 bucket
- *   - system_mappings    — the evolutionary external-system IDs per entity
- *   - state_snapshots    — immutable checkpoints of the two tables above
+ *   - canonical_entities, the permanent internal IDs + their L1 bucket
+ *   - system_mappings    # the evolutionary external-system IDs per entity
+ *   - state_snapshots    # immutable checkpoints of the two tables above
  *
  * What it deliberately does NOT touch:
  *   - the audit log and the typed-event ledger are append-only and are never
@@ -25,7 +25,7 @@ import { ulid } from "ulid";
 export interface CanonicalEntity {
   canonicalId: string;
   kind: string;
-  /** L1 universal lifecycle bucket — see the canonical state ladder. */
+  /** L1 universal lifecycle bucket. See the canonical state ladder. */
   l1Bucket: string;
   createdAt: string;
   tombstonedAt?: string;
@@ -65,7 +65,7 @@ export interface RollbackResult {
   snapshot: StateSnapshot;
   restoredEntities: number;
   restoredMappings: number;
-  /** State immediately before the rollback, hashed — for the audit record. */
+  /** State immediately before the rollback, hashed, for the audit record. */
   replacedHash: string;
 }
 
@@ -315,7 +315,7 @@ export class SqliteStateStore {
   }
 }
 
-/** Deterministic sha256 of the canonical state — order-independent. */
+/** Deterministic sha256 of the canonical state, order-independent. */
 export function hashState(
   entities: CanonicalEntity[],
   mappings: SystemMapping[],

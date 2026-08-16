@@ -1,6 +1,6 @@
 # /company/domains/product-operations/architecture
 
-Organizational placeholder for the **architecture** sub-module. No manifest is declared yet — this folder claims structure, not runtime authority.
+Organizational placeholder for the **architecture** sub-module. No manifest is declared yet, this folder claims structure, not runtime authority.
 
 To activate this module:
 
