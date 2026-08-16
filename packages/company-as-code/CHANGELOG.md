@@ -83,6 +83,7 @@ that no existing check could see. All are closed:
 - **[`GOVERNANCE.md`](./GOVERNANCE.md)**, **[`SUPPORT.md`](./SUPPORT.md)**, **[`NOTICE`](./NOTICE)**, **`CITATION.cff`**, `.editorconfig`, `.gitattributes`, and an issue-template contact config.
 - **`release.yml`** fires on a version tag, re-runs validate, the drift gate, doctor, and both test suites, confirms all three `package.json` versions and the CHANGELOG heading agree with the tag, and publishes the release from the CHANGELOG entry. A tag that cannot pass the project's own gates does not become a release.
 - **`scorecard.yml`** runs OpenSSF Scorecard weekly and on branch-protection changes. The framework argues that a company's posture should be measured rather than asserted; the same applies to the repository making the argument.
+- **Dependabot regrouped.** The previous configuration left GitHub Actions ungrouped, so each action opened its own PR, and split npm by dev versus production, which doubled the count. Across the project's history 15 of 32 closed Dependabot PRs were closed unmerged: roughly half the review attention went to noise. Each ecosystem now opens at most two PRs, one for minor and patch bumps and one for majors, with a release cooldown of 3, 7, and 30 days. GitHub Actions moves to monthly because every reference is SHA-pinned. Security updates are exempt from all of it.
 - **`NOTICE`** records what was adopted from neighbouring projects and from Daniel Rothmann's "Company as Code", with licences. Each is an idea reimplemented, not code copied.
 
 ### Changed

@@ -34,7 +34,7 @@ If you discover a row where the "Enforcement" column says "operator discipline" 
 | 26 | Static analysis | `/docs/standards/security.md` | **CI**, `security.yml` (CodeQL) |
 | 27 | `npm ci` (lockfile-strict installs in CI) | `/docs/standards/security.md` | **CI**, `validate.yml`, `generate-check.yml` use `npm ci` without fallback |
 | 28 | GitHub Actions pinned by SHA, not tag | `/docs/standards/security.md` | **CI**, every action reference in `.github/workflows/*.yml` is `uses: org/repo@<sha>` |
-| 29 | Dependency updates reviewed weekly | `/docs/standards/security.md` | **Dependabot**, `.github/dependabot.yml` |
+| 29 | Dependency updates arrive grouped and on a cadence matched to the ecosystem | `/docs/standards/security.md` | **Dependabot**, `.github/dependabot.yml` (at most two PRs per ecosystem; majors separated from minor and patch; security updates exempt from grouping, cooldown, and the open-PR limit) |
 | 30 | Soft-delete with tombstone is mandatory; hard-delete is forbidden | `/company/policies/data-retention.md` | **Operator discipline**. Schemas support tombstones; storage-layer enforcement is fork-specific |
 | 31 | Every agent emits an `auditTopic` | `/docs/standards/observability.md` | **Schema**: `Agent.observability.auditTopic` (not currently required by schema; roadmap item) |
 | 32 | Every metric declares ownership, lineage, freshness | Spec | **Schema**, `Metric.owner`, `Metric.lineage`, `Metric.freshness` all required |
