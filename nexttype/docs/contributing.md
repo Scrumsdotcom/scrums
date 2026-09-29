@@ -23,10 +23,10 @@ Never invent a passing result for a planned command.
 
 | File | Contents |
 | --- | --- |
-| [CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution scope, classes, evidence, and review. |
-| [GOVERNANCE.md](../GOVERNANCE.md) | Roles and decision responsibility. |
-| [SECURITY.md](../SECURITY.md) | How to report security issues. |
-| [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) | Expected conduct. |
+| [CONTRIBUTING.md](https://github.com/Scrumsdotcom/nexttype/blob/main/CONTRIBUTING.md) | Contribution scope, classes, evidence, and review. |
+| [GOVERNANCE.md](https://github.com/Scrumsdotcom/nexttype/blob/main/GOVERNANCE.md) | Roles and decision responsibility. |
+| [SECURITY.md](https://github.com/Scrumsdotcom/nexttype/blob/main/SECURITY.md) | How to report security issues. |
+| [CODE_OF_CONDUCT.md](https://github.com/Scrumsdotcom/nexttype/blob/main/CODE_OF_CONDUCT.md) | Expected conduct. |
 
 ## Editing these docs
 

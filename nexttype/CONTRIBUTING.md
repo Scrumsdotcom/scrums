@@ -76,3 +76,15 @@ Disabling a check is not a repair.
 
 The release maintainer publishes only artifacts with complete evidence and provenance.
 Signing, license terms, contributor agreements, and contact details need owner decisions before public launch.
+
+## Docs
+
+Edit the Markdown pages under `docs/`.
+They publish to [nexttype.dev/docs](https://nexttype.dev/docs) on the next site build.
+Follow the docs contract:
+
+- Each page starts with YAML frontmatter: `title` (required), `description` (one sentence, required), and optional `order`.
+- Use plain GitHub-flavoured Markdown. Do not use MDX or HTML components.
+- Link between pages with relative `.md` paths, for example `[Invoice](examples/invoice.md)`.
+- Add each new page id to `docs/nav.json`. A page id is its path under `docs/` without `.md`.
+- Put images under `docs/` and link them with relative paths.
