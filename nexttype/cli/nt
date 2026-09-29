@@ -1,0 +1,232 @@
+#!/bin/sh
+# nt - NextType preview command line (design preview).
+#
+# NextType is an M0 design preview. There is no compiler, type checker,
+# or prover. This script prints the guide and checks the format of an
+# obligation ledger (PROOF.md). It never claims that code is verified.
+#
+# Licensed under the Apache License 2.0. See LICENSE in the repository.
+
+set -eu
+
+NT_VERSION="0.0.1-preview"
+NT_LEDGER_FORMAT="ntproof/0"
+NT_PREVIEW_NOTE="design preview: no compiler; this checks the ledger format only"
+
+usage() {
+  cat <<'EOF'
+nt - NextType preview command line (design preview, no compiler)
+
+Usage:
+  nt guide              Print the guide for agents and people.
+  nt proof [FILE]       Check an obligation ledger (default: PROOF.md).
+  nt proof init [FILE]  Write a template ledger (default: PROOF.md).
+  nt version            Print the version.
+  nt help               Print this help.
+
+Exit codes:
+  0  success
+  1  the ledger has errors or open obligations
+  2  usage error, or the file is missing or already exists
+
+Docs: https://nexttype.dev/docs
+EOF
+}
+
+guide() {
+  cat <<'EOF'
+NextType guide (design preview)
+===============================
+
+Status: M0 design preview. No compiler exists. Nothing is measured.
+Do not treat any output of this tool as verification.
+
+What NextType is
+----------------
+NextType is an experimental execution language for agents.
+Dependent types are the spec: a type can refer to a value, so a type
+can state a requirement such as "the total equals the sum of the lines".
+Agents write the code. A planned compiler checks it against the fixed
+contract. People review and approve the contract.
+
+Two views of one contract
+-------------------------
+The readable view is for people. It keeps a TypeScript lineage:
+
+  type Total<xs> = { t: Int; ok: t == sum(xs) };
+  function total(xs: Vec<Int>): Total<xs> {
+    return { t: sum(xs), ok: refl };
+  }
+
+The NTΔ agent form is for agents. It is compact:
+
+  c0 (sig t Z (= t (sum xs)))      contract slot c0
+  f0 (pair (sum xs) refl)          fragment slot f0
+  put f0 c0 @b0                    patch the hole against base @b0
+  ck f0 @a0                        check under approval envelope @a0
+
+Both views project the same planned NT0 term. Both are proposals.
+
+How to write a contract
+-----------------------
+1. State the rule in one sentence. Example: "The total equals the exact
+   sum of its lines."
+2. Name the inputs and their types. Example: n:N, xs:V Z n.
+3. Write the result type so that it carries the rule. Example: a pair of
+   an integer t and evidence that t equals sum xs.
+4. List what the contract does NOT say. A checker cannot recover intent
+   that the contract omits.
+5. Let a person approve the contract. An agent may repair the body, but
+   it may not weaken the contract to pass a check.
+
+Keep obligations in a ledger
+----------------------------
+Until a compiler exists, record each obligation in PROOF.md:
+
+  nt proof init        write a template ledger
+  nt proof             check that every obligation has evidence
+
+Each obligation is a "## ID" heading with "- claim:", "- status:" and
+"- evidence:" lines. "nt proof" checks the ledger format only. It does
+not run tests and it does not prove anything.
+
+When using NextType
+-------------------
+- Run "nt guide" to learn it.
+- Keep obligations in PROOF.md.
+- Run "nt proof" before you commit.
+- Never change a contract to make a check pass. Ask the owner.
+- Say what is planned and what is measured. Never claim a proof you
+  do not have.
+
+Safety warning
+--------------
+NextType is experimental. Expect breaking changes, rough edges, and
+security issues. Run it in isolated workspaces, not against production
+systems or sensitive data.
+
+Where the docs are
+------------------
+- Docs:       https://nexttype.dev/docs
+- Reference:  https://nexttype.dev/docs/reference
+- CLI:        https://nexttype.dev/docs/tools/cli
+- Source:     https://github.com/Scrumsdotcom/nexttype
+EOF
+}
+
+template() {
+  cat <<'EOF'
+# PROOF
+
+ntproof: 0
+
+This is a NextType obligation ledger. Each obligation is a level-two
+heading with an id, then "- key: value" lines. Required keys: claim,
+status, evidence. Status is "open" or "discharged". A discharged
+obligation names its evidence, such as a test file, a review, or a proof
+artifact. Run "nt proof" to check this file. It checks the format only.
+
+## O1
+
+- claim: The invoice total equals the exact sum of its lines.
+- contract: invoice.total
+- status: open
+- evidence: none
+EOF
+}
+
+# check_ledger FILE -> prints findings; exit status 0 (pass) or 1 (fail)
+check_ledger() {
+  awk -v file="$1" '
+    function trim(s) { sub(/^[ \t]+/, "", s); sub(/[ \t\r]+$/, "", s); return s }
+    function err(line, msg) { printf "%s:%d: %s\n", file, line, msg; errors++ }
+    function finish(   ev, st) {
+      if (id == "") return
+      if (bad) { total++; bad = 0; for (k in f) delete f[k]; return }
+      if (!("claim" in f) || f["claim"] == "") err(start, id ": claim is missing")
+      st = f["status"]
+      if (!("status" in f) || st == "") err(start, id ": status is missing")
+      else if (st != "open" && st != "discharged")
+        err(start, id ": status \"" st "\" is not \"open\" or \"discharged\"")
+      ev = tolower(f["evidence"])
+      if (!("evidence" in f) || ev == "" || ev == "none" || ev == "-" || ev == "todo" || ev == "tbd")
+        err(start, id ": evidence is missing")
+      if (st == "open") { err(start, id ": obligation is open"); open++ }
+      if (st == "discharged") done++
+      total++
+      for (k in f) delete f[k]
+    }
+    BEGIN { errors = 0; total = 0; open = 0; done = 0; bad = 0; marker = 0; fence = 0; id = "" }
+    /^[ \t]*(```|~~~)/ { fence = !fence; next }
+    fence { next }
+    /^ntproof:/ {
+      v = trim(substr($0, 9))
+      if (v != "0") err(NR, "unsupported ledger format \"ntproof: " v "\" (expected \"ntproof: 0\")")
+      marker = 1; next
+    }
+    /^## / {
+      finish()
+      id = trim(substr($0, 4)); start = NR
+      if (id !~ /^[A-Za-z][A-Za-z0-9._-]*$/) { err(NR, "obligation id \"" id "\" is not valid (use letters, digits, . _ -)"); bad = 1 }
+      else if (id in seen) err(NR, id ": duplicate obligation id (first at line " seen[id] ")")
+      else seen[id] = NR
+      if (!marker) err(NR, "the \"ntproof: 0\" line must come before the first obligation")
+      next
+    }
+    /^- [a-z][a-z-]*:/ && id != "" {
+      line = substr($0, 3); k = substr(line, 1, index(line, ":") - 1)
+      v = trim(substr(line, index(line, ":") + 1))
+      if (k in f) err(NR, id ": duplicate key \"" k "\"")
+      f[k] = v; next
+    }
+    END {
+      finish()
+      if (fence) err(NR, "a code fence is not closed")
+      if (!marker && total == 0) err(1, "not a ledger: no \"ntproof: 0\" line")
+      if (total == 0) err(1, "the ledger has no obligations")
+      printf "%d obligation(s): %d discharged, %d open; %d error(s)\n", total, done, open, errors
+      exit(errors > 0 ? 1 : 0)
+    }
+  ' "$1"
+}
+
+proof() {
+  if [ "${1:-}" = "init" ]; then
+    target=${2:-PROOF.md}
+    if [ -e "$target" ]; then
+      echo "nt: $target already exists; not overwriting" >&2
+      exit 2
+    fi
+    template > "$target"
+    echo "nt: wrote $target"
+    echo "nt: $NT_PREVIEW_NOTE"
+    return 0
+  fi
+  if [ "$#" -gt 1 ]; then
+    echo "nt: proof takes at most one FILE" >&2
+    exit 2
+  fi
+  target=${1:-PROOF.md}
+  if [ ! -f "$target" ]; then
+    echo "nt: $target not found (run \"nt proof init\" to create one)" >&2
+    exit 2
+  fi
+  echo "nt proof: $NT_PREVIEW_NOTE"
+  if check_ledger "$target"; then
+    echo "nt proof: PASS (ledger $NT_LEDGER_FORMAT is well formed; every obligation has evidence recorded)"
+    echo "nt proof: this is not a type check or a proof; review the evidence itself"
+  else
+    echo "nt proof: FAIL (fix the lines above; $NT_PREVIEW_NOTE)"
+    exit 1
+  fi
+}
+
+cmd=${1:-help}
+[ "$#" -gt 0 ] && shift
+case "$cmd" in
+  guide) guide ;;
+  proof) proof "$@" ;;
+  version|--version|-V) echo "nt $NT_VERSION (NextType M0 design preview; ledger format $NT_LEDGER_FORMAT; no compiler)" ;;
+  help|--help|-h) usage ;;
+  *) echo "nt: unknown command \"$cmd\"" >&2; usage >&2; exit 2 ;;
+esac

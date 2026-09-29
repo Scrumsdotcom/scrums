@@ -1,0 +1,109 @@
+---
+title: Diagnostics
+description: Proof results, the draft diagnostic frame, and the diagnostic and response codes the NextType design defines.
+order: 9
+---
+
+# Diagnostics
+
+> **Status: Designed (result vocabulary and diagnostic shape), Planned (code catalogue).**
+> The design defines five proof results, one diagnostic frame, and a small set of codes.
+> A stable code catalogue is planned (C22).
+> No tool emits these diagnostics today.
+
+## Proof results
+
+Every obligation ends in exactly one result:
+
+| Result | Meaning | Required evidence |
+| --- | --- | --- |
+| `proved` | The obligation holds. | A checked proof artifact bound to the exact program and contract. |
+| `refuted` | The obligation does not hold. | A validated counterexample or accepted refutation evidence. |
+| `unknown` | The checker could not decide. | None. Timeouts and failed tactics land here. |
+| `unsupported` | The obligation is outside the supported fragment. | None. For example, an unsupported predicate. |
+| `invalid` | The input is malformed or inconsistent. | None. For example, a bad frame or a wrong theorem statement. |
+
+The plan defines `proved`, `refuted`, and `unknown` precisely.
+It names `unsupported` and `invalid` but does not define them in full.
+Their rows show the intended reading; the exact boundary is an **open question**.
+
+Rules:
+
+- A timeout is `unknown`, never `proved` or `refuted`.
+- A failed tactic is `unknown`. It is not a counterexample.
+- A cached result is transport metadata, not a separate status.
+- Acceptance is reported separately from proof status.
+
+## Diagnostic shape
+
+A diagnostic has four parts (Designed, section 3.4):
+
+1. a code;
+2. an obligation slot;
+3. a typed local context;
+4. an evidence handle.
+
+Draft NTΔ form:
+
+```text
+unknown o0 EQ f0
+ctx @k0
+get o0 256
+```
+
+| Line | Meaning |
+| --- | --- |
+| `unknown o0 EQ f0` | Result `unknown` for obligation `o0`, class `EQ`, in fragment `f0`. |
+| `ctx @k0` | `@k0` resolves to the expected type and the relevant local context. |
+| `get o0 256` | The agent's next frame: request bounded context for `o0`. |
+
+Every response also has a request identity in its transport envelope.
+A bounded response declares omitted context, so a truncated answer cannot look complete.
+
+## Known codes
+
+The design defines these codes and responses:
+
+| Code | Kind | Meaning |
+| --- | --- | --- |
+| `EQ` | Obligation class | An unresolved equality obligation. |
+| `CONFLICT` | Patch response | The patch base is stale. The patch did not apply. |
+
+No other code is designed.
+The plan requires stable exit and diagnostic codes (C22).
+It keeps these error classes distinct: programmer fault, cancellation, unsupported feature, and resource exhaustion.
+Resource exhaustion appears as a diagnostic, not as a compiler crash.
+
+## Failure sources by pass
+
+Each compiler pass has a failure vocabulary (section 15.1).
+The codes are not assigned.
+This table shows where diagnostics will come from:
+
+| Pass | Example failures |
+| --- | --- |
+| Decode | Frame too large, bad grammar, wrong alias class. |
+| Scope | Dangling variable, capture, illegal recursion group. |
+| Elaborate | Unresolved implicit, unsolved motive, universe inconsistency, missing termination evidence. |
+| Obligation generation | Statement or predicate identity does not match the approval. |
+| Check | Unapproved axiom, proof hole, stale dependency, wrong theorem. |
+| Policy | Patch touches protected inputs, broader effect, new assumption. |
+
+## Required negative cases
+
+The plan lists cases that must produce a rejection or an unresolved result:
+
+- Empty-vector access and unequal-length `zip` inputs.
+- Wrong invoice totals and mixed currencies.
+- Invalid state transitions and forged success responses.
+- Stale versions, repeated requests, and exhausted capability budgets.
+- Different definitions hidden behind the same display name.
+- Missing proofs, unapproved assumptions, and checker resource exhaustion.
+- Changed dependencies with stale cached evidence.
+- Host functions attempting to return unchecked evidence.
+
+## The preview CLI
+
+`nt proof` is not a compiler and does not emit these diagnostics.
+It prints `FILE:LINE: ID: message` lines for ledger format errors.
+See [The nt preview CLI](../tools/cli.md).
