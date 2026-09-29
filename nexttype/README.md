@@ -40,6 +40,22 @@ NextType is experimental.
 Expect breaking changes, rough edges, and security issues.
 Run it in isolated workspaces, not against production systems or sensitive data.
 
+## Install (preview)
+
+> **Design preview.** This installs `nt`, a small preview script.
+> It has no compiler, type checker, or prover.
+
+```sh
+curl -fsSL https://nexttype.dev/install.sh | sh
+```
+
+- `nt guide` prints the guide: what NextType is, the two views, and how to write a contract.
+- `nt proof init` writes a template obligation ledger, `PROOF.md`.
+- `nt proof` checks that every obligation in the ledger has evidence recorded. It checks the ledger format only.
+
+When using NextType: run `nt guide` to learn it, keep obligations in `PROOF.md`, and run `nt proof` before committing.
+See [the CLI docs](docs/tools/cli.md).
+
 ## One fragment, one obligation
 
 Proposed NTΔ under the manifest context `Γ = {A:U0, n:N, v:V A (S n)}`:

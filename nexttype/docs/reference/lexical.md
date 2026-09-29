@@ -98,7 +98,8 @@ Dictionary transmission and retrieval count toward tokens.
 **Open question.**
 The plan puts comments outside semantic identity.
 It does not define comment syntax for NTΔ.
-The readable view uses `//` comments in examples, like TypeScript.
+Code samples on the website label the readable view with `//` lines, like TypeScript.
+Whether the readable view has comments of its own is also open.
 
 ## Readable view tokens
 

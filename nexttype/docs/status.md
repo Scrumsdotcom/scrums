@@ -8,7 +8,8 @@ order: 2
 
 **Current maturity: M0 design preview.**
 The compiler, the proof service, and the autonomous repair controller are planned.
-There is no installable release.
+There is no installable language release.
+The `nt` preview script is not a compiler.
 No benchmark has run.
 
 ## What exists
@@ -19,6 +20,8 @@ No benchmark has run.
 - A research website with three browser fixture checks.
 - A scripted target animation. It runs no model, compiler, or CI service.
 - Repository templates: contribution, governance, and security drafts.
+- A compact [language reference](reference/index.md). Each rule carries a Designed, Planned, or Open label.
+- A preview command, `nt`. It prints the guide and checks the format of an obligation ledger. It has no compiler. See [The nt preview CLI](tools/cli.md).
 
 The browser fixture checks test fixed sample values only.
 They do not execute NTΔ.

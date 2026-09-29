@@ -44,7 +44,9 @@ Run it in isolated workspaces, not against production systems or sensitive data.
 | [Language overview](language/overview.md) | Learn the compiler path from NTΔ to runtime targets. |
 | [Contracts](language/contracts.md) | See how a dependent type states a requirement. |
 | [One contract, two views](language/two-views.md) | Compare the readable view with the NTΔ agent form. |
+| [Language reference](reference/index.md) | Look up the precise rules: types, contracts, effects, NTΔ frames, diagnostics, the protocol, and the grammar. |
 | [Glossary](reference/glossary.md) | Look up NTΔ, NT0, Γ, obligation, and other terms. |
+| [The nt preview CLI](tools/cli.md) | Install `nt`, read the guide, and check an obligation ledger. It has no compiler. |
 | [Examples](../examples/README.md) | Read the invoice, vector, and state examples. |
 | [Why NextType](../research/why-nexttype.md) | Understand the design position. |
 | [Benchmark design](../benchmarks/README.md) | See how the project plans to measure tokens, time, and defects. |
