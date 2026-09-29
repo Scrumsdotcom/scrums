@@ -114,7 +114,7 @@ Improve the benchmark design with reproducible comparisons.
 Follow [CONTRIBUTING.md](CONTRIBUTING.md) and label planned capabilities accurately.
 
 Licensed under the [Apache License 2.0](LICENSE).
-Maintainers and release identifiers remain pending.
+Release identifiers remain pending.
 
 ## Credits
 
