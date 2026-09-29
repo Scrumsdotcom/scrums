@@ -49,15 +49,68 @@ contains "No compiler exists" "guide states there is no compiler"
 contains "nt proof" "guide lists nt proof"
 expect 2 "unknown command" sh "$nt" frobnicate
 
-# 4. Ledger: init, then the template is open and fails
+# 4. Token estimates (stable numbers; the method is documented in cli/nt)
+printf 'The quick brown fox jumps over the lazy dog.\n' >"$work/fox.txt"
+expect 0 "nt tokens FILE" sh "$nt" tokens "$work/fox.txt"
+contains "~10 tokens (estimate;" "tokens on a sentence"
+contains "not a model tokenizer" "tokens output says it is an estimate"
+# tokens_is WANT NAME TEXT  (pipes TEXT to nt tokens --quiet)
+tokens_is() {
+  got=$(printf '%s' "$3" | sh "$nt" tokens --quiet)
+  if [ "$got" = "$1" ]; then ok "$2"; else bad "$2 (got $got, want $1)"; fi
+}
+tokens_is 3 "tokens: two words and a line break" 'hello world
+'
+tokens_is 5 "tokens: digits and punctuation" 'total = 12000;
+'
+tokens_is 4 "tokens: a long word splits (20 letters = 3, line break = 1)" 'internationalization
+'
+tokens_is 4 "tokens: blank lines and indentation fold" 'a
+
+
+   b
+'
+tokens_is 0 "tokens: empty input" ''
+expect 0 "nt tokens - (stdin)" sh -c "printf 'hello world\n' | sh '$nt' tokens -"
+contains "~3 tokens" "stdin estimate"
+expect 2 "nt tokens missing file" sh "$nt" tokens "$work/nope.txt"
+expect 2 "nt tokens unknown option" sh "$nt" tokens --frobnicate
+
+# 5. Compare the two views of the bundled examples
+expect 0 "nt compare (default invoice)" sh "$nt" compare
+contains "type Total<xs> = { t: Int; ok: t == sum(xs) };" "compare shows the readable view"
+contains "c0 (sig t Z (= t (sum xs)))" "compare shows the NTΔ form"
+contains "Readable view, for people (TypeScript lineage): ~48 tokens" "readable view estimate"
+contains "NTΔ agent form, for agents: ~39 tokens" "NTΔ form estimate"
+contains "about 18% fewer tokens for the agent to write" "compare prints the percentage"
+contains "design notation example; token counts are estimates" "compare labels the estimate"
+contains "no compiler exists" "compare states there is no compiler"
+expect 0 "nt compare vector" sh "$nt" compare vector
+contains "% fewer tokens" "vector percentage"
+expect 0 "nt compare state" sh "$nt" compare state
+contains "c3 (I paid)" "state NTΔ form"
+expect 2 "nt compare unknown example" sh "$nt" compare nosuch
+
+# 6. Ledger: init, then the first run passes
 cd "$work"
 expect 0 "nt proof init" sh "$nt" proof init
 expect 2 "nt proof init refuses to overwrite" sh "$nt" proof init
-expect 1 "template ledger fails (open obligation)" sh "$nt" proof
-contains "O1: obligation is open" "open obligation reported"
+expect 0 "first nt proof after init passes" sh "$nt" proof
+contains "nt proof: PASS" "first run prints PASS"
+contains "tokens per accepted change: ~1840 (over 1 accepted change" "first run prints tokens per accepted change"
+contains "Next: add your own obligation (status: open)" "first run prints the next step"
 contains "design preview: no compiler; this checks the ledger format only" "preview note printed"
+printf '\n## O2\n\n- claim: head is never called on an empty vector.\n- status: open\n- evidence: none\n' >>PROOF.md
+expect 1 "an added open obligation fails" sh "$nt" proof
+contains "O2: obligation is open" "open obligation reported"
+contains "nt proof: FAIL" "open obligation prints FAIL"
+expect 0 "nt quickstart" sh "$nt" quickstart
+contains "about 18% fewer tokens" "quickstart runs compare"
+contains "nt proof: PASS" "quickstart shows the passing ledger"
+contains "O2: obligation is open" "quickstart shows the open obligation"
+expect 0 "nt demo alias" sh "$nt" demo
 
-# 5. A good ledger passes
+# 7. A good ledger passes (no tokens field: format 0 stays compatible)
 cat >good.md <<'EOF'
 ---
 title: Proof ledger
@@ -85,8 +138,9 @@ EOF
 expect 0 "good ledger passes" sh "$nt" proof good.md
 contains "2 obligation(s): 2 discharged, 0 open; 0 error(s)" "good ledger counts"
 contains "not a type check or a proof" "pass output disclaims verification"
+if grep -qF "tokens per accepted change" "$work/out"; then bad "no tokens line without tokens fields"; else ok "no tokens line without tokens fields"; fi
 
-# 6. Bad ledgers fail
+# 8. Bad ledgers fail
 printf 'ntproof: 0\n\n## O1\n- claim: x\n- status: discharged\n' >no-evidence.md
 expect 1 "missing evidence fails" sh "$nt" proof no-evidence.md
 contains "O1: evidence is missing" "missing evidence reported"
@@ -100,7 +154,19 @@ printf 'ntproof: 0\n' >empty.md
 expect 1 "ledger without obligations fails" sh "$nt" proof empty.md
 expect 2 "missing file" sh "$nt" proof does-not-exist.md
 
-# 7. Installer: download path (file:// base URL), checksum, local copy, uninstall
+# 9. Optional tokens field
+printf 'ntproof: 0\n\n## A\n- claim: x\n- status: discharged\n- evidence: y\n- tokens: 1000\n\n## B\n- claim: x\n- status: discharged\n- evidence: y\n- tokens: 2001\n\n## C\n- claim: x\n- status: discharged\n- evidence: y\n' >tokens.md
+expect 0 "ledger with tokens passes" sh "$nt" proof tokens.md
+contains "tokens per accepted change: ~1501 (over 2 accepted changes" "average over discharged obligations with tokens"
+printf 'ntproof: 0\n\n## A\n- claim: x\n- status: discharged\n- evidence: y\n- tokens: -5\n' >neg.md
+expect 1 "negative tokens fails" sh "$nt" proof neg.md
+contains "A: tokens \"-5\" is not a non-negative integer" "negative tokens reported"
+printf 'ntproof: 0\n\n## A\n- claim: x\n- status: discharged\n- evidence: y\n- tokens: 12.5\n' >frac.md
+expect 1 "non-integer tokens fails" sh "$nt" proof frac.md
+printf 'ntproof: 0\n\n## A\n- claim: x\n- status: discharged\n- evidence: y\n- tokens: many\n' >word.md
+expect 1 "non-numeric tokens fails" sh "$nt" proof word.md
+
+# 10. Installer: download path (file:// base URL), checksum, local copy, uninstall
 mkdir -p site
 cp "$root/cli/nt" "$root/cli/nt.sha256" site/
 expect 0 "install from base URL" env NT_BASE_URL="file://$work/site" NT_INSTALL_DIR="$work/bin" sh "$installer"

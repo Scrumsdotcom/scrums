@@ -55,6 +55,7 @@ curl -fsSL https://nexttype.dev/install.sh | sh
 
 When using NextType: run `nt guide` to learn it, keep obligations in `PROOF.md`, and run `nt proof` before committing.
 See [the CLI docs](docs/tools/cli.md).
+Try `nt compare`, then `nt proof init` and `nt proof`.
 
 ## One fragment, one obligation
 
