@@ -1,0 +1,26 @@
+name: cli-check
+
+on:
+  pull_request:
+    paths:
+      - "cli/**"
+      - "tests/cli.sh"
+      - ".github/workflows/cli-check.yml"
+  push:
+    branches: [main]
+    paths:
+      - "cli/**"
+      - "tests/cli.sh"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Show shellcheck version
+        run: shellcheck --version
+      - name: Test the preview CLI and installer
+        run: sh tests/cli.sh

@@ -1,7 +1,7 @@
 ---
 title: Glossary
 description: Definitions of the NextType terms used in these docs, such as NTΔ, NT0, Γ, obligation, and approval envelope.
-order: 4
+order: 13
 ---
 
 # Glossary

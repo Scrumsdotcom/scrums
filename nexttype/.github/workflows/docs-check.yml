@@ -4,12 +4,18 @@ on:
   pull_request:
     paths:
       - "docs/**"
+      - "examples/**"
+      - "benchmarks/**"
+      - "research/**"
       - ".github/scripts/check_docs.py"
       - ".github/workflows/docs-check.yml"
   push:
     branches: [main]
     paths:
       - "docs/**"
+      - "examples/**"
+      - "benchmarks/**"
+      - "research/**"
 
 permissions:
   contents: read
