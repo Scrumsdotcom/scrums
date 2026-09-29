@@ -91,6 +91,7 @@ The repository keeps four kinds of content apart, like most language repositorie
 The site renders these folders on its next build. Follow the content contract:
 
 - Each page starts with YAML frontmatter: `title` (required), `description` (one sentence, required), and optional `order`.
+- Quote a frontmatter value in double quotes when it contains `: ` or ` #`, or starts with a YAML indicator such as `*`, `&`, `[`, or `"`. The check rejects it otherwise.
 - Use plain GitHub-flavoured Markdown. Do not use MDX or HTML components.
 - Link between pages with relative `.md` paths, for example `[Invoice](../examples/invoice/README.md)`.
 - Add each new documentation page id to `docs/nav.json`. A page id is its path under `docs/` without `.md`.

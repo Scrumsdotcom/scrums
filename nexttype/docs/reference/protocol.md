@@ -1,6 +1,6 @@
 ---
 title: Machine protocol
-description: The planned NextType machine protocol: requests, bounded responses, compact and JSON modes, and evidence.
+description: "The planned NextType machine protocol: requests, bounded responses, compact and JSON modes, and evidence."
 order: 10
 ---
 

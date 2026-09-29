@@ -1,6 +1,6 @@
 ---
 title: Types
-description: The proposed NextType types: primitives, records, unions, vectors, generics, dependent types, and refinements.
+description: "The proposed NextType types: primitives, records, unions, vectors, generics, dependent types, and refinements."
 order: 3
 ---
 
