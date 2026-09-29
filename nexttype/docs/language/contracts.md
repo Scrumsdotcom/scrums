@@ -58,7 +58,7 @@ ck f0 @a0
 If an agent changes the body to `sum xs + 1`, the same equality fails.
 The agent cannot change the contract to make the check pass.
 
-See the full [Invoice example](../examples/invoice.md).
+See the full [Invoice example](../../examples/invoice/README.md).
 
 ## The contract is fixed
 

@@ -32,7 +32,7 @@ The compiler, proof service, and autonomous repair controller remain planned.
 The website contains browser fixtures and a scripted target animation.
 There is no installable language release or measured performance result.
 
-[Design documents](docs/README.md) · [Contribute](CONTRIBUTING.md) · [Governance](GOVERNANCE.md) · [Security](SECURITY.md)
+[Docs](docs/index.md) · [Examples](examples/README.md) · [Benchmarks](benchmarks/README.md) · [Research](research/README.md) · [Contribute](CONTRIBUTING.md) · [Governance](GOVERNANCE.md) · [Security](SECURITY.md)
 
 ## Safety warning
 
@@ -102,7 +102,7 @@ All comparisons retain fixed acceptance requirements and report failures.
 | `packages/policy/`, `services/acceptance/` | Independent approval, bounded repair, and artifact acceptance. |
 | `packages/runtime/`, `stdlib/`, `targets/` | Execution, reusable checked operations, and application bindings. |
 | `tests/`, `benchmarks/` | Conformance, boundary failures, token accounting, and empirical evaluation. |
-| `website/`, `visualization/`, `docs/` | Generated reference, transparent status, and foundational design. |
+| `docs/`, `examples/`, `research/` | Documentation (published at nexttype.dev/docs), illustrative examples, and the foundation paper. The website itself lives outside this repository. |
 
 This table is a blueprint.
 Implementation folders appear as their milestones begin.

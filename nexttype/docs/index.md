@@ -23,7 +23,7 @@ It has three core ideas:
 
 - **TypeScript lineage.** People review a readable, TypeScript-style view of each contract. Agents write a compact form of the same contract. See [One contract, two views](language/two-views.md).
 - **Dependent types are the spec.** A type can refer to a value. So a type can state "the total equals the sum of the lines". The compiler checks that the code satisfies it. See [Contracts](language/contracts.md).
-- **Tokens per accepted change.** The main metric is the total model tokens across all attempts, divided by the changes that pass acceptance. Failed attempts count. See [Benchmark design](articles/benchmarks.md).
+- **Tokens per accepted change.** The main metric is the total model tokens across all attempts, divided by the changes that pass acceptance. Failed attempts count. See [Benchmark design](../benchmarks/README.md).
 
 Programs are typed compiler graphs.
 Agents send compact patches and receive explicit obligations.
@@ -44,9 +44,9 @@ Run it in isolated workspaces, not against production systems or sensitive data.
 | [Language overview](language/overview.md) | Learn the compiler path from NTΔ to runtime targets. |
 | [Contracts](language/contracts.md) | See how a dependent type states a requirement. |
 | [One contract, two views](language/two-views.md) | Compare the readable view with the NTΔ agent form. |
-| [Glossary](language/glossary.md) | Look up NTΔ, NT0, Γ, obligation, and other terms. |
-| [Examples](examples/index.md) | Read the invoice, vector, and state examples. |
-| [Why NextType](articles/why-nexttype.md) | Understand the design position. |
-| [Benchmark design](articles/benchmarks.md) | See how the project plans to measure tokens, time, and defects. |
-| [Foundational paper](paper/README.md) | Read the one-page concept note (PDF and HTML). |
-| [Contributing](contributing.md) | Find how to help. |
+| [Glossary](reference/glossary.md) | Look up NTΔ, NT0, Γ, obligation, and other terms. |
+| [Examples](../examples/README.md) | Read the invoice, vector, and state examples. |
+| [Why NextType](../research/why-nexttype.md) | Understand the design position. |
+| [Benchmark design](../benchmarks/README.md) | See how the project plans to measure tokens, time, and defects. |
+| [Foundational paper](../research/paper/README.md) | Read the one-page concept note (PDF and HTML). |
+| [Contributing](../CONTRIBUTING.md) | Find how to help. |

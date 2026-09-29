@@ -40,7 +40,7 @@ Dependent types can describe facts: "this total equals the sum of these lines".
 In NextType, that type is the specification.
 The approval envelope fixes it.
 An agent can repair the implementation, but it cannot weaken the contract.
-See [Contracts](../language/contracts.md).
+See [Contracts](../docs/language/contracts.md).
 
 ## One number: tokens per accepted change
 
@@ -49,7 +49,7 @@ NextType proposes one primary metric: total model tokens across all attempts, di
 Failed attempts count.
 Context, dictionaries, proof attempts, and repairs count.
 A cheap run that fails does not count as a saving.
-See [Benchmark design](benchmarks.md).
+See [Benchmark design](../benchmarks/README.md).
 
 ## How NextType differs from graph-native agent languages
 
@@ -75,4 +75,4 @@ The benchmark design compares it with readable source and typed patches before a
 - A proof about the core model does not verify every generated runtime.
 - A proof does not show that a requirement expresses the right intent.
 
-Read the [Status](../status.md) page for the current boundary.
+Read the [Status](../docs/status.md) page for the current boundary.

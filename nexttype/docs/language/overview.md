@@ -74,4 +74,4 @@ A timeout remains `unknown`.
 
 - [Contracts](contracts.md)
 - [One contract, two views](two-views.md)
-- [Glossary](glossary.md)
+- [Glossary](../reference/glossary.md)

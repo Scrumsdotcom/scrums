@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
-"""Check the docs contract shared with the nexttype.dev renderer.
+"""Check the content contract shared with the nexttype.dev renderer.
 
-- Every docs/**/*.md page has YAML frontmatter with title and description.
+- Every page under docs/, examples/, benchmarks/ and research/ has YAML
+  frontmatter with title and description (the site renders all four).
 - Every page id in docs/nav.json exists as docs/<id>.md.
-- Every relative link in a docs page resolves to a file.
+- Every relative link in those pages resolves to a file.
 """
 import json
 import re
 import sys
 from pathlib import Path
 
-DOCS = Path(__file__).resolve().parents[2] / "docs"
+ROOT = Path(__file__).resolve().parents[2]
+DOCS = ROOT / "docs"
+AREAS = [ROOT / a for a in ("docs", "examples", "benchmarks", "research")]
 LINK = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 FENCE = re.compile(r"^(```|~~~)")
 errors = []
@@ -30,8 +33,8 @@ def frontmatter(text):
     return fields
 
 
-for page in sorted(DOCS.rglob("*.md")):
-    rel = page.relative_to(DOCS)
+for page in sorted(p for area in AREAS if area.exists() for p in area.rglob("*.md")):
+    rel = page.relative_to(ROOT)
     text = page.read_text(encoding="utf-8")
     fields = frontmatter(text)
     if fields is None:

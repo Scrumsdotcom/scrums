@@ -77,14 +77,22 @@ Disabling a check is not a repair.
 The release maintainer publishes only artifacts with complete evidence and provenance.
 Signing, license terms, contributor agreements, and contact details need owner decisions before public launch.
 
-## Docs
+## Docs, examples and research
 
-Edit the Markdown pages under `docs/`.
-They publish to [nexttype.dev/docs](https://nexttype.dev/docs) on the next site build.
-Follow the docs contract:
+The repository keeps four kinds of content apart, like most language repositories:
+
+| Folder | Publishes to | What belongs there |
+| --- | --- | --- |
+| `docs/` | [nexttype.dev/docs](https://nexttype.dev/docs) | Documentation only: getting started, the language guide, the reference. |
+| `examples/` | nexttype.dev/examples | One folder per example with a `README.md`. Each starts with the disclaimer that it has not been compiled, checked or run. |
+| `benchmarks/` | nexttype.dev/benchmarks | The benchmark design and, later, measured results. |
+| `research/` | nexttype.dev/research | The foundation paper and positioning articles. |
+
+The site renders these folders on its next build. Follow the content contract:
 
 - Each page starts with YAML frontmatter: `title` (required), `description` (one sentence, required), and optional `order`.
 - Use plain GitHub-flavoured Markdown. Do not use MDX or HTML components.
-- Link between pages with relative `.md` paths, for example `[Invoice](examples/invoice.md)`.
-- Add each new page id to `docs/nav.json`. A page id is its path under `docs/` without `.md`.
-- Put images under `docs/` and link them with relative paths.
+- Link between pages with relative `.md` paths, for example `[Invoice](../examples/invoice/README.md)`.
+- Add each new documentation page id to `docs/nav.json`. A page id is its path under `docs/` without `.md`.
+- Put images next to the page that uses them and link them with relative paths.
+- Run `python3 .github/scripts/check_docs.py` before you open a pull request. CI runs it too.
