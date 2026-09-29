@@ -45,9 +45,21 @@ Run it in isolated workspaces, not against production systems or sensitive data.
 > **Design preview.** This installs `nt`, a small preview script.
 > It has no compiler, type checker, or prover.
 
+For humans:
+
 ```sh
 curl -fsSL https://nexttype.dev/install.sh | sh
 ```
+
+For agents:
+
+```sh
+npx skills add Scrumsdotcom/nexttype
+```
+
+This installs the [NextType agent skill](skills/nexttype/SKILL.md) with the [`skills`](https://github.com/vercel-labs/skills) CLI.
+The skill tells the agent to install `nt` and to follow the habits below.
+While this repository is private, the command needs GitHub access to it (a `gh` login or a `GH_TOKEN`); when it is public, it needs no access.
 
 - `nt guide` prints the guide: what NextType is, the two views, and how to write a contract.
 - `nt proof init` writes a template obligation ledger, `PROOF.md`.

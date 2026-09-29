@@ -23,9 +23,19 @@ Run it in isolated workspaces, not against production systems or sensitive data.
 
 ## Install
 
+For humans:
+
 ```sh
 curl -fsSL https://nexttype.dev/install.sh | sh
 ```
+
+For agents:
+
+```sh
+npx skills add Scrumsdotcom/nexttype
+```
+
+The agent command installs the NextType agent skill. See [Agent skill](#agent-skill).
 
 The installer does these steps:
 
@@ -158,6 +168,31 @@ When you use NextType:
 - Run `nt proof` before you commit.
 - Do not change a contract or a claim to make a check pass. Ask the owner.
 - Report what is planned and what is measured. Do not claim a proof that does not exist.
+
+## Agent skill
+
+The repository contains an agent skill: [skills/nexttype/SKILL.md](https://github.com/Scrumsdotcom/nexttype/blob/main/skills/nexttype/SKILL.md).
+It follows the [Agent Skills](https://agentskills.io) format.
+The [`skills`](https://github.com/vercel-labs/skills) CLI installs it for Claude Code, Codex, Cursor, and other agents:
+
+```sh
+# Install into the current project for the agents that the CLI detects
+npx skills add Scrumsdotcom/nexttype
+
+# Install for one agent only, without prompts
+npx skills add Scrumsdotcom/nexttype -a claude-code -y
+```
+
+The skill tells the agent to:
+
+- install `nt` only when it is missing;
+- run `nt guide`, keep obligations in `PROOF.md` (start with `nt proof init`), and run `nt proof` before a commit;
+- write a contract in the readable view and in the NTΔ form;
+- report the status honestly: `nt proof` checks the ledger format only.
+
+The CLI clones the repository with git.
+While the repository is private, the command needs GitHub access to it: a `gh` login or a `GH_TOKEN` with access.
+When the repository is public, it needs no access.
 
 ## Relation to the planned toolchain
 
