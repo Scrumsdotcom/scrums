@@ -21,7 +21,7 @@ No benchmark has run.
 - A scripted target animation. It runs no model, compiler, or CI service.
 - Repository templates: contribution, governance, and security drafts.
 - A compact [language reference](reference/index.md). Each rule carries a Designed, Planned, or Open label.
-- A preview command, `nt`. It prints the guide and checks the format of an obligation ledger. It has no compiler. See [The nt preview CLI](tools/cli.md).
+- A preview command, `nt`. It prints the guide, estimates token counts with a documented heuristic, compares the two views of the design examples, and checks the format of an obligation ledger. It has no compiler. Its token counts are estimates, not measurements. See [The nt preview CLI](tools/cli.md).
 
 The browser fixture checks test fixed sample values only.
 They do not execute NTΔ.
