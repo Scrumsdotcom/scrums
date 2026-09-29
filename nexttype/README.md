@@ -119,7 +119,7 @@ Release identifiers remain pending.
 ## Credits
 
 NextType is created by [Scrums.com](https://www.scrums.com), the Enterprise AI Platform for software engineering orchestration.
-Maintainer: [GeZ-scrumsdotcom](https://github.com/GeZ-scrumsdotcom).
+Maintainer: [Gerald Neves](https://github.com/gez-scrumsdotcom).
 Organisation: [Scrumsdotcom](https://github.com/Scrumsdotcom).
 
 Read the docs at [nexttype.dev](https://nexttype.dev/docs).
