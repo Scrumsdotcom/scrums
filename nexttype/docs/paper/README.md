@@ -1,3 +1,9 @@
+---
+title: Foundational paper
+description: A one-page concept note on contract-bound autonomous programming. Not peer reviewed.
+order: 1
+---
+
 # NextType foundational note
 
 [Read the single-page PDF](nexttype-foundation.pdf).

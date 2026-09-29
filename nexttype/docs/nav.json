@@ -1,0 +1,10 @@
+{
+  "sections": [
+    { "title": "Get started", "pages": ["index", "status"] },
+    { "title": "Language", "pages": ["language/overview", "language/contracts", "language/two-views", "language/glossary"] },
+    { "title": "Examples", "pages": ["examples/index", "examples/invoice", "examples/vector", "examples/state"] },
+    { "title": "Articles", "pages": ["articles/why-nexttype", "articles/benchmarks"] },
+    { "title": "Research", "pages": ["paper/README"] },
+    { "title": "Project", "pages": ["contributing"] }
+  ]
+}

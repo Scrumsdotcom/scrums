@@ -1,0 +1,23 @@
+name: docs-check
+
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+      - ".github/scripts/check_docs.py"
+      - ".github/workflows/docs-check.yml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check frontmatter, nav.json, and relative links
+        run: python3 .github/scripts/check_docs.py

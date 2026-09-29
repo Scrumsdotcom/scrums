@@ -1,17 +1,46 @@
-# Design document index
+---
+title: Documentation index
+description: The GitHub index of the NextType docs, which also publish to nexttype.dev/docs.
+---
 
-The downloadable repository bundle places these source documents beside this index:
+# NextType documentation
+
+These pages are the single source for the docs site at [nexttype.dev/docs](https://nexttype.dev/docs).
+[`nav.json`](nav.json) defines the site sidebar in the same order as this index.
+
+## Get started
+
+- [Home](index.md) — what NextType is, and the safety warning.
+- [Status](status.md) — M0 design preview: what exists, what is planned, what is unmeasured.
+
+## Language
+
+- [Language overview](language/overview.md) — the proposed compiler path.
+- [Contracts](language/contracts.md) — dependent types as the spec.
+- [One contract, two views](language/two-views.md) — the readable view and the NTΔ agent form.
+- [Glossary](language/glossary.md) — NTΔ, NT0, Γ, obligation, approval envelope, and more.
+
+## Examples
+
+- [Examples](examples/index.md)
+- [Invoice](examples/invoice.md)
+- [Vector](examples/vector.md)
+- [State](examples/state.md)
+
+## Articles
+
+- [Why NextType](articles/why-nexttype.md)
+- [Benchmark design](articles/benchmarks.md)
+
+## Research
 
 | File | Purpose |
 | --- | --- |
-| `LANGUAGE-PLAN.md` | NT0, NTΔ, approval envelopes, compiler passes, and 60 completeness areas. |
-| `BENCHMARK-PLAN.md` | Fair baselines, complete token accounting, and unmeasured numerical targets. |
-| `RESEARCH.md` | Primary references and the limits of existing evidence. |
-| `REPOSITORY-PLAN.md` | Intended language repository layout, CI, ownership, and release sequence. |
-| `paper/nexttype-foundation.pdf` | Single-page foundational concept note. |
-| `paper/nexttype-foundation.html` | Editable print source with notation and references. |
-| `visualization/index.html` | Offline target animation with separate CSS. |
+| [paper/README.md](paper/README.md) | Foundational paper page. |
+| [paper/nexttype-foundation.pdf](paper/nexttype-foundation.pdf) | Single-page foundational concept note. |
+| [paper/nexttype-foundation.html](paper/nexttype-foundation.html) | Editable print source with notation and references. |
+| [paper/references.bib](paper/references.bib) | BibTeX references. |
 
-Within the company lab, these documents remain in the parent NextType folder.
-The download generator copies the current versions into the repository bundle.
-The blueprint does not claim that planned compiler packages already exist.
+## Project
+
+- [Contributing](contributing.md)

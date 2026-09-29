@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://www.scrums.com"><img src="https://img.shields.io/badge/Scrums.com-Research-0B5FFF" alt="Scrums.com Research"></a>
+  <a href="docs/status.md"><img src="https://img.shields.io/badge/NextType_compiler-planned-lightgrey" alt="NextType compiler: planned"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue" alt="License: Apache-2.0"></a>
+</p>
+
 <p align="center"><img src="assets/cover.svg" alt="NextType: compact compiler terms, fixed contracts, checked changes. Design preview; targets unmeasured." width="100%"></p>
 
 <p align="center">
@@ -27,6 +33,12 @@ The website contains browser fixtures and a scripted target animation.
 There is no installable language release or measured performance result.
 
 [Design documents](docs/README.md) · [Contribute](CONTRIBUTING.md) · [Governance](GOVERNANCE.md) · [Security](SECURITY.md)
+
+## Safety warning
+
+NextType is experimental.
+Expect breaking changes, rough edges, and security issues.
+Run it in isolated workspaces, not against production systems or sensitive data.
 
 ## One fragment, one obligation
 
@@ -102,4 +114,12 @@ Improve the benchmark design with reproducible comparisons.
 Follow [CONTRIBUTING.md](CONTRIBUTING.md) and label planned capabilities accurately.
 
 Licensed under the [Apache License 2.0](LICENSE).
-Maintainers and release identifiers remain pending.
+Release identifiers remain pending.
+
+## Credits
+
+NextType is created by [Scrums.com](https://www.scrums.com), the Enterprise AI Platform for software engineering orchestration.
+Maintainer: [GeZ-scrumsdotcom](https://github.com/GeZ-scrumsdotcom).
+Organisation: [Scrumsdotcom](https://github.com/Scrumsdotcom).
+
+Read the docs at [nexttype.dev](https://nexttype.dev/docs).
