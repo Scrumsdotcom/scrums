@@ -15,7 +15,7 @@ No benchmark has run.
 
 - A language plan with 60 completeness areas.
 - A benchmark plan with fixed definitions and unmeasured targets.
-- A one-page foundational paper. See [the paper](paper/README.md).
+- A one-page foundational paper. See [the paper](../research/paper/README.md).
 - A research website with three browser fixture checks.
 - A scripted target animation. It runs no model, compiler, or CI service.
 - Repository templates: contribution, governance, and security drafts.
@@ -49,7 +49,7 @@ The north-star targets are goals, not results:
 | Elapsed time for matched work | 30% less | Target, unmeasured |
 | Escaped-defect rate | 50% lower | Target, unmeasured |
 
-See [Benchmark design](articles/benchmarks.md) for the definitions.
+See [Benchmark design](../benchmarks/README.md) for the definitions.
 
 ## Maturity levels
 

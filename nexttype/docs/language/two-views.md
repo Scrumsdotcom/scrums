@@ -58,9 +58,9 @@ The checker reconstructs the full typed term before checking.
 All dictionary transmission and retrieval count toward tokens.
 A dense symbol can tokenize worse than a common word.
 The benchmark design compares readable source, typed patches, and dense syntax before it selects a codec.
-See [Benchmark design](../articles/benchmarks.md).
+See [Benchmark design](../../benchmarks/README.md).
 
 ## Read next
 
-- [Examples](../examples/index.md)
-- [Glossary](glossary.md)
+- [Examples](../../examples/README.md)
+- [Glossary](../reference/glossary.md)
