@@ -1,0 +1,82 @@
+---
+title: "Bitbucket"
+description: "Connect Bitbucket to surface repository analytics, PR metrics, and DORA data in your Scrums.com workspace."
+---
+
+<Note>
+  The Bitbucket integration is currently in **Alpha**. To have it enabled on your account, contact [support@scrums.com](mailto:support@scrums.com).
+</Note>
+
+## Overview
+
+The Bitbucket integration collects metadata about your organisation's activity across repositories, pull requests, and deployments. We never read, transmit, or store source code. Sensitive data — such as branch names and pull request titles — are always encrypted.
+
+## Why integrate Bitbucket?
+
+- **Automated analytics** — Gain insights into your team's delivery performance, DORA metrics, code churn, and more.
+- **No code changes needed** — Integration is secure and token-based, requiring no changes to your repositories.
+- **Real-time & historical data** — See results in minutes, with both real-time and historical analysis.
+
+## Permissions
+
+We request only the permissions necessary to analyse Git metadata.
+
+| Scope | Purpose |
+| --- | --- |
+| Repository (Read) | Commit, branch, PR, and deployment metadata |
+| Workspace (Read) | Workspace members and projects |
+| Account (Read) | Bitbucket profile and email address |
+
+We never read, transmit, or store source code. Learn more about [Bitbucket API tokens](https://support.atlassian.com/bitbucket-cloud/docs/api-tokens/).
+
+## Requirements
+
+- Bitbucket Cloud account with workspace access
+- Scrums.com workspace Admin access
+
+## Setup
+
+<Steps>
+  <Step title="Log in to Scrums.com">
+    Go to [Scrums.com](https://scrums.com/) and sign in to your account.
+  </Step>
+  <Step title="Navigate to Integrations">
+    In your dashboard, click on your profile or account menu and select **Integrations** from the dropdown or sidebar.
+  </Step>
+  <Step title="Add Bitbucket">
+    Click **Add Integration** and select **Bitbucket** from the list. Choose the project you want to link.
+  </Step>
+  <Step title="Generate a Bitbucket App Password">
+    In Bitbucket, go to **Personal settings \> App passwords** and click **Create app password**. Set an expiry as required by your security policy, and select the following permissions:
+
+    - `Repository: Read`
+    - `Pull requests: Read`
+    - `Workspace membership: Read`
+    - `Account: Read`
+
+    Copy the generated app password.
+  </Step>
+  <Step title="Connect your workspace">
+    In the Scrums.com integration form, enter your Bitbucket workspace handle (e.g. `scrumsdotcom`) and paste your app password. Save the form.
+  </Step>
+  <Step title="Add repositories">
+    Click **Add** next to Bitbucket repositories. Select your workspace, enter the repository name, and specify the branch (typically `main` or `master`). Save your changes.
+  </Step>
+  <Step title="Data sync">
+    Scrums.com will begin syncing your Bitbucket data. Initial results appear within minutes, and the platform will continue to backfill historical data. Explore your analytics dashboards for real-time insights.
+  </Step>
+</Steps>
+
+## Best practices
+
+- **Use a long-term admin account** — Set up the integration with an account that will remain active to avoid disruptions.
+- **App password security** — Store your Bitbucket app password securely. Do not share it publicly.
+- **Repository selection** — Only connect repositories relevant to your project for focused analytics.
+
+## Troubleshooting
+
+| Issue | Resolution |
+| --- | --- |
+| Authorization error | Ensure your app password has all required scopes and has not expired |
+| Data not syncing | Double-check the app password permissions and repository names — the integration page will alert you if a password has expired or a repo name is invalid |
+| Need help? | Contact support through your [Scrums.com](https://scrums.com/) dashboard |

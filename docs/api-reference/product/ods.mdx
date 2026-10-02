@@ -1,0 +1,308 @@
+---
+title: 'ODS API'
+description: 'On-Demand Sprints — scoped, time-boxed outcome delivery. You define the result you need. Scrums.com delivers it.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+ODS (On-Demand Sprints) is outcome-based delivery. You define what needs to exist — a working feature, a fixed integration, a delivered audit, a shipped component — and Scrums.com delivers it within a defined timeframe at a fixed commercial commitment.
+
+ODS is not sprint tooling. You are not managing a team or tracking a backlog. You are purchasing a defined outcome. The scope is fixed, the price is fixed, and completion is verified against acceptance criteria.
+
+When an ODS scope is confirmed, the platform creates an active [Service Line](/api-reference/core/service-lines) with `execution_model: timeboxed_outcome` and `billing_model: fixed_scope`. The engagement is tracked as discrete cycles. Deliverables must be formally accepted to close the Service Line.
+
+## Core Concepts
+
+### Requests
+
+A request is the starting point: a description of the outcome you need and the constraints around it (timeline, budget, acceptance criteria). Scrums.com reviews the request, produces a scoped proposal, and presents it for confirmation.
+
+### Scopes
+
+A scope is the confirmed engagement specification: the deliverables, the acceptance criteria, the timeline, and the fixed price. You confirm the scope to activate the engagement.
+
+### Cycles
+
+A cycle is a time-boxed delivery period within an ODS scope. Complex outcomes may be broken into multiple cycles with interim deliverables. Each cycle has a planned end date and a set of deliverable items.
+
+### Deliverables and acceptance
+
+When a cycle completes, deliverables are surfaced via the API for formal review and acceptance. You either accept (releases payment and may trigger next cycle) or reject (triggers a remediation cycle at no additional cost, within scope).
+
+This is the key distinction from managed delivery: you are not managing the work. You are reviewing the output and making a binary acceptance decision.
+
+## Endpoints
+
+### POST /v1/capabilities/ods/requests
+
+Submit an ODS outcome request.
+
+#### Request
+
+```json
+{
+  "organization_id": "ORG-26-090500",
+  "workspace_id": "WS-26-000021",
+  "subscription_id": "SUB-26-001122",
+  "project_tags": ["PROJ-26-004281"],
+  "title": "Payment webhook reliability - end-to-end fix and test coverage",
+  "description": "Our payment webhook handler has a 2% failure rate under load. We need the root cause identified, fixed, load tested, and shipped to production with full test coverage.",
+  "desired_outcome": "Production webhook failure rate below 0.1% under 2x normal load, with test suite proving reliability.",
+  "acceptance_criteria": [
+    "Webhook handler passes load test at 2x peak throughput with <0.1% failure rate",
+    "Unit test coverage of the handler reaches >90%",
+    "Change is deployed to production and monitored for 48 hours"
+  ],
+  "timeline_weeks": 3,
+  "budget_max": 18000.00,
+  "currency": "USD"
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "OREQ-26-000041",
+    "status": "scoping",
+    "title": "Payment webhook reliability - end-to-end fix and test coverage",
+    "created_at": "2026-04-15T10:00:00Z"
+  }
+}
+```
+
+#### Notes
+
+- Status moves to `scoped` when Scrums.com has produced a proposal. You receive a `ods.request.scoped` event.
+- If budget or timeline cannot be accommodated, the request moves to `requires_negotiation` and the account team will contact you.
+
+### GET /v1/capabilities/ods/requests/{request_id}
+
+Retrieve a request with current status and any attached scope proposal.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "OREQ-26-000041",
+    "status": "scoped",
+    "title": "Payment webhook reliability - end-to-end fix and test coverage",
+    "scope_id": "OSCOPE-26-000009",
+    "scope_summary": {
+      "deliverables": 3,
+      "cycles": 1,
+      "timeline_weeks": 3,
+      "fixed_price": 15500.00,
+      "currency": "USD"
+    }
+  }
+}
+```
+
+### GET /v1/capabilities/ods/scopes/{scope_id}
+
+Retrieve the full scope proposal.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "OSCOPE-26-000009",
+    "request_id": "OREQ-26-000041",
+    "status": "pending_confirmation",
+    "title": "Payment webhook reliability - end-to-end fix and test coverage",
+    "deliverables": [
+      {
+        "id": "DLV-26-000081",
+        "title": "Root cause analysis and fix",
+        "description": "Identify and resolve the root cause of the webhook failure rate.",
+        "acceptance_criteria": "Failure rate <0.1% in staging load test."
+      },
+      {
+        "id": "DLV-26-000082",
+        "title": "Test suite",
+        "description": "Unit tests covering the webhook handler at >90% coverage.",
+        "acceptance_criteria": "Coverage report showing >90% with all tests passing."
+      },
+      {
+        "id": "DLV-26-000083",
+        "title": "Production deployment and monitoring",
+        "description": "Deployment to production with 48-hour monitoring window.",
+        "acceptance_criteria": "48-hour monitoring report showing <0.1% failure rate in production."
+      }
+    ],
+    "cycles": [
+      {
+        "id": "OCYCLE-26-000011",
+        "name": "Cycle 1",
+        "planned_start": "2026-05-01",
+        "planned_end": "2026-05-21",
+        "deliverable_ids": ["DLV-26-000081", "DLV-26-000082", "DLV-26-000083"]
+      }
+    ],
+    "fixed_price": 15500.00,
+    "currency": "USD",
+    "timeline_weeks": 3,
+    "payment_terms": "50% on confirmation, 50% on final acceptance"
+  }
+}
+```
+
+### POST /v1/capabilities/ods/scopes/{scope_id}
+
+Confirm a scope to activate the engagement and create the Service Line.
+
+#### Request
+
+```json
+{
+  "confirm": true,
+  "accepted_by": "USR-26-000044"
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "scope_id": "OSCOPE-26-000009",
+    "status": "active",
+    "service_line_id": "LIN-26-092200",
+    "cycle_id": "OCYCLE-26-000011",
+    "payment_due": {
+      "amount": 7750.00,
+      "currency": "USD",
+      "due_at": "2026-04-22T00:00:00Z",
+      "description": "50% upfront on scope confirmation"
+    }
+  }
+}
+```
+
+### GET /v1/capabilities/ods/cycles/{cycle_id}
+
+Get current cycle status, progress, and deliverable states.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "OCYCLE-26-000011",
+    "scope_id": "OSCOPE-26-000009",
+    "service_line_id": "LIN-26-092200",
+    "status": "in_progress",
+    "planned_start": "2026-05-01",
+    "planned_end": "2026-05-21",
+    "deliverables": [
+      {
+        "id": "DLV-26-000081",
+        "title": "Root cause analysis and fix",
+        "status": "completed",
+        "submitted_at": "2026-05-14T16:00:00Z"
+      },
+      {
+        "id": "DLV-26-000082",
+        "title": "Test suite",
+        "status": "in_progress"
+      },
+      {
+        "id": "DLV-26-000083",
+        "title": "Production deployment and monitoring",
+        "status": "pending"
+      }
+    ]
+  }
+}
+```
+
+### GET /v1/capabilities/ods/deliverables
+
+List deliverables ready for acceptance review.
+
+#### Request
+
+```bash
+GET /v1/capabilities/ods/deliverables?scope_id=OSCOPE-26-000009&status=ready_for_acceptance
+```
+
+### POST /v1/capabilities/ods/deliverables/{deliverable_id}/accept
+
+Formally accept a deliverable.
+
+#### Request
+
+```json
+{
+  "accepted": true,
+  "reviewer_id": "USR-26-000044",
+  "notes": "Load test results reviewed and confirmed. Deployment monitoring report reviewed and approved."
+}
+```
+
+#### Notes
+
+- Setting `accepted: false` triggers a remediation cycle. Include a `rejection_reason` explaining what criteria were not met.
+- Final acceptance of the last deliverable closes the Service Line and triggers the final payment.
+
+## Common Workflows
+
+### Full ODS engagement lifecycle
+
+```bash
+# 1. Submit the outcome request
+POST /v1/capabilities/ods/requests
+
+# 2. Wait for scoping (ods.request.scoped event)
+GET /v1/capabilities/ods/requests/OREQ-26-000041
+
+# 3. Review and confirm the scope
+GET /v1/capabilities/ods/scopes/OSCOPE-26-000009
+POST /v1/capabilities/ods/scopes/OSCOPE-26-000009
+{ "confirm": true }
+
+# 4. Monitor cycle progress
+GET /v1/capabilities/ods/cycles/OCYCLE-26-000011
+
+# 5. Review and accept deliverables
+GET /v1/capabilities/ods/deliverables?status=ready_for_acceptance
+POST /v1/capabilities/ods/deliverables/DLV-26-000083/accept
+{ "accepted": true }
+```
+
+## Objects
+
+### ODS Request
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `OREQ-*` identifier |
+| `status` | enum | `scoping`, `scoped`, `requires_negotiation`, `cancelled` |
+| `title` | string | Outcome request title |
+| `scope_id` | string | Linked scope (when scoped) |
+
+### Scope
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `OSCOPE-*` identifier |
+| `status` | enum | `pending_confirmation`, `active`, `completed`, `cancelled` |
+| `deliverables` | array | Defined deliverable items |
+| `cycles` | array | Time-boxed delivery cycles |
+| `fixed_price` | number | Total fixed price for the scope |
+| `payment_terms` | string | Payment schedule description |
+
+## Best Practices
+
+- **Write acceptance criteria before confirming a scope.** Vague acceptance criteria lead to disputes. If the scope proposal has weak criteria, reject it and ask for specifics before confirming.
+- **Do not try to manage the delivery.** ODS is not a managed engagement. Your role is to review deliverables and make acceptance decisions. Attempting to direct the team mid-cycle undermines the fixed-scope model.
+- **Use `rejection_reason` precisely.** When rejecting a deliverable, specify exactly which acceptance criteria were not met, with evidence. Generic rejections ("not good enough") create remediation cycles that go in circles.
+- **Confirm quickly.** ODS pricing reflects the timeline agreed at scoping. Late confirmation can delay team assembly and compress the delivery window, which increases risk.

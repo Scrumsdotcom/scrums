@@ -1,0 +1,77 @@
+---
+title: "ClickUp"
+description: "Connect ClickUp to surface sprint progress, task flow, and delivery metrics in your Scrums.com workspace."
+---
+
+## Overview
+
+The ClickUp integration connects your project management and task workflows with Scrums.com, enabling analytics and delivery insights. We collect only the metadata required to provide value — never your task content or attachments. Sensitive data, such as list names and task titles, are always encrypted.
+
+## Why integrate ClickUp?
+
+- **Automated analytics** — Gain insights into your team's project progress, resource allocation, and delivery metrics.
+- **No code changes needed** — Integration is secure and token-based, requiring no changes to your ClickUp workspace.
+- **Real-time & historical data** — See results in minutes, with both real-time and historical analysis.
+
+## Permissions
+
+| Scope | Purpose |
+| --- | --- |
+| Spaces, Folders, Lists | Read access to workspace structure and metadata |
+| Tasks | Read access to task metadata, statuses, and assignments |
+| Users | Read access to user profiles and assignments |
+
+ClickUp's API requires broad read permissions to access these endpoints. We never read, transmit, or store task descriptions or attachments. Learn more in [ClickUp's API documentation](https://developer.clickup.com/).
+
+## Requirements
+
+- ClickUp account with API access
+- Scrums.com workspace Admin access
+
+## Setup
+
+<Steps>
+  <Step title="Log in to Scrums.com">
+    Go to [Scrums.com](https://scrums.com/) and sign in to your account.
+  </Step>
+  <Step title="Navigate to Integrations">
+    In your dashboard, click on your profile or account menu and select **Integrations** from the dropdown or sidebar.
+  </Step>
+  <Step title="Add ClickUp">
+    Click **Add Integration** and select **ClickUp** from the list. Choose the project you want to link.
+  </Step>
+  <Step title="Authorise Scrums.com to access ClickUp">
+    Enter your ClickUp API key (found in your personal ClickUp settings under **My Settings \> Apps**). Click the green checkbox to save.
+  </Step>
+  <Step title="Verify the connection">
+    Click **Verify** to confirm endpoints are correct.
+  </Step>
+  <Step title="Add your ClickUp Sprint Folder">
+    Click **Add** to add your ClickUp sprint folder. Select the ClickUp workspace and add the relevant [Folder ID](https://help.clickup.com/hc/en-us/articles/6308812667671-Create-a-Folder) for the project sprints. Click **Verify** to check the connection.
+  </Step>
+  <Step title="Data sync">
+    Scrums.com will begin syncing your ClickUp data. Initial results appear within minutes, and the platform will continue to backfill historical data. Explore your analytics dashboards for real-time insights.
+  </Step>
+</Steps>
+
+## Best practices
+
+- **Use a long-term admin account** — Set up the integration with an account that will remain active to avoid disruptions.
+- **API key security** — Store your ClickUp API key securely. Do not share it publicly.
+- **Workspace selection** — Only connect sprint folders relevant to your analytics needs.
+
+## What this unlocks
+
+Connecting ClickUp to Scrums.com gives your team:
+
+- Transparency and accountability across teams
+- Data-driven retrospectives and planning sessions
+- Real-time delivery metrics to identify bottlenecks
+
+## Troubleshooting
+
+| Issue | Resolution |
+| --- | --- |
+| Authorization error | Ensure your ClickUp account has the required permissions and a valid API key |
+| Data not syncing | Double-check your API key permissions and workspace/folder IDs — the integration page will alert you if a key has expired or an ID is invalid |
+| Need help? | Contact support through your [Scrums.com](https://scrums.com/) dashboard |

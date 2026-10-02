@@ -1,0 +1,203 @@
+---
+title: "Integrations API"
+description: "Third-party tool connections per workspace. Integrations drive data sync, event bridging, task linking, and automation across source control, project management, monitoring, and communication tools."
+sidebarTitle: "Integrations"
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+Integrations (`INT-*`) are authenticated connections between the Scrums.com platform and third-party tools. They are configured at the workspace level and drive: task synchronization with project management tools, code event ingestion from source control, notification delivery to communication platforms, and metric ingestion from monitoring systems.
+
+Integrations are a key part of the platform's orchestration model. A workspace with active integrations gives agents, observability, and task workflows access to real-time data from the tools your teams already use.
+
+## Core Concepts
+
+### Supported integration types
+
+| Type | Category | Description |
+|------|----------|-------------|
+| `github` | Source Control | Repository events, PRs, commits |
+| `gitlab` | Source Control | Repository events, pipelines |
+| `bitbucket` | Source Control | Repository events, PRs |
+| `azure_devops` | Source Control + PM | Repos, boards, pipelines |
+| `jira` | Project Management | Issues, sprints, project sync |
+| `clickup` | Project Management | Tasks, spaces, lists |
+| `linear` | Project Management | Issues, cycles, project sync |
+| `azure_boards` | Project Management | Work items, sprints |
+| `slack` | Communication | Notifications, incident alerts |
+| `microsoft_teams` | Communication | Notifications, incident alerts |
+| `datadog` | Monitoring | Metrics ingestion, alert bridging |
+| `sonarcloud` | Quality | Code quality metrics, quality gates |
+
+### Sync behavior
+
+Integrations sync data bidirectionally where supported. Task status changes made in the Scrums platform can be written back to Jira or ClickUp. Code events from GitHub are surfaced as platform events and feed observability metrics.
+
+### Integration and agents
+
+Agents on the platform can be granted access to workspace integrations. This allows an agent to read from a GitHub repository, query a Jira board, or post a message to Slack as part of its execution. Access is governed by the workspace's [agent policies](/api-reference/product/agent-gateway).
+
+## Endpoints
+
+### GET /v1/integrations
+
+List integrations for a workspace.
+
+#### Request
+
+```bash
+GET /v1/integrations?workspace_id=WS-26-000021
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "INT-26-000041",
+      "workspace_id": "WS-26-000021",
+      "type": "github",
+      "name": "apex-digital/payments-api",
+      "status": "active",
+      "last_synced_at": "2026-04-15T09:30:00Z",
+      "sync_status": "healthy",
+      "created_at": "2024-03-20T10:00:00Z"
+    },
+    {
+      "id": "INT-26-000042",
+      "workspace_id": "WS-26-000021",
+      "type": "jira",
+      "name": "APEX Jira Project",
+      "status": "active",
+      "last_synced_at": "2026-04-15T09:00:00Z",
+      "sync_status": "healthy",
+      "created_at": "2024-03-20T10:30:00Z"
+    }
+  ]
+}
+```
+
+### POST /v1/integrations
+
+Connect a new integration to a workspace.
+
+#### Request
+
+```json
+{
+  "workspace_id": "WS-26-000021",
+  "type": "github",
+  "name": "apex-digital/payments-api",
+  "config": {
+    "organization": "apex-digital",
+    "repositories": ["payments-api", "payments-worker"],
+    "events": ["push", "pull_request", "deployment"]
+  },
+  "credentials": {
+    "installation_id": "12345678"
+  }
+}
+```
+
+#### Response
+
+Returns the created integration record. OAuth-based integrations (GitHub, Jira) require an additional authorization step via the UI. The integration is created with `status: "pending_auth"` until the OAuth flow completes.
+
+#### Notes
+
+- `credentials` shape varies by integration type.
+- GitHub integrations use the Scrums GitHub App installation model.
+- Jira integrations use OAuth 2.0.
+- Direct API key integrations (Datadog, SonarCloud) accept a `credentials.api_key` field.
+
+### GET /v1/integrations/{integration_id}
+
+Retrieve an integration with full configuration and recent sync history.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "INT-26-000041",
+    "workspace_id": "WS-26-000021",
+    "type": "github",
+    "name": "apex-digital/payments-api",
+    "status": "active",
+    "config": {
+      "organization": "apex-digital",
+      "repositories": ["payments-api", "payments-worker"],
+      "events": ["push", "pull_request", "deployment"]
+    },
+    "last_synced_at": "2026-04-15T09:30:00Z",
+    "sync_status": "healthy",
+    "sync_history": [
+      { "at": "2026-04-15T09:30:00Z", "status": "success", "records_synced": 14 },
+      { "at": "2026-04-15T08:30:00Z", "status": "success", "records_synced": 3 }
+    ],
+    "created_at": "2024-03-20T10:00:00Z"
+  }
+}
+```
+
+### PATCH /v1/integrations/{integration_id}
+
+Update an integration's configuration or name.
+
+#### Request
+
+```json
+{
+  "config": {
+    "repositories": ["payments-api", "payments-worker", "payments-gateway"]
+  }
+}
+```
+
+### DELETE /v1/integrations/{integration_id}
+
+Disconnect an integration. Synced data is retained but no new data will be received.
+
+### POST /v1/integrations/{integration_id}/sync
+
+Trigger a manual sync for the integration.
+
+#### Response
+
+```json
+{
+  "data": {
+    "sync_id": "SYNC-26-000811",
+    "status": "running",
+    "started_at": "2026-04-15T10:00:00Z"
+  }
+}
+```
+
+## Objects
+
+### Integration
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `INT-*` identifier |
+| `workspace_id` | string | Scoped workspace |
+| `type` | string | Integration type identifier |
+| `name` | string | Display name |
+| `status` | enum | `active`, `pending_auth`, `error`, `disconnected` |
+| `config` | object | Integration-specific configuration |
+| `last_synced_at` | datetime | Most recent successful sync |
+| `sync_status` | enum | `healthy`, `degraded`, `failed` |
+| `created_at` | datetime | Connection timestamp |
+
+## Best Practices
+
+- **Connect source control and PM integrations before activating Service Lines.** Observability metrics and task sync depend on these connections being live. A Service Line that starts without integrations will have no code or task signals in its health data.
+- **Use `sync_status: "failed"` as an alert trigger.** A failed integration stops data flowing to observability and agent tools. Set up an alert rule that fires when integration sync fails.
+- **Grant agent access to integrations explicitly.** Connecting an integration to a workspace does not automatically make it available to all agents. Agent tool access is granted per-policy in the [AI Agent Gateway](/api-reference/product/agent-gateway).

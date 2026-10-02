@@ -1,0 +1,77 @@
+---
+title: "Claude Code"
+description: "Connect Claude Code to track AI coding metrics, productivity, and usage patterns across your engineering teams."
+---
+
+<Note>
+  The Claude Code integration is currently in **Alpha**. To have it enabled on your account, contact [support@scrums.com](mailto:support@scrums.com).
+</Note>
+
+## Overview
+
+The Claude Code integration connects your AI coding metrics with Scrums.com, enabling analytics and delivery insights. Compare teams using different AI tools to determine where you're getting the best ROI. We collect only the metadata required to provide value — never your code or sensitive content. Sensitive data, such as user IDs and project names, are always encrypted.
+
+## Why integrate Claude Code?
+
+- **Automated analytics** — Gain insights into your team's AI coding activity, productivity, and usage patterns.
+- **No code changes needed** — Integration is secure and key-based, requiring no changes to your codebase.
+- **Real-time & historical data** — See results in minutes, with both real-time and historical analysis.
+- **Cross-tool comparison** — Benchmark Claude Code against other AI coding tools to measure ROI across your teams.
+
+## Permissions
+
+| Scope | Purpose |
+| --- | --- |
+| Admin API Key | Read access to usage and productivity metrics, and organisation user data via the Claude Developer Platform API |
+
+We never read, transmit, or store your source code.
+
+## Requirements
+
+- Admin access to your [Claude.ai](https://claude.ai) organisation
+- Scrums.com workspace Admin access
+
+## Setup
+
+<Steps>
+  <Step title="Generate a Claude Admin API Key">
+    In the [Claude Console](https://platform.claude.com), generate an **Admin API key** (prefix: `sk-ant-admin...`). Only organisation admins can create these keys.
+  </Step>
+  <Step title="Log in to Scrums.com">
+    Go to [Scrums.com](https://scrums.com/) and sign in to your account.
+  </Step>
+  <Step title="Navigate to Integrations">
+    In your dashboard, click on your profile or account menu and select **Integrations** from the dropdown or sidebar.
+  </Step>
+  <Step title="Add Claude Code">
+    Click **Add Integration** and select **Claude Code** from the list. Choose the project you want to link. Paste your Claude Admin API key into the integration form and click the green checkbox to save.
+  </Step>
+  <Step title="Verify the connection">
+    Click **Verify** to confirm the connection is working correctly.
+  </Step>
+  <Step title="Data sync">
+    Scrums.com will begin syncing your Claude Code data. Initial results appear within minutes, and the platform will continue to backfill historical data. Explore your analytics dashboards for real-time insights.
+  </Step>
+</Steps>
+
+## Best practices
+
+- **Use a long-term admin account** — Set up the integration with an account that will remain active to avoid disruptions.
+- **API key security** — Store your Claude Admin API key securely. Do not share it publicly.
+- **Key permissions** — Ensure your API key has the correct permissions for the most detailed insights.
+
+## What this unlocks
+
+Connecting Claude Code to Scrums.com gives your team:
+
+- Transparency and accountability across teams
+- Data-driven retrospectives and planning sessions
+- Real-time AI coding metrics to identify bottlenecks
+
+## Troubleshooting
+
+| Issue | Resolution |
+| --- | --- |
+| Authorization error | Ensure your Claude Developer Platform account has the required permissions and a valid Admin API key |
+| Data not syncing | Double-check your API key and analytics settings — the integration page will alert you if a key has expired or is invalid |
+| Need help? | Contact support through your [Scrums.com](https://scrums.com/) dashboard |

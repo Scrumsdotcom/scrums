@@ -1,0 +1,992 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Scrums.com API",
+    "version": "1.0.0",
+    "description": "The Scrums.com Software Engineering Orchestration Platform (SEOP) REST API. Every capability — talent, managed delivery, ODS, infrastructure, intelligence, and agents — operates through a Service Line (LIN-*). Base URL: https://api.scrums.com/v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.scrums.com/v1",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "tags": [
+    { "name": "Service Lines", "description": "Manage SEOP Service Lines (LIN-*) across all product types." },
+    { "name": "Organizations", "description": "Top-level account containers (ORG-*)." },
+    { "name": "Workspaces", "description": "Team workspaces nested within an organization (WS-*)." },
+    { "name": "AI Agent Gateway", "description": "Trigger and monitor AI agent runs (AGT-*, RUN-*)." },
+    { "name": "Observability & Metrics", "description": "Health scores, risk signals, and delivery metrics." },
+    { "name": "ODS", "description": "On-Demand Solutions scoping and request management." },
+    { "name": "Talent Marketplace", "description": "Submit and manage vetted talent placement requests." }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": ["code", "message", "status"],
+        "properties": {
+          "code": { "type": "string", "example": "not_found" },
+          "message": { "type": "string", "example": "The requested resource was not found." },
+          "status": { "type": "integer", "example": 404 }
+        }
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "cursor": { "type": "string", "example": "eyJpZCI6IkxJTi0yNi0wODQ3MjkifQ==" },
+          "has_more": { "type": "boolean", "example": false }
+        }
+      },
+      "ServiceLine": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^LIN-", "example": "LIN-26-084729" },
+          "name": { "type": "string", "example": "Core Platform Squad" },
+          "workspace_id": { "type": "string", "pattern": "^WS-", "example": "WS-26-000021" },
+          "organization_id": { "type": "string", "pattern": "^ORG-", "example": "ORG-26-090500" },
+          "product_line": {
+            "type": "string",
+            "enum": ["talent", "managed_services", "ods", "infrastructure", "intelligence", "agent_gateway"],
+            "example": "talent"
+          },
+          "execution_model": {
+            "type": "string",
+            "enum": ["capacity", "ongoing_sla", "timeboxed_outcome", "infra_managed", "observability", "agent_runtime"],
+            "example": "capacity"
+          },
+          "billing_model": {
+            "type": "string",
+            "enum": ["monthly_retainer", "milestone", "usage_based", "seat_based"],
+            "example": "monthly_retainer"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["draft", "active", "paused", "closed", "terminated"],
+            "example": "active"
+          },
+          "project_tags": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^PROJ-" },
+            "example": ["PROJ-26-004281"]
+          },
+          "subscription_id": { "type": "string", "pattern": "^SUB-", "example": "SUB-26-001122" },
+          "config": { "type": "object", "example": { "timezone": "UTC", "sprint_length_days": 14 } },
+          "started_at": { "type": "string", "format": "date-time", "example": "2026-01-15T09:00:00Z" },
+          "ends_at": { "type": "string", "format": "date-time", "nullable": true, "example": null },
+          "created_at": { "type": "string", "format": "date-time", "example": "2026-01-10T08:30:00Z" },
+          "updated_at": { "type": "string", "format": "date-time", "example": "2026-04-01T11:00:00Z" }
+        }
+      },
+      "ServiceLineInput": {
+        "type": "object",
+        "required": ["name", "workspace_id", "product_line", "execution_model", "billing_model", "subscription_id"],
+        "properties": {
+          "name": { "type": "string", "example": "Mobile Engineering Squad" },
+          "workspace_id": { "type": "string", "example": "WS-26-000021" },
+          "product_line": {
+            "type": "string",
+            "enum": ["talent", "managed_services", "ods", "infrastructure", "intelligence", "agent_gateway"],
+            "example": "managed_services"
+          },
+          "execution_model": {
+            "type": "string",
+            "enum": ["capacity", "ongoing_sla", "timeboxed_outcome", "infra_managed", "observability", "agent_runtime"],
+            "example": "ongoing_sla"
+          },
+          "billing_model": {
+            "type": "string",
+            "enum": ["monthly_retainer", "milestone", "usage_based", "seat_based"],
+            "example": "monthly_retainer"
+          },
+          "subscription_id": { "type": "string", "example": "SUB-26-001122" },
+          "project_tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["PROJ-26-004281"]
+          },
+          "config": { "type": "object", "example": { "sprint_length_days": 14 } },
+          "starts_at": { "type": "string", "format": "date-time", "example": "2026-05-01T00:00:00Z" }
+        }
+      },
+      "ServiceLineUsage": {
+        "type": "object",
+        "properties": {
+          "service_line_id": { "type": "string", "example": "LIN-26-084729" },
+          "period": {
+            "type": "object",
+            "properties": {
+              "from": { "type": "string", "format": "date", "example": "2026-03-01" },
+              "to": { "type": "string", "format": "date", "example": "2026-03-31" }
+            }
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "metric": { "type": "string", "example": "engineer_days" },
+                "quantity": { "type": "number", "example": 40 },
+                "unit": { "type": "string", "example": "days" },
+                "cost": { "type": "number", "example": 12000.00 },
+                "currency": { "type": "string", "example": "USD" }
+              }
+            }
+          },
+          "total_cost": { "type": "number", "example": 12000.00 },
+          "currency": { "type": "string", "example": "USD" }
+        }
+      },
+      "Organization": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^ORG-", "example": "ORG-26-090500" },
+          "name": { "type": "string", "example": "Acme Corp" },
+          "slug": { "type": "string", "example": "acme-corp" },
+          "status": { "type": "string", "enum": ["active", "suspended", "cancelled"], "example": "active" },
+          "plan_id": { "type": "string", "example": "PLAN-26-000003" },
+          "owner_id": { "type": "string", "example": "USR-26-000044" },
+          "workspace_count": { "type": "integer", "example": 4 },
+          "active_service_lines": { "type": "integer", "example": 7 },
+          "created_at": { "type": "string", "format": "date-time", "example": "2025-11-01T10:00:00Z" },
+          "updated_at": { "type": "string", "format": "date-time", "example": "2026-04-10T08:00:00Z" }
+        }
+      },
+      "Workspace": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^WS-", "example": "WS-26-000021" },
+          "organization_id": { "type": "string", "example": "ORG-26-090500" },
+          "name": { "type": "string", "example": "Platform Engineering" },
+          "slug": { "type": "string", "example": "platform-engineering" },
+          "status": { "type": "string", "enum": ["active", "archived"], "example": "active" },
+          "member_count": { "type": "integer", "example": 12 },
+          "active_service_lines": { "type": "integer", "example": 3 },
+          "health_score": { "type": "integer", "minimum": 0, "maximum": 100, "example": 87 },
+          "cost_mtd": { "type": "number", "example": 34500.00 },
+          "currency": { "type": "string", "example": "USD" },
+          "created_at": { "type": "string", "format": "date-time", "example": "2025-11-05T09:00:00Z" },
+          "updated_at": { "type": "string", "format": "date-time", "example": "2026-04-12T07:30:00Z" }
+        }
+      },
+      "AgentRun": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^RUN-", "example": "RUN-26-001812" },
+          "agent_id": { "type": "string", "pattern": "^AGT-", "example": "AGT-26-000012" },
+          "service_line_id": { "type": "string", "example": "LIN-26-091844" },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "running", "awaiting_approval", "completed", "failed", "cancelled"],
+            "example": "running"
+          },
+          "input": { "type": "object", "example": { "prompt": "Summarise sprint velocity for Q1 2026." } },
+          "output": { "type": "object", "nullable": true, "example": null },
+          "tokens_used": { "type": "integer", "nullable": true, "example": null },
+          "duration_ms": { "type": "integer", "nullable": true, "example": null },
+          "triggered_by": { "type": "string", "example": "USR-26-000044" },
+          "started_at": { "type": "string", "format": "date-time", "example": "2026-04-15T10:22:00Z" },
+          "completed_at": { "type": "string", "format": "date-time", "nullable": true, "example": null }
+        }
+      },
+      "AgentRunInput": {
+        "type": "object",
+        "required": ["input", "triggered_by"],
+        "properties": {
+          "input": { "type": "object", "example": { "prompt": "Summarise sprint velocity for Q1 2026." } },
+          "triggered_by": { "type": "string", "pattern": "^USR-", "example": "USR-26-000044" }
+        }
+      },
+      "HealthRecord": {
+        "type": "object",
+        "properties": {
+          "service_line_id": { "type": "string", "example": "LIN-26-084729" },
+          "name": { "type": "string", "example": "Core Platform Squad" },
+          "health_score": { "type": "integer", "minimum": 0, "maximum": 100, "example": 87 },
+          "risk_level": { "type": "string", "enum": ["low", "medium", "high"], "example": "low" },
+          "signals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "signal": { "type": "string", "example": "velocity_trend" },
+                "status": { "type": "string", "enum": ["green", "amber", "red"], "example": "green" },
+                "value": { "type": "string", "example": "+8% WoW" }
+              }
+            }
+          }
+        }
+      },
+      "OdsRequest": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^OREQ-", "example": "OREQ-26-000041" },
+          "status": {
+            "type": "string",
+            "enum": ["scoping", "scoped", "requires_negotiation", "cancelled"],
+            "example": "scoping"
+          },
+          "title": { "type": "string", "example": "Rebuild checkout flow with React 19" },
+          "scope_id": { "type": "string", "nullable": true, "example": null },
+          "created_at": { "type": "string", "format": "date-time", "example": "2026-04-15T09:05:00Z" }
+        }
+      },
+      "OdsRequestInput": {
+        "type": "object",
+        "required": ["organization_id", "workspace_id", "title", "description", "desired_outcome"],
+        "properties": {
+          "organization_id": { "type": "string", "example": "ORG-26-090500" },
+          "workspace_id": { "type": "string", "example": "WS-26-000021" },
+          "subscription_id": { "type": "string", "example": "SUB-26-001122" },
+          "project_tags": { "type": "array", "items": { "type": "string" }, "example": ["PROJ-26-004281"] },
+          "title": { "type": "string", "example": "Rebuild checkout flow with React 19" },
+          "description": { "type": "string", "example": "Migrate the existing checkout service to a React 19 Server Components architecture." },
+          "desired_outcome": { "type": "string", "example": "50% reduction in checkout load time and improved Core Web Vitals." },
+          "acceptance_criteria": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["All existing tests pass", "LCP < 1.5s on 4G", "Zero regressions in order completion rate"]
+          },
+          "timeline_weeks": { "type": "integer", "example": 8 },
+          "budget_max": { "type": "number", "example": 24000 },
+          "currency": { "type": "string", "example": "USD" }
+        }
+      },
+      "TalentRequest": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^TREQ-", "example": "TREQ-26-000091" },
+          "workspace_id": { "type": "string", "example": "WS-26-000021" },
+          "status": {
+            "type": "string",
+            "enum": ["matching", "matched", "confirmed", "cancelled"],
+            "example": "matching"
+          },
+          "role": { "type": "string", "example": "Senior React Engineer" },
+          "hours_per_week": { "type": "integer", "example": 40 },
+          "start_date": { "type": "string", "format": "date", "example": "2026-05-01" },
+          "created_at": { "type": "string", "format": "date-time", "example": "2026-04-15T09:10:00Z" }
+        }
+      },
+      "TalentRequestInput": {
+        "type": "object",
+        "required": ["workspace_id", "role", "hours_per_week", "start_date", "engagement_type"],
+        "properties": {
+          "workspace_id": { "type": "string", "example": "WS-26-000021" },
+          "subscription_id": { "type": "string", "example": "SUB-26-001122" },
+          "project_tags": { "type": "array", "items": { "type": "string" }, "example": ["PROJ-26-004281"] },
+          "role": { "type": "string", "example": "Senior React Engineer" },
+          "required_skills": { "type": "array", "items": { "type": "string" }, "example": ["React", "TypeScript", "Node.js"] },
+          "hours_per_week": { "type": "integer", "example": 40 },
+          "start_date": { "type": "string", "format": "date", "example": "2026-05-01" },
+          "engagement_type": { "type": "string", "enum": ["staff_augmentation", "dedicated_team", "managed_delivery"], "example": "staff_augmentation" },
+          "description": { "type": "string", "example": "Senior front-end engineer to own the design system and new checkout UI." },
+          "duration_weeks": { "type": "integer", "example": 24 }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "The request was malformed or contained invalid parameters.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "code": "invalid_request", "message": "workspace_id is required.", "status": 400 }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Missing or invalid authentication token.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "code": "unauthorized", "message": "Bearer token is missing or expired.", "status": 401 }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "The authenticated principal does not have permission to perform this action.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "code": "forbidden", "message": "You do not have access to this resource.", "status": 403 }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "The requested resource was not found.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "code": "not_found", "message": "The requested resource was not found.", "status": 404 }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/service-lines": {
+      "get": {
+        "summary": "List all service lines",
+        "description": "Returns a paginated list of Service Lines the caller has access to.",
+        "operationId": "listServiceLines",
+        "tags": ["Service Lines"],
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "description": "Filter by workspace ID (WS-*).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "description": "Filter by organization ID (ORG-*).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by service line status.",
+            "schema": { "type": "string", "enum": ["draft", "active", "paused", "closed", "terminated"] }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Pagination cursor from a previous response.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results to return (1–100).",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of service lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/ServiceLine" }
+                    },
+                    "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "LIN-26-084729",
+                      "name": "Core Platform Squad",
+                      "workspace_id": "WS-26-000021",
+                      "organization_id": "ORG-26-090500",
+                      "product_line": "talent",
+                      "execution_model": "capacity",
+                      "billing_model": "monthly_retainer",
+                      "status": "active",
+                      "project_tags": ["PROJ-26-004281"],
+                      "subscription_id": "SUB-26-001122",
+                      "config": { "sprint_length_days": 14 },
+                      "started_at": "2026-01-15T09:00:00Z",
+                      "ends_at": null,
+                      "created_at": "2026-01-10T08:30:00Z",
+                      "updated_at": "2026-04-01T11:00:00Z"
+                    }
+                  ],
+                  "meta": { "cursor": "eyJpZCI6IkxJTi0yNi0wODQ3MjkifQ==", "has_more": false }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      },
+      "post": {
+        "summary": "Create a new service line",
+        "description": "Creates a new Service Line within the specified workspace.",
+        "operationId": "createServiceLine",
+        "tags": ["Service Lines"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ServiceLineInput" },
+              "example": {
+                "name": "Mobile Engineering Squad",
+                "workspace_id": "WS-26-000021",
+                "product_line": "managed_services",
+                "execution_model": "ongoing_sla",
+                "billing_model": "monthly_retainer",
+                "subscription_id": "SUB-26-001122",
+                "project_tags": ["PROJ-26-004281"],
+                "config": { "sprint_length_days": 14 },
+                "starts_at": "2026-05-01T00:00:00Z"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The newly created service line.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "$ref": "#/components/schemas/ServiceLine" }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "id": "LIN-26-091844",
+                    "name": "Mobile Engineering Squad",
+                    "workspace_id": "WS-26-000021",
+                    "organization_id": "ORG-26-090500",
+                    "product_line": "managed_services",
+                    "execution_model": "ongoing_sla",
+                    "billing_model": "monthly_retainer",
+                    "status": "draft",
+                    "project_tags": ["PROJ-26-004281"],
+                    "subscription_id": "SUB-26-001122",
+                    "config": { "sprint_length_days": 14 },
+                    "started_at": null,
+                    "ends_at": null,
+                    "created_at": "2026-04-15T10:00:00Z",
+                    "updated_at": "2026-04-15T10:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/service-lines/{lin_code}": {
+      "get": {
+        "summary": "Get a single service line",
+        "description": "Returns the full details of a specific Service Line by its LIN-* code.",
+        "operationId": "getServiceLine",
+        "tags": ["Service Lines"],
+        "parameters": [
+          {
+            "name": "lin_code",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the Service Line (e.g. LIN-26-084729).",
+            "schema": { "type": "string", "pattern": "^LIN-" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested service line.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "$ref": "#/components/schemas/ServiceLine" }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "id": "LIN-26-084729",
+                    "name": "Core Platform Squad",
+                    "workspace_id": "WS-26-000021",
+                    "organization_id": "ORG-26-090500",
+                    "product_line": "talent",
+                    "execution_model": "capacity",
+                    "billing_model": "monthly_retainer",
+                    "status": "active",
+                    "project_tags": ["PROJ-26-004281"],
+                    "subscription_id": "SUB-26-001122",
+                    "config": { "sprint_length_days": 14, "timezone": "UTC" },
+                    "started_at": "2026-01-15T09:00:00Z",
+                    "ends_at": null,
+                    "created_at": "2026-01-10T08:30:00Z",
+                    "updated_at": "2026-04-01T11:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/service-lines/{lin_code}/usage": {
+      "get": {
+        "summary": "Get service line usage metrics",
+        "description": "Returns metered usage and cost breakdown for a Service Line over a billing period.",
+        "operationId": "getServiceLineUsage",
+        "tags": ["Service Lines"],
+        "parameters": [
+          {
+            "name": "lin_code",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the Service Line.",
+            "schema": { "type": "string", "pattern": "^LIN-" }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Start date for the usage period (YYYY-MM-DD).",
+            "schema": { "type": "string", "format": "date" }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "End date for the usage period (YYYY-MM-DD).",
+            "schema": { "type": "string", "format": "date" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usage and cost metrics for the service line.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "$ref": "#/components/schemas/ServiceLineUsage" }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "service_line_id": "LIN-26-084729",
+                    "period": { "from": "2026-03-01", "to": "2026-03-31" },
+                    "metrics": [
+                      { "metric": "engineer_days", "quantity": 40, "unit": "days", "cost": 12000.00, "currency": "USD" },
+                      { "metric": "ci_minutes", "quantity": 8500, "unit": "minutes", "cost": 85.00, "currency": "USD" }
+                    ],
+                    "total_cost": 12085.00,
+                    "currency": "USD"
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/orgs": {
+      "get": {
+        "summary": "List all organizations",
+        "description": "Returns a paginated list of organizations the caller belongs to or manages.",
+        "operationId": "listOrgs",
+        "tags": ["Organizations"],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by organization status.",
+            "schema": { "type": "string", "enum": ["active", "suspended", "cancelled"] }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Pagination cursor from a previous response.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results to return (1–100).",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of organizations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Organization" }
+                    },
+                    "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "ORG-26-090500",
+                      "name": "Acme Corp",
+                      "slug": "acme-corp",
+                      "status": "active",
+                      "plan_id": "PLAN-26-000003",
+                      "owner_id": "USR-26-000044",
+                      "workspace_count": 4,
+                      "active_service_lines": 7,
+                      "created_at": "2025-11-01T10:00:00Z",
+                      "updated_at": "2026-04-10T08:00:00Z"
+                    }
+                  ],
+                  "meta": { "cursor": null, "has_more": false }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/workspaces": {
+      "get": {
+        "summary": "List all workspaces",
+        "description": "Returns a paginated list of workspaces the caller has access to.",
+        "operationId": "listWorkspaces",
+        "tags": ["Workspaces"],
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "description": "Filter by organization ID.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by workspace status.",
+            "schema": { "type": "string", "enum": ["active", "archived"] }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Pagination cursor from a previous response.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results to return (1–100).",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of workspaces.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Workspace" }
+                    },
+                    "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "WS-26-000021",
+                      "organization_id": "ORG-26-090500",
+                      "name": "Platform Engineering",
+                      "slug": "platform-engineering",
+                      "status": "active",
+                      "member_count": 12,
+                      "active_service_lines": 3,
+                      "health_score": 87,
+                      "cost_mtd": 34500.00,
+                      "currency": "USD",
+                      "created_at": "2025-11-05T09:00:00Z",
+                      "updated_at": "2026-04-12T07:30:00Z"
+                    }
+                  ],
+                  "meta": { "cursor": null, "has_more": false }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/agents/{agent_id}/runs": {
+      "post": {
+        "summary": "Trigger an agent run",
+        "description": "Initiates a new run for the specified AI agent within its configured service line.",
+        "operationId": "createAgentRun",
+        "tags": ["AI Agent Gateway"],
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the agent (e.g. AGT-26-000012).",
+            "schema": { "type": "string", "pattern": "^AGT-" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AgentRunInput" },
+              "example": {
+                "input": { "prompt": "Summarise sprint velocity for Q1 2026." },
+                "triggered_by": "USR-26-000044"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The newly created agent run.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "$ref": "#/components/schemas/AgentRun" }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "id": "RUN-26-001812",
+                    "agent_id": "AGT-26-000012",
+                    "service_line_id": "LIN-26-091844",
+                    "status": "running",
+                    "input": { "prompt": "Summarise sprint velocity for Q1 2026." },
+                    "output": null,
+                    "tokens_used": null,
+                    "duration_ms": null,
+                    "triggered_by": "USR-26-000044",
+                    "started_at": "2026-04-15T10:22:00Z",
+                    "completed_at": null
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/observability/health": {
+      "get": {
+        "summary": "Get health for all service lines",
+        "description": "Returns health scores and risk signals for all active service lines in a workspace.",
+        "operationId": "getObservabilityHealth",
+        "tags": ["Observability & Metrics"],
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "description": "Filter health records by workspace ID.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "description": "Filter health records by organization ID.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of health records for active service lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/HealthRecord" }
+                    }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "service_line_id": "LIN-26-084729",
+                      "name": "Core Platform Squad",
+                      "health_score": 87,
+                      "risk_level": "low",
+                      "signals": [
+                        { "signal": "velocity_trend", "status": "green", "value": "+8% WoW" },
+                        { "signal": "open_incidents", "status": "green", "value": "0" },
+                        { "signal": "pr_cycle_time", "status": "amber", "value": "2.4 days avg" }
+                      ]
+                    },
+                    {
+                      "service_line_id": "LIN-26-091844",
+                      "name": "Mobile Engineering Squad",
+                      "health_score": 72,
+                      "risk_level": "medium",
+                      "signals": [
+                        { "signal": "velocity_trend", "status": "amber", "value": "-5% WoW" },
+                        { "signal": "open_incidents", "status": "green", "value": "1" },
+                        { "signal": "pr_cycle_time", "status": "red", "value": "4.1 days avg" }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/capabilities/ods/requests": {
+      "post": {
+        "summary": "Submit an ODS scoping request",
+        "description": "Creates a new On-Demand Solutions request to begin the scoping and commercials process.",
+        "operationId": "createOdsRequest",
+        "tags": ["ODS"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OdsRequestInput" },
+              "example": {
+                "organization_id": "ORG-26-090500",
+                "workspace_id": "WS-26-000021",
+                "subscription_id": "SUB-26-001122",
+                "project_tags": ["PROJ-26-004281"],
+                "title": "Rebuild checkout flow with React 19",
+                "description": "Migrate the existing checkout service to a React 19 Server Components architecture.",
+                "desired_outcome": "50% reduction in checkout load time and improved Core Web Vitals.",
+                "acceptance_criteria": [
+                  "All existing tests pass",
+                  "LCP < 1.5s on 4G",
+                  "Zero regressions in order completion rate"
+                ],
+                "timeline_weeks": 8,
+                "budget_max": 24000,
+                "currency": "USD"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The newly created ODS request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "$ref": "#/components/schemas/OdsRequest" }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "id": "OREQ-26-000041",
+                    "status": "scoping",
+                    "title": "Rebuild checkout flow with React 19",
+                    "scope_id": null,
+                    "created_at": "2026-04-15T09:05:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/talent/requests": {
+      "post": {
+        "summary": "Create a talent placement request",
+        "description": "Submits a new request to match and place vetted engineering talent into a workspace.",
+        "operationId": "createTalentRequest",
+        "tags": ["Talent Marketplace"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TalentRequestInput" },
+              "example": {
+                "workspace_id": "WS-26-000021",
+                "subscription_id": "SUB-26-001122",
+                "project_tags": ["PROJ-26-004281"],
+                "role": "Senior React Engineer",
+                "required_skills": ["React", "TypeScript", "Node.js"],
+                "hours_per_week": 40,
+                "start_date": "2026-05-01",
+                "engagement_type": "staff_augmentation",
+                "description": "Senior front-end engineer to own the design system and new checkout UI.",
+                "duration_weeks": 24
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The newly created talent request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "$ref": "#/components/schemas/TalentRequest" }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "id": "TREQ-26-000091",
+                    "workspace_id": "WS-26-000021",
+                    "status": "matching",
+                    "role": "Senior React Engineer",
+                    "hours_per_week": 40,
+                    "start_date": "2026-05-01",
+                    "created_at": "2026-04-15T09:10:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    }
+  }
+}

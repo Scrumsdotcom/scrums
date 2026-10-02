@@ -1,0 +1,177 @@
+---
+title: 'Events'
+description: 'The immutable platform event stream. Events record every significant state change and action across all Service Lines, resources, and actors.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+Events (`EVT-*`) are immutable records in the Scrums.com platform event stream. Every significant action — a Service Line activating, an agent completing a run, an invoice being finalized, a user being invited — produces an event.
+
+Events are the source of truth for the [Webhooks](/api-reference/core/webhooks) system. When you configure a webhook, you are subscribing to events by type. Events are also queryable directly via this API for debugging, integration development, and operational visibility.
+
+Events cannot be created or modified via the API. They are generated exclusively by the platform.
+
+## Core Concepts
+
+### Event structure
+
+Every event shares a common envelope: an identifier, a type, a timestamp, an actor, a subject, and a payload. The payload is specific to the event type.
+
+### Event types and domains
+
+Events are namespaced by domain and action:
+
+| Domain | Example types |
+|--------|--------------|
+| `service_line` | `.activated`, `.paused`, `.closed`, `.status_changed` |
+| `invoice` | `.finalized`, `.paid`, `.payment_failed`, `.voided` |
+| `incident` | `.opened`, `.resolved`, `.severity_changed` |
+| `agent` | `.run.started`, `.run.completed`, `.run.failed`, `.policy_violated` |
+| `user` | `.invited`, `.role_changed`, `.deactivated` |
+| `integration` | `.connected`, `.sync_failed`, `.disconnected` |
+| `execution` | `.blocked`, `.resumed` |
+| `capacity` | `.utilisation_warning`, `.gap_detected` |
+| `task` | `.created`, `.status_changed`, `.assigned` |
+| `webhook` | `.delivery_failed`, `.verification_failed` |
+
+### Events vs audit logs
+
+Events represent things that happened on the platform (state changes, system notifications). [Audit logs](/api-reference/core/audit-logs) record every write action taken by an actor. They overlap in some areas but have different purposes: events drive integrations and webhooks; audit logs serve compliance and investigation.
+
+## Endpoints
+
+### GET /v1/events
+
+Query the event stream for an organization.
+
+#### Request
+
+```bash
+GET /v1/events?organization_id=ORG-26-090500&type=service_line.activated&from=2026-04-01
+Authorization: Bearer <token>
+```
+
+**Query parameters**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `organization_id` | string | Required. Organization scope. |
+| `workspace_id` | string | Filter to a specific workspace |
+| `type` | string | Event type filter (e.g. `invoice.finalized`) |
+| `subject_type` | string | Resource type of the event subject |
+| `subject_id` | string | ID of the specific subject resource |
+| `actor_id` | string | Filter by actor |
+| `from` | datetime | Start of time range |
+| `to` | datetime | End of time range |
+| `cursor` | string | Pagination cursor |
+| `limit` | integer | Results per page (max 100, default 25) |
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "EVT-26-044912",
+      "type": "service_line.activated",
+      "organization_id": "ORG-26-090500",
+      "workspace_id": "WS-26-000021",
+      "actor": {
+        "type": "user",
+        "id": "USR-26-000044"
+      },
+      "subject": {
+        "type": "service_line",
+        "id": "LIN-26-084729"
+      },
+      "payload": {
+        "previous_status": "draft",
+        "new_status": "active",
+        "execution_model": "capacity",
+        "product_line": "talent"
+      },
+      "created_at": "2026-01-15T09:00:00Z"
+    },
+    {
+      "id": "EVT-26-044899",
+      "type": "agent.run.completed",
+      "organization_id": "ORG-26-090500",
+      "workspace_id": "WS-26-000021",
+      "actor": {
+        "type": "agent",
+        "id": "AGT-26-000012"
+      },
+      "subject": {
+        "type": "run",
+        "id": "RUN-26-001812"
+      },
+      "payload": {
+        "service_line_id": "LIN-26-091100",
+        "duration_ms": 2411,
+        "tokens_used": 1840,
+        "outcome": "success"
+      },
+      "created_at": "2026-04-15T09:12:46Z"
+    }
+  ],
+  "meta": {
+    "cursor": "eyJpZCI6IkVWVC0yNi0wNDQ5MTIifQ",
+    "has_more": true
+  }
+}
+```
+
+### GET /v1/events/{event_id}
+
+Retrieve a single event with full payload.
+
+## Common Workflows
+
+### Debugging a webhook
+
+If a webhook is not firing as expected, query the event stream directly to confirm the event was produced:
+
+```bash
+# Confirm the event exists
+GET /v1/events?organization_id=ORG-26-090500&type=service_line.activated&subject_id=LIN-26-084729
+
+# If it exists, check webhook delivery
+GET /v1/webhooks/WHK-26-000004/deliveries
+```
+
+### Watching for invoice events
+
+```bash
+GET /v1/events?organization_id=ORG-26-090500&type=invoice.finalized&from=2026-04-01
+```
+
+### Building an activity feed
+
+```bash
+GET /v1/events?workspace_id=WS-26-000021&from=2026-04-14T00:00:00Z&to=2026-04-15T00:00:00Z
+```
+
+## Objects
+
+### Event
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `EVT-*` identifier |
+| `type` | string | Event type (namespaced, e.g. `service_line.activated`) |
+| `organization_id` | string | Organization context |
+| `workspace_id` | string | Workspace context (null for org-level events) |
+| `actor` | object | Actor type and ID |
+| `subject` | object | Subject resource type and ID |
+| `payload` | object | Event-type-specific data |
+| `created_at` | datetime | When the event was recorded |
+
+## Best Practices
+
+- **Use webhooks for real-time reactions; use the events API for debugging.** Querying events in a polling loop is not a substitute for webhooks and will quickly exhaust rate limits on high-volume accounts.
+- **Filter by `subject_id` for resource-level event history.** Every event related to a specific `LIN-*`, `INV-*`, or `AGT-*` can be retrieved by filtering on `subject_id`. This gives you a timeline of everything that happened to a resource.
+- **Events are retained for 90 days.** For long-term history and compliance, use [Audit Logs](/api-reference/core/audit-logs), which have a 12-month retention window.

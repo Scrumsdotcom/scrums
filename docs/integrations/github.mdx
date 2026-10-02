@@ -1,0 +1,91 @@
+---
+title: "GitHub"
+description: "Connect GitHub to surface code quality, PR analytics, and deployment data in your Scrums.com workspace."
+---
+
+## Overview
+
+Our GitHub integration collects metadata about your organization’s activity across repositories, pull requests, and deployments. **We never read, transmit, or store source code.** Sensitive data, such as branch names and pull request titles, are always encrypted.
+
+## Why Integrate GitHub with [Scrums.com](https://www.scrums.com)?
+
+- **Automated Analytics:** Gain insights into your team's delivery performance, DORA metrics, code churn, and more.
+- **No Code Changes Needed:** Integration is secure and token-based, requiring no changes to your repositories.
+- **Real-Time & Historical Data:** See results in minutes, with both real-time and historical analysis.
+
+## Permissions
+
+We request only the necessary permissions to analyze Git metadata. Below is a description of the scopes requested when connecting to GitHub:
+
+- **Repository**: Read access to actions, checks, code, commit statuses, deployments, issues, metadata, and pull requests
+- **Organization**: Read access to members, organization administration, organization copilot seat management, and organization projects
+- **User**: Read access to email addresses, public repositories, public organization information, and public user profile data
+
+We require read access to metadata for commits, branches, and releases. Since GitHub’s API does not offer more granular permissions for these specific endpoints, we must request read access to all repository contents. **Please note that we never read, transmit, or store source code.**
+
+You can learn more about permissions for GitHub Apps in [GitHub’s documentation ](https://docs.github.com/en/rest/authentication/permissions-required-for-github-apps?apiVersion=2022-11-28).
+
+## Step-by-Step Integration Instructions
+
+### 1. Log in to [Scrums.com](https://www.scrums.com)
+
+- Go to [Scrums.com](https://www.scrums.com) and sign in to your account.
+
+### 2. Navigate to Integrations
+
+- In your dashboard, click on your profile or account menu.
+- Select **Integrations** from the dropdown or sidebar.
+
+### 3. Add a New GitHub Integration
+
+- Click **Add Integration** and select **GitHub** from the list of available integrations.
+- Choose the project you want to link to GitHub.
+
+### 4. Authorize [Scrums.com](https://www.scrums.com) to Access GitHub
+
+- You will be prompted to enter your GitHub organization’s account name (just the handle, e.g., `scrumsdotcom`).
+- Generate a ﻿[GitHubsettings/tokens](https://github.com/settings/tokens)﻿:
+  - Click **Generate new token (classic)**
+  - Set expiry to **none**
+  - Under **user**, select:
+    - `read:user`
+    - `user:email`
+  - Under **repo**, select:
+    - `repo` — tick the **parent** box (auto-includes `repo:status`, `repo_deployment`, `public_repo`, and grants private repo read)
+  - Under **audit log**, select:
+    - `read:audit_log`
+  - Under **project**, select:
+    - `read:project`
+  - Under **admin:org**, select:
+    - `read:org` 
+
+- Copy the generated token and paste it into the [Scrums.com](https://www.scrums.com) integration form.
+
+### 5. Add GitHub Repositories
+
+- After authorizing, click **Add** next to GitHub repositories.
+- Select your organization, enter the repository name, and specify the branch (usually `main` or `master`).
+- Save your changes.
+
+### 6. Data Sync & Dashboard
+
+- [Scrums.com](https://www.scrums.com) will begin syncing your GitHub data. Initial results appear within minutes, and the platform will continue to backfill historical data.
+- Explore your analytics dashboards for real-time insights. 
+
+ 
+
+## Best Practices
+
+- **Use a Long-Term Admin Account:** Set up integrations using an account that will remain active to avoid disruptions.
+- **Token Security:** Store your GitHub personal access token securely. Do not share it publicly.
+- **Repository Selection:** Only connect repositories relevant to your project for focused analytics. 
+
+ 
+
+## Troubleshooting & Support
+
+- **Authorization Issues:** Ensure your GitHub account has the required permissions.
+- **Data Not Syncing:** Double-check your token permissions and repository names. Our integration page will alert you if a token has expired or a repo name is invalid.
+- **Need Help?** Contact support through your [Scrums.com](https://www.scrums.com) dashboard.
+
+ 

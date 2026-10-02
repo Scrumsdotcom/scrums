@@ -1,0 +1,47 @@
+---
+title: 'Policies'
+description: 'Governance rules, access policies, and compliance configurations applied to platform resources and agents.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+Policies are structured governance rules applied to platform resources. They govern access control, agent behaviour, compliance requirements, and operational constraints. Policies can be scoped to an organization, workspace, project, or individual resource.
+
+## Base path
+
+```
+/v1/organizations/{organization_id}/policies
+```
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/organizations/{org_id}/policies` | List policies for an organization |
+| `POST` | `/v1/organizations/{org_id}/policies` | Create a policy |
+| `GET` | `/v1/policies/{id}` | Get a policy |
+| `PATCH` | `/v1/policies/{id}` | Update a policy |
+| `DELETE` | `/v1/policies/{id}` | Delete a policy |
+
+## Attributes
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier |
+| `organization_id` | string | Parent organization reference |
+| `name` | string | Policy name |
+| `type` | enum | `access`, `agent`, `compliance`, `data`, `operational` |
+| `scope` | enum | `organization`, `workspace`, `project`, `resource` |
+| `subject_id` | string | Optional: ID of the scoped subject |
+| `rules` | array | Ordered list of policy rules |
+| `enforced` | boolean | Whether the policy is actively enforced |
+| `created_at` | datetime | ISO 8601 timestamp |
+| `updated_at` | datetime | ISO 8601 timestamp |
+
+## Relationships
+
+<Note>
+  Policies are applied to [Agents](/api-reference/core/agents), [Workspaces](/api-reference/core/workspaces), and [Projects](/api-reference/core/projects). The [Agent Gateway](/api-reference/product/agent-gateway) evaluates policies on every agent invocation.
+</Note>

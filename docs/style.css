@@ -1,0 +1,216 @@
+/* Blue navbar treatment.
+   Mintlify exposes no docs.json key for header background, so these override
+   the Tailwind utilities it emits on #navbar. Selectors verified against the
+   rendered DOM; re-check after a Mintlify major upgrade. */
+
+:root {
+  --navbar-bg: #0d46db;
+  --footer-bg: #041745;
+  /* 5.17:1 on --navbar-bg — keep at or above 0.80 alpha for WCAG AA */
+  --navbar-fg-muted: rgba(255, 255, 255, 0.8);
+  --navbar-border: rgba(255, 255, 255, 0.18);
+  /* 9.9:1 on --footer-bg */
+  --footer-fg-muted: rgba(255, 255, 255, 0.72);
+  /* Tab underline, hover and selected alike. */
+  --navbar-underline: #fff;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Header background. Mintlify swaps opacity utilities via data-is-opaque as you
+   scroll; pin both states to the same blue so it doesn't fade at the top. */
+#navbar-transition {
+  background-color: var(--navbar-bg) !important;
+  border-bottom-color: var(--navbar-border) !important;
+}
+
+#navbar {
+  color: #fff;
+}
+
+/* Mintlify's gray text utilities, both light and dark variants. */
+#navbar [class*="text-gray-"] {
+  color: var(--navbar-fg-muted) !important;
+}
+
+#navbar [class*="fill-gray-"] {
+  fill: var(--navbar-fg-muted) !important;
+}
+
+#navbar a:hover [class*="text-gray-"],
+#navbar button:hover [class*="text-gray-"],
+#navbar [class*="text-gray-"]:hover {
+  color: #fff !important;
+}
+
+/* Mobile: current-page breadcrumb should read as primary, not muted. */
+#navbar .font-semibold[class*="text-gray-9"] {
+  color: #fff !important;
+}
+
+/* Tab strip */
+#navbar .nav-tabs-item {
+  color: var(--navbar-fg-muted) !important;
+}
+
+#navbar .nav-tabs-item:hover,
+#navbar .nav-tabs-item[data-active="true"] {
+  color: #fff !important;
+}
+
+/* Underline for both selected (bg-primary) and hover (group-hover:bg-gray-200).
+   Same colour for both; only the label weight distinguishes them. */
+#navbar .nav-tabs-item[data-active="true"] > div,
+#navbar .nav-tabs-item:hover > div {
+  background-color: var(--navbar-underline) !important;
+}
+
+/* Search field: translucent white rather than the light/dark surface colors. */
+#search-bar-entry {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  color: var(--navbar-fg-muted) !important;
+  filter: none !important;
+  --tw-ring-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+#search-bar-entry:hover {
+  background-color: rgba(255, 255, 255, 0.18) !important;
+  --tw-ring-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+#theme-preference-menu-trigger:hover svg {
+  color: #fff !important;
+}
+
+/* Primary CTA — inverted. bg-primary-dark (#0d3eb3) is within a few points of
+   the navbar blue, so the button would vanish; white-on-blue instead. */
+#topbar-cta-button a > span:first-child {
+  background-color: #fff !important;
+}
+
+#topbar-cta-button a span,
+#topbar-cta-button a svg {
+  color: var(--navbar-bg) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Footer. Dark navy so the white logo reads; it was invisible on the default
+   white surface. Same override approach as the navbar.
+   --------------------------------------------------------------------------- */
+
+#footer {
+  background-color: var(--footer-bg) !important;
+  border-top-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+#footer [class*="text-gray-"] {
+  color: var(--footer-fg-muted) !important;
+}
+
+/* Column headings carry a bare text-gray-950; the muted links carry
+   text-gray-950/50. Match the exact token so the two don't collapse. */
+#footer [class~="text-gray-950"] {
+  color: #fff !important;
+}
+
+#footer a:hover,
+#footer a:hover [class*="text-gray-"] {
+  color: #fff !important;
+}
+
+/* Horizontal rule above the lower footer row. */
+#footer [class~="bg-gray-100"] {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Social icons are mask-image svgs — background-color is the icon color. */
+#footer svg[class*="bg-gray-"] {
+  background-color: var(--footer-fg-muted) !important;
+}
+
+#footer a:hover svg[class*="bg-gray-"] {
+  background-color: #fff !important;
+}
+
+/* Selected pill on the footer's light/dark/system switch. */
+#footer button[class~="bg-gray-200"] {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+/* Column headings in mono, matching the headings elsewhere on the site.
+   Link labels deliberately stay in the body face: mono at 14px does not fit
+   Mintlify's ~144px link columns, so mono links either clip (5 labels) or wrap
+   onto two lines (6-10 labels) at every tagline width. Headings have no such
+   constraint once allowed to wrap. */
+#footer [class~="text-gray-950"] {
+  font-family: var(--font-mono);
+}
+
+/* Mono headings are wider than the columns Mintlify sized for the body face. */
+#footer p[class*="font-semibold"] {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+
+/* Footer tagline, injected by footer-tagline.js. */
+#footer .footer-tagline {
+  font-family: var(--font-mono);
+  max-width: 30rem;
+}
+
+#footer .footer-tagline-title {
+  font-size: 1.0625rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+#footer .footer-tagline-sub {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--footer-fg-muted);
+  margin: 0;
+}
+
+/* The column is md:flex-col justify-between with gap-y-24 (6rem), tuned to push
+   the socials to the bottom under a lone logo. With the tagline as a third
+   child, justify-between strands it mid-column — group them at the top. */
+@media (min-width: 768px) {
+  #footer .footer-brand-col {
+    justify-content: flex-start !important;
+    row-gap: 1.75rem !important;
+  }
+}
+
+/* At lg the brand column and the four link columns share a 920px row with no
+   slack (192 + 32 gap + 696). Cap the tagline so it cannot steal that width. */
+@media (min-width: 1024px) {
+  #footer .footer-tagline {
+    max-width: 20rem;
+  }
+}
+
+/* Below 1024 the row cannot hold the brand block plus four link columns.
+   Mintlify coped by truncating link labels so the columns could shrink; since
+   we let them wrap instead (for mono), they no longer shrink and would collide.
+   Stack them. This also fixes an upstream overlap at exactly 768px. */
+@media (max-width: 1023px) {
+  #footer .footer-brand-row {
+    flex-direction: column !important;
+  }
+}
+
+/* Below md the brand column is a row (logo | socials). Let it wrap so the
+   tagline takes a full line of its own instead of squeezing between them. */
+@media (max-width: 767px) {
+  #footer .footer-brand-col {
+    flex-wrap: wrap;
+    row-gap: 1.5rem;
+  }
+
+  #footer .footer-tagline {
+    flex-basis: 100%;
+    text-align: center;
+  }
+}

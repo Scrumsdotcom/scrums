@@ -1,0 +1,51 @@
+---
+title: "Datadog"
+description: "Connect Datadog to surface infrastructure metrics, MTTR data, and observability signals in Scrums.com."
+---
+
+## Overview
+
+The Datadog integration brings infrastructure health and observability data into SEOP's delivery analytics layer. Incident data, MTTR signals, and infrastructure metrics from Datadog feed directly into your Analytics dashboard, completing the DORA metric picture alongside code and deployment data.
+
+## What syncs
+
+| Data | Direction | Details |
+|---|---|---|
+| Incidents | Inbound | Incident severity, duration, and resolution time |
+| MTTR | Inbound | Mean time to recovery calculated from incident data |
+| Infrastructure metrics | Inbound | CPU, memory, error rates — visible in delivery context |
+| Monitors and alerts | Inbound | Active alerts surfaced in the SEOP Dashboard |
+
+## Requirements
+
+- Datadog API key and Application key (Admin access required to generate)
+- Scrums.com workspace Admin access
+
+## Setup
+
+<Steps>
+  <Step title="Generate API credentials">
+    In Datadog, go to **Organisation Settings > API Keys** and create a new API key. Then go to **Organisation Settings > Application Keys** and create an Application key. Copy both values.
+  </Step>
+  <Step title="Open Integrations">
+    In your Scrums.com workspace, go to **Settings > Integrations** and select **Datadog**.
+  </Step>
+  <Step title="Enter API credentials">
+    Paste your Datadog API key and Application key into the configuration fields. Select your Datadog site (e.g. `datadoghq.com`, `datadoghq.eu`).
+  </Step>
+  <Step title="Select data to sync">
+    Choose which Datadog monitors and services to include. You can filter by service tags to limit data to your production environment.
+  </Step>
+  <Step title="Save and verify">
+    Click **Save**. Incident and infrastructure data will begin appearing in your Analytics dashboard within the next sync window.
+  </Step>
+</Steps>
+
+## DORA metrics with Datadog
+
+When combined with the GitHub or Azure DevOps integration, Datadog incident data completes the DORA metric set:
+
+- **MTTR** is calculated from Datadog incident open-to-resolved time
+- **Change failure rate** is correlated with deployment events from your source control integration
+
+This gives engineering leaders a full picture of delivery reliability in a single dashboard.

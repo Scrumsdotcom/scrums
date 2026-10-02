@@ -1,0 +1,63 @@
+---
+title: "Integration Setup"
+description: "Step-by-step instructions for setting up integrations between SEOP and your existing tools."
+---
+
+## Overview
+
+All integrations are managed from a single location inside your Scrums.com workspace:
+
+**Settings > Integrations**
+
+Navigate there, find your tool from the full list of supported integrations, and follow the on-screen steps to connect. Each integration walks you through authorisation and configuration directly in the platform.
+
+## Before you start
+
+Most integrations require Admin access on both Scrums.com and the tool you're connecting. Confirm you have the right permissions in each system before starting setup.
+
+Common requirements:
+
+| Tool | Required permissions |
+|---|---|
+| Jira | Jira Admin or Project Admin |
+| GitHub | Repository Admin or Organisation Owner |
+| Slack | Slack Workspace Admin |
+| Azure DevOps | Project Collection Administrator |
+| Datadog | API key (Admin access) |
+| SonarCloud | Organisation Admin |
+
+## General setup steps
+
+<Steps>
+  <Step title="Open Settings > Integrations">
+    Navigate to your workspace settings and select the Integrations tab. You will see the full list of available integrations.
+  </Step>
+  <Step title="Select your tool">
+    Find the tool you want to connect. Click **Connect** to begin the setup flow.
+  </Step>
+  <Step title="Authorise access">
+    You will be redirected to the tool's authorisation page. Log in and grant Scrums.com the required permissions. For OAuth-based integrations (Jira, GitHub, Slack), this is handled automatically. For API-key-based integrations (Datadog, SonarCloud), you will paste your key directly into the settings form.
+  </Step>
+  <Step title="Configure sync settings">
+    Select which projects, repositories, or channels to connect. Set your sync frequency (real-time or hourly where applicable).
+  </Step>
+  <Step title="Verify and save">
+    Click **Save** and confirm the connection is active. Your integration status will show as **Connected** in the Integrations list.
+  </Step>
+</Steps>
+
+## Per-tool setup guides
+
+For detailed instructions specific to each tool, see the individual setup guides:
+
+- [Jira](/integrations/jira)
+- [GitHub](/integrations/github)
+- [Slack](/integrations/slack)
+- [Microsoft Teams](/integrations/microsoft-teams)
+- [Azure DevOps](/integrations/azure-devops)
+- [Datadog](/integrations/datadog)
+- [SonarCloud](/integrations/sonarcloud)
+
+## Getting help
+
+Need help connecting a specific tool? Contact your Enablement Partner or email [support@scrums.com](mailto:support@scrums.com) and the team will assist with setup.

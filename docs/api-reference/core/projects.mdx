@@ -1,0 +1,226 @@
+---
+title: 'Projects'
+description: 'Project labels applied to Service Lines and work items. Projects are not hierarchy — they are cross-cutting tags that group work across product lines and workspaces.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+A project (`PROJ-*`) is a label, not a container. Projects do not sit in the hierarchy between workspaces and Service Lines. There is no "project scope" in access control, no "project-owned" resources, and no billing boundary at the project level.
+
+Projects exist to answer one question: across all the Service Lines and work items on this platform, which ones relate to a given initiative?
+
+A talent engagement `LIN-*`, an ODS outcome `LIN-*`, an infrastructure estate `LIN-*`, and a hundred tasks (`TSK-*`) can all carry the same `PROJ-26-004281` tag. That tag is how you get a cross-platform, cross-product-line view of everything related to a named initiative.
+
+## Core Concepts
+
+### Where project tags appear
+
+Projects are applied as labels on:
+- [Service Lines](/api-reference/core/service-lines) — via `project_tags[]` on the `LIN-*` object
+- [Tasks & Work Items](/api-reference/core/tasks) — via `project_id` on the `TSK-*` object
+
+Projects do not appear on: users, invoices, capacity pools, or integrations. Those resources are scoped to organizations and workspaces.
+
+### Scope and visibility
+
+A project is scoped to an organization. Its label can be applied across any workspace within that organization. This is how cross-workspace project visibility is achieved without duplicating structure.
+
+### Projects and billing
+
+There is no project-level billing. Costs are always anchored to [Service Lines](/api-reference/core/service-lines). If you need cost visibility per project, query usage across all `LIN-*` that carry that `project_tag`.
+
+## Endpoints
+
+### GET /v1/projects
+
+List all projects within an organization.
+
+#### Request
+
+```bash
+GET /v1/projects?organization_id=ORG-26-090500
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "PROJ-26-004281",
+      "organization_id": "ORG-26-090500",
+      "name": "Payments Platform Rebuild",
+      "slug": "payments-platform-rebuild",
+      "status": "active",
+      "description": "Full rebuild of the payments processing stack onto event-driven architecture.",
+      "service_line_count": 4,
+      "open_task_count": 38,
+      "created_at": "2025-11-01T10:00:00Z",
+      "updated_at": "2026-04-14T16:00:00Z"
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+### POST /v1/projects
+
+Create a new project label.
+
+#### Request
+
+```json
+{
+  "organization_id": "ORG-26-090500",
+  "name": "Payments Platform Rebuild",
+  "slug": "payments-platform-rebuild",
+  "description": "Full rebuild of the payments processing stack onto event-driven architecture."
+}
+```
+
+#### Response
+
+Returns the created project with `status: "active"`.
+
+#### Notes
+
+- `slug` must be unique within the organization.
+- Creating a project does not create any Service Lines, workspaces, or tasks. It is purely a label until you tag other resources with it.
+
+### GET /v1/projects/{project_id}
+
+Retrieve a project with its current resource summary.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "PROJ-26-004281",
+    "organization_id": "ORG-26-090500",
+    "name": "Payments Platform Rebuild",
+    "slug": "payments-platform-rebuild",
+    "status": "active",
+    "description": "Full rebuild of the payments processing stack onto event-driven architecture.",
+    "service_lines": [
+      {
+        "id": "LIN-26-084729",
+        "name": "Backend Engineering - Q2 2026",
+        "product_line": "talent",
+        "status": "active"
+      },
+      {
+        "id": "LIN-26-091100",
+        "name": "Payments Infra - Production",
+        "product_line": "infrastructure",
+        "status": "active"
+      }
+    ],
+    "service_line_count": 4,
+    "open_task_count": 38,
+    "cost_mtd": 57490.00,
+    "currency": "USD",
+    "created_at": "2025-11-01T10:00:00Z",
+    "updated_at": "2026-04-14T16:00:00Z"
+  }
+}
+```
+
+### PATCH /v1/projects/{project_id}
+
+Update a project label's metadata.
+
+#### Request
+
+```json
+{
+  "name": "Payments Platform Rebuild - Phase 2",
+  "status": "archived"
+}
+```
+
+#### Notes
+
+- Archiving a project does not affect Service Lines or tasks that carry the label. It only removes the project from active lists.
+- `project_tags` on Service Lines are not automatically removed when a project is archived.
+
+### GET /v1/projects/{project_id}/service-lines
+
+List all Service Lines tagged with this project.
+
+#### Response
+
+Returns a list of `LIN-*` objects with the full Service Line shape. Equivalent to `GET /v1/service-lines?project_tag=PROJ-26-004281`.
+
+### GET /v1/projects/{project_id}/tasks
+
+List all tasks tagged with this project.
+
+#### Response
+
+Returns a list of `TSK-*` objects. Equivalent to `GET /v1/tasks?project_id=PROJ-26-004281`.
+
+## Common Workflows
+
+### Building a cross-platform project view
+
+```bash
+# Get the project summary (includes linked service lines)
+GET /v1/projects/PROJ-26-004281
+
+# Get all open tasks under the project
+GET /v1/projects/PROJ-26-004281/tasks?status=open
+
+# Get usage cost for all project-tagged service lines this month
+GET /v1/service-lines?project_tag=PROJ-26-004281
+# Then loop each LIN-* and GET /v1/service-lines/{lin_code}/usage
+```
+
+### Tagging new work to a project
+
+```bash
+# Tag a new service line at creation
+POST /v1/service-lines
+{ "project_tags": ["PROJ-26-004281"], ... }
+
+# Tag an existing service line
+PATCH /v1/service-lines/LIN-26-091100
+{ "project_tags": ["PROJ-26-004281", "PROJ-26-005501"] }
+
+# Tag a task
+POST /v1/tasks
+{ "project_id": "PROJ-26-004281", ... }
+```
+
+## Objects
+
+### Project
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `PROJ-*` identifier |
+| `organization_id` | string | Parent organization (`ORG-*`) |
+| `name` | string | Display name |
+| `slug` | string | URL-safe identifier, unique within the org |
+| `status` | enum | `active`, `archived` |
+| `description` | string | Optional description |
+| `service_line_count` | integer | Number of tagged `LIN-*` |
+| `open_task_count` | integer | Number of open `TSK-*` tagged to this project |
+| `cost_mtd` | number | Month-to-date cost across all tagged Service Lines |
+| `created_at` | datetime | Creation timestamp |
+| `updated_at` | datetime | Last modification timestamp |
+
+## Best Practices
+
+- **Treat projects as dashboards, not containers.** A project label gives you a cross-platform lens. Build views and reports using it, but do not architect systems that depend on project hierarchy — there is none.
+- **Tag at Service Line creation.** The easiest time to tag a `LIN-*` is when the product line request is created (talent request, ODS scope, infrastructure estate). Retroactively tagging is possible but creates reporting gaps.
+- **One project per named initiative.** Do not create per-sprint or per-quarter projects. Those are operational details. Projects are strategic groupings that span months and multiple Service Lines.
+- **Archive, do not delete.** Archived projects preserve their label history. Deleted projects would orphan the `project_tag` values on Service Lines and tasks, causing broken reporting.

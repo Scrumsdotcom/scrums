@@ -1,0 +1,87 @@
+---
+title: "Azure Boards"
+description: "Connect Azure Boards to surface sprint progress, work item flow, and delivery metrics in your Scrums.com workspace."
+---
+
+<Note>
+  The Azure Boards integration is currently in **Alpha**. To have it enabled on your account, contact [support@scrums.com](mailto:support@scrums.com).
+</Note>
+
+## Overview
+
+The Azure Boards integration connects your work item tracking and sprint management with Scrums.com, enabling analytics and delivery insights. We collect only the metadata required to provide value — never your work item content or attachments. Sensitive data, such as board names and work item titles, are always encrypted.
+
+## Why integrate Azure Boards?
+
+- **Automated analytics** — Gain insights into your team's sprint progress, work item flow, and delivery metrics.
+- **No code changes needed** — Integration is secure and token-based, requiring no changes to your Azure Boards setup.
+- **Real-time & historical data** — See results in minutes, with both real-time and historical analysis.
+
+## Permissions
+
+| Scope | Purpose |
+| --- | --- |
+| Work Items (Read) | Board metadata, sprints, and work items |
+| Project and Team (Read) | Project metadata and team assignments |
+| User Profile (Read) | User profiles and assignments |
+
+We never read, transmit, or store work item descriptions or attachments. Learn more in [Microsoft's Azure DevOps documentation](https://learn.microsoft.com/en-us/azure/devops/organizations/security/permissions?view=azure-devops).
+
+## Requirements
+
+- Admin access to your Azure DevOps organisation and Boards
+- Scrums.com workspace Admin access
+
+## Setup
+
+<Steps>
+  <Step title="Generate an Azure DevOps Personal Access Token">
+    In [Azure DevOps](https://dev.azure.com/), go to **User Settings \> Personal access tokens** and click **New Token**. Set an expiry as required by your security policy, and select the following scopes:
+
+    - `Work Items (Read)`
+    - `Project and Team (Read)`
+    - `User Profile (Read)`
+
+    Copy the generated token.
+  </Step>
+  <Step title="Log in to Scrums.com">
+    Go to [Scrums.com](https://scrums.com/) and sign in to your account.
+  </Step>
+  <Step title="Navigate to Integrations">
+    In your dashboard, click on your profile or account menu and select **Integrations** from the dropdown or sidebar.
+  </Step>
+  <Step title="Add Azure Boards">
+    Click **Add Integration** and select **Azure Boards** from the list. Choose the project you want to link.
+  </Step>
+  <Step title="Authorise Scrums.com to access Azure Boards">
+    Enter your Azure DevOps organisation name and paste your personal access token into the integration form. Save the form.
+  </Step>
+  <Step title="Add projects and boards">
+    Click **Add** next to Azure Boards projects or boards. Select your organisation, enter the project or board name, and specify the relevant key or ID. Click **Verify** to check the connection.
+  </Step>
+  <Step title="Data sync">
+    Scrums.com will begin syncing your Azure Boards data. Initial results appear within minutes, and the platform will continue to backfill historical data. Explore your analytics dashboards for real-time insights.
+  </Step>
+</Steps>
+
+## Best practices
+
+- **Use a long-term admin account** — Set up the integration with an account that will remain active to avoid disruptions.
+- **Token security** — Store your Azure DevOps personal access token securely. Do not share it publicly.
+- **Board selection** — Only connect boards and projects relevant to your analytics needs.
+
+## What this unlocks
+
+Connecting Azure Boards to Scrums.com gives your team:
+
+- Transparency and accountability across teams
+- Data-driven retrospectives and planning sessions
+- Real-time delivery metrics to identify bottlenecks
+
+## Troubleshooting
+
+| Issue | Resolution |
+| --- | --- |
+| Authorization error | Ensure your Azure DevOps account has the required permissions and correct token scopes |
+| Data not syncing | Double-check your token permissions and board/project names — the integration page will alert you if a token has expired or a name is invalid |
+| Need help? | Contact support through your [Scrums.com](https://scrums.com/) dashboard |

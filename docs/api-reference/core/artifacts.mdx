@@ -1,0 +1,47 @@
+---
+title: 'Artifacts'
+description: 'Build outputs, deployment packages, reports, and AI-generated deliverables produced within a project.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+Artifacts are the outputs of delivery activity within a project — compiled builds, deployment packages, test reports, documentation, code review outputs, and AI-generated deliverables from agents. They are versioned, immutable once created, and addressable by URL.
+
+## Base path
+
+```
+/v1/projects/{project_id}/artifacts
+```
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/projects/{project_id}/artifacts` | List artifacts in a project |
+| `POST` | `/v1/projects/{project_id}/artifacts` | Upload or register an artifact |
+| `GET` | `/v1/artifacts/{id}` | Get an artifact |
+| `DELETE` | `/v1/artifacts/{id}` | Delete an artifact |
+
+## Attributes
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier |
+| `project_id` | string | Parent project reference |
+| `type` | enum | `build`, `deploy`, `report`, `document`, `agent_output` |
+| `name` | string | Artifact name |
+| `version` | string | Version or tag |
+| `url` | string | Secure download URL |
+| `size` | number | File size in bytes |
+| `checksum` | string | SHA-256 checksum |
+| `producer_type` | enum | `user`, `agent`, `ci` |
+| `producer_id` | string | ID of the producing entity |
+| `created_at` | datetime | ISO 8601 timestamp |
+
+## Relationships
+
+<Note>
+  Artifacts belong to [Projects](/api-reference/core/projects) and may be produced by [Agents](/api-reference/core/agents) or CI pipelines. They can be referenced by [Tasks](/api-reference/core/tasks) and [Events](/api-reference/core/events).
+</Note>

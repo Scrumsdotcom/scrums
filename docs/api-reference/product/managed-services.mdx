@@ -1,0 +1,228 @@
+---
+title: 'Managed Services API'
+description: 'SLA-backed delivery pods operated by Scrums.com. Managed service engagements run as ongoing Service Lines with defined capacity, scope, and SLA commitments.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+The Managed Services API exposes Scrums.com's ongoing delivery pod model. A managed services engagement gives you a fully coordinated team — engineers, PM, QA — operating under Scrums.com management with SLA commitments for delivery throughput, responsiveness, and quality.
+
+Every active pod is an active [Service Line](/api-reference/core/service-lines) with `execution_model: ongoing_sla`. Usage is metered in talent days and billed at the agreed pod rate. SLA compliance is tracked by the [Observability API](/api-reference/core/observability) and surfaces in [Incidents](/api-reference/core/incidents) when commitments are breached.
+
+## Core Concepts
+
+### Pods
+
+A pod is a configured delivery team — its composition, roles, capacity, and SLA terms. The pod is the unit of engagement. Creating a pod request begins the assembly and scoping process. Once confirmed, the pod activates and its Service Line begins.
+
+### Scopes
+
+A scope defines what the pod is responsible for delivering. Unlike [ODS](/api-reference/product/ods) (which is fixed-scope, outcome-based), managed service scopes are living documents updated through the engagement as priorities evolve.
+
+### SLA terms
+
+| SLA metric | Description |
+|------------|-------------|
+| `throughput` | Minimum tasks completed per sprint cycle |
+| `response_time` | Maximum time to respond to new priority items |
+| `quality_gate` | Minimum test coverage and defect rate |
+| `availability` | Team availability hours per week |
+
+### Tickets
+
+Tickets are the operational communication mechanism for a managed pod. They are how the client raises requests, reports issues, and escalates concerns to the pod and to Scrums.com account management.
+
+## Endpoints
+
+### GET /v1/managed-services/pods
+
+List managed service pods for an organization.
+
+#### Request
+
+```bash
+GET /v1/managed-services/pods?organization_id=ORG-26-090500&status=active
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "POD-26-000008",
+      "organization_id": "ORG-26-090500",
+      "workspace_id": "WS-26-000021",
+      "service_line_id": "LIN-26-088401",
+      "name": "Payments Platform Pod",
+      "status": "active",
+      "team_size": 5,
+      "delivery_model": "managed_delivery",
+      "sla_id": "SLA-26-000008",
+      "started_at": "2025-09-01T00:00:00Z",
+      "renews_at": "2026-09-01T00:00:00Z",
+      "cost_per_month": 38000.00,
+      "currency": "USD"
+    }
+  ]
+}
+```
+
+### POST /v1/managed-services/pods
+
+Create a managed service pod request.
+
+#### Request
+
+```json
+{
+  "organization_id": "ORG-26-090500",
+  "workspace_id": "WS-26-000021",
+  "subscription_id": "SUB-26-001122",
+  "project_tags": ["PROJ-26-004281"],
+  "name": "Payments Platform Pod",
+  "delivery_model": "managed_delivery",
+  "requested_team_size": 5,
+  "required_capabilities": ["backend_engineering", "qa", "technical_pm"],
+  "start_date": "2026-06-01",
+  "duration_months": 12,
+  "description": "End-to-end managed delivery for the payments platform rebuild."
+}
+```
+
+#### Response
+
+Returns a pod record with `status: "scoping"`. The Scrums.com account team will follow up to finalize team composition and SLA terms before activation.
+
+### GET /v1/managed-services/pods/{pod_id}
+
+Retrieve a pod with full configuration, team, and SLA detail.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "POD-26-000008",
+    "service_line_id": "LIN-26-088401",
+    "name": "Payments Platform Pod",
+    "status": "active",
+    "team_size": 5,
+    "team": [
+      { "talent_id": "SCR-128491", "role": "senior_backend_engineer" },
+      { "talent_id": "SCR-129102", "role": "backend_engineer" },
+      { "talent_id": "SCR-130011", "role": "qa_engineer" },
+      { "talent_id": "SCR-130988", "role": "frontend_engineer" },
+      { "talent_id": "SCR-131200", "role": "technical_pm" }
+    ],
+    "sla": {
+      "id": "SLA-26-000008",
+      "throughput_tasks_per_sprint": 18,
+      "response_time_hours": 2,
+      "availability_hours_per_week": 200,
+      "current_compliance": 97.2
+    },
+    "cost_per_month": 38000.00,
+    "currency": "USD",
+    "started_at": "2025-09-01T00:00:00Z",
+    "renews_at": "2026-09-01T00:00:00Z"
+  }
+}
+```
+
+### POST /v1/managed-services/requests
+
+Submit a new service request to the pod (equivalent to a support ticket or priority escalation).
+
+#### Request
+
+```json
+{
+  "pod_id": "POD-26-000008",
+  "type": "priority_item",
+  "title": "Expedite payment webhook reliability fix",
+  "description": "Production webhooks are failing at 2% rate. Need this triaged and resolved this sprint.",
+  "priority": "high",
+  "submitted_by": "USR-26-000044"
+}
+```
+
+#### Response
+
+Returns a ticket record with an SLA response timestamp based on the pod's `response_time_hours` commitment.
+
+### GET /v1/managed-services/tickets
+
+List service tickets for a pod.
+
+### GET /v1/managed-services/slas
+
+Retrieve SLA performance history for a pod.
+
+#### Response
+
+```json
+{
+  "data": {
+    "pod_id": "POD-26-000008",
+    "sla_id": "SLA-26-000008",
+    "period": "2026-04",
+    "compliance_percent": 97.2,
+    "metrics": [
+      { "metric": "throughput", "target": 18, "actual": 19, "status": "met" },
+      { "metric": "response_time_hours", "target": 2, "actual": 1.8, "status": "met" },
+      { "metric": "availability_hours", "target": 200, "actual": 198, "status": "met" },
+      { "metric": "quality_gate", "target": 80, "actual": 76, "status": "breached" }
+    ],
+    "incidents": ["INC-26-000091"]
+  }
+}
+```
+
+### POST /v1/managed-services/incidents
+
+Raise an incident against a pod for a suspected SLA breach or delivery failure.
+
+## Common Workflows
+
+### Monthly SLA review
+
+```bash
+# Get SLA compliance for the pod
+GET /v1/managed-services/slas?pod_id=POD-26-000008&period=2026-04
+
+# Check any open incidents
+GET /v1/incidents?service_line_id=LIN-26-088401&status=open
+
+# Review overall service line health
+GET /v1/observability/health?service_line_id=LIN-26-088401
+```
+
+## Objects
+
+### Pod
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `POD-*` identifier |
+| `service_line_id` | string | Linked `LIN-*` (execution contract) |
+| `name` | string | Pod name |
+| `status` | enum | `scoping`, `active`, `paused`, `completed`, `cancelled` |
+| `delivery_model` | enum | `managed_delivery`, `dedicated_team`, `staff_augmentation` |
+| `team_size` | integer | Number of allocated team members |
+| `team` | array | Individual talent allocations (returned on GET by ID) |
+| `sla_id` | string | Linked SLA configuration |
+| `cost_per_month` | number | Monthly engagement cost |
+| `started_at` | datetime | Pod activation timestamp |
+| `renews_at` | datetime | Current term renewal date |
+
+## Best Practices
+
+- **Use tickets for all requests, not direct communication.** Tickets create an auditable trail, tie requests to SLA response timers, and ensure the pod's PM processes them in priority order.
+- **Review SLA compliance before renewal.** Run `GET /v1/managed-services/slas` before a renewal decision. A pattern of `breached` metrics warrants a scope or team composition review before committing to another term.
+- **Monitor the pod's Service Line weekly.** `GET /v1/service-lines/{lin_code}/usage` and `GET /v1/observability/health` for the pod's `LIN-*` give a combined view of cost and delivery health.

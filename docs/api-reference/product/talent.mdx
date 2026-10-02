@@ -1,0 +1,279 @@
+---
+title: 'Talent Marketplace API'
+description: 'Access the Scrums.com talent network. Request, match, and allocate engineers, designers, and technical specialists. Every confirmed engagement mints a Service Line.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+The Talent Marketplace API gives you programmatic access to the Scrums.com talent network — vetted engineers, designers, technical leads, and specialists available for engagement across all delivery models.
+
+When a talent request is matched and confirmed, the platform automatically creates an active [Service Line](/api-reference/core/service-lines) with `execution_model: capacity` and `billing_model: time_and_materials`. That `LIN-*` becomes the execution contract for the engagement, and all hours, costs, and delivery signals are tracked through it.
+
+## Core Concepts
+
+### Talent profiles
+
+Talent profiles (`SCR-*`) represent individuals in the network. Profiles include skills, availability, engagement preferences, timezone, and rate. Profiles are managed by Scrums.com and are read-only to the requester.
+
+### Talent requests
+
+A request represents your demand: the role, skills, hours per week, and timeline you need. The platform matches the request to available talent and presents candidates for confirmation.
+
+### Allocations
+
+An allocation represents a confirmed talent engagement — a specific `SCR-*` matched to a specific workspace, for a defined capacity, starting on a specific date. An allocation corresponds one-to-one with an active Service Line.
+
+## Endpoints
+
+### GET /v1/talent/profiles
+
+Search and list talent profiles.
+
+#### Request
+
+```bash
+GET /v1/talent/profiles?skills=typescript,node.js&availability_status=available&timezone=Europe
+Authorization: Bearer <token>
+```
+
+**Query parameters**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `skills` | string | Comma-separated skill identifiers |
+| `availability_status` | enum | `available`, `partial`, `unavailable` |
+| `timezone` | string | Timezone region filter |
+| `engagement_type` | enum | `dedicated`, `augmentation`, `ods` |
+| `min_rate` | number | Minimum rate filter |
+| `max_rate` | number | Maximum rate filter |
+| `cursor` | string | Pagination cursor |
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "SCR-128491",
+      "title": "Senior Backend Engineer",
+      "skills": [
+        { "id": "typescript", "level": "expert" },
+        { "id": "node.js", "level": "expert" },
+        { "id": "postgresql", "level": "proficient" },
+        { "id": "aws", "level": "proficient" }
+      ],
+      "availability_status": "available",
+      "availability_from": "2026-05-01",
+      "engagement_types": ["dedicated", "augmentation"],
+      "rate": 95.00,
+      "currency": "USD",
+      "timezone": "Europe/London",
+      "location": "United Kingdom",
+      "years_experience": 9
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+### GET /v1/talent/profiles/{talent_id}
+
+Retrieve a full talent profile.
+
+### POST /v1/talent/search
+
+Run a structured talent search with multiple constraints.
+
+#### Request
+
+```json
+{
+  "workspace_id": "WS-26-000021",
+  "role": "senior_backend_engineer",
+  "required_skills": ["typescript", "node.js"],
+  "preferred_skills": ["postgresql", "kafka"],
+  "hours_per_week": 40,
+  "start_date": "2026-05-01",
+  "engagement_type": "dedicated",
+  "timezone_overlap_hours": 4,
+  "max_rate": 110.00,
+  "currency": "USD"
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "search_id": "SRCH-26-000811",
+    "matches": [
+      {
+        "talent_id": "SCR-128491",
+        "match_score": 94,
+        "match_reasons": ["All required skills matched", "Full timezone overlap", "Rate within budget"],
+        "rate": 95.00,
+        "available_from": "2026-05-01"
+      }
+    ],
+    "total_matches": 3
+  }
+}
+```
+
+### POST /v1/talent/requests
+
+Create a talent request to begin a staffing engagement.
+
+#### Request
+
+```json
+{
+  "workspace_id": "WS-26-000021",
+  "subscription_id": "SUB-26-001122",
+  "project_tags": ["PROJ-26-004281"],
+  "role": "senior_backend_engineer",
+  "required_skills": ["typescript", "node.js", "postgresql"],
+  "hours_per_week": 40,
+  "start_date": "2026-05-01",
+  "engagement_type": "dedicated",
+  "description": "Backend engineer for payments platform rebuild. Focus on event-driven architecture, TypeScript, and PostgreSQL.",
+  "duration_weeks": 26
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "TREQ-26-000091",
+    "workspace_id": "WS-26-000021",
+    "status": "matching",
+    "role": "senior_backend_engineer",
+    "hours_per_week": 40,
+    "start_date": "2026-05-01",
+    "created_at": "2026-04-15T10:00:00Z"
+  }
+}
+```
+
+#### Notes
+
+- Status moves to `matched` when candidates are identified. You will receive a `talent.request.matched` event.
+- Confirming a match transitions the request to `confirmed` and automatically creates an active `LIN-*`.
+
+### GET /v1/talent/requests
+
+List talent requests for a workspace.
+
+### GET /v1/talent/requests/{request_id}
+
+Retrieve a request with current match candidates.
+
+#### Response includes
+
+```json
+{
+  "data": {
+    "id": "TREQ-26-000091",
+    "status": "matched",
+    "candidates": [
+      {
+        "talent_id": "SCR-128491",
+        "match_score": 94,
+        "rate": 95.00,
+        "available_from": "2026-05-01"
+      }
+    ]
+  }
+}
+```
+
+### POST /v1/talent/requests/{request_id}/matches
+
+Confirm a match to activate the engagement.
+
+#### Request
+
+```json
+{
+  "talent_id": "SCR-128491",
+  "confirm": true
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "request_id": "TREQ-26-000091",
+    "status": "confirmed",
+    "talent_id": "SCR-128491",
+    "service_line_id": "LIN-26-091844",
+    "allocation_id": "ALLOC-26-000441",
+    "starts_at": "2026-05-01T00:00:00Z"
+  }
+}
+```
+
+### GET /v1/talent/allocations
+
+List all active talent allocations for a workspace.
+
+#### Response
+
+Returns active allocation records, each referencing a `talent_id`, `service_line_id`, and `allocation_id`.
+
+## Common Workflows
+
+### Staffing a new project role
+
+```bash
+# Search available talent
+POST /v1/talent/search
+{ "role": "senior_backend_engineer", "required_skills": ["typescript"], "hours_per_week": 40 }
+
+# Create a formal request
+POST /v1/talent/requests
+{ "workspace_id": "WS-26-000021", "role": "senior_backend_engineer", ... }
+
+# Wait for matched event, then confirm
+POST /v1/talent/requests/TREQ-26-000091/matches
+{ "talent_id": "SCR-128491", "confirm": true }
+
+# Service Line is now active - track usage via
+GET /v1/service-lines/LIN-26-091844/usage
+```
+
+## Objects
+
+### Talent profile (`SCR-*`)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `SCR-*` identifier |
+| `title` | string | Professional role title |
+| `skills` | array | Skills with proficiency levels |
+| `availability_status` | enum | `available`, `partial`, `unavailable` |
+| `availability_from` | date | Earliest start date |
+| `engagement_types` | array | Supported engagement types |
+| `rate` | number | Indicative hourly rate |
+| `currency` | string | ISO 4217 currency code |
+| `timezone` | string | IANA timezone identifier |
+| `location` | string | Country or region |
+| `years_experience` | integer | Total years of relevant experience |
+
+## Best Practices
+
+- **Search before requesting.** Run `POST /v1/talent/search` first to confirm matching talent exists before creating a formal request. Requests with no viable matches delay activation.
+- **Include `project_tags` at request time.** Tags applied at request creation propagate to the Service Line automatically. Retroactively tagging is possible but creates gaps in project-level reporting.
+- **Track hours weekly via the Service Line.** After activation, monitor `GET /v1/service-lines/{lin_code}/usage` weekly to verify hours are being logged against the allocation.

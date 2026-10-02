@@ -1,0 +1,246 @@
+---
+title: 'Developer Intelligence API'
+description: 'Engineering metrics, delivery health, team performance, and risk signals across all Service Lines. The platform intelligence layer.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+The Developer Intelligence API is the analytics and insight layer of the Scrums.com platform. It aggregates signals from source control, project management integrations, execution records, and platform metering to produce structured metrics, health scores, scorecards, and AI-generated insights.
+
+An active intelligence configuration is a [Service Line](/api-reference/core/service-lines) with `execution_model: observability`. It runs continuously against a connected workspace, consuming metrics and publishing results that can be queried via this API or delivered via webhooks.
+
+## Core Concepts
+
+### Repositories
+
+Intelligence is seeded by connecting source repositories. Each connected repository streams commit, PR, and pipeline events into the platform. Repository-level metrics form the foundation of team and project analytics.
+
+### Metrics
+
+Metrics are computed, time-series data points derived from platform activity. They cover delivery pace, code quality, team patterns, and risk indicators.
+
+| Metric | Description |
+|--------|-------------|
+| `cycle_time` | Median time from commit to production deployment |
+| `pr_review_time` | Median time from PR open to merge |
+| `deployment_frequency` | Deployments per week per service |
+| `change_failure_rate` | Percentage of deployments requiring rollback |
+| `test_coverage` | Line and branch coverage across repos |
+| `code_churn` | Lines modified vs lines added ratio |
+| `open_incident_rate` | Incidents opened per week per service line |
+| `task_throughput` | Tasks completed per sprint per service line |
+
+### Scorecards
+
+A scorecard aggregates multiple metrics for a workspace or Service Line into a structured health summary with signal-level status (green / amber / red) and trend direction.
+
+### Insights
+
+Insights are AI-generated narrative observations derived from metric patterns. They identify anomalies, emerging risks, and performance trends that are not obvious from individual metrics.
+
+### Benchmarks
+
+Benchmarks compare a workspace's metrics against platform-wide medians for similar organization size, team composition, and technology stack.
+
+## Endpoints
+
+### POST /v1/intelligence/repositories
+
+Connect a repository to intelligence analysis.
+
+#### Request
+
+```json
+{
+  "workspace_id": "WS-26-000021",
+  "integration_id": "INT-26-000041",
+  "repository": "apex-digital/payments-api",
+  "service_line_id": "LIN-26-084729"
+}
+```
+
+#### Notes
+
+- Requires an active [source control integration](/api-reference/core/integrations) in the workspace.
+- Historical backfill begins on connection. Recent months of commits and PRs are analyzed. Full backfill may take up to 24 hours.
+
+### GET /v1/intelligence/repositories
+
+List repositories connected for intelligence in a workspace.
+
+### GET /v1/intelligence/metrics
+
+Query metric time series for a workspace or Service Line.
+
+#### Request
+
+```bash
+GET /v1/intelligence/metrics?workspace_id=WS-26-000021&metric=cycle_time&from=2026-01-01&to=2026-04-01&granularity=weekly
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "metric": "cycle_time",
+    "workspace_id": "WS-26-000021",
+    "unit": "hours",
+    "series": [
+      { "week": "2026-W01", "value": 18.4, "trend": "stable" },
+      { "week": "2026-W02", "value": 22.1, "trend": "worsening" },
+      { "week": "2026-W03", "value": 19.8, "trend": "improving" },
+      { "week": "2026-W14", "value": 14.2, "trend": "improving" }
+    ],
+    "period_average": 17.1,
+    "benchmark_median": 19.8
+  }
+}
+```
+
+### GET /v1/intelligence/scorecards
+
+Retrieve a scorecard for a workspace or Service Line.
+
+#### Request
+
+```bash
+GET /v1/intelligence/scorecards?workspace_id=WS-26-000021
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "workspace_id": "WS-26-000021",
+    "computed_at": "2026-04-15T06:00:00Z",
+    "overall_score": 81,
+    "signals": [
+      { "metric": "cycle_time", "value": 14.2, "unit": "hours", "status": "green", "trend": "improving" },
+      { "metric": "deployment_frequency", "value": 4.1, "unit": "per_week", "status": "green", "trend": "stable" },
+      { "metric": "change_failure_rate", "value": 3.8, "unit": "percent", "status": "amber", "trend": "worsening" },
+      { "metric": "test_coverage", "value": 76.2, "unit": "percent", "status": "amber", "trend": "stable" },
+      { "metric": "pr_review_time", "value": 6.1, "unit": "hours", "status": "green", "trend": "improving" }
+    ]
+  }
+}
+```
+
+### GET /v1/intelligence/insights
+
+Retrieve AI-generated insights for a workspace.
+
+#### Request
+
+```bash
+GET /v1/intelligence/insights?workspace_id=WS-26-000021&limit=5
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "INS-26-000091",
+      "type": "anomaly",
+      "severity": "medium",
+      "title": "Change failure rate increasing over 3 weeks",
+      "body": "The change failure rate for the payments-api repository has increased from 1.2% to 3.8% over the last 3 sprints. The pattern correlates with a 40% increase in deployment frequency. Recommend reviewing whether deployment pace has outrun test coverage.",
+      "metrics_referenced": ["change_failure_rate", "deployment_frequency", "test_coverage"],
+      "service_line_id": "LIN-26-084729",
+      "generated_at": "2026-04-15T06:00:00Z"
+    }
+  ]
+}
+```
+
+### POST /v1/intelligence/alerts
+
+Create an alert that fires when a metric crosses a threshold.
+
+#### Request
+
+```json
+{
+  "workspace_id": "WS-26-000021",
+  "metric": "change_failure_rate",
+  "condition": { "operator": "gt", "threshold": 5.0 },
+  "window": "7d",
+  "severity": "high",
+  "actions": [
+    { "type": "notify_webhook", "webhook_id": "WHK-26-000004" }
+  ]
+}
+```
+
+### GET /v1/intelligence/benchmarks
+
+Compare workspace metrics against platform benchmarks.
+
+#### Response
+
+```json
+{
+  "data": {
+    "workspace_id": "WS-26-000021",
+    "computed_at": "2026-04-15T06:00:00Z",
+    "benchmarks": [
+      {
+        "metric": "cycle_time",
+        "workspace_value": 14.2,
+        "platform_median": 19.8,
+        "percentile": 72,
+        "assessment": "above_median"
+      },
+      {
+        "metric": "change_failure_rate",
+        "workspace_value": 3.8,
+        "platform_median": 2.1,
+        "percentile": 38,
+        "assessment": "below_median"
+      }
+    ]
+  }
+}
+```
+
+### GET /v1/intelligence/health
+
+Overall engineering health score for a workspace, with context.
+
+### GET /v1/intelligence/risk
+
+Risk signals and recommended actions for a workspace.
+
+#### Response
+
+Returns the same shape as `GET /v1/observability/risk` but with engineering-specific risk factors derived from code and delivery metrics rather than platform operational signals.
+
+## Objects
+
+### Insight
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `INS-*` identifier |
+| `type` | enum | `anomaly`, `trend`, `recommendation`, `benchmark` |
+| `severity` | enum | `low`, `medium`, `high` |
+| `title` | string | Short description |
+| `body` | string | Full narrative |
+| `metrics_referenced` | array | Metric names driving this insight |
+| `service_line_id` | string | Linked `LIN-*` (if scoped to a line) |
+| `generated_at` | datetime | When the insight was generated |
+
+## Best Practices
+
+- **Connect repositories before expecting metrics.** Intelligence requires source control integration. A workspace with no connected repositories will produce empty metric responses, not errors.
+- **Use scorecards for weekly reviews; use metrics for trend analysis.** Scorecards give a point-in-time summary. Time series are how you spot patterns and measure whether changes are working.
+- **Treat amber signals as action items, not warnings.** An amber signal means the metric is within operational range but trending toward red. Acting on amber is cheaper than responding to red.
+- **Share benchmarks in quarterly reviews.** Benchmark data shows how your team compares to peers on the platform. It provides objective context for retrospective conversations that individual metrics alone cannot give.

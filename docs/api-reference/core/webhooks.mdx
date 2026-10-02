@@ -1,0 +1,200 @@
+---
+title: 'Webhooks'
+description: 'Configure HTTP endpoints to receive real-time event notifications from the Scrums.com platform. Webhooks make the platform orchestration-friendly.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+Webhooks deliver platform [Events](/api-reference/core/events) to HTTP endpoints you control. Rather than polling the API for state changes, you configure a webhook to receive a POST request whenever a specified event occurs on the platform.
+
+Webhooks are essential for integrating Scrums.com into your operational tooling: triggering finance workflows on `invoice.finalized`, alerting teams on `service_line.paused`, routing incidents to on-call systems on `incident.opened`, or reacting to agent completions in real time.
+
+## Core Concepts
+
+### Event scoping
+
+A webhook can be scoped to an organization or a specific workspace. Organization-scoped webhooks receive events from all workspaces. Workspace-scoped webhooks receive only events from that workspace.
+
+### Event types
+
+Webhooks can subscribe to specific event types or to `*` (all events). Subscribe narrowly — receiving every platform event for a large organization is noisy and expensive to process.
+
+Common event types:
+
+| Event type | Description |
+|------------|-------------|
+| `service_line.activated` | A Service Line moved to active status |
+| `service_line.paused` | A Service Line was paused |
+| `service_line.closed` | A Service Line was closed |
+| `invoice.finalized` | An invoice moved from draft to open |
+| `invoice.paid` | An invoice was paid |
+| `invoice.payment_failed` | An invoice payment attempt failed |
+| `incident.opened` | An incident was created |
+| `incident.resolved` | An incident was resolved |
+| `execution.blocked` | A Service Line execution is blocked |
+| `agent.run.completed` | An agent run completed |
+| `agent.run.failed` | An agent run failed |
+| `capacity.utilisation_warning` | Utilisation crossed a threshold |
+
+### Delivery and retries
+
+The platform delivers webhook events with exponential backoff on failure. An event is considered delivered when your endpoint returns `2xx`. If delivery fails after 5 attempts, the event is marked `failed` and a `webhook.delivery_failed` event is emitted.
+
+### Signature verification
+
+All webhook payloads include an `X-Scrums-Signature` header containing an HMAC-SHA256 signature of the request body using your webhook secret. Verify this signature before processing any payload.
+
+```
+X-Scrums-Signature: sha256=<hex_digest>
+```
+
+## Endpoints
+
+### GET /v1/webhooks
+
+List webhook configurations.
+
+#### Request
+
+```bash
+GET /v1/webhooks?organization_id=ORG-26-090500
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "WHK-26-000004",
+      "organization_id": "ORG-26-090500",
+      "workspace_id": null,
+      "url": "https://ops.apexdigital.com/hooks/scrums",
+      "status": "active",
+      "event_types": ["incident.opened", "incident.resolved", "service_line.paused"],
+      "created_at": "2026-02-01T10:00:00Z",
+      "last_delivery_at": "2026-04-15T09:12:44Z",
+      "last_delivery_status": "success"
+    }
+  ]
+}
+```
+
+### POST /v1/webhooks
+
+Create a new webhook.
+
+#### Request
+
+```json
+{
+  "organization_id": "ORG-26-090500",
+  "url": "https://ops.apexdigital.com/hooks/scrums",
+  "event_types": ["incident.opened", "incident.resolved", "service_line.paused"],
+  "secret": "whsec_your_secret_here"
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "WHK-26-000004",
+    "organization_id": "ORG-26-090500",
+    "url": "https://ops.apexdigital.com/hooks/scrums",
+    "status": "active",
+    "event_types": ["incident.opened", "incident.resolved", "service_line.paused"],
+    "created_at": "2026-04-15T10:00:00Z"
+  }
+}
+```
+
+#### Notes
+
+- The `secret` is write-only. It is not returned in any subsequent read response.
+- The platform sends a `webhook.verification` request to the URL on creation. Your endpoint must return `200` within 5 seconds, otherwise the webhook is created with `status: "unverified"`.
+
+### DELETE /v1/webhooks/{webhook_id}
+
+Delete a webhook configuration. Event delivery stops immediately.
+
+### POST /v1/webhooks/{webhook_id}/test
+
+Send a test event to the webhook URL to verify delivery.
+
+#### Request
+
+```json
+{
+  "event_type": "service_line.activated"
+}
+```
+
+#### Response
+
+Returns a delivery receipt with status and response time.
+
+### GET /v1/webhooks/{webhook_id}/deliveries
+
+List recent delivery attempts for a webhook, including failures.
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "WDLV-26-008812",
+      "event_id": "EVT-26-044912",
+      "event_type": "incident.opened",
+      "status": "success",
+      "http_status": 200,
+      "duration_ms": 144,
+      "delivered_at": "2026-04-15T07:00:00Z"
+    },
+    {
+      "id": "WDLV-26-008801",
+      "event_id": "EVT-26-044899",
+      "event_type": "service_line.paused",
+      "status": "failed",
+      "http_status": 503,
+      "duration_ms": 30001,
+      "last_attempt_at": "2026-04-14T22:31:00Z",
+      "attempts": 5
+    }
+  ]
+}
+```
+
+## Payload format
+
+All webhook payloads share a common envelope:
+
+```json
+{
+  "id": "EVT-26-044912",
+  "type": "incident.opened",
+  "created_at": "2026-04-15T07:00:00Z",
+  "organization_id": "ORG-26-090500",
+  "workspace_id": "WS-26-000021",
+  "data": {
+    "id": "INC-26-000091",
+    "service_line_id": "LIN-26-088401",
+    "severity": "p2",
+    "title": "SLA response time exceeded"
+  }
+}
+```
+
+## Best Practices
+
+- **Use narrow `event_types` subscriptions.** Subscribing to `*` for a large organization will generate enormous volume. Subscribe only to the event types your receiver actually processes.
+- **Verify the signature before processing.** Reject any request without a valid `X-Scrums-Signature`. Do not skip this step in production.
+- **Return 200 immediately and process asynchronously.** Your endpoint should acknowledge delivery within 3 seconds. If processing takes longer, enqueue the payload and acknowledge immediately. Slow responses cause timeouts and unnecessary retries.
+- **Monitor `GET /v1/webhooks/{id}/deliveries` regularly.** Failed deliveries mean your system missed events. Build alerting on persistent delivery failures.

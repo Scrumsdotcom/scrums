@@ -1,0 +1,10 @@
+---
+title: "AI Agent Gateway"
+description: "An AI gateway for models and agents: one governed endpoint that routes each call, enforces policy, records every run and meters usage per agent, team and model."
+---
+
+An AI agent gateway is a single governed endpoint between your applications and the AI they call. Every request passes through it, whether the target is a foundation model or a deployed AI agent. The gateway decides where the call goes, checks it against policy, records what happened and meters what it cost. Most AI gateways stop at models. The Scrums.com gateway governs model calls and agent calls on one plane, because an agent holds context, uses tools and acts for a principal, so it needs identity, authority boundaries and an audit trail as well as routing.
+
+The gateway is a capability of the platform, not a separate product. It runs next to the [AI agent harness](/platform/agent-harness) and the [MCP Gateway](/platform/mcp-gateway), and every agent you deploy from the [AI Catalog](/catalog/agents) or through an [AI Development](/ai-development/overview) workstream is governed through it. Usage is metered per agent, team and model and appears in your workspace reporting. Programmatic access is documented in the [AI Agent Gateway API](/api-reference/product/agent-gateway).
+
+[View AI Agent Gateway on www.scrums.com →](https://www.scrums.com/platform/ai-gateway)

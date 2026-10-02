@@ -1,0 +1,123 @@
+---
+title: "2026 Summer Release"
+description: "Features and improvements actively in development for Summer 2026."
+tag: "Active"
+---
+
+**Releasing Summer 2026 — actively in development**
+
+The 2026 Summer Release is our largest update yet, introducing multi-workspace support, real-time collaboration, and a new generation of AI delivery controls. This page is updated as features ship.
+
+<Info>
+  Features marked **In progress** are under active development and subject to change. Features marked **Shipped** are available now in your workspace.
+</Info>
+
+---
+
+## What's new
+
+- [AI backlog prioritization](#ai-backlog-prioritization) — Shipped
+- [Multi-workspace support](#multi-workspace-support) — Shipped
+- [Real-time collaboration](#real-time-collaboration) — In progress
+- [Advanced compliance reporting](#advanced-compliance-reporting) — In progress
+- [Delivery model analytics](#delivery-model-analytics) — Shipped
+
+---
+
+## AI backlog prioritization
+
+**Shipped**
+
+The backlog view now includes an AI-generated priority score for every ticket. Scores are calculated from business value signals, dependency chains, team velocity, and stakeholder-flagged urgency.
+
+**How it works:**
+
+- Connect your issue tracker (Jira, Linear, GitHub Issues) to sync ticket metadata
+- The AI model re-scores tickets nightly and on demand
+- Priority explanations are shown inline so teams understand the reasoning, not just the rank
+- Scrum Masters can pin tickets to override AI ordering without losing the underlying score
+
+The priority score is visible in the backlog list and sprint planning views. It does not automatically move tickets — all reordering requires human confirmation.
+
+---
+
+## Multi-workspace support
+
+**Shipped**
+
+Organizations can now manage multiple workspaces under a single billing account.
+
+**What this enables:**
+
+- Separate workspaces per business unit, product line, or client engagement
+- Centralized billing and seat management from the account admin panel
+- Cross-workspace reporting for portfolio-level visibility
+- Role assignments are workspace-scoped; users can hold different roles across workspaces
+
+To create additional workspaces, go to **Administration → Account Admin → Workspaces**.
+
+<Note>
+  Each workspace requires at least one Workspace Admin. Users can belong to multiple workspaces with independent role assignments.
+</Note>
+
+---
+
+## Real-time collaboration
+
+**In progress**
+
+Ticket editing, sprint boards, and planning sessions will support real-time multi-user collaboration — similar to what you'd expect from a shared document editor.
+
+**Planned capabilities:**
+
+- Live cursor presence on sprint boards and the backlog
+- Concurrent ticket editing with conflict resolution
+- Collaborative sprint planning mode where multiple participants can drag, resize, and comment simultaneously
+- Presence indicators showing who is viewing the same page
+
+Real-time collaboration is in private beta. Contact your account manager to join the early access program.
+
+---
+
+## Advanced compliance reporting
+
+**In progress**
+
+A new compliance reporting module will provide audit-ready exports aligned with common frameworks including SOC 2, ISO 27001, and custom enterprise policies.
+
+**Planned report types:**
+
+- Access and permission change log
+- Sprint and delivery evidence reports for audit trails
+- Data residency and processing records
+- Policy enforcement summaries from the governance module
+
+Reports will be available as PDF and CSV, with scheduled delivery to a configurable email list.
+
+---
+
+## Delivery model analytics
+
+**Shipped**
+
+A new analytics section breaks down performance and cost data by delivery model — dedicated teams, managed delivery, staff augmentation, and on-demand.
+
+**Available metrics:**
+
+- Cost per story point by delivery model
+- On-time delivery rate by model and team size
+- Ramp time for new team members by engagement type
+- Comparative velocity across concurrent delivery models
+
+Access delivery model analytics from the main navigation under **Platform → Delivery Models → Analytics**.
+
+---
+
+## Upcoming in this release
+
+The following items are planned for the Summer 2026 release window and will be documented here as they ship:
+
+- **Mobile app** — iOS and Android apps for sprint board management and notifications
+- **AI retrospective summaries** — Auto-generated retrospective drafts from sprint data and team sentiment
+- **Custom metric definitions** — Define your own KPIs and track them alongside built-in metrics
+- **Webhooks v2** — Expanded webhook event catalog with filtering and retry logic

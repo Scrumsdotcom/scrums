@@ -1,0 +1,50 @@
+---
+title: 'Agents'
+description: 'AI agents configured and deployed on the Scrums.com platform. Agents execute tasks, generate artifacts, and integrate with platform workflows.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+Agents are AI-powered execution units configured within a workspace. Each agent is scoped, policy-governed, and connected to platform resources and integrations. Agents can be triggered manually, on schedule, or in response to platform events. They produce [Artifacts](/api-reference/core/artifacts) and emit [Events](/api-reference/core/events).
+
+## Base path
+
+```
+/v1/workspaces/{workspace_id}/agents
+```
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/workspaces/{workspace_id}/agents` | List agents in a workspace |
+| `POST` | `/v1/workspaces/{workspace_id}/agents` | Create an agent |
+| `GET` | `/v1/agents/{id}` | Get an agent |
+| `PATCH` | `/v1/agents/{id}` | Update an agent |
+| `DELETE` | `/v1/agents/{id}` | Delete an agent |
+| `POST` | `/v1/agents/{id}/run` | Trigger an agent run |
+| `POST` | `/v1/agents/{id}/stop` | Stop a running agent |
+| `GET` | `/v1/agents/{id}/runs` | List agent run history |
+
+## Attributes
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier |
+| `workspace_id` | string | Parent workspace reference |
+| `name` | string | Agent name |
+| `type` | string | Agent type or capability class |
+| `status` | enum | `idle`, `running`, `error`, `disabled` |
+| `policy_id` | string | Governing policy reference |
+| `config` | object | Agent-specific configuration |
+| `last_run_at` | datetime | Timestamp of last execution |
+| `created_at` | datetime | ISO 8601 timestamp |
+| `updated_at` | datetime | ISO 8601 timestamp |
+
+## Relationships
+
+<Note>
+  Agents belong to [Workspaces](/api-reference/core/workspaces), are governed by [Policies](/api-reference/core/policies), and are routed through the [Agent Gateway](/api-reference/product/agent-gateway). They produce [Artifacts](/api-reference/core/artifacts) and emit [Events](/api-reference/core/events).
+</Note>

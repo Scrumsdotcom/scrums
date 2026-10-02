@@ -1,0 +1,70 @@
+---
+title: "GitLab"
+description: "Connect GitLab to surface merge request analytics, pipeline data, and DORA metrics in your Scrums.com workspace."
+---
+
+<Note>
+  The GitLab integration is currently in **Alpha**. To have it enabled on your account, contact [support@scrums.com](mailto:support@scrums.com).
+</Note>
+
+## Overview
+
+The GitLab integration collects metadata about your organisation's activity across repositories, merge requests, and deployments. We never read, transmit, or store source code. Sensitive data — such as branch names and merge request titles — are always encrypted.
+
+## Why integrate GitLab?
+
+- **Automated analytics** — Gain insights into your team's performance, DORA metrics, code churn, and more.
+- **No code changes needed** — Integration is secure and token-based, requiring no changes to your repositories.
+- **Real-time & historical data** — See results in minutes, with both real-time and historical analysis.
+
+## Requirements
+
+- Administrative access to your GitLab group or project
+- Scrums.com account with access to the Integrations section
+
+## Setup
+
+<Steps>
+  <Step title="Log in to Scrums.com">
+    Go to [Scrums.com](https://scrums.com/) and sign in to your account.
+  </Step>
+  <Step title="Navigate to Integrations">
+    In your dashboard, click on your profile or account menu and select **Integrations** from the dropdown or sidebar.
+  </Step>
+  <Step title="Add GitLab">
+    Click **Add Integration** and select **GitLab** from the list. Choose the project you want to link.
+  </Step>
+  <Step title="Generate a GitLab Personal Access Token">
+    In GitLab, go to [Personal Access Tokens](https://gitlab.com/-/profile/personal_access_tokens) and click **Create personal access token**. Set an expiry as required by your security policy, and select the following scopes:
+
+    - `api`
+    - `read_user`
+    - `read_repository`
+    - `read_api`
+
+    Copy the generated token.
+  </Step>
+  <Step title="Connect your organisation">
+    In the Scrums.com integration form, enter your GitLab organisation handle (e.g. `scrumsdotcom`) and paste your personal access token. Save the form.
+  </Step>
+  <Step title="Add repositories">
+    Click **Add** next to GitLab repositories. Select your group or username, enter the repository name, and specify the branch (typically `main` or `master`). Save your changes.
+  </Step>
+  <Step title="Data sync">
+    Scrums.com will begin syncing your GitLab data. Initial results appear within minutes, and the platform will continue to backfill historical data. Explore your analytics dashboards for real-time insights.
+  </Step>
+</Steps>
+
+## Best practices
+
+- **Use a long-term admin account** — Set up the integration with an account that will remain active to avoid disruptions.
+- **Token security** — Store your personal access token securely. Do not share it publicly.
+- **Repository selection** — Only connect repositories relevant to your project for focused analytics.
+
+## Troubleshooting
+
+| Issue | Resolution |
+| --- | --- |
+| Authorization error | Ensure your token has all required scopes and has not expired |
+| Data not syncing | Double-check token permissions and repository names |
+| Need help? | Contact support through your [Scrums.com](https://scrums.com/) dashboard |

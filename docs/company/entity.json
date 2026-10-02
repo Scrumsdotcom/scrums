@@ -1,0 +1,1931 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://www.scrums.com/#organization",
+  "name": "Scrums.com",
+  "url": "https://www.scrums.com/",
+  "legalName": "Scrumsdotcom Ltd",
+  "alternateName": [
+    "Scrums",
+    "Scrumsdotcom",
+    "Software Engineering Orchestration Platform",
+    "Engineering Delivery Platform",
+    "SovTech"
+  ],
+  "foundingDate": "2012-06-07",
+  "formerName": "SovTech",
+  "dateModified": "2026-09-14",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://scrums.com/logo.png",
+    "contentUrl": "https://scrums.com/logo.png",
+    "width": 712,
+    "height": 155,
+    "encodingFormat": "image/png"
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "VERIFY - Primary brand image URL",
+    "contentUrl": "VERIFY - Image content URL",
+    "width": "VERIFY - Width",
+    "height": "VERIFY - Height",
+    "caption": "VERIFY - Image caption"
+  },
+  "description": "The Software Engineering Orchestration Platform (SEOP). Deploy AI agents, talent, teams, tools, infrastructure, and delivery operations from one platform.",
+  "abstract": "Scrums.com is the Software Engineering Orchestration Platform (SEOP). Mission control for engineering and product leaders. Instantly deploy AI agents, talent, teams, tools, infrastructure, and delivery operations from one platform with live engineering intelligence, unified reporting, and predictable software delivery. One contract. One SLA. One deploy. Software Engineering. Sorted.",
+  "slogan": "Software Engineering. Sorted.™",
+  "disambiguatingDescription": "Scrums.com is a B2B software company and the Software Engineering Orchestration Platform (SEOP), not a rugby brand, the Agile Scrum methodology, a traditional staffing agency, or container/data-pipeline orchestration. It orchestrates software engineering deployments across AI agents, talent, teams, tools, infrastructure, and delivery operations from one unified platform for predictable software delivery. Formerly operated as SovTech.",
+  "tagline": "Software Engineering. Sorted.™",
+  "founder": {
+    "@type": "Person",
+    "@id": "https://www.scrums.com/about-us#gerald-neves",
+    "name": "Gerald Neves",
+    "givenName": "Gerald",
+    "familyName": "Neves",
+    "honorificPrefix": "Mr.",
+    "honorificSuffix": "MBA",
+    "jobTitle": "Founder & CEO",
+    "email": "ceo@scrums.com",
+    "description": "VERIFY - Founder bio",
+    "abstract": "VERIFY - Short founder summary",
+    "url": "VERIFY - Founder personal website if exists",
+    "sameAs": [
+      "https://www.linkedin.com/in/geraldneves/",
+      "https://x.com/geraldneves/",
+      "https://github.com/gez-scrumsdotcom"
+    ],
+    "image": "https://scrums.com/founder.jpg",
+    "alumniOf": "Edinburgh Business School (EBS)",
+    "knowsAbout": [
+      "Software Engineering Orchestration",
+      "AI Agents",
+      "Long-Term Thinking",
+      "Venture Capital Studio Operations"
+    ],
+    "owns": [
+      {
+        "@type": "Organization",
+        "name": "Scrums.com"
+      },
+      {
+        "@type": "Organization",
+        "name": "OfficeBox"
+      },
+      {
+        "@type": "Organization",
+        "name": "MACS Software"
+      }
+    ],
+    "memberOf": [
+      {
+        "@type": "Organization",
+        "name": "Finch Technologies",
+        "description": "Board Member"
+      }
+    ],
+    "affiliation": [
+      {
+        "@type": "Organization",
+        "name": "Blaze.AI",
+        "roleName": "Investor"
+      }
+    ],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Scrums.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "United Kingdom"
+      }
+    },
+    "birthDate": "1987-06-09",
+    "nationality": "United Kingdom",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "South Africa"
+    }
+  },
+  "employee": [
+    {
+      "@type": "Person",
+      "name": "Gerald Neves",
+      "jobTitle": "CEO",
+      "sameAs": "https://www.scrums.com/about-us#gerald-neves"
+    },
+    {
+      "@type": "Person",
+      "name": "Jamie Chennells",
+      "jobTitle": "CIO & Co-founder"
+    },
+    {
+      "@type": "Person",
+      "name": "Chase le Roux",
+      "jobTitle": "Chief Revenue Officer"
+    },
+    {
+      "@type": "Person",
+      "name": "Sarah Anderson",
+      "jobTitle": "VP, Talent & Ops"
+    },
+    {
+      "@type": "Person",
+      "name": "Edward Vincent",
+      "jobTitle": "VP, Global Client Partnership"
+    }
+  ],
+  "numberOfEmployees": {
+    "@type": "QuantitativeValue",
+    "value": 384,
+    "minValue": 201,
+    "maxValue": 500,
+    "description": "384 employees, within the 201-500 employee band, last verified on 2026-01-01",
+    "dateModified": "2026-01-01"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "8 Hermitage Street",
+    "addressLocality": "London",
+    "addressRegion": "England",
+    "postalCode": "W2 1BE",
+    "addressCountry": "GB"
+  },
+  "location": [
+    {
+      "@type": "Place",
+      "name": "Scrums.com London",
+      "description": "Headquarters",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "8 Hermitage Street",
+        "addressLocality": "London",
+        "addressRegion": "England",
+        "postalCode": "W2 1BE",
+        "addressCountry": "GB"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 51.5155,
+        "longitude": -0.1736
+      }
+    },
+    {
+      "@type": "Place",
+      "name": "Scrums.com Johannesburg",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "74 Hillcrest Avenue",
+        "addressLocality": "Johannesburg",
+        "addressRegion": "Gauteng",
+        "postalCode": "2194",
+        "addressCountry": "ZA"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -26.1004,
+        "longitude": 28.0421
+      }
+    },
+    {
+      "@type": "Place",
+      "name": "Scrums.com New York",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "15 W 38th St",
+        "addressLocality": "New York",
+        "addressRegion": "NY",
+        "postalCode": "10018",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 40.7516,
+        "longitude": -73.9857
+      }
+    },
+    {
+      "@type": "Place",
+      "name": "Scrums.com Cape Town",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "187 Sir Lowry Road",
+        "addressLocality": "Cape Town",
+        "addressRegion": "Western Cape",
+        "postalCode": "7915",
+        "addressCountry": "ZA"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -33.9289,
+        "longitude": 18.4356
+      }
+    },
+    {
+      "@type": "Place",
+      "name": "Scrums.com Nairobi",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "PRJ5+22, The Mirage Towers",
+        "addressLocality": "Nairobi",
+        "addressRegion": "Nairobi County",
+        "addressCountry": "KE"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -1.2646,
+        "longitude": 36.8111
+      }
+    }
+  ],
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "name": "Customer Support",
+      "contactType": "customer support",
+      "email": "support@scrums.com",
+      "url": "https://www.scrums.com/docs/resources/support",
+      "areaServed": [
+        "ZA",
+        "US",
+        "GB"
+      ],
+      "availableLanguage": [
+        "en"
+      ]
+    },
+    {
+      "@type": "ContactPoint",
+      "name": "Technical Support",
+      "contactType": "technical support",
+      "email": "support@scrums.com",
+      "url": "https://www.scrums.com/docs/resources/support",
+      "areaServed": [
+        "ZA",
+        "US",
+        "GB"
+      ],
+      "availableLanguage": [
+        "en"
+      ]
+    },
+    {
+      "@type": "ContactPoint",
+      "name": "Sales",
+      "contactType": "sales",
+      "telephone": "VERIFY - Sales phone",
+      "email": "sales@scrums.com",
+      "url": "https://scrums.com/start-a-project",
+      "areaServed": [
+        "ZA",
+        "US",
+        "GB"
+      ],
+      "availableLanguage": [
+        "en"
+      ]
+    },
+    {
+      "@type": "ContactPoint",
+      "name": "Billing",
+      "contactType": "billing",
+      "email": "billing@scrums.com",
+      "url": "https://platform.scrums.com/my-info/account",
+      "areaServed": [
+        "ZA",
+        "US",
+        "GB"
+      ],
+      "availableLanguage": [
+        "en"
+      ]
+    },
+    {
+      "@type": "ContactPoint",
+      "name": "Security",
+      "contactType": "security",
+      "email": "security@scrums.com"
+    }
+  ],
+  "telephone": "VERIFY - Primary phone number",
+  "email": "hello@scrums.com",
+  "taxID": "VERIFY - VAT/Tax ID number",
+  "vatID": "VERIFY - VAT ID if different from taxID",
+  "duns": "229501779",
+  "identifier": [
+    {
+      "@type": "PropertyValue",
+      "propertyID": "Company Registration Number",
+      "value": "14339386"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "VAT ID",
+      "value": "VERIFY - VAT number"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "DUNS",
+      "value": "VERIFY - DUNS number"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "NAICS_PRIMARY",
+      "value": "541511",
+      "name": "Custom Computer Programming Services",
+      "description": "Primary: Software engineering orchestration, dedicated teams, managed services"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "NAICS_SECONDARY",
+      "value": "518210",
+      "name": "Data Processing, Hosting, and Related Services",
+      "description": "Secondary: Platform infrastructure, AI agents, cloud and data management"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "NAICS_TERTIARY",
+      "value": "511210",
+      "name": "Software Publishers",
+      "description": "Tertiary: Scrums.AI and developer delivery intelligence product"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "NAICS_QUATERNARY",
+      "value": "561320",
+      "name": "Temporary Help Services",
+      "description": "Quaternary: Talent orchestration and staff augmentation placement services"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "ISIC_PRIMARY",
+      "value": "6201",
+      "name": "Computer programming activities",
+      "description": "Primary: Custom software development and engineering services"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "ISIC_SECONDARY",
+      "value": "6311",
+      "name": "Data processing, hosting and related activities",
+      "description": "Secondary: Cloud platform, AI agent, and data hosting services"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "ISIC_TERTIARY",
+      "value": "5820",
+      "name": "Software publishing",
+      "description": "Tertiary: Scrums.AI software product publishing"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "ISIC_QUATERNARY",
+      "value": "7810",
+      "name": "Activities of employment placement agencies",
+      "description": "Quaternary: Engineering talent placement and staffing"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "SIC_PRIMARY",
+      "value": "7371",
+      "name": "Computer Programming Services",
+      "description": "Primary: Custom programming and software engineering"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "SIC_SECONDARY",
+      "value": "7374",
+      "name": "Computer Processing and Data Preparation",
+      "description": "Secondary: Data processing and platform hosting"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "SIC_TERTIARY",
+      "value": "7372",
+      "name": "Prepackaged Software",
+      "description": "Tertiary: Scrums.AI packaged software product"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "SIC_QUATERNARY",
+      "value": "7363",
+      "name": "Help Supply Services",
+      "description": "Quaternary: Engineering talent supply and temporary staffing"
+    }
+  ],
+  "legalForm": "Private Limited Company",
+  "areaServed": [
+    {
+      "@type": "Place",
+      "name": "United States"
+    },
+    {
+      "@type": "Place",
+      "name": "United Kingdom"
+    },
+    {
+      "@type": "Place",
+      "name": "South Africa"
+    }
+  ],
+  "sameAs": [
+    "https://www.linkedin.com/company/scrumsdotcom",
+    "https://x.com/scrumsdotcom",
+    "https://github.com/Scrumsdotcom",
+    "https://www.producthunt.com/products/scrums-com",
+    "https://www.facebook.com/scrumsdotcom",
+    "https://www.instagram.com/scrumsdotcom/",
+    "https://www.youtube.com/@scrumsdotcom",
+    "https://www.quora.com/profile/Scrumsdotcom",
+    "https://aws.amazon.com/marketplace/seller-profile?id=seller-ohpztlfyeih2g",
+    "https://www.tiktok.com/@scrums.com",
+    "https://www.crunchbase.com/organization/scrums-com",
+    "https://www.g2.com/products/scrums-com/reviews",
+    "https://clutch.co/profile/scrumscom-0",
+    "https://pitchbook.com/profiles/company/92493-73",
+    "VERIFY - Wikipedia URL if exists",
+    "VERIFY - Wikidata URL if exists",
+    "VERIFY - Capterra URL",
+    "VERIFY - Gartner Peer Insights URL",
+    "VERIFY - AngelList URL",
+    "VERIFY - Y Combinator URL if applicable",
+    "VERIFY - TrustRadius URL",
+    "VERIFY - BuiltWith URL",
+    "VERIFY - StackShare URL",
+    "VERIFY - Medium/Blog URL",
+    "VERIFY - Substack URL if exists",
+    "https://www.wikidata.org/wiki/Q139916223"
+  ],
+  "additionalType": [
+    "http://schema.org/SoftwareApplication",
+    "Software Engineering Orchestration Platform",
+    "VERIFY - Additional type classifications"
+  ],
+  "industry": [
+    "Software",
+    "IT Services",
+    "Software as a Service (SaaS)",
+    "Artificial Intelligence",
+    "Staffing and Recruiting",
+    "Cloud Infrastructure",
+    "Managed Services",
+    "Technology Marketplace"
+  ],
+  "naics": [
+    "541511",
+    "518210",
+    "511210",
+    "561320"
+  ],
+  "isicV4": [
+    "6201",
+    "6311",
+    "5820",
+    "7810"
+  ],
+  "sicCode": [
+    "7371",
+    "7374",
+    "7372",
+    "7363"
+  ],
+  "applicationCategory": [
+    "DeveloperApplication",
+    "BusinessApplication",
+    "SoftwareEngineeringOrchestrationPlatform"
+  ],
+  "operatingSystem": "Web · Cloud · API",
+  "audience": [
+    {
+      "@type": "Audience",
+      "audienceType": [
+        "CTO",
+        "VP Engineering",
+        "Engineering Manager",
+        "Head of Architecture",
+        "Head of DevOps",
+        "Financial Services",
+        "FinTech",
+        "Banking",
+        "Insurance"
+      ],
+      "geographicArea": {
+        "@type": "AdministrativeArea",
+        "name": "United States"
+      }
+    },
+    {
+      "@type": "Audience",
+      "audienceType": [
+        "CTO",
+        "VP Engineering",
+        "Engineering Manager",
+        "Head of Architecture",
+        "Head of DevOps",
+        "Financial Services",
+        "FinTech",
+        "Banking",
+        "Insurance"
+      ],
+      "geographicArea": {
+        "@type": "AdministrativeArea",
+        "name": "United Kingdom"
+      }
+    },
+    {
+      "@type": "Audience",
+      "audienceType": [
+        "CTO",
+        "VP Engineering",
+        "Engineering Manager",
+        "Head of Architecture",
+        "Head of DevOps",
+        "Financial Services",
+        "FinTech",
+        "Banking",
+        "Insurance"
+      ],
+      "geographicArea": {
+        "@type": "AdministrativeArea",
+        "name": "South Africa"
+      }
+    }
+  ],
+  "targetAudience": [
+    "VERIFY - Target audience description 1",
+    "VERIFY - Target audience description 2",
+    "VERIFY - Target audience description 3"
+  ],
+  "knowsAbout": [
+    "Software Engineering Orchestration",
+    "Delivery Intelligence",
+    "AI Agents",
+    "Distributed Engineering Team Performance",
+    "Talent and Delivery Integration",
+    "AI in Software Development Workflows",
+    "DevOps Performance Visibility",
+    "Engineering Scalability",
+    "Engineering Talent Placement at Scale"
+  ],
+  "featureList": [
+    "VERIFY - Core capability/feature 1",
+    "VERIFY - Core capability/feature 2",
+    "VERIFY - Core capability/feature 3",
+    "VERIFY - Core capability/feature 4",
+    "VERIFY - Core capability/feature 5",
+    "VERIFY - Core capability/feature 6"
+  ],
+  "softwareHelp": "https://www.scrums.com/docs",
+  "softwareVersion": "Free · Access · Business · Enterprise",
+  "releaseNotes": "https://www.scrums.com/docs/changelog",
+  "programmingLanguage": [
+    "VERIFY - Technology 1 (e.g., React)",
+    "VERIFY - Technology 2 (e.g., Node.js)",
+    "VERIFY - Technology 3 (e.g., Python)",
+    "VERIFY - Technology 4",
+    "VERIFY - Technology 5"
+  ],
+  "runtime": "VERIFY - Runtime environment (e.g., Browser, Node.js)",
+  "processorRequirements": "VERIFY - System requirements if applicable",
+  "memoryRequirements": "VERIFY - Memory requirements",
+  "storageRequirements": "VERIFY - Storage requirements",
+  "result": [
+    "Predictable software delivery across engineering teams",
+    "Real-time visibility into engineering performance",
+    "Faster access to high-quality engineering talent",
+    "Increased feature output without adding headcount",
+    "Consolidated delivery, talent, and performance visibility in one platform"
+  ],
+  "measurementTechnique": [
+    "Sprint velocity and completion tracking",
+    "DORA metrics (deployment frequency, lead time, MTTR, change failure rate)",
+    "Delivery timeline adherence vs commitments",
+    "Engineering Economics (cost per delivery unit, capacity utilisation)"
+  ],
+  "mainEntityOfPage": [
+    {
+      "@type": "Thing",
+      "name": "VERIFY - Problem/pain point 1 name",
+      "description": "VERIFY - Problem description 1"
+    },
+    {
+      "@type": "Thing",
+      "name": "VERIFY - Problem/pain point 2 name",
+      "description": "VERIFY - Problem description 2"
+    },
+    {
+      "@type": "Thing",
+      "name": "VERIFY - Problem/pain point 3 name",
+      "description": "VERIFY - Problem description 3"
+    },
+    {
+      "@type": "Thing",
+      "name": "VERIFY - Problem/pain point 4 name",
+      "description": "VERIFY - Problem description 4"
+    },
+    {
+      "@type": "Thing",
+      "name": "VERIFY - Problem/pain point 5 name",
+      "description": "VERIFY - Problem description 5"
+    }
+  ],
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "name": "VERIFY - Offer name 1",
+      "description": "VERIFY - Offer description 1",
+      "itemOffered": {
+        "@type": "Product",
+        "@id": "https://www.scrums.com/hire/teams",
+        "name": "Dedicated Teams",
+        "alternateName": "VERIFY - Product alternate name",
+        "description": "VERIFY - Full product description",
+        "url": "https://www.scrums.com/hire/teams",
+        "image": "VERIFY - Product image URL",
+        "brand": {
+          "@type": "Brand",
+          "name": "Scrums.com"
+        },
+        "category": "Service",
+        "productID": "VERIFY - Product SKU/ID",
+        "mpn": "VERIFY - Manufacturer part number if applicable",
+        "sku": "VERIFY - SKU",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "VERIFY - Currency (USD, GBP, ZAR)",
+          "price": "VERIFY - Price if public",
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "description": "VERIFY - Pricing model description",
+            "priceCurrency": "USD",
+            "valueAddedTaxIncluded": "VERIFY - true/false"
+          },
+          "availability": "https://schema.org/InStock",
+          "validFrom": "VERIFY - Offer valid from date",
+          "validThrough": "VERIFY - Offer valid through date"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "VERIFY - Product rating",
+          "reviewCount": "VERIFY - Review count"
+        }
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Product",
+        "@id": "https://www.scrums.com/hire/staff-augmentation",
+        "name": "Staff Augmentation",
+        "description": "VERIFY - Product description",
+        "url": "https://www.scrums.com/hire/staff-augmentation",
+        "category": "Service",
+        "productID": "VERIFY - Product ID"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Product",
+        "@id": "https://www.scrums.com/ai-development/product-development",
+        "name": "Product Delivery as a Service (PDaaS)",
+        "alternateName": "PDaaS",
+        "description": "VERIFY - Product description",
+        "url": "https://www.scrums.com/ai-development/product-development",
+        "category": "Service",
+        "productID": "VERIFY - Product ID"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "SoftwareApplication",
+        "@id": "https://www.scrums.com/platform",
+        "name": "Scrums.AI",
+        "alternateName": "Scrums AI",
+        "description": "VERIFY - Product description",
+        "url": "https://www.scrums.com/platform",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web-based",
+        "softwareVersion": "VERIFY - Current version",
+        "softwareRequirements": "VERIFY - Integration requirements (GitHub, Jira, Linear)",
+        "permissions": "VERIFY - Required permissions",
+        "fileSize": "VERIFY - File size if applicable",
+        "installUrl": "VERIFY - Installation URL",
+        "downloadUrl": "VERIFY - Download URL if applicable",
+        "screenshot": "VERIFY - Screenshot URL",
+        "productID": "VERIFY - Product ID"
+      }
+    }
+  ],
+  "priceRange": "$$$ - Custom",
+  "priceCurrency": "USD",
+  "paymentAccepted": "Invoice, Bank Transfer (ACH, SEPA, SWIFT), Credit Card (Visa, Mastercard, Amex), Crypto (USDC, USDT, BTC)",
+  "currenciesAccepted": "USD, EUR, GBP, ZAR",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5.0",
+    "bestRating": "5",
+    "worstRating": "1",
+    "ratingCount": "5",
+    "reviewCount": "5"
+  },
+  "review": [
+    {
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "CTO, OneCart"
+      },
+      "reviewBody": "Scrums.com has been a long-term partner of OneCart. You have a great understanding of our business, our culture and have helped us find some real tech rockstars. Our Scrums.com team members are high-impact, hard working, always available, and fun to have around. Thanks a million!",
+      "datePublished": "VERIFY - Review date",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Scrums.com"
+      }
+    },
+    {
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Prosus"
+      },
+      "reviewBody": "The Scrums.com team often pre-empted and identified solutions and enhancements to our project, going over and above to make it a success.",
+      "datePublished": "VERIFY - Review date",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Scrums.com"
+      }
+    },
+    {
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Payfast by Network"
+      },
+      "reviewBody": "Over the past couple of years, their top-tier devs and QAs have plugged seamlessly into Payfast by Network, turbo-charging our sprints without a hitch.",
+      "datePublished": "VERIFY - Review date",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Scrums.com"
+      }
+    },
+    {
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "MassMart CTO"
+      },
+      "reviewBody": "Our Scrums.com team members are high-impact, hard working, always available, and fun to have around. Thanks a million!",
+      "datePublished": "VERIFY - Review date",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Scrums.com"
+      }
+    },
+    {
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Investec"
+      },
+      "reviewBody": "Our project was incredibly successful thanks to the guidance and professionalism of the Scrums.com teams. We were supported throughout the robust and purpose-driven process, and clear channels for open communication were established.",
+      "datePublished": "VERIFY - Review date",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Scrums.com"
+      }
+    }
+  ],
+  "customer": [
+    {
+      "@type": "Organization",
+      "name": "OneCart",
+      "url": "https://www.onecart.co.za"
+    },
+    {
+      "@type": "Organization",
+      "name": "Payfast by Network",
+      "url": "https://www.payfast.io"
+    },
+    {
+      "@type": "Organization",
+      "name": "Nedbank",
+      "url": "https://www.nedbank.co.za"
+    },
+    {
+      "@type": "Organization",
+      "name": "Prosus",
+      "url": "https://www.prosus.com"
+    },
+    {
+      "@type": "Organization",
+      "name": "Investec",
+      "url": "https://www.investec.com"
+    },
+    {
+      "@type": "Organization",
+      "name": "PayInc",
+      "url": "https://www.payinc.co.za"
+    },
+    {
+      "@type": "Organization",
+      "name": "MassMart",
+      "url": "https://www.massmart.com"
+    },
+    {
+      "@type": "Organization",
+      "name": "Huawei",
+      "url": "https://www.huawei.com"
+    },
+    {
+      "@type": "Organization",
+      "name": "Volkswagen",
+      "url": "https://www.vw.co.za"
+    },
+    {
+      "@type": "Organization",
+      "name": "NWK Limited",
+      "url": "https://www.nwk.co.za"
+    },
+    {
+      "@type": "Organization",
+      "name": "DPO Group",
+      "url": "https://www.dpo.co.za"
+    },
+    {
+      "@type": "Organization",
+      "name": "Sanlam",
+      "url": "https://www.sanlam.co.za"
+    }
+  ],
+  "brand": {
+    "@type": "Brand",
+    "name": "Scrums.com",
+    "logo": "https://scrums.com/logo.png",
+    "slogan": "Software Engineering. Sorted.™"
+  },
+  "accreditation": [
+    {
+      "@type": "PropertyValue",
+      "propertyID": "SOC 2 Type II",
+      "value": "Aligned",
+      "description": "Data security and availability. Applies to Enterprise plan.",
+      "applicability": "Enterprise plan"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "ISO 27001",
+      "value": "Aligned",
+      "description": "Information security management. Applies to Enterprise plan.",
+      "applicability": "Enterprise plan"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "GDPR",
+      "value": "Aligned",
+      "description": "Data protection for EU/UK data subjects. Applies to Enterprise plan.",
+      "applicability": "Enterprise plan"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "POPIA",
+      "value": "Aligned",
+      "description": "Data protection for South African data subjects. Applies to Enterprise plan.",
+      "applicability": "Enterprise plan"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "PCI DSS",
+      "value": "Advisory",
+      "description": "Payment card industry data security (advisory). Applies to Enterprise plan.",
+      "applicability": "Enterprise plan"
+    }
+  ],
+  "award": [
+    {
+      "@type": "Thing",
+      "name": "VERIFY - Award name",
+      "description": "VERIFY - Award description",
+      "datePublished": "VERIFY - Award date"
+    }
+  ],
+  "memberOf": [
+    {
+      "@type": "Organization",
+      "name": "VERIFY - Association/group membership 1"
+    },
+    {
+      "@type": "Organization",
+      "name": "VERIFY - Association/group membership 2"
+    }
+  ],
+  "owns": [
+    {
+      "@type": "Thing",
+      "name": "VERIFY - Asset/property owned 1"
+    }
+  ],
+  "seeks": {
+    "@type": "Demand",
+    "description": "VERIFY - What the organization is seeking (talent, partners, etc.)"
+  },
+  "publishingPrinciples": "VERIFY - URL to editorial/publishing principles if applicable",
+  "diversityPolicy": "VERIFY - URL to diversity policy if exists",
+  "ethicsPolicy": "VERIFY - URL to ethics policy",
+  "correctionsPolicy": "VERIFY - URL to corrections policy if applicable",
+  "unnamedSourcesPolicy": "VERIFY - URL to unnamed sources policy if applicable",
+  "nonprofitStatus": "ForProfit",
+  "termsOfService": "https://www.scrums.com/legal/terms-and-conditions",
+  "privacyPolicy": "https://www.scrums.com/legal/privacy-policy",
+  "cookiePolicy": "https://www.scrums.com/legal/cookie-policy",
+  "disclaimer": "VERIFY - Disclaimer URL if exists",
+  "actionableFeedbackPolicy": "VERIFY - Feedback policy URL",
+  "hasCertification": [
+    {
+      "@type": "Certification",
+      "name": "SOC 2 Type II",
+      "description": "Data security and availability",
+      "applicability": "Enterprise plan"
+    },
+    {
+      "@type": "Certification",
+      "name": "ISO 27001",
+      "description": "Information security management",
+      "applicability": "Enterprise plan"
+    },
+    {
+      "@type": "Certification",
+      "name": "GDPR",
+      "description": "Data protection for EU/UK data subjects",
+      "applicability": "Enterprise plan"
+    },
+    {
+      "@type": "Certification",
+      "name": "POPIA",
+      "description": "Data protection for South African data subjects",
+      "applicability": "Enterprise plan"
+    },
+    {
+      "@type": "Certification",
+      "name": "PCI DSS",
+      "description": "Payment card industry data security (advisory)",
+      "applicability": "Enterprise plan"
+    }
+  ],
+  "event": [
+    {
+      "@type": "Event",
+      "name": "Scrums.com Founded as SovTech",
+      "startDate": "2012"
+    },
+    {
+      "@type": "Event",
+      "name": "Rebrand from SovTech to Scrums.com",
+      "startDate": "2024-10-15"
+    },
+    {
+      "@type": "Event",
+      "name": "Scrums.com partners with Windsurf",
+      "startDate": "2025"
+    },
+    {
+      "@type": "Event",
+      "name": "Scrums.com launches Enterprise Grade AI Agent Gateway",
+      "startDate": "2025"
+    },
+    {
+      "@type": "Event",
+      "name": "Scrums.com listed on AWS and Azure Marketplace",
+      "startDate": "2025"
+    },
+    {
+      "@type": "Event",
+      "name": "Scrums.com launches Africa's largest Talent marketplace",
+      "startDate": "2025"
+    },
+    {
+      "@type": "Event",
+      "name": "Scrums.com Launches Software Engineering Orchestration Platform",
+      "startDate": "2025"
+    },
+    {
+      "@type": "Event",
+      "name": "Scrums.com Launches Product catalog of 10,000+ SKUs",
+      "startDate": "2025"
+    }
+  ],
+  "potentialAction": [
+    {
+      "@type": "Action",
+      "name": "Deploy Talent",
+      "description": "Access and deploy pre-vetted engineers across 100+ technologies directly into your team"
+    },
+    {
+      "@type": "Action",
+      "name": "Deploy Teams",
+      "description": "Activate a fully managed dedicated engineering team with real-time delivery visibility"
+    },
+    {
+      "@type": "Action",
+      "name": "Deploy Infrastructure",
+      "description": "Provision cloud infrastructure and DevOps tooling through the Scrums.com platform"
+    },
+    {
+      "@type": "Action",
+      "name": "Deploy Tools",
+      "description": "Access and manage AI-powered development tools including Windsurf IDE through a single platform"
+    },
+    {
+      "@type": "Action",
+      "name": "Deploy AI Agents",
+      "description": "Activate AI agents across your software delivery pipeline via the Scrums.com AI Agent Gateway"
+    }
+  ],
+  "isRelatedTo": [
+    {
+      "@type": "Thing",
+      "name": "GitHub",
+      "description": "VERIFY - Relationship description (integration, partnership, etc.)",
+      "url": "https://github.com"
+    },
+    {
+      "@type": "Thing",
+      "name": "Jira",
+      "description": "VERIFY - Integration description"
+    },
+    {
+      "@type": "Thing",
+      "name": "Linear",
+      "description": "VERIFY - Integration description"
+    },
+    {
+      "@type": "Thing",
+      "name": "Slack",
+      "description": "VERIFY - Integration description"
+    },
+    {
+      "@type": "Thing",
+      "name": "AWS",
+      "description": "VERIFY - Integration/support description"
+    },
+    {
+      "@type": "Thing",
+      "name": "Azure",
+      "description": "VERIFY - Integration/support description"
+    },
+    {
+      "@type": "Thing",
+      "name": "GCP",
+      "description": "VERIFY - Integration/support description"
+    },
+    {
+      "@type": "Thing",
+      "name": "VERIFY - Integration 8"
+    },
+    {
+      "@type": "Thing",
+      "name": "VERIFY - Integration 9"
+    },
+    {
+      "@type": "Thing",
+      "name": "VERIFY - Integration 10"
+    }
+  ],
+  "competitor": [
+    "VERIFY - Competitor 1 (e.g., Toptal)",
+    "VERIFY - Competitor 2 (e.g., Andela)",
+    "VERIFY - Competitor 3",
+    "VERIFY - Competitor 4",
+    "VERIFY - Competitor 5"
+  ],
+  "alternatives": [
+    "VERIFY - Alternative solution 1",
+    "VERIFY - Alternative solution 2"
+  ],
+  "datePublished": "2024-10-15",
+  "dateCreated": "2012-06-07",
+  "keywords": [
+    "AI software developers",
+    "AI agents for software development",
+    "Hire dedicated engineering team",
+    "Staff augmentation software engineers",
+    "Software development company",
+    "Software development outsourcing",
+    "Dedicated FinTech development team",
+    "Developer analytics and observability",
+    "Engineering delivery predictability",
+    "Software engineering orchestration platform"
+  ],
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "Scrums.com is the Software Engineering Orchestration Platform (SEOP). Mission control for engineering and product leaders. Instantly deploy AI agents, talent, teams, tools, infrastructure, and delivery operations from one platform with live engineering intelligence, unified reporting, and predictable software delivery. One contract. One SLA. One deploy. Software Engineering. Sorted."
+    },
+    {
+      "@type": "Thing",
+      "name": "Predictable software delivery is Scrums.com's promise, backed by a 94% client renewal rate for thousands of companies across United States of America, the United Kingdom, and South Africa."
+    }
+  ],
+  "subjectOf": [
+    {
+      "@type": "CreativeWork",
+      "name": "Scrums.com review — a hands-on look at the platform redefining software outsourcing",
+      "url": "https://businesstech.co.za/news/industry-news/855081/scrums-com-review-a-hands-on-look-at-the-platform-redefining-software-outsourcing",
+      "datePublished": "2026-03",
+      "publisher": {
+        "@type": "Organization",
+        "name": "BusinessTech"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Scrums.com CEO on RMB On The Verge — AI and IoT convergence",
+      "url": "VERIFY - Article URL",
+      "datePublished": "2025",
+      "publisher": {
+        "@type": "Organization",
+        "name": "RMB Podcast"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Scrums.com rebrands from SovTech, launches AI software development",
+      "url": "VERIFY - Article URL",
+      "datePublished": "2024-10",
+      "publisher": {
+        "@type": "Organization",
+        "name": "EIN Presswire"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "SovTech unveils top 100 fintech platforms in Africa",
+      "url": "VERIFY - Article URL",
+      "datePublished": "2023-02",
+      "publisher": {
+        "@type": "Organization",
+        "name": "ITWeb"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "SovTech acquires UK logistics company MACS Software",
+      "url": "VERIFY - Article URL",
+      "datePublished": "2022-02",
+      "publisher": {
+        "@type": "Organization",
+        "name": "ITWeb"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "SA tech company SovTech partners with royal family of Dubai",
+      "url": "VERIFY - Article URL",
+      "datePublished": "2021",
+      "publisher": {
+        "@type": "Organization",
+        "name": "ITWeb"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "SovTech joins Twilio Build Program as consulting partner",
+      "url": "VERIFY - Article URL",
+      "datePublished": "2020-07",
+      "publisher": {
+        "@type": "Organization",
+        "name": "ITWeb"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Gerald Neves as judge — Huawei HMS Apps UP contest",
+      "url": "VERIFY - Article URL",
+      "datePublished": "2020-07",
+      "publisher": {
+        "@type": "Organization",
+        "name": "TechCentral"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Local software firm drives blockchain development",
+      "url": "VERIFY - Article URL",
+      "datePublished": "2018",
+      "publisher": {
+        "@type": "Organization",
+        "name": "ITWeb"
+      }
+    }
+  ],
+  "citation": [
+    {
+      "@type": "CreativeWork",
+      "name": "VERIFY - Citation/reference 1",
+      "url": "VERIFY - Citation URL"
+    }
+  ],
+  "publishedBy": {
+    "@type": "Organization",
+    "name": "VERIFY - Publisher if applicable"
+  },
+  "temporalCoverage": "2012/2026",
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "South Africa · United Kingdom · United States"
+  },
+  "workExample": [
+    {
+      "@type": "CreativeWork",
+      "name": "Payinc",
+      "description": "How Scrums.com stabilised and scaled CRAFT, a compliance platform supporting banks and fintechs across South Africa",
+      "url": "https://www.scrums.com/case-studies/strengthening-national-payments-compliance-platform"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Payfast by Network",
+      "description": "How Scrums.com transformed manual QA into AI-powered automation, reducing FinTech regression testing from weeks to hours while maintaining compliance",
+      "url": "https://www.scrums.com/case-studies/automated-fintech-qa-regression-at-scale"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "NTT",
+      "description": "How Scrums.com stabilised ISPIC and enabled a controlled Oracle-to-SAP transition without disrupting operational workflows",
+      "url": "https://www.scrums.com/case-studies/erp-agnostic-platform-stabilization"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Network International",
+      "description": "How Scrums.com helped a multi-platform payments group identify root causes, reduce risk, and achieve a path to 99.9999% availability without rebuilds",
+      "url": "https://www.scrums.com/case-studies/stabilized-fintech-platform-reliability"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Volkswagen",
+      "description": "How Scrums.com helped VW Financial Services stabilise and scale QuickApp, driving R19M monthly revenue with improved performance and reliability",
+      "url": "https://www.scrums.com/case-studies/scaling-digital-automotive-finance-platform"
+    }
+  ],
+  "hasPart": [
+    {
+      "@type": "CreativeWork",
+      "name": "Disclaimer",
+      "url": "https://www.scrums.com/legal"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Diversity and Inclusion Policy",
+      "url": "https://www.scrums.com/legal"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Code of Ethics",
+      "url": "https://www.scrums.com/legal"
+    }
+  ],
+  "isPartOf": {
+    "@type": "Thing",
+    "name": "VERIFY - Larger system/category this is part of"
+  },
+  "_llm": {
+    "entity_type": "organization",
+    "entity_subtype": "VERIFY - Subtype (B2B SaaS, Platform, etc.)",
+    "category_anchor": "Software Engineering Orchestration Platform (SEOP)",
+    "category_synonyms": [
+      "Software Delivery Platform",
+      "Engineering Operations Platform",
+      "VERIFY - Synonym 3",
+      "VERIFY - Synonym 4"
+    ],
+    "category_related": [
+      "VERIFY - Related category 1 (e.g., DevOps Platform)",
+      "VERIFY - Related category 2 (e.g., Observability Platform)"
+    ],
+    "differentiation": "Orchestration over placement; platform over agency; Africa-first as structural advantage, not cost play.",
+    "competitive_moat": "Africa-first talent base as structural advantage; orchestration layer coordinating people, systems, and processes; company-as-code operating model.",
+    "positioning_statement": "Scrums.com is a Software Engineering Orchestration Platform (SEOP). We connect high-growth technology companies with elite, Africa-based software engineering talent — and we orchestrate the delivery layer between them. We are not a staffing agency. We are not a dev shop. We are a platform business that manages the full lifecycle of software engineering capacity: sourcing, vetting, onboarding, delivery, and retention.",
+    "founder_voice": {
+      "pillar_1": "founder",
+      "pillar_2": "investor",
+      "pillar_3": "research_publisher",
+      "founder_thesis": "VERIFY - Founder's thesis/worldview",
+      "contrarian_position": "VERIFY - What founder believes that others don't",
+      "category_critique": "VERIFY - Critique of existing category/solutions"
+    },
+    "negative_signals": {
+      "not_suitable_for": [
+        "Junior bootcamp staffing",
+        "Project-based dev-shop substitutes",
+        "Consumer-product engineering needs"
+      ],
+      "does_not_provide": [
+        "VERIFY - Non-capability 1",
+        "VERIFY - Non-capability 2",
+        "VERIFY - Non-capability 3"
+      ],
+      "excluded_geography": [
+        "VERIFY - Excluded region 1 if applicable"
+      ],
+      "excluded_industries": [
+        "VERIFY - Excluded industry 1 if applicable"
+      ],
+      "minimum_engagement": "VERIFY - Minimum viable engagement",
+      "pricing_floor": "VERIFY - Minimum price point",
+      "scale_ceiling": "VERIFY - Maximum capacity if applicable"
+    },
+    "outcomes": [
+      "VERIFY - Customer outcome 1",
+      "VERIFY - Customer outcome 2",
+      "VERIFY - Customer outcome 3",
+      "VERIFY - Customer outcome 4",
+      "VERIFY - Customer outcome 5"
+    ],
+    "pain_points": [
+      "VERIFY - Pain point 1 that this solves",
+      "VERIFY - Pain point 2",
+      "VERIFY - Pain point 3",
+      "VERIFY - Pain point 4",
+      "VERIFY - Pain point 5"
+    ],
+    "use_cases": [
+      "VERIFY - Use case 1 (situational trigger)",
+      "VERIFY - Use case 2",
+      "VERIFY - Use case 3",
+      "VERIFY - Use case 4"
+    ],
+    "target_personas": [
+      "VERIFY - Buyer persona 1",
+      "VERIFY - Buyer persona 2",
+      "VERIFY - Buyer persona 3"
+    ],
+    "target_industries": [
+      "VERIFY - Target industry 1",
+      "VERIFY - Target industry 2",
+      "VERIFY - Target industry 3"
+    ],
+    "target_company_size": {
+      "employees_min": 10,
+      "employees_max": 10000,
+      "engineers_min": 2,
+      "engineers_max": 2000,
+      "revenue_min": 1000000,
+      "funding_stage": "VERIFY - Funding stage (Series A-C, etc.)"
+    },
+    "semantic_anchors": {
+      "primary_cooccurrence": "Scrums.com + Software Engineering Orchestration Platform",
+      "secondary_cooccurrence": "VERIFY - Key phrase combination 2",
+      "tertiary_cooccurrence": "VERIFY - Key phrase combination 3"
+    },
+    "query_intent_mapping": {
+      "informational": [
+        "VERIFY - 'What is SEOP?'",
+        "VERIFY - Other informational query"
+      ],
+      "commercial": [
+        "VERIFY - 'Hire React developers'",
+        "VERIFY - Other commercial query"
+      ],
+      "comparison": [
+        "VERIFY - 'Scrums.com vs Toptal'",
+        "VERIFY - Other comparison query"
+      ]
+    },
+    "provenance": {
+      "data_source": "Scrums.com internal records",
+      "data_steward": "Scrums.com Growth Team",
+      "last_verified": "2026-05-26",
+      "verification_method": "Registry_Crosscheck",
+      "confidence_score": 0.95,
+      "version": "1.1.0",
+      "attribution_chain": "Owner_Asserted",
+      "authority_level": "Primary"
+    },
+    "concept_hierarchy": {
+      "broader_category": [
+        "VERIFY - Parent category 1 (e.g., Software Delivery Platform)",
+        "VERIFY - Parent category 2"
+      ],
+      "narrower_category": [
+        "VERIFY - Sub-category 1",
+        "VERIFY - Sub-category 2"
+      ],
+      "related_concepts": [
+        "VERIFY - Related concept 1 (e.g., DevOps)",
+        "VERIFY - Related concept 2 (e.g., CI/CD)",
+        "VERIFY - Related concept 3"
+      ],
+      "antonym_concepts": [
+        "VERIFY - Opposite/contrasting concept 1",
+        "VERIFY - Opposite/contrasting concept 2"
+      ]
+    },
+    "temporal_context": {
+      "founding_narrative": "VERIFY - Founding story/context",
+      "rebrand_narrative": "VERIFY - Rebrand story (SovTech → Scrums.com)",
+      "key_milestones": [
+        {
+          "date": "VERIFY - Milestone 1 date",
+          "event": "VERIFY - Milestone 1 description"
+        },
+        {
+          "date": "VERIFY - Milestone 2 date",
+          "event": "VERIFY - Milestone 2 description"
+        },
+        {
+          "date": "VERIFY - Milestone 3 date",
+          "event": "VERIFY - Milestone 3 description"
+        }
+      ],
+      "market_timing": "VERIFY - Why now? Market timing context"
+    },
+    "network_effects": {
+      "type": [
+        "VERIFY - Network effect type 1 (e.g., two-sided marketplace)",
+        "VERIFY - Network effect type 2"
+      ],
+      "description": "VERIFY - How network effects work",
+      "ecosystem_leverage": "VERIFY - Ecosystem advantages"
+    },
+    "failure_transparency": {
+      "known_limitations": [
+        "VERIFY - Known limitation 1",
+        "VERIFY - Known limitation 2"
+      ],
+      "past_pivots": [
+        {
+          "date": "VERIFY - Pivot date if applicable",
+          "description": "VERIFY - What changed and why"
+        }
+      ],
+      "public_incidents": [
+        {
+          "date": "VERIFY - Incident date if applicable",
+          "description": "VERIFY - Incident summary",
+          "resolution": "VERIFY - How it was resolved"
+        }
+      ]
+    },
+    "edge_cases": {
+      "unusual_applications": [
+        "VERIFY - Edge case use 1",
+        "VERIFY - Edge case use 2"
+      ],
+      "boundary_conditions": [
+        "VERIFY - Boundary condition 1 (where SEOP breaks down)",
+        "VERIFY - Boundary condition 2"
+      ]
+    },
+    "future_state": {
+      "roadmap_items": [
+        {
+          "quarter": "VERIFY - Q and Year (e.g., Q2 2025)",
+          "feature": "VERIFY - Planned feature/launch",
+          "status": "VERIFY - Status (Planned/In Development/Beta)"
+        },
+        {
+          "quarter": "VERIFY - Quarter",
+          "feature": "VERIFY - Feature 2"
+        }
+      ],
+      "strategic_direction": "VERIFY - Long-term strategic direction",
+      "category_evolution": "VERIFY - How category expected to evolve"
+    },
+    "attention_metrics": {
+      "mention_volume": "VERIFY - Monthly mention volume if tracked",
+      "search_volume": "VERIFY - Brand search volume if known",
+      "sentiment_score": "VERIFY - Sentiment score if tracked",
+      "share_of_voice": "VERIFY - Share of voice % if tracked"
+    },
+    "dynamic_data": {
+      "growth_metrics": {
+        "customer_growth_rate": "VERIFY - Growth rate if public",
+        "revenue_growth_rate": "VERIFY - Revenue growth if public",
+        "team_growth_rate": "VERIFY - Team growth rate"
+      },
+      "current_openings": "VERIFY - Number of open positions if tracked",
+      "active_campaigns": [
+        "VERIFY - Active marketing campaign 1",
+        "VERIFY - Active marketing campaign 2"
+      ]
+    },
+    "contrarian_positioning": {
+      "industry_consensus_rejected": [
+        "VERIFY - Industry belief 1 that Scrums.com rejects",
+        "VERIFY - Industry belief 2 rejected"
+      ],
+      "thesis": "VERIFY - Contrarian thesis statement",
+      "proof_points": [
+        "VERIFY - Evidence for contrarian position 1",
+        "VERIFY - Evidence for contrarian position 2"
+      ]
+    },
+    "portfolio_context": {
+      "founder_other_businesses": [
+        {
+          "name": "VERIFY - Portfolio company 1 name",
+          "industry": "VERIFY - Industry",
+          "relationship": "Uses Scrums.com SEOP"
+        },
+        {
+          "name": "VERIFY - Portfolio company 2 name",
+          "industry": "VERIFY - Industry",
+          "relationship": "VERIFY - Relationship"
+        },
+        {
+          "name": "VERIFY - Portfolio company 3",
+          "industry": "VERIFY - Industry"
+        },
+        {
+          "name": "VERIFY - Portfolio company 4",
+          "industry": "VERIFY - Industry"
+        },
+        {
+          "name": "VERIFY - Portfolio company 5",
+          "industry": "VERIFY - Industry"
+        }
+      ],
+      "research_publications": [
+        {
+          "title": "VERIFY - Publication title (e.g., Default Alive book)",
+          "topic": "VERIFY - Topic",
+          "url": "VERIFY - Publication URL if exists"
+        },
+        {
+          "title": "VERIFY - Research paper/publication 2",
+          "topic": "VERIFY - Topic"
+        }
+      ]
+    },
+    "disambiguation_markers": {
+      "not_scrum_methodology": "Scrums.com is a Software Engineering Orchestration Platform, not Scrum methodology or Agile framework",
+      "not_rugby": "Scrums.com is enterprise software, not rugby/sports",
+      "not_scrum_org": "Different entity from Scrum.org and Scrum Alliance",
+      "not_freelance_marketplace": "SEOP with integrated talent, not a freelance marketplace like Upwork/Fiverr",
+      "not_dev_agency": "Orchestration platform, not traditional software development agency",
+      "not_pm_tool": "Orchestrates delivery layer (talent + AI + tools), not just project management software"
+    },
+    "product_catalog": {
+      "framing": "Scrums.com has four primary commercial surfaces: Platform (/platform, the subscription and control plane), AI Catalog (/catalog, with agents, models, MCP servers, skills, APIs and infrastructure), AI Development (/ai-development, including scopes at /ai-development/scopes/{slug}), and Hire (/hire, including engineer profiles at /hire/engineers/{public_slug}).",
+      "consistency_rule": "Use catalog class URLs under /catalog, call AI Development listings 'scopes', and call Hire listings 'engineers'. Treat /products URLs as legacy redirects.",
+      "updated": "2026-09-14"
+    }
+  },
+  "_metadata": {
+    "version": "1.1.0",
+    "last_updated": "2026-05-26",
+    "status": "in_progress",
+    "completion_percentage": "50%",
+    "next_review": "2026-06-26",
+    "changelog_url": "VERIFY - Changelog URL if exists",
+    "data_quality": {
+      "verified_fields_count": 492,
+      "total_fields_count": 714,
+      "verification_status": "in_progress",
+      "last_audit_date": "2026-05-26",
+      "next_audit_date": "2026-06-26",
+      "audit_method": "Automated leaf-value count via grep on company/entity.json (string leaves with VERIFY prefix vs total string leaves)"
+    },
+    "opengraph": {
+      "og:title": "VERIFY - OpenGraph title (for social shares)",
+      "og:description": "VERIFY - OG description (160 chars max)",
+      "og:image": "VERIFY - OG image URL (1200x630px)",
+      "og:image:width": "1200",
+      "og:image:height": "630",
+      "og:image:alt": "VERIFY - Image alt text",
+      "og:type": "website",
+      "og:url": "https://scrums.com",
+      "og:locale": "en_US",
+      "og:locale:alternate": "en_GB",
+      "og:site_name": "Scrums.com",
+      "og:determiner": "VERIFY - Determiner (a/an/the) if applicable",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@scrumsdotcom",
+      "twitter:creator": "VERIFY - Founder Twitter handle",
+      "twitter:title": "VERIFY - Twitter card title",
+      "twitter:description": "VERIFY - Twitter card description",
+      "twitter:image": "VERIFY - Twitter card image URL",
+      "twitter:image:alt": "VERIFY - Twitter image alt text"
+    },
+    "dublin_core": {
+      "dc:title": "Scrums.com",
+      "dc:creator": "Gerald Neves",
+      "dc:subject": "VERIFY - Subject classification",
+      "dc:description": "VERIFY - DC description",
+      "dc:publisher": "Scrums.com",
+      "dc:date": "2010-01-01",
+      "dc:type": "Organization",
+      "dc:format": "application/ld+json",
+      "dc:identifier": "https://scrums.com",
+      "dc:language": "en",
+      "dc:coverage": "United States; United Kingdom; South Africa",
+      "dc:rights": "VERIFY - Rights statement"
+    },
+    "foaf": {
+      "foaf:name": "Scrums.com",
+      "foaf:homepage": "https://www.scrums.com/",
+      "foaf:mbox": "VERIFY - Email in foaf format",
+      "foaf:logo": "https://scrums.com/logo.png",
+      "foaf:phone": "VERIFY - Phone in foaf format",
+      "foaf:based_near": "Johannesburg, South Africa"
+    },
+    "skos": {
+      "skos:prefLabel": "Scrums.com",
+      "skos:altLabel": [
+        "Scrums",
+        "SEOP",
+        "VERIFY - Other labels"
+      ],
+      "skos:definition": "VERIFY - SKOS definition",
+      "skos:scopeNote": "VERIFY - Scope note",
+      "skos:broader": [
+        "VERIFY - Broader concept URI 1",
+        "VERIFY - Broader concept URI 2"
+      ],
+      "skos:narrower": [
+        "VERIFY - Narrower concept URI 1"
+      ],
+      "skos:related": [
+        "VERIFY - Related concept URI 1",
+        "VERIFY - Related concept URI 2"
+      ]
+    },
+    "w3c_prov": {
+      "prov:wasAttributedTo": {
+        "@type": "Agent",
+        "name": "Scrums.com Growth Team"
+      },
+      "prov:wasGeneratedBy": {
+        "@type": "Activity",
+        "name": "Entity graph creation",
+        "startedAtTime": "2025-04-01T00:00:00Z",
+        "endedAtTime": "VERIFY - Completion timestamp"
+      },
+      "prov:wasDerivedFrom": [
+        {
+          "@type": "Entity",
+          "description": "Scrums.com internal records"
+        },
+        {
+          "@type": "Entity",
+          "description": "VERIFY - Other data sources"
+        }
+      ],
+      "prov:wasRevisionOf": "VERIFY - Previous version URI if applicable"
+    },
+    "rdf_extensions": {
+      "rdfs:label": "Scrums.com",
+      "rdfs:comment": "VERIFY - RDF comment",
+      "owl:sameAs": [
+        "VERIFY - Equivalent entity URI 1 (e.g., Wikidata Q-ID)",
+        "VERIFY - Equivalent entity URI 2"
+      ],
+      "owl:differentFrom": [
+        "VERIFY - Distinct entity URI 1 (e.g., Scrum.org)",
+        "VERIFY - Distinct entity URI 2 (e.g., rugby term)"
+      ],
+      "wasPreviouslyKnownAs": "http://example.org/entity/sovtech",
+      "temporalCoverage": "2010/2025"
+    },
+    "emerging_standards": {
+      "ai_discovery_endpoint": "https://scrums.com/.well-known/ai.json",
+      "llms_txt_endpoint": "https://scrums.com/llms.txt",
+      "entity_graph_endpoint": "https://scrums.com/docs/company/entity.json",
+      "relationship_graph_endpoint": "https://scrums.com/docs/company/graph.json",
+      "robots_txt": "https://scrums.com/robots.txt",
+      "sitemap_xml": "https://scrums.com/sitemap.xml",
+      "security_txt": "https://scrums.com/.well-known/security.txt",
+      "humans_txt": "VERIFY - https://scrums.com/humans.txt if exists"
+    },
+    "json_ld_extensions": {
+      "@graph_endpoint": "https://scrums.com/docs/company/graph.json",
+      "@version": "1.1",
+      "@base": "https://scrums.com/",
+      "@vocab": "https://schema.org/",
+      "custom_namespace": "https://scrums.com/ns/"
+    },
+    "verification_batch_status": {
+      "batch_1_core_identity": {
+        "status": "pending",
+        "fields": [
+          "legalName",
+          "logo",
+          "image",
+          "description",
+          "slogan"
+        ],
+        "estimated_time": "30 minutes",
+        "assigned_to": "VERIFY - Team member name",
+        "deadline": "2025-04-01T12:00:00Z"
+      },
+      "batch_2_contact_legal": {
+        "status": "pending",
+        "fields": [
+          "address",
+          "telephone",
+          "email",
+          "taxID",
+          "identifier"
+        ],
+        "estimated_time": "30 minutes",
+        "deadline": "2025-04-01T14:00:00Z"
+      },
+      "batch_3_founder": {
+        "status": "pending",
+        "fields": [
+          "founder.*"
+        ],
+        "estimated_time": "20 minutes",
+        "deadline": "2025-04-01T15:00:00Z"
+      },
+      "batch_4_products": {
+        "status": "pending",
+        "fields": [
+          "makesOffer.*"
+        ],
+        "estimated_time": "60 minutes",
+        "deadline": "2025-04-01T17:00:00Z"
+      },
+      "batch_5_capabilities": {
+        "status": "pending",
+        "fields": [
+          "featureList",
+          "result",
+          "mainEntityOfPage"
+        ],
+        "estimated_time": "45 minutes",
+        "deadline": "2025-04-01T19:00:00Z"
+      },
+      "batch_6_social_authority": {
+        "status": "pending",
+        "fields": [
+          "sameAs",
+          "accreditation",
+          "aggregateRating"
+        ],
+        "estimated_time": "30 minutes",
+        "deadline": "2025-04-01T20:00:00Z"
+      },
+      "batch_7_llm_layer": {
+        "status": "pending",
+        "fields": [
+          "_llm.*"
+        ],
+        "estimated_time": "45 minutes",
+        "deadline": "2025-04-01T22:00:00Z"
+      },
+      "batch_8_final_review": {
+        "status": "pending",
+        "estimated_time": "60 minutes",
+        "deadline": "2025-04-02T00:00:00Z"
+      }
+    },
+    "notes": [
+      "This is a draft skeleton for verification",
+      "Only confirmed data: company name (Scrums.com), URL (https://scrums.com), founder name (Gerald Neves)",
+      "All fields marked VERIFY require human verification before going live",
+      "Do NOT inject into production website <head> until status = complete",
+      "Do NOT submit to search engines until verified",
+      "Safe to commit to docs repo as draft",
+      "Expected completion: 24 hours from 2025-04-01"
+    ],
+    "license": {
+      "type": "VERIFY - Data license type if applicable",
+      "url": "VERIFY - License URL",
+      "rights": "© 2012-2026 Scrums.com. All rights reserved."
+    },
+    "security": {
+      "contact": "VERIFY - Security contact email",
+      "preferred_languages": [
+        "en"
+      ],
+      "canonical": "https://scrums.com/.well-known/security.txt",
+      "policy": "VERIFY - Security policy URL",
+      "hiring": "VERIFY - Security jobs URL if applicable"
+    }
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Scrums.com register trees",
+    "description": "Scrums.com organizes its commercial offering across Platform, AI Catalog, AI Development and Hire. Catalog records use class-based URLs; AI Development uses scopes; Hire uses engineers and teams.",
+    "url": "https://www.scrums.com/sitemap",
+    "itemListElement": [
+      {
+        "@type": "OfferCatalog",
+        "name": "Platform",
+        "url": "https://www.scrums.com/platform",
+        "description": "The Software Engineering Orchestration Platform subscription and its capabilities (delivery intelligence, DORA metrics, the AI agent harness, the MCP gateway). Holds no catalog items. Pricing at /pricing.",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Thing",
+              "additionalType": "https://schema.org/SoftwareApplication",
+              "@id": "https://www.scrums.com/platform#app",
+              "name": "Scrums.com · Software Engineering Orchestration Platform (SEOP)",
+              "url": "https://www.scrums.com/platform"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "AI Catalog",
+        "url": "https://www.scrums.com/catalog",
+        "description": "The AI Catalog contains six deployable classes: agents, models, MCP servers, skills, APIs and infrastructure.",
+        "itemListElement": [
+          {
+            "@type": "OfferCatalog",
+            "name": "Agents",
+            "url": "https://www.scrums.com/catalog/agents",
+            "description": "AI agents that carry out work inside the delivery lifecycle. listing_type: agent."
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Infra",
+            "url": "https://www.scrums.com/catalog/infrastructure",
+            "description": "Infrastructure, tooling and services delivery runs on. listing_type: infra."
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Models",
+            "url": "https://www.scrums.com/catalog/models"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "MCP Servers",
+            "url": "https://www.scrums.com/catalog/mcps"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "Agent Skills",
+            "url": "https://www.scrums.com/catalog/skills"
+          },
+          {
+            "@type": "OfferCatalog",
+            "name": "AI APIs",
+            "url": "https://www.scrums.com/catalog/apis"
+          }
+        ]
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "AI Development",
+        "url": "https://www.scrums.com/ai-development",
+        "description": "The AI development page and its scopes register: scoped units of work Scrums.com owns and runs (sprints, pods, managed SLAs). Scopes live at /ai-development/scopes/{slug}; the filter surface is /ai-development/scopes. listing_type: delivery.",
+        "itemListElement": [
+          {
+            "@type": "OfferCatalog",
+            "name": "Scopes",
+            "url": "https://www.scrums.com/ai-development/scopes"
+          }
+        ]
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Hire",
+        "url": "https://www.scrums.com/hire",
+        "description": "Hire AI Engineers: role pages at /hire/{role}, dedicated development teams at /hire/teams, forward-deployed engineers, staff augmentation, the global capability center, and the engineers register at /hire/engineers with anonymised profiles at /hire/engineers/{public_slug}. listing_type: talent.",
+        "itemListElement": [
+          {
+            "@type": "OfferCatalog",
+            "name": "Engineers",
+            "url": "https://www.scrums.com/hire/engineers"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "@id": "https://www.scrums.com/hire/teams#service",
+              "name": "Dedicated Development Team",
+              "url": "https://www.scrums.com/hire/teams"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

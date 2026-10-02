@@ -1,0 +1,47 @@
+---
+title: "Resources API"
+description: "Compute, storage, and service resources allocated to environments. Resources are the operational units tracked for usage and billing."
+sidebarTitle: "Resources"
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+Resources represent the compute, storage, networking, or service capacity allocated to a project environment. They are the operational units that generate [Usage Records](/api-reference/core/usage-records) and feed into billing.
+
+## Base path
+
+```
+/v1/environments/{environment_id}/resources
+```
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/environments/{env_id}/resources` | List resources in an environment |
+| `POST` | `/v1/environments/{env_id}/resources` | Allocate a resource |
+| `GET` | `/v1/resources/{id}` | Get a resource |
+| `PATCH` | `/v1/resources/{id}` | Update resource configuration |
+| `DELETE` | `/v1/resources/{id}` | Deallocate a resource |
+
+## Attributes
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier |
+| `environment_id` | string | Parent environment reference |
+| `type` | enum | `compute`, `storage`, `database`, `network`, `service` |
+| `name` | string | Descriptive name |
+| `status` | enum | `provisioning`, `active`, `degraded`, `deprovisioned` |
+| `config` | object | Resource-type-specific configuration |
+| `provider` | string | Cloud or service provider identifier |
+| `created_at` | datetime | ISO 8601 timestamp |
+| `updated_at` | datetime | ISO 8601 timestamp |
+
+## Relationships
+
+<Note>
+  Resources belong to [Environments](/api-reference/core/environments) and generate [Usage Records](/api-reference/core/usage-records). Infrastructure-layer resources are also visible via [Infrastructure](/api-reference/product/infrastructure).
+</Note>

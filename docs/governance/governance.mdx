@@ -1,0 +1,85 @@
+---
+title: "Delivery Governance"
+description: "How Scrums.com enforces delivery standards, controls, and accountability across engagements by subscription tier."
+---
+
+## Overview
+
+Delivery governance is how Scrums.com ensures that every engagement runs to a consistent standard and that clients have the visibility and control to hold teams accountable.
+
+SEOP applies governance at three levels: process standards, performance measurement, and escalation management. The depth of governance available scales with your subscription tier.
+
+## Governance by tier
+
+| Governance feature | Access | Business | Enterprise |
+| --- | --- | --- | --- |
+| Core delivery metrics | ✓ | ✓ | ✓ |
+| Full DORA reporting | — | ✓ | ✓ |
+| Role-based access control | Standard | Full RBAC | Advanced |
+| Customer audit logs | — | — | ✓ |
+| SSO/SAML and SCIM | — | — | ✓ |
+| Deployment model | Scrums.com cloud | Scrums.com cloud | Customer-controlled option |
+| Enablement | Self-serve | Enablement Partner | Enablement Team |
+| Support response | 24h | 8h | 4h |
+
+## Sprint governance
+
+All Scrums.com teams operate within a structured sprint framework regardless of tier:
+
+- **Sprint planning** — Backlog items are reviewed, estimated, and committed at the start of each sprint
+- **Daily stand-up** — Team members report progress, blockers, and plans daily (async or live)
+- **Sprint review** — Completed work is demonstrated to stakeholders at the end of each sprint
+- **Retrospective** — The team reflects on process improvements after each sprint
+
+Sprint data — velocity, completion rate, blockers — is captured automatically in SEOP and surfaced in your Analytics dashboard.
+
+## Performance measurement
+
+SEOP continuously tracks delivery performance across four dimensions:
+
+**Throughput** — How much work is completed per sprint, measured in story points and ticket counts. Tracked against team commitments and compared to baseline velocity.
+
+**Quality** — Defect escape rates, PR rejection rates, and code quality gate scores from SonarCloud. Trends are visible in the Analytics dashboard.
+
+**Speed** — Cycle time, lead time for changes, and PR cycle time. These indicators show how efficiently work moves through the delivery pipeline.
+
+**Reliability** — Deployment frequency, change failure rate, and time to restore service. Full DORA reporting requires an eligible plan and connected delivery systems.
+
+## Escalation process
+
+If delivery issues arise that cannot be resolved within the team, the escalation path is:
+
+<Steps>
+  <Step title="Raise with your Enablement Partner">
+    Contact your dedicated Enablement Partner as soon as a risk or issue is identified. Do not wait until sprint end.
+  </Step>
+  <Step title="Delivery Lead engagement">
+    Your Enablement Partner engages the relevant Delivery Lead within 24 hours of the issue being raised.
+  </Step>
+  <Step title="Client Success escalation">
+    If unresolved within 48 hours, the issue is escalated to Scrums.com's Client Success leadership.
+  </Step>
+  <Step title="Executive escalation (Enterprise)">
+    On Enterprise plans, a dedicated Enablement Team manages escalations proactively with a 4-hour SLA.
+  </Step>
+</Steps>
+
+## Quarterly Business Reviews
+
+Business and Enterprise support structured delivery and strategy reviews according to your agreement:
+
+- Review delivery performance against agreed benchmarks
+- Assess team composition and capacity for the next quarter
+- Align roadmap priorities with your Enablement Partner
+- Review cost, utilisation, and billing
+
+Executive QBRs on Enterprise plans include Scrums.com leadership and are designed to align at a strategic level — not just a delivery level.
+
+## Governance controls in settings
+
+Workspace Admins can configure delivery governance controls in **Administration → Governance**:
+
+- Minimum Definition of Done criteria per project type
+- Required reviewer roles before ticket status advancement
+- Automated escalation rules for blocked tickets exceeding a configurable threshold
+- Full audit log of policy changes and enforcement events (Enterprise)

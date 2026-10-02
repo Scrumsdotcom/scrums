@@ -1,0 +1,198 @@
+---
+title: 'API Keys'
+description: 'Create and manage API keys for server-to-server authentication. API keys are scoped to an organization or workspace and support granular permission control.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+API keys are the authentication mechanism for server-to-server integrations, CI pipelines, and automation. Unlike bearer tokens that represent a user session, API keys are issued to a service account or directly to an organization context.
+
+Every API key is scoped and permissioned. Keys do not grant access beyond their declared scope and permission set.
+
+## Core Concepts
+
+### Key types
+
+| Type | Description |
+|------|-------------|
+| `secret_key` | Full API access within scope. Treat as a secret credential. |
+| `publishable_key` | Read-only, safe to embed in client contexts. Limited to non-sensitive reads. |
+
+### Scopes
+
+A key is scoped to one of:
+- **Organization** — can access all resources in the org, respecting permissions
+- **Workspace** — restricted to resources in a single workspace
+
+Workspace-scoped keys are preferred for CI pipelines and integrations that operate within a single team.
+
+### Permissions
+
+Keys can be granted a subset of permissions, independent of the user role that created them.
+
+| Permission | Description |
+|------------|-------------|
+| `read` | Read access to all resources in scope |
+| `write` | Create and update resources |
+| `service_lines:manage` | Activate and close Service Lines |
+| `metering:write` | Ingest external usage events |
+| `billing:read` | Access invoices and usage summaries |
+| `agents:run` | Trigger agent runs |
+| `audit:read` | Access audit logs |
+| `webhooks:manage` | Create and delete webhooks |
+
+### Key rotation
+
+Keys should be rotated regularly. The platform supports creating a replacement key and then deleting the old one without a gap in service. Keys do not expire automatically — rotation is a manual operational responsibility.
+
+## Endpoints
+
+### GET /v1/api-keys
+
+List API keys for an organization.
+
+#### Request
+
+```bash
+GET /v1/api-keys?organization_id=ORG-26-090500
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "key_26_00041",
+      "name": "CI Pipeline - Platform Engineering",
+      "type": "secret_key",
+      "scope": "workspace",
+      "workspace_id": "WS-26-000021",
+      "permissions": ["read", "write", "agents:run"],
+      "prefix": "sk_live_xxxx",
+      "status": "active",
+      "last_used_at": "2026-04-15T09:00:00Z",
+      "created_at": "2026-01-10T10:00:00Z",
+      "expires_at": null
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+#### Notes
+
+- The full key value is never returned after creation. Only the key prefix is stored and returned.
+
+### POST /v1/api-keys
+
+Create a new API key.
+
+#### Request
+
+```json
+{
+  "organization_id": "ORG-26-090500",
+  "name": "CI Pipeline - Platform Engineering",
+  "type": "secret_key",
+  "scope": "workspace",
+  "workspace_id": "WS-26-000021",
+  "permissions": ["read", "write", "agents:run"],
+  "expires_at": null
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "key_26_00041",
+    "name": "CI Pipeline - Platform Engineering",
+    "type": "secret_key",
+    "scope": "workspace",
+    "workspace_id": "WS-26-000021",
+    "permissions": ["read", "write", "agents:run"],
+    "key": "sk_live_xxxxxxxxxxxxxxxx",
+    "prefix": "sk_live_xxxx",
+    "status": "active",
+    "created_at": "2026-04-15T10:00:00Z",
+    "expires_at": null
+  }
+}
+```
+
+#### Notes
+
+- The `key` field is returned **only once** at creation. Store it securely immediately.
+- Requires org `admin` or `owner` role to create.
+
+### DELETE /v1/api-keys/{key_id}
+
+Revoke an API key immediately. All in-flight requests using this key will fail once deleted.
+
+#### Notes
+
+- Deletion is immediate and irreversible.
+- If a replacement key is needed, create the new key before deleting the old one.
+
+## Common Workflows
+
+### Rotating a key
+
+```bash
+# 1. Create the replacement key
+POST /v1/api-keys
+{ "name": "CI Pipeline - Platform Engineering (rotated 2026-04)", ... }
+
+# 2. Update the consumer (CI, integration, automation) to use the new key
+
+# 3. Verify the new key works
+
+# 4. Delete the old key
+DELETE /v1/api-keys/key_26_00041
+```
+
+### Auditing key access
+
+```bash
+# List all keys for the organization
+GET /v1/api-keys?organization_id=ORG-26-090500
+
+# Review last_used_at to identify stale keys
+# Delete keys not used in 90+ days
+```
+
+## Objects
+
+### API Key
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Key identifier |
+| `name` | string | Human-readable label |
+| `type` | enum | `secret_key`, `publishable_key` |
+| `scope` | enum | `organization`, `workspace` |
+| `workspace_id` | string | Scoped workspace (if workspace-scoped) |
+| `permissions` | array | Granted permission identifiers |
+| `key` | string | Full key value (returned on creation only) |
+| `prefix` | string | Key prefix for identification |
+| `status` | enum | `active`, `revoked` |
+| `last_used_at` | datetime | Most recent authentication using this key |
+| `created_at` | datetime | Creation timestamp |
+| `expires_at` | datetime | Expiry timestamp (null = no expiry) |
+
+## Best Practices
+
+- **Follow least-privilege.** Grant only the permissions the consuming system actually needs. A CI pipeline that only reads status does not need `service_lines:manage`.
+- **Name keys to identify the consumer.** Use the name field to record what system the key belongs to and when it was issued. "My key" is not a useful name.
+- **Never embed secret keys in client-side code.** Use `publishable_key` type for any key that touches a browser or mobile client. Secret keys belong in server-side environments only.
+- **Rotate keys after team member departures.** If the person who configured an integration leaves, rotate the keys they had access to. Key access is not automatically revoked with user deactivation.

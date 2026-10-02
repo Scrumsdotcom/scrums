@@ -1,0 +1,39 @@
+---
+title: "AI Agent Harness"
+description: "Configure the context, tools, guardrails, runtime, and evaluations that make an AI agent dependable."
+---
+
+## What the harness controls
+
+An AI agent harness is the operational layer around a model. It determines what an agent knows, what it can do, where it runs, and how you evaluate its results.
+
+| Layer | Purpose |
+|---|---|
+| Context | Scope repositories, tickets, decisions, and domain rules for each run |
+| Tools | Expose typed actions with explicit permissions |
+| Authority guardrails | Reserve sensitive or destructive decisions for people |
+| Runtime | Provide isolated, reproducible execution and an audit trail |
+| Evaluations | Measure task outcome, boundary adherence, cost, and latency |
+
+## Configure an agent
+
+1. Select the context sources the agent needs.
+2. Grant only the tools required for its task.
+3. Define actions that require approval or remain blocked.
+4. Choose a model based on capability, latency, cost, security, and residency.
+5. Create evaluation cases and acceptance criteria.
+6. Review run outcomes before expanding access.
+
+<Warning>
+Prompt instructions are not a security boundary. Enforce permissions and approval requirements in the runtime and tool layer.
+</Warning>
+
+## Model-agnostic operation
+
+Keep context, tools, policies, and evaluations outside the model. This lets you compare or replace model providers without rebuilding the operational controls around an agent.
+
+## Related
+
+- [AI usage boundaries and controls](/products/agents/ai-controls)
+- [MCP Gateway](/platform/mcp-gateway)
+- [AI Agent Harness capability](https://www.scrums.com/platform/agent-harness)

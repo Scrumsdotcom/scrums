@@ -1,0 +1,26 @@
+---
+title: "AI Usage Boundaries & Controls"
+description: "The limits, safeguards, and governance applied to AI usage within the Scrums.com platform."
+---
+
+## Overview
+
+AI Agents in SEOP operate within defined boundaries — they cannot access systems outside their configured scope, cannot take autonomous action without logging, and cannot override human decisions.
+
+## What AI Agents Can and Cannot Do
+
+| Can Do | Cannot Do |
+| --- | --- |
+| Run automated tests against defined test suites | Modify production systems without human approval |
+| Review code and surface quality issues | Access client data outside the defined workspace |
+| Generate documentation from code and sprint data | Take irreversible actions autonomously |
+| Flag delivery risks and surface analytics | Override engineer or client decisions |
+| Integrate with connected tools (Jira, GitHub) | Connect to external systems not authorised in settings |
+
+## Data Sovereignty
+
+Client code and delivery data processed by AI Agents remains within the Scrums.com secure infrastructure. Data is not used to train external AI models. Enterprise clients can specify data residency requirements.
+
+## Audit Logs
+
+On Enterprise plans, all AI Agent activity is captured in audit logs — including what the agent did, when, against which resources, and what the outcome was. Logs are available in **Settings \> Security \> Audit Logs**.

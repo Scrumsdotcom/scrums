@@ -1,0 +1,90 @@
+---
+title: "GitHub Copilot"
+description: "Connect GitHub Copilot to track AI coding metrics, adoption rates, and productivity across your engineering teams."
+---
+
+<Note>
+  The GitHub Copilot integration is currently in **Alpha**. To have it enabled on your account, contact [support@scrums.com](mailto:support@scrums.com).
+</Note>
+
+## Overview
+
+The GitHub Copilot integration connects your AI coding metrics with Scrums.com, enabling analytics and delivery insights. Compare teams using different AI tools to determine where you're getting the best ROI. We collect only the metadata required to provide value — never your code or sensitive content. Sensitive data, such as user IDs and organisation names, are always encrypted.
+
+## Why integrate GitHub Copilot?
+
+- **Automated analytics** — Gain insights into your team's Copilot usage, productivity, and adoption patterns.
+- **No code changes needed** — Integration is secure and token-based, requiring no changes to your codebase.
+- **Real-time & historical data** — See results in minutes, with both real-time and historical analysis.
+- **Cross-tool comparison** — Benchmark Copilot against other AI coding tools to measure ROI across your teams.
+
+## Permissions
+
+| Scope | Purpose |
+| --- | --- |
+| `read:enterprise` | Read-only access to enterprise-level data |
+| `manage_billing:copilot` | View Copilot Business seat assignments |
+
+We never read, transmit, or store your source code. Learn more about [GitHub OAuth scopes](https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps).
+
+## Requirements
+
+- Enterprise owner or billing manager role in your GitHub account
+- Copilot usage metrics enabled at the enterprise or organisation level
+- Scrums.com workspace Admin access
+
+## Setup
+
+<Steps>
+  <Step title="Enable Copilot metrics">
+    Enable Copilot usage metrics in your GitHub settings:
+
+    - **Enterprise:** Go to `github.com/enterprises/{your_enterprise_slug}/ai-controls/copilot` → AI Controls → Copilot → Metrics. Enable **Copilot metrics API** and **Copilot usage metrics**.
+    - **Organisation:** Go to `github.com/organizations/{your_org_slug}/settings/copilot/policies` → Settings → Copilot → Policies. Enable **Copilot metrics API** and **Copilot usage metrics**.
+  </Step>
+  <Step title="Create a GitHub Personal Access Token (PAT)">
+    Generate a PAT with the following scopes:
+
+    - `read:enterprise`
+    - `manage_billing:copilot`
+
+    Set an expiration date (e.g. one year). Note your Enterprise Slug from your GitHub URL: `github.com/enterprises/YOUR-SLUG`.
+  </Step>
+  <Step title="Log in to Scrums.com">
+    Go to [Scrums.com](https://scrums.com/) and sign in to your account.
+  </Step>
+  <Step title="Navigate to Integrations">
+    In your dashboard, click on your profile or account menu and select **Integrations** from the dropdown or sidebar.
+  </Step>
+  <Step title="Add GitHub Copilot">
+    Click **Add Integration** and select **GitHub Copilot** from the list. Choose the project you want to link. Paste your GitHub PAT and enter your Enterprise Slug into the integration form. Click the green checkbox to save.
+  </Step>
+  <Step title="Verify the connection">
+    Click **Verify** to confirm the connection is working correctly.
+  </Step>
+  <Step title="Data sync">
+    Scrums.com will begin syncing your Copilot data. Initial results appear within minutes, and the platform will continue to backfill historical data. Explore your analytics dashboards for real-time insights.
+  </Step>
+</Steps>
+
+## Best practices
+
+- **Use a long-term admin account** — Set up the integration with an account that will remain active to avoid disruptions.
+- **PAT security** — Store your GitHub PAT securely. Do not share it publicly.
+- **Token permissions** — Ensure your PAT has the correct scopes for the most detailed insights.
+
+## What this unlocks
+
+Connecting GitHub Copilot to Scrums.com gives your team:
+
+- Transparency and accountability across teams
+- Data-driven retrospectives and planning sessions
+- Real-time AI coding metrics to identify bottlenecks
+
+## Troubleshooting
+
+| Issue | Resolution |
+| --- | --- |
+| Authorization error | Ensure your GitHub account has the required permissions and a valid PAT |
+| Data not syncing | Double-check your PAT, enterprise slug, and Copilot metrics settings — the integration page will alert you if a token has expired or is invalid |
+| Need help? | Contact support through your [Scrums.com](https://scrums.com/) dashboard |

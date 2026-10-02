@@ -1,0 +1,78 @@
+---
+title: "Windsurf"
+description: "Connect Windsurf to track AI coding metrics, productivity, and usage patterns across your engineering teams."
+---
+
+## Overview
+
+The Windsurf integration connects your AI coding metrics with Scrums.com, enabling analytics and delivery insights. Compare teams using different AI tools to determine where you're getting the best ROI. We collect only the metadata required to provide value — never your code or sensitive content. Sensitive data, such as user IDs and project names, are always encrypted.
+
+## Why integrate Windsurf?
+
+- **Automated analytics** — Gain insights into your team's AI coding activity, productivity, and usage patterns.
+- **No code changes needed** — Integration is secure and key-based, requiring no changes to your codebase.
+- **Real-time & historical data** — See results in minutes, with both real-time and historical analysis.
+- **Cross-tool comparison** — Benchmark Windsurf against other AI coding tools to measure ROI across your teams.
+
+## Permissions
+
+| Scope | Purpose |
+| --- | --- |
+| Service Key | Read access to AI coding metrics and usage data for your team |
+| User Analytics | Read access to individual and group-level analytics (when enabled) |
+
+We never read, transmit, or store your source code.
+
+## Requirements
+
+- Admin access to your Windsurf team account
+- Individual Level Analytics enabled in Windsurf settings (recommended for detailed metrics)
+- Scrums.com workspace Admin access
+
+## Setup
+
+<Steps>
+  <Step title="Enable Individual Level Analytics in Windsurf">
+    In Windsurf, go to **Team Settings** and enable **Individual Level Analytics** for detailed per-developer metrics.
+  </Step>
+  <Step title="Generate a Windsurf Service Key">
+    In Windsurf, go to **Team Settings \> Service Key Configuration** and click **Configure**. Generate a service key and copy it.
+  </Step>
+  <Step title="Log in to Scrums.com">
+    Go to [Scrums.com](https://scrums.com/) and sign in to your account.
+  </Step>
+  <Step title="Navigate to Integrations">
+    In your dashboard, click on your account menu and select **Integrations** from the dropdown or sidebar.
+  </Step>
+  <Step title="Add Windsurf">
+    Click **Add Integration** and select **Windsurf** from the list. Choose the project you want to link. Paste your Windsurf service key into the integration form and click the green checkbox to save.
+  </Step>
+  <Step title="Verify the connection">
+    Click **Verify** to confirm the connection is working correctly.
+  </Step>
+  <Step title="Data sync">
+    Scrums.com will begin syncing your Windsurf data. Initial results appear within minutes, and the platform will continue to backfill historical data. Explore your analytics dashboards for real-time insights.
+  </Step>
+</Steps>
+
+## Best practices
+
+- **Use a long-term admin account** — Set up the integration with an account that will remain active to avoid disruptions.
+- **Service key security** — Store your Windsurf service key securely. Do not share it publicly.
+- **Enable individual analytics** — Turn on Individual Level Analytics in Windsurf for the most detailed per-developer insights.
+
+## What this unlocks
+
+Connecting Windsurf to Scrums.com gives your team:
+
+- Transparency and accountability across teams
+- Data-driven retrospectives and planning sessions
+- Real-time AI coding metrics to identify bottlenecks
+
+## Troubleshooting
+
+| Issue | Resolution |
+| --- | --- |
+| Authorization error | Ensure your Windsurf account has the required permissions and a valid service key |
+| Data not syncing | Double-check your service key and analytics settings — the integration page will alert you if a key has expired or is invalid |
+| Need help? | Contact support through your [Scrums.com](https://scrums.com/) dashboard |

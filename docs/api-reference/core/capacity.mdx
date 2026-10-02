@@ -1,0 +1,253 @@
+---
+title: 'Capacity & Allocation'
+description: 'Capacity pools and resource allocation across Service Lines. Manage supply, demand, and utilisation for talent, infrastructure, and agent resources.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+The Capacity API manages the supply side of the Scrums.com platform. It exposes the available capacity pools and controls how that capacity is allocated to active [Service Lines](/api-reference/core/service-lines).
+
+Capacity is abstract across resource types. A capacity unit might be talent hours, infrastructure compute, or agent execution credits depending on the product line. The Capacity API provides a consistent interface regardless of resource type.
+
+Capacity data is critical for:
+- Planning future Service Lines (can demand be met?)
+- Monitoring utilisation against allocation (is the agreed capacity being delivered?)
+- Forecasting costs before billing periods close
+
+## Core Concepts
+
+### Capacity pools
+
+A capacity pool represents a supply of a specific resource type available to a workspace or organization. Pools are maintained by the platform and updated as talent is onboarded, infrastructure is provisioned, and agent credits are purchased.
+
+### Allocations
+
+An allocation links a capacity pool to a Service Line. When a `LIN-*` is activated, the platform creates an allocation record. Allocations track both the committed capacity (agreed) and the actual delivery (measured).
+
+### Utilisation
+
+Utilisation is the ratio of actual usage to allocated capacity. Consistently low utilisation may indicate over-allocation. Consistently high utilisation signals capacity strain and potential delivery risk.
+
+### Resource types
+
+| Type | Unit | Product lines |
+|------|------|---------------|
+| `talent_hours` | hours/week | Talent, Managed Services |
+| `compute` | vCPU-hours | Infrastructure |
+| `storage_gb` | gigabytes | Infrastructure |
+| `agent_credits` | credits | AI Agent Gateway |
+| `intelligence_units` | units | Developer Intelligence |
+
+## Endpoints
+
+### GET /v1/capacity
+
+List capacity pools for the authenticated context.
+
+#### Request
+
+```bash
+GET /v1/capacity?workspace_id=WS-26-000021
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "CAP-26-000112",
+      "workspace_id": "WS-26-000021",
+      "organization_id": "ORG-26-090500",
+      "resource_type": "talent_hours",
+      "total": 200,
+      "allocated": 160,
+      "available": 40,
+      "unit": "hours_per_week",
+      "period": "weekly",
+      "updated_at": "2026-04-15T06:00:00Z"
+    },
+    {
+      "id": "CAP-26-000198",
+      "workspace_id": "WS-26-000021",
+      "organization_id": "ORG-26-090500",
+      "resource_type": "agent_credits",
+      "total": 100000,
+      "allocated": 45000,
+      "available": 55000,
+      "unit": "credits",
+      "period": "monthly",
+      "updated_at": "2026-04-15T06:00:00Z"
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+### GET /v1/capacity/allocations
+
+List all capacity allocations, optionally filtered by Service Line or resource type.
+
+#### Request
+
+```bash
+GET /v1/capacity/allocations?workspace_id=WS-26-000021&status=active
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "ALLOC-26-000441",
+      "capacity_pool_id": "CAP-26-000112",
+      "service_line_id": "LIN-26-084729",
+      "resource_type": "talent_hours",
+      "committed_per_week": 40,
+      "actual_last_week": 38.5,
+      "utilisation_percent": 96.3,
+      "status": "active",
+      "resources": [
+        {
+          "type": "talent",
+          "id": "SCR-128491",
+          "role": "senior_backend_engineer",
+          "committed_hours_per_week": 40
+        }
+      ],
+      "started_at": "2026-01-15T00:00:00Z",
+      "ends_at": null
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+### GET /v1/capacity/allocations/{allocation_id}
+
+Retrieve a single allocation record.
+
+### PATCH /v1/capacity/allocations/{allocation_id}
+
+Update an active allocation. Used to adjust committed capacity, replace resources, or schedule an end date.
+
+#### Request
+
+```json
+{
+  "committed_per_week": 32,
+  "ends_at": "2026-06-30T23:59:59Z",
+  "reason": "Reduced scope for final project phase"
+}
+```
+
+#### Notes
+
+- Reducing `committed_per_week` below current `actual_last_week` generates a `capacity.utilisation_warning` event.
+- Replacing resources within an allocation does not change the `LIN-*` identifier.
+- Allocation changes take effect at the start of the next billing period unless `effective_immediately: true` is supplied.
+
+### GET /v1/capacity/demand
+
+Retrieve demand forecasts for upcoming periods. Used for planning future Service Lines before committing.
+
+#### Request
+
+```bash
+GET /v1/capacity/demand?workspace_id=WS-26-000021&resource_type=talent_hours&period=2026-Q3
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "workspace_id": "WS-26-000021",
+    "resource_type": "talent_hours",
+    "period": "2026-Q3",
+    "current_committed": 160,
+    "pending_requests": 80,
+    "available_supply": 40,
+    "supply_gap": 40,
+    "recommendation": "Current supply cannot meet pending demand. Consider expanding the talent pool or deferring requests."
+  }
+}
+```
+
+## Common Workflows
+
+### Checking capacity before creating a new Service Line
+
+```bash
+# Check current available talent hours
+GET /v1/capacity?workspace_id=WS-26-000021&resource_type=talent_hours
+
+# Check demand forecast for the intended period
+GET /v1/capacity/demand?workspace_id=WS-26-000021&resource_type=talent_hours&period=2026-Q3
+
+# If supply is sufficient, proceed with talent request
+POST /v1/talent/requests
+```
+
+### Reviewing under-utilised allocations
+
+```bash
+# List allocations with low utilisation
+GET /v1/capacity/allocations?workspace_id=WS-26-000021&status=active
+
+# Identify lines with utilisation_percent below threshold
+# Adjust or wind down those allocations
+PATCH /v1/capacity/allocations/ALLOC-26-000441
+{ "ends_at": "2026-05-31T23:59:59Z", "reason": "Consistent under-utilisation" }
+```
+
+## Objects
+
+### Capacity pool
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Pool identifier (`CAP-*`) |
+| `workspace_id` | string | Scoped workspace |
+| `resource_type` | enum | `talent_hours`, `compute`, `storage_gb`, `agent_credits`, `intelligence_units` |
+| `total` | number | Total capacity in the pool |
+| `allocated` | number | Currently committed to active Service Lines |
+| `available` | number | Unallocated capacity |
+| `unit` | string | Unit of measure |
+| `period` | enum | `hourly`, `daily`, `weekly`, `monthly` |
+
+### Allocation
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Allocation identifier (`ALLOC-*`) |
+| `capacity_pool_id` | string | Source capacity pool |
+| `service_line_id` | string | Target `LIN-*` |
+| `resource_type` | enum | Type of resource allocated |
+| `committed_per_week` | number | Agreed capacity (in pool units) |
+| `actual_last_week` | number | Measured delivery in the last period |
+| `utilisation_percent` | number | Actual vs committed ratio |
+| `status` | enum | `active`, `paused`, `closed` |
+| `resources` | array | Individual resources contributing to this allocation |
+| `starts_at` | datetime | Allocation start |
+| `ends_at` | datetime | Scheduled end (null if open-ended) |
+
+## Best Practices
+
+- **Check capacity before creating Service Lines.** Use `GET /v1/capacity/demand` to confirm supply exists before submitting talent requests or ODS scopes. A demand gap will cause delays.
+- **Monitor utilisation weekly.** Allocations with persistently low utilisation indicate commercial waste. Build automated checks against `utilisation_percent` and act on allocations below 70%.
+- **Align allocation end dates with Service Line lifecycle.** When a `LIN-*` is closed, ensure the corresponding allocation is also closed. Orphaned allocations inflate reported capacity consumption.
+- **Use the demand forecast for commercial planning.** `GET /v1/capacity/demand` gives a forward-looking view of supply gaps. Run this before quarterly planning to surface capacity constraints early.

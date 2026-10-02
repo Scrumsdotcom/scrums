@@ -1,0 +1,222 @@
+---
+title: 'Workspaces'
+description: 'Operational units within an organization. Workspaces activate and own Service Lines, hold team membership, and provide the operational scope for all delivery activity.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+A workspace (`WS-*`) is the operational unit within an organization. It is where delivery happens: Service Lines are activated within workspaces, teams are assembled within workspaces, and integrations connect at the workspace level.
+
+The platform hierarchy is `ORG-*` owns `WS-*` which activates `LIN-*`. Workspaces are not projects. [Projects](/api-reference/core/projects) are labels applied to work; workspaces are structural operational containers.
+
+## Core Concepts
+
+### Workspace scope
+
+Most resource operations are scoped to a workspace. API tokens can be narrowed to a single workspace to enforce isolation between teams or business units.
+
+### Workspace membership
+
+Users are added to workspaces with a role. Workspace roles are: `admin`, `member`, `viewer`. Organization-level `owner` and `admin` members implicitly have access to all workspaces in the org.
+
+### Service Lines and workspaces
+
+A workspace activates Service Lines. Every `LIN-*` belongs to exactly one workspace. Usage, capacity, and observability queries are most commonly filtered by `workspace_id`.
+
+### Multiple workspaces per organization
+
+Large organizations typically run multiple workspaces representing business units, product areas, or engineering tribes. Each workspace has its own: team, Service Lines, integrations, and budget visibility. Billing rolls up to the organization.
+
+## Endpoints
+
+### GET /v1/workspaces
+
+List workspaces accessible to the authenticated token.
+
+#### Request
+
+```bash
+GET /v1/workspaces?organization_id=ORG-26-090500
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "WS-26-000021",
+      "organization_id": "ORG-26-090500",
+      "name": "Platform Engineering",
+      "slug": "platform-engineering",
+      "status": "active",
+      "member_count": 14,
+      "active_service_lines": 6,
+      "created_at": "2024-03-15T10:00:00Z",
+      "updated_at": "2026-04-01T09:00:00Z"
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+### POST /v1/workspaces
+
+Create a new workspace within an organization.
+
+#### Request
+
+```json
+{
+  "organization_id": "ORG-26-090500",
+  "name": "Platform Engineering",
+  "slug": "platform-engineering"
+}
+```
+
+#### Response
+
+Returns the created workspace with `status: "active"`.
+
+#### Notes
+
+- `slug` must be unique within the organization.
+- The creating user is automatically added as a workspace `admin`.
+
+### GET /v1/workspaces/{workspace_id}
+
+Retrieve a workspace with current summary metrics.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "WS-26-000021",
+    "organization_id": "ORG-26-090500",
+    "name": "Platform Engineering",
+    "slug": "platform-engineering",
+    "status": "active",
+    "settings": {
+      "default_currency": "USD",
+      "require_task_service_line": true
+    },
+    "member_count": 14,
+    "active_service_lines": 6,
+    "health_score": 87,
+    "cost_mtd": 142650.00,
+    "currency": "USD",
+    "created_at": "2024-03-15T10:00:00Z",
+    "updated_at": "2026-04-01T09:00:00Z"
+  }
+}
+```
+
+### PATCH /v1/workspaces/{workspace_id}
+
+Update a workspace.
+
+#### Request
+
+```json
+{
+  "name": "Platform & Infrastructure Engineering",
+  "settings": {
+    "require_task_service_line": true
+  }
+}
+```
+
+### GET /v1/workspaces/{workspace_id}/members
+
+List workspace members.
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "user_id": "USR-26-000044",
+      "name": "Sam Rivera",
+      "email": "sam@apexdigital.com",
+      "role": "admin",
+      "status": "active",
+      "joined_at": "2024-03-15T10:00:00Z"
+    }
+  ]
+}
+```
+
+### POST /v1/workspaces/{workspace_id}/members
+
+Add a user to a workspace.
+
+#### Request
+
+```json
+{
+  "user_id": "USR-26-000081",
+  "role": "member"
+}
+```
+
+#### Notes
+
+- User must already exist in the organization (via `POST /v1/orgs/{org_id}/members`).
+- A user cannot be added to a workspace with a role higher than their organization role.
+
+### DELETE /v1/workspaces/{workspace_id}/members/{user_id}
+
+Remove a user from a workspace.
+
+## Common Workflows
+
+### Creating a workspace for a new team
+
+```bash
+# Create the workspace
+POST /v1/workspaces
+{ "organization_id": "ORG-26-090500", "name": "Data Engineering", "slug": "data-engineering" }
+
+# Add team members
+POST /v1/workspaces/WS-26-000091/members
+{ "user_id": "USR-26-000081", "role": "admin" }
+
+# Connect integrations
+POST /v1/integrations
+{ "workspace_id": "WS-26-000091", "type": "github", "config": { "org": "apex-digital" } }
+```
+
+## Objects
+
+### Workspace
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `WS-*` identifier |
+| `organization_id` | string | Parent organization (`ORG-*`) |
+| `name` | string | Display name |
+| `slug` | string | URL-safe identifier, unique within the org |
+| `status` | enum | `active`, `archived` |
+| `settings` | object | Workspace-level configuration |
+| `member_count` | integer | Number of active workspace members |
+| `active_service_lines` | integer | Active `LIN-*` count |
+| `health_score` | integer | Current observability health score (0-100) |
+| `cost_mtd` | number | Month-to-date spend across all Service Lines |
+| `created_at` | datetime | Creation timestamp |
+| `updated_at` | datetime | Last modification timestamp |
+
+## Best Practices
+
+- **Align workspaces with operational teams, not business entities.** A workspace is where a team works day-to-day. Use project labels and Service Line tags to represent business groupings.
+- **Scope API tokens to workspaces.** For integrations that operate within a single team, issue tokens scoped to that workspace. This prevents cross-team data access and simplifies debugging.
+- **Do not archive workspaces with active Service Lines.** Close all Service Lines first. Archiving a workspace with active `LIN-*` will block further metering and may cause invoicing gaps.

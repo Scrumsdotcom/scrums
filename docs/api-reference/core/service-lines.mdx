@@ -1,0 +1,388 @@
+---
+title: 'Service Lines'
+description: 'The central execution primitive of the Scrums.com platform. Every active capability — talent, managed delivery, ODS, infrastructure, intelligence, and agent execution — operates through a Service Line.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+A Service Line (`LIN-*`) is the execution contract at the heart of the Scrums.com platform. It defines what is being delivered, under which execution model, for which workspace, against which subscription, and at what commercial terms.
+
+Every active capability on the platform is represented as, and operates through, a Service Line:
+
+- A talent engagement is a `LIN-*` with `execution_model: capacity`
+- A managed delivery pod is a `LIN-*` with `execution_model: ongoing_sla`
+- An ODS outcome scope is a `LIN-*` with `execution_model: timeboxed_outcome`
+- Infrastructure under management is a `LIN-*` with `execution_model: infra_managed`
+- An active intelligence analysis is a `LIN-*` with `execution_model: observability`
+- A deployed agent is a `LIN-*` with `execution_model: agent_runtime`
+
+Usage is metered against Service Lines. Invoices are derived from Service Line consumption. The [Execution API](/api-reference/core/execution), [Capacity API](/api-reference/core/capacity), and [Observability API](/api-reference/core/observability) all anchor to `LIN-*` identifiers.
+
+## Core Concepts
+
+### Execution models
+
+The execution model determines how work is performed and measured:
+
+| Model | Description | Typical product line |
+|-------|-------------|----------------------|
+| `capacity` | Time-and-materials staffing. Usage measured in hours. | Talent Marketplace |
+| `ongoing_sla` | Managed delivery with defined SLA commitments. | Managed Services |
+| `timeboxed_outcome` | Scoped, time-boxed, outcome-based delivery. | ODS |
+| `infra_managed` | Infrastructure provisioned and operated by Scrums. | Platforms & Infrastructure |
+| `observability` | Read-only intelligence and monitoring access. | Developer Intelligence |
+| `agent_runtime` | Governed agent execution environment. | AI Agent Gateway |
+
+### Billing models
+
+Billing models determine how consumption maps to invoice line items:
+
+| Model | Description |
+|-------|-------------|
+| `time_and_materials` | Metered hours or units billed at agreed rate |
+| `subscription` | Flat periodic charge regardless of usage |
+| `fixed_scope` | Fixed price for defined deliverables |
+| `usage_plus_subscription` | Base subscription with metered overage |
+| `seat_or_usage` | Per-seat or per-consumption, whichever applies |
+| `usage` | Pure consumption-based billing |
+
+### Projects are labels
+
+A `PROJ-*` identifier is a label, not a hierarchy level. Service Lines carry `project_tags` that group work across product lines and workspaces without structural nesting. The same project tag can appear on a talent `LIN-*`, an ODS `LIN-*`, and an infrastructure `LIN-*` simultaneously. This is how cross-platform project visibility is achieved.
+
+### Status lifecycle
+
+```
+draft -> active -> paused -> closed
+              |                   ^
+              +----> terminated --+  (exceptional)
+```
+
+A Service Line is created in `draft` by the platform when a product line request is fulfilled. It becomes `active` when execution begins. It can be `paused` temporarily and `closed` when the engagement ends. `terminated` is reserved for exceptional closures.
+
+## Endpoints
+
+### GET /v1/service-lines
+
+List Service Lines accessible to the authenticated token.
+
+#### Request
+
+```bash
+GET /v1/service-lines?workspace_id=WS-26-000021&status=active&execution_model=capacity
+Authorization: Bearer <token>
+```
+
+**Query parameters**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `workspace_id` | string | Filter by workspace |
+| `organization_id` | string | Filter by organization |
+| `status` | enum | `draft`, `active`, `paused`, `closed`, `terminated` |
+| `execution_model` | enum | Filter by execution model |
+| `billing_model` | enum | Filter by billing model |
+| `product_line` | enum | Filter by product line |
+| `project_tag` | string | Filter by project label (`PROJ-*`) |
+| `cursor` | string | Pagination cursor |
+| `limit` | integer | Results per page (max 100, default 25) |
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "LIN-26-084729",
+      "name": "Backend Engineering - Q2 2026",
+      "workspace_id": "WS-26-000021",
+      "organization_id": "ORG-26-090500",
+      "product_line": "talent",
+      "execution_model": "capacity",
+      "billing_model": "time_and_materials",
+      "status": "active",
+      "project_tags": ["PROJ-26-004281"],
+      "subscription_id": "SUB-26-001122",
+      "config": {
+        "rate": 95.00,
+        "currency": "USD",
+        "hours_per_week": 40
+      },
+      "started_at": "2026-01-15T00:00:00Z",
+      "ends_at": null,
+      "created_at": "2026-01-10T09:00:00Z",
+      "updated_at": "2026-04-01T14:22:11Z"
+    }
+  ],
+  "meta": {
+    "cursor": "eyJpZCI6IkxJTi0yNi0wODQ3MjkifQ",
+    "has_more": true
+  }
+}
+```
+
+#### Notes
+
+- Results are ordered by `created_at` descending.
+- Only Service Lines within the token's organization scope are returned.
+- Filtering by `project_tag` performs an inclusive match against the `project_tags` array.
+
+### POST /v1/service-lines
+
+Create a Service Line directly. In most cases, Service Lines are created automatically by the platform when a product line request is fulfilled. Direct creation is available for operators and integrations managing their own fulfillment.
+
+#### Request
+
+```json
+{
+  "name": "Backend Engineering - Q3 2026",
+  "workspace_id": "WS-26-000021",
+  "product_line": "talent",
+  "execution_model": "capacity",
+  "billing_model": "time_and_materials",
+  "subscription_id": "SUB-26-001122",
+  "project_tags": ["PROJ-26-004281"],
+  "config": {
+    "rate": 95.00,
+    "currency": "USD",
+    "hours_per_week": 40
+  },
+  "starts_at": "2026-07-01T00:00:00Z"
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "LIN-26-091844",
+    "name": "Backend Engineering - Q3 2026",
+    "workspace_id": "WS-26-000021",
+    "organization_id": "ORG-26-090500",
+    "product_line": "talent",
+    "execution_model": "capacity",
+    "billing_model": "time_and_materials",
+    "status": "draft",
+    "subscription_id": "SUB-26-001122",
+    "project_tags": ["PROJ-26-004281"],
+    "config": {
+      "rate": 95.00,
+      "currency": "USD",
+      "hours_per_week": 40
+    },
+    "starts_at": "2026-07-01T00:00:00Z",
+    "ends_at": null,
+    "created_at": "2026-04-15T10:00:00Z",
+    "updated_at": "2026-04-15T10:00:00Z"
+  }
+}
+```
+
+#### Notes
+
+- New Service Lines start in `draft`. Activation requires `POST /v1/service-lines/{lin_code}/transitions` with `{ "status": "active" }`.
+- `subscription_id` must reference an active subscription on the same organization.
+- `execution_model` and `billing_model` cannot be changed after activation.
+- `config` schema varies by `execution_model`. Invalid config is rejected with `422`.
+
+### GET /v1/service-lines/{lin_code}
+
+Retrieve a single Service Line with current metrics.
+
+#### Request
+
+```bash
+GET /v1/service-lines/LIN-26-084729
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "LIN-26-084729",
+    "name": "Backend Engineering - Q2 2026",
+    "workspace_id": "WS-26-000021",
+    "organization_id": "ORG-26-090500",
+    "product_line": "talent",
+    "execution_model": "capacity",
+    "billing_model": "time_and_materials",
+    "status": "active",
+    "project_tags": ["PROJ-26-004281"],
+    "subscription_id": "SUB-26-001122",
+    "config": {
+      "rate": 95.00,
+      "currency": "USD",
+      "hours_per_week": 40
+    },
+    "metrics": {
+      "hours_logged_mtd": 312.5,
+      "cost_mtd": 29687.50,
+      "utilisation_percent": 97.6
+    },
+    "started_at": "2026-01-15T00:00:00Z",
+    "ends_at": null,
+    "created_at": "2026-01-10T09:00:00Z",
+    "updated_at": "2026-04-01T14:22:11Z"
+  }
+}
+```
+
+### PATCH /v1/service-lines/{lin_code}
+
+Update mutable fields on a Service Line.
+
+#### Request
+
+```json
+{
+  "name": "Backend Engineering - Q2 2026 (Extended)",
+  "project_tags": ["PROJ-26-004281", "PROJ-26-005501"],
+  "ends_at": "2026-06-30T23:59:59Z"
+}
+```
+
+#### Notes
+
+- `execution_model` and `billing_model` cannot be changed on an active Service Line.
+- `project_tags` is fully replaced. Supply the complete intended list.
+- Status transitions use `POST /v1/service-lines/{lin_code}/transitions` not PATCH.
+
+### POST /v1/service-lines/{lin_code}/transitions
+
+Transition a Service Line between lifecycle states.
+
+#### Request
+
+```json
+{
+  "status": "paused",
+  "reason": "Talent member on leave - resuming 2026-05-01"
+}
+```
+
+#### Notes
+
+- Valid transitions: `draft -> active`, `active -> paused`, `paused -> active`, `active -> closed`, `paused -> closed`.
+- `terminated` can only be set by platform operations.
+- State transitions emit `service_line.status_changed` events.
+
+### GET /v1/service-lines/{lin_code}/usage
+
+Usage summary for a Service Line over a date range.
+
+#### Request
+
+```bash
+GET /v1/service-lines/LIN-26-084729/usage?from=2026-04-01&to=2026-04-15
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "service_line_id": "LIN-26-084729",
+    "period": {
+      "from": "2026-04-01",
+      "to": "2026-04-15"
+    },
+    "metrics": [
+      {
+        "metric": "talent.hours",
+        "quantity": 156.0,
+        "unit": "hours",
+        "cost": 14820.00,
+        "currency": "USD"
+      }
+    ],
+    "total_cost": 14820.00,
+    "currency": "USD"
+  }
+}
+```
+
+### GET /v1/service-lines/{lin_code}/billing
+
+Billing history and current period forecast for a Service Line.
+
+#### Response
+
+```json
+{
+  "data": {
+    "service_line_id": "LIN-26-084729",
+    "billing_model": "time_and_materials",
+    "invoiced_total": 118412.50,
+    "currency": "USD",
+    "current_period": {
+      "start": "2026-04-01",
+      "end": "2026-04-30",
+      "accrued": 14820.00,
+      "forecast": 29687.50
+    },
+    "invoice_ids": ["INV-26-000881", "INV-26-001102", "INV-26-001341"]
+  }
+}
+```
+
+## Common Workflows
+
+### Tagging a Service Line to multiple projects
+
+```bash
+PATCH /v1/service-lines/LIN-26-084729
+{
+  "project_tags": ["PROJ-26-004281", "PROJ-26-005501"]
+}
+```
+
+The same `PROJ-26-004281` tag can be applied to a talent `LIN-*`, an ODS `LIN-*`, and an infrastructure `LIN-*` simultaneously. Query tasks and usage by `project_tag` to get a unified cross-platform view.
+
+### Cross-service-line cost reporting
+
+```bash
+# Get all active lines in a workspace
+GET /v1/service-lines?workspace_id=WS-26-000021&status=active
+
+# Get usage for each LIN-* over the current month
+GET /v1/service-lines/LIN-26-084729/usage?from=2026-04-01&to=2026-04-30
+GET /v1/service-lines/LIN-26-091100/usage?from=2026-04-01&to=2026-04-30
+```
+
+## Objects
+
+### Service Line
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `LIN-*` identifier |
+| `name` | string | Human-readable name |
+| `workspace_id` | string | Parent workspace (`WS-*`) |
+| `organization_id` | string | Parent organization (`ORG-*`) |
+| `product_line` | enum | `talent`, `managed_services`, `ods`, `infrastructure`, `intelligence`, `agent_gateway` |
+| `execution_model` | enum | `capacity`, `ongoing_sla`, `timeboxed_outcome`, `infra_managed`, `observability`, `agent_runtime` |
+| `billing_model` | enum | `time_and_materials`, `subscription`, `fixed_scope`, `usage_plus_subscription`, `seat_or_usage`, `usage` |
+| `status` | enum | `draft`, `active`, `paused`, `closed`, `terminated` |
+| `project_tags` | array | List of `PROJ-*` label identifiers |
+| `subscription_id` | string | Active subscription (`SUB-*`) |
+| `config` | object | Execution-model-specific configuration |
+| `metrics` | object | Real-time utilisation summary (on GET by ID) |
+| `started_at` | datetime | Activation timestamp |
+| `ends_at` | datetime | Scheduled close date (null if open-ended) |
+| `created_at` | datetime | Creation timestamp |
+| `updated_at` | datetime | Last modification timestamp |
+
+## Best Practices
+
+- **Treat LIN-* as your primary reporting key.** Build cost dashboards, utilisation reports, and delivery tracking against Service Line identifiers, not workspace or project identifiers.
+- **Do not use workspaces to represent projects.** Use `project_tags` on Service Lines and Tasks. Workspaces are operational units; projects are labels.
+- **Subscribe to Service Line events.** The platform emits `service_line.activated`, `service_line.paused`, `service_line.closed`, and usage threshold events. Use webhooks to react to lifecycle changes programmatically.
+- **Execution model is permanent after activation.** Validate the model during the scoping or request phase, before the Service Line is activated.
+- **Query usage at the Service Line level.** Aggregating usage across the organization is done by summing Service Line usage. There is no shortcut endpoint that bypasses the LIN-* model.

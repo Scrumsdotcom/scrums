@@ -1,0 +1,236 @@
+---
+title: 'Incidents & Alerts'
+description: 'Incident tracking and alert configuration per Service Line. Incidents represent platform, delivery, or SLA events that require active response.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+Incidents represent events on the platform that require a response — SLA breaches, infrastructure failures, delivery blockers, agent errors, and compliance violations. Alerts are the detection layer: they monitor signals across [Service Lines](/api-reference/core/service-lines) and trigger incident creation or notifications when thresholds are crossed.
+
+Incidents are not the same as tasks or risks. A risk is a forward-looking signal on the [Observability API](/api-reference/core/observability). An incident is a live event requiring active resolution.
+
+## Core Concepts
+
+### Incident types
+
+| Type | Description |
+|------|-------------|
+| `sla_breach` | A committed SLA was violated on a managed Service Line |
+| `delivery_blocker` | Execution is blocked and cannot proceed without intervention |
+| `infrastructure_failure` | A managed infrastructure resource is unavailable or degraded |
+| `agent_error` | Repeated agent execution failures on a `agent_runtime` Service Line |
+| `capacity_gap` | Allocated capacity cannot be fulfilled |
+| `compliance_violation` | A policy was violated by a user or agent action |
+
+### Incident severity
+
+| Severity | Description |
+|----------|-------------|
+| `p1` | Critical. Platform-level impact. Immediate response required. |
+| `p2` | High. Service Line blocked or degraded. Response within 1 hour. |
+| `p3` | Medium. Delivery at risk but running. Response within 4 hours. |
+| `p4` | Low. Advisory. No immediate delivery impact. |
+
+### Alerts
+
+An alert is a rule that watches a metric or signal and fires an incident or sends a notification when a threshold is met. Alerts are configured per workspace or per Service Line.
+
+## Endpoints
+
+### GET /v1/incidents
+
+List incidents for an organization or workspace.
+
+#### Request
+
+```bash
+GET /v1/incidents?workspace_id=WS-26-000021&status=open&severity=p1,p2
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "INC-26-000091",
+      "service_line_id": "LIN-26-088401",
+      "workspace_id": "WS-26-000021",
+      "type": "sla_breach",
+      "severity": "p2",
+      "title": "SLA response time exceeded on Managed Delivery Pod - Payments",
+      "status": "open",
+      "assigned_to": "USR-26-000044",
+      "opened_at": "2026-04-15T07:00:00Z",
+      "resolved_at": null
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+### POST /v1/incidents
+
+Create an incident manually. The platform also creates incidents automatically from alert rules.
+
+#### Request
+
+```json
+{
+  "service_line_id": "LIN-26-084729",
+  "type": "delivery_blocker",
+  "severity": "p2",
+  "title": "Blocked: awaiting client API credentials to proceed with integration",
+  "description": "The team cannot proceed with the payments integration without the production API keys from the client. Escalation to account manager required.",
+  "assigned_to": "USR-26-000044"
+}
+```
+
+#### Response
+
+Returns the created incident with `status: "open"`.
+
+### GET /v1/incidents/{incident_id}
+
+Retrieve an incident with full detail and timeline.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "INC-26-000091",
+    "service_line_id": "LIN-26-088401",
+    "workspace_id": "WS-26-000021",
+    "type": "sla_breach",
+    "severity": "p2",
+    "title": "SLA response time exceeded on Managed Delivery Pod - Payments",
+    "description": "The agreed P2 response time of 2 hours was exceeded on ticket TKT-882.",
+    "status": "open",
+    "assigned_to": "USR-26-000044",
+    "timeline": [
+      {
+        "at": "2026-04-15T07:00:00Z",
+        "event": "opened",
+        "actor_id": "system",
+        "note": "Automatically opened by alert rule ALT-26-000018"
+      },
+      {
+        "at": "2026-04-15T07:12:00Z",
+        "event": "assigned",
+        "actor_id": "USR-26-000001",
+        "note": "Assigned to Sam Rivera for investigation"
+      }
+    ],
+    "opened_at": "2026-04-15T07:00:00Z",
+    "resolved_at": null
+  }
+}
+```
+
+### PATCH /v1/incidents/{incident_id}
+
+Update an incident — reassign, escalate severity, add notes, or resolve.
+
+#### Request
+
+```json
+{
+  "status": "resolved",
+  "resolution_note": "SLA committed response added to the process checklist. Recurrence prevention measures in place.",
+  "resolved_at": "2026-04-15T10:30:00Z"
+}
+```
+
+### GET /v1/alerts
+
+List alert rules for a workspace.
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "ALT-26-000018",
+      "workspace_id": "WS-26-000021",
+      "name": "SLA breach monitor",
+      "status": "active",
+      "condition": {
+        "metric": "sla_compliance",
+        "operator": "lt",
+        "threshold": 95,
+        "window_minutes": 60
+      },
+      "actions": [
+        { "type": "create_incident", "severity": "p2" },
+        { "type": "notify_webhook", "webhook_id": "WHK-26-000004" }
+      ],
+      "created_at": "2026-02-01T10:00:00Z"
+    }
+  ]
+}
+```
+
+### POST /v1/alerts
+
+Create a new alert rule.
+
+#### Request
+
+```json
+{
+  "workspace_id": "WS-26-000021",
+  "name": "Agent error rate spike",
+  "service_line_id": "LIN-26-091100",
+  "condition": {
+    "metric": "agent_error_rate",
+    "operator": "gt",
+    "threshold": 5.0,
+    "window_minutes": 15
+  },
+  "actions": [
+    { "type": "create_incident", "severity": "p3" },
+    { "type": "notify_webhook", "webhook_id": "WHK-26-000004" }
+  ]
+}
+```
+
+#### Notes
+
+- Alert conditions reference metrics from the [Observability API](/api-reference/core/observability).
+- Alerts fire at most once per `window_minutes` to prevent notification floods.
+- Multiple actions per alert are supported; all fire simultaneously when the condition is met.
+
+## Objects
+
+### Incident
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `INC-*` identifier |
+| `service_line_id` | string | Affected `LIN-*` |
+| `workspace_id` | string | Scoped workspace |
+| `type` | enum | Incident type |
+| `severity` | enum | `p1`, `p2`, `p3`, `p4` |
+| `title` | string | Short description |
+| `description` | string | Full detail |
+| `status` | enum | `open`, `investigating`, `resolved`, `closed` |
+| `assigned_to` | string | `USR-*` of the assigned responder |
+| `timeline` | array | Ordered event log (returned on GET by ID) |
+| `opened_at` | datetime | Incident creation timestamp |
+| `resolved_at` | datetime | Resolution timestamp (null if open) |
+
+## Best Practices
+
+- **Wire critical Service Lines to P1/P2 alert rules at activation.** Do not wait for an incident to discover that you have no alerting. Create alert rules when you create the Service Line.
+- **Use incidents as the authoritative resolution record.** When something goes wrong with a managed or ODS Service Line, the incident record is the audit trail. Resolution notes should be factual, not CYA prose.
+- **Distinguish delivery blockers from infrastructure failures.** They have different owners and different escalation paths. Miscategorizing an incident slows resolution.
