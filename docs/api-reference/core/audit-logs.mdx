@@ -1,0 +1,220 @@
+---
+title: 'Audit Logs'
+description: 'Immutable, tamper-evident record of all significant actions taken on the platform. Audit logs capture who did what, when, and with what result.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+Audit logs provide an immutable, tamper-evident record of every significant action taken on the Scrums.com platform. They capture the actor, the action, the affected resource, the timestamp, and the outcome.
+
+Audit logs are available on plans that include `audit_logs` in their feature set (Growth and above). They are stored for a minimum of 12 months and are exportable for compliance reporting.
+
+Audit logs are read-only. They cannot be modified, deleted, or backfilled.
+
+## Core Concepts
+
+### What is audited
+
+Every API write operation is automatically audited. Additionally, the platform audits:
+- Authentication events (login, token use, key creation)
+- Access control changes (role updates, invitations, removals)
+- Service Line lifecycle changes (create, activate, pause, close)
+- Billing events (subscription changes, invoice actions)
+- Agent actions (policy changes, run triggers, tool access grants)
+- Integration configuration changes
+
+### Actor types
+
+| Actor type | Description |
+|------------|-------------|
+| `user` | A human user authenticated via session or token |
+| `api_key` | Server-to-server request via API key |
+| `agent` | An AI agent performing a platform action |
+| `system` | An automated platform process |
+
+### Retention and export
+
+Audit logs are retained for 12 months by default. Enterprise plans support extended retention. Logs can be exported in JSONL or CSV format via the export endpoint.
+
+## Endpoints
+
+### GET /v1/audit-logs
+
+Query the audit log for an organization.
+
+#### Request
+
+```bash
+GET /v1/audit-logs?organization_id=ORG-26-090500&from=2026-04-01&to=2026-04-15&actor_type=user
+Authorization: Bearer <token>
+```
+
+**Query parameters**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `organization_id` | string | Required. Organization scope. |
+| `workspace_id` | string | Filter to a specific workspace |
+| `actor_id` | string | Filter by actor (`USR-*`, key ID, `AGT-*`) |
+| `actor_type` | enum | `user`, `api_key`, `agent`, `system` |
+| `action` | string | Filter by action type (e.g. `service_line.activated`) |
+| `resource_type` | string | Filter by resource type (e.g. `service_line`, `user`) |
+| `resource_id` | string | Filter by specific resource ID |
+| `from` | datetime | Start of time range |
+| `to` | datetime | End of time range |
+| `cursor` | string | Pagination cursor |
+| `limit` | integer | Results per page (max 100, default 25) |
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "AUDIT-26-092841",
+      "organization_id": "ORG-26-090500",
+      "workspace_id": "WS-26-000021",
+      "actor": {
+        "type": "user",
+        "id": "USR-26-000044",
+        "name": "Sam Rivera",
+        "email": "sam@apexdigital.com"
+      },
+      "action": "service_line.activated",
+      "resource_type": "service_line",
+      "resource_id": "LIN-26-084729",
+      "outcome": "success",
+      "ip_address": "203.0.113.42",
+      "user_agent": "scrums-cli/1.0.0",
+      "metadata": {
+        "previous_status": "draft",
+        "new_status": "active"
+      },
+      "occurred_at": "2026-01-15T09:00:00Z"
+    },
+    {
+      "id": "AUDIT-26-092799",
+      "organization_id": "ORG-26-090500",
+      "workspace_id": "WS-26-000021",
+      "actor": {
+        "type": "agent",
+        "id": "AGT-26-000012",
+        "name": "Deployment Automation Agent"
+      },
+      "action": "task.status_changed",
+      "resource_type": "task",
+      "resource_id": "TSK-26-018841",
+      "outcome": "success",
+      "metadata": {
+        "previous_status": "in_progress",
+        "new_status": "done",
+        "run_id": "RUN-26-001812"
+      },
+      "occurred_at": "2026-04-15T09:12:46Z"
+    }
+  ],
+  "meta": {
+    "cursor": "eyJpZCI6IkFVRElULTI2LTA5Mjg0MSJ9",
+    "has_more": true
+  }
+}
+```
+
+### GET /v1/audit-logs/{audit_id}
+
+Retrieve a single audit log entry with full metadata.
+
+### POST /v1/audit-logs/export
+
+Export audit logs as a file for compliance or archival purposes.
+
+#### Request
+
+```json
+{
+  "organization_id": "ORG-26-090500",
+  "from": "2026-01-01T00:00:00Z",
+  "to": "2026-03-31T23:59:59Z",
+  "format": "jsonl",
+  "filters": {
+    "actor_type": "user"
+  }
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "export_id": "EXP-26-000041",
+    "status": "processing",
+    "estimated_records": 14211,
+    "format": "jsonl",
+    "download_url": null
+  }
+}
+```
+
+Poll `GET /v1/audit-logs/exports/{export_id}` for completion. `download_url` is populated when `status` is `ready`. The URL expires after 1 hour.
+
+#### Notes
+
+- Exports are processed asynchronously. Large date ranges may take several minutes.
+- Only org `admin` or `owner` role can export audit logs.
+- Export files are available for 24 hours. After that, re-request the export.
+
+## Common Workflows
+
+### Security review: all user role changes in the last 30 days
+
+```bash
+GET /v1/audit-logs?organization_id=ORG-26-090500&action=user.role_changed&from=2026-03-15&to=2026-04-15
+```
+
+### Investigating an unexpected Service Line closure
+
+```bash
+GET /v1/audit-logs?organization_id=ORG-26-090500&resource_id=LIN-26-084729&action=service_line.closed
+```
+
+### Compliance export for a quarterly review
+
+```bash
+POST /v1/audit-logs/export
+{
+  "organization_id": "ORG-26-090500",
+  "from": "2026-01-01T00:00:00Z",
+  "to": "2026-03-31T23:59:59Z",
+  "format": "jsonl"
+}
+```
+
+## Objects
+
+### Audit log entry
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `AUDIT-*` identifier |
+| `organization_id` | string | Organization context |
+| `workspace_id` | string | Workspace context (null for org-level actions) |
+| `actor` | object | Actor identity (type, ID, display name) |
+| `action` | string | Action identifier (e.g. `service_line.activated`) |
+| `resource_type` | string | Type of the affected resource |
+| `resource_id` | string | ID of the affected resource |
+| `outcome` | enum | `success`, `failure` |
+| `ip_address` | string | Client IP address (null for system actions) |
+| `user_agent` | string | Client user agent |
+| `metadata` | object | Action-specific supplementary data |
+| `occurred_at` | datetime | When the action occurred |
+
+## Best Practices
+
+- **Filter by `resource_id` for resource-level investigations.** When something unexpected happens to a `LIN-*`, `USR-*`, or agent, the audit log filtered by that ID gives the complete action history.
+- **Export quarterly for long-term compliance.** The 12-month retention window means logs from 13 months ago will be gone. If your compliance framework requires longer retention, export quarterly to your own storage.
+- **Treat agent audit entries as first-class.** Agents acting autonomously (`actor.type: "agent"`) leave the same audit trail as humans. Review agent actions in the same compliance workflows.

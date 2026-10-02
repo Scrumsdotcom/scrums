@@ -1,0 +1,275 @@
+---
+title: 'Users & Roles'
+description: 'Platform identity, role-based access control, and workspace membership. Users are scoped to organizations and granted roles within workspaces and at the organization level.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+Users (`USR-*`) are individual authenticated identities on the Scrums.com platform. A user can belong to multiple organizations through separate invitations, and can hold different roles in each workspace they are a member of.
+
+Access to platform resources is governed by the user's role in the organization and within each workspace. Role evaluation is hierarchical: an organization-level `admin` has implicit access to all workspaces in that org; a workspace-level `member` only has access to resources within that workspace.
+
+## Core Concepts
+
+### Organization roles
+
+| Role | Description |
+|------|-------------|
+| `owner` | Full platform control. Transfers ownership, closes the org, manages billing. One owner per org. |
+| `admin` | Manages workspaces, users, integrations, and settings across the org. |
+| `billing` | Read access to invoices, subscriptions, and usage. Cannot modify operational resources. |
+| `viewer` | Read-only access to org-level metadata. Cannot access workspace resources directly. |
+
+### Workspace roles
+
+| Role | Description |
+|------|-------------|
+| `admin` | Manages workspace members, integrations, and Service Lines. |
+| `member` | Creates and manages tasks, views Service Lines, runs agents within policy bounds. |
+| `viewer` | Read-only access to workspace resources. |
+
+### Role inheritance
+
+Org `owner` and `admin` roles grant implicit `admin` access to all workspaces in the organization. Workspace-specific roles are additive: a user with org `viewer` can be granted workspace `admin` for a specific workspace.
+
+### API tokens and user scope
+
+API tokens are issued to users or service accounts. A token's effective permissions are the intersection of the user's role and any token-level scoping applied at creation.
+
+## Endpoints
+
+### GET /v1/users
+
+List users within an organization.
+
+#### Request
+
+```bash
+GET /v1/users?organization_id=ORG-26-090500&status=active
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "USR-26-000044",
+      "email": "sam@apexdigital.com",
+      "name": "Sam Rivera",
+      "status": "active",
+      "org_role": "admin",
+      "last_active_at": "2026-04-15T09:10:00Z",
+      "created_at": "2024-03-15T10:00:00Z"
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+### POST /v1/users
+
+Create a user account and issue an invitation. The user activates their account by accepting the invitation email.
+
+#### Request
+
+```json
+{
+  "email": "alex@apexdigital.com",
+  "name": "Alex Morgan",
+  "organization_id": "ORG-26-090500",
+  "org_role": "member"
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "USR-26-000091",
+    "email": "alex@apexdigital.com",
+    "name": "Alex Morgan",
+    "status": "invited",
+    "org_role": "member",
+    "created_at": "2026-04-15T10:30:00Z"
+  }
+}
+```
+
+#### Notes
+
+- Users with `status: "invited"` cannot authenticate until they accept the invitation.
+- If a user with that email already exists on the platform, they are added to the organization without creating a new user record.
+
+### GET /v1/users/{user_id}
+
+Retrieve a user by ID.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "USR-26-000044",
+    "email": "sam@apexdigital.com",
+    "name": "Sam Rivera",
+    "avatar_url": "https://cdn.scrums.com/avatars/USR-26-000044.png",
+    "status": "active",
+    "org_role": "admin",
+    "workspace_memberships": [
+      {
+        "workspace_id": "WS-26-000021",
+        "workspace_name": "Platform Engineering",
+        "role": "admin"
+      },
+      {
+        "workspace_id": "WS-26-000034",
+        "workspace_name": "Data Engineering",
+        "role": "member"
+      }
+    ],
+    "last_active_at": "2026-04-15T09:10:00Z",
+    "created_at": "2024-03-15T10:00:00Z"
+  }
+}
+```
+
+### PATCH /v1/users/{user_id}
+
+Update a user's profile or organization role.
+
+#### Request
+
+```json
+{
+  "name": "Sam Rivera-Chen",
+  "org_role": "admin"
+}
+```
+
+#### Notes
+
+- Only org `owner` or `admin` can change `org_role`.
+- The org `owner` role cannot be changed via PATCH. Use the ownership transfer endpoint.
+- `email` cannot be changed via the API. The user must change it via account settings.
+
+### DELETE /v1/users/{user_id}
+
+Deactivate a user. Sets `status` to `deactivated` and revokes all active tokens. Does not delete the user record.
+
+#### Notes
+
+- Deactivated users cannot be reactivated via the API. Raise a support request if needed.
+- All workspace memberships are preserved for audit purposes.
+
+### GET /v1/workspaces/{workspace_id}/members
+
+List members of a workspace with their workspace-level role.
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "user_id": "USR-26-000044",
+      "name": "Sam Rivera",
+      "email": "sam@apexdigital.com",
+      "workspace_role": "admin",
+      "org_role": "admin",
+      "status": "active",
+      "joined_at": "2024-03-15T10:00:00Z"
+    }
+  ]
+}
+```
+
+### POST /v1/workspaces/{workspace_id}/members
+
+Add a user to a workspace with a specific role.
+
+#### Request
+
+```json
+{
+  "user_id": "USR-26-000091",
+  "workspace_role": "member"
+}
+```
+
+#### Notes
+
+- User must be a member of the parent organization before they can be added to a workspace.
+- Workspace role cannot exceed the user's organization role in privilege.
+
+### PATCH /v1/workspaces/{workspace_id}/members/{user_id}
+
+Update a user's role within a workspace.
+
+#### Request
+
+```json
+{
+  "workspace_role": "admin"
+}
+```
+
+### DELETE /v1/workspaces/{workspace_id}/members/{user_id}
+
+Remove a user from a workspace without deactivating their account.
+
+## Common Workflows
+
+### Onboarding a new team member
+
+```bash
+# Create the user at org level
+POST /v1/users
+{ "email": "alex@apexdigital.com", "name": "Alex Morgan", "organization_id": "ORG-26-090500", "org_role": "member" }
+
+# Add to the relevant workspace
+POST /v1/workspaces/WS-26-000021/members
+{ "user_id": "USR-26-000091", "workspace_role": "member" }
+```
+
+### Auditing access before a security review
+
+```bash
+# List all org users and their roles
+GET /v1/users?organization_id=ORG-26-090500
+
+# Check each workspace's member list
+GET /v1/workspaces/WS-26-000021/members
+GET /v1/workspaces/WS-26-000034/members
+```
+
+## Objects
+
+### User
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `USR-*` identifier |
+| `email` | string | Primary email address |
+| `name` | string | Display name |
+| `avatar_url` | string | Profile image URL |
+| `status` | enum | `active`, `invited`, `deactivated` |
+| `org_role` | enum | `owner`, `admin`, `billing`, `viewer` |
+| `workspace_memberships` | array | Workspace roles (returned on GET by ID) |
+| `last_active_at` | datetime | Most recent authenticated activity |
+| `created_at` | datetime | Account creation timestamp |
+
+## Best Practices
+
+- **Use workspace roles for day-to-day access control.** Org-level roles are for administrators. Most users should have org `member` or `viewer` and workspace-level roles for their actual team.
+- **Issue service account users for integrations.** Rather than using a personal user token for CI or third-party tools, create a dedicated user (`bot@...`) with the minimum role needed and issue scoped API keys from it.
+- **Audit roles before adding new Service Lines.** Before activating a high-cost Service Line, confirm that only the intended users have workspace `admin` access. Workspace admins can close and modify Service Lines.

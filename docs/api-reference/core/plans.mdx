@@ -1,0 +1,177 @@
+---
+title: 'Plans'
+description: 'Platform subscription tiers that determine which Service Lines an organization can activate, usage limits, and available features across all workspaces.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+Plans define the tiers of access to the Scrums.com platform. An organization's active Plan determines which [Service Lines](/api-reference/core/service-lines) can be activated, what usage limits apply, which features are available, and what level of support is included.
+
+Plans are managed by Scrums.com and are read-only via the API. Organizations subscribe to plans via [Subscriptions](/api-reference/core/subscriptions).
+
+## Core Concepts
+
+### Plans and Service Lines
+
+Every `execution_model` and `product_line` combination available on a Service Line is gated by the active plan. A plan lists its permitted product lines under `allowed_product_lines`. Attempting to create a Service Line for a product line not on the plan returns a `403` error with code `plan_limit_exceeded`.
+
+### Plan tiers
+
+| Tier | Description |
+|------|-------------|
+| `starter` | Single workspace, limited Service Lines, core platform features only. |
+| `growth` | Multiple workspaces, expanded product line access, standard integrations. |
+| `scale` | Unlimited workspaces, all product lines, advanced observability, priority support. |
+| `enterprise` | Custom limits, dedicated support, SLA guarantees, SSO, and governance features. |
+
+### Limits
+
+Plans declare limits on: workspaces, concurrent active Service Lines, users, API calls per month, agent credits per month, and integration connections. Exceeding a hard limit returns `429 rate_limited` or `403 plan_limit_exceeded` depending on the resource.
+
+## Endpoints
+
+### GET /v1/plans
+
+List all available plans.
+
+#### Request
+
+```bash
+GET /v1/plans
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "plan_starter_monthly",
+      "name": "Starter",
+      "tier": "starter",
+      "billing_cycle": "monthly",
+      "price": 299.00,
+      "currency": "USD",
+      "status": "active",
+      "allowed_product_lines": ["talent"],
+      "limits": {
+        "workspaces": 1,
+        "active_service_lines": 3,
+        "users": 10,
+        "api_calls_monthly": 50000,
+        "agent_credits_monthly": 0
+      }
+    },
+    {
+      "id": "plan_enterprise_annual",
+      "name": "Enterprise",
+      "tier": "enterprise",
+      "billing_cycle": "annual",
+      "price": null,
+      "currency": "USD",
+      "status": "active",
+      "allowed_product_lines": ["talent", "managed_services", "ods", "infrastructure", "intelligence", "agent_gateway"],
+      "limits": {
+        "workspaces": null,
+        "active_service_lines": null,
+        "users": null,
+        "api_calls_monthly": null,
+        "agent_credits_monthly": "custom"
+      }
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+#### Notes
+
+- `null` limits indicate no hard cap.
+- `price: null` on enterprise plans indicates custom commercial terms.
+- Deprecated plans (`status: "deprecated"`) are returned only if `include_deprecated=true` is passed.
+
+### GET /v1/plans/{plan_id}
+
+Retrieve a single plan with full feature and limit details.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "plan_enterprise_annual",
+    "name": "Enterprise",
+    "tier": "enterprise",
+    "billing_cycle": "annual",
+    "price": null,
+    "currency": "USD",
+    "status": "active",
+    "allowed_product_lines": [
+      "talent",
+      "managed_services",
+      "ods",
+      "infrastructure",
+      "intelligence",
+      "agent_gateway"
+    ],
+    "features": [
+      "sso",
+      "mfa",
+      "audit_logs",
+      "custom_policies",
+      "dedicated_support",
+      "sla_guarantee",
+      "custom_integrations",
+      "advanced_observability",
+      "agent_policy_engine"
+    ],
+    "limits": {
+      "workspaces": null,
+      "active_service_lines": null,
+      "users": null,
+      "api_calls_monthly": null,
+      "agent_credits_monthly": "custom",
+      "integrations": null,
+      "webhooks": null
+    },
+    "support_tier": "dedicated",
+    "sla": {
+      "uptime_percent": 99.9,
+      "response_time_hours": 1
+    }
+  }
+}
+```
+
+## Objects
+
+### Plan
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Plan identifier |
+| `name` | string | Display name |
+| `tier` | enum | `starter`, `growth`, `scale`, `enterprise` |
+| `billing_cycle` | enum | `monthly`, `annual`, `custom` |
+| `price` | number | Base price per cycle (null for custom) |
+| `currency` | string | ISO 4217 currency code |
+| `status` | enum | `active`, `deprecated` |
+| `allowed_product_lines` | array | Product lines that can be activated |
+| `features` | array | Named feature identifiers included in plan |
+| `limits` | object | Hard limits per resource type (null = unlimited) |
+| `support_tier` | enum | `community`, `standard`, `priority`, `dedicated` |
+| `sla` | object | SLA terms (uptime, response times) |
+
+## Best Practices
+
+- **Verify `allowed_product_lines` before building integrations.** If you are building an integration that activates a specific product line (e.g., agent gateway), check that the target organization's plan permits it before attempting Service Line creation.
+- **Cache the plan list.** Plans change infrequently. Cache the response from `GET /v1/plans` for at least one hour rather than querying on every request.
+- **Treat `null` limits as unlimited, not as missing data.** The API explicitly signals uncapped limits with `null`. Do not treat a `null` limit as an error or missing value.

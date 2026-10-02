@@ -1,0 +1,100 @@
+---
+title: "2025 Winter Release"
+description: "New features and improvements shipped in Winter 2025."
+---
+
+**Released December 2025**
+
+The 2025 Winter Release brings significant improvements to AI-assisted delivery, team observability, and governance controls across the Scrums.com platform.
+
+---
+
+## What's new
+
+- [AI sprint velocity forecasting](#ai-sprint-velocity-forecasting)
+- [Team observability dashboard v2](#team-observability-dashboard-v2)
+- [Governance policy controls](#governance-policy-controls)
+- [Staff augmentation marketplace](#staff-augmentation-marketplace)
+- [API v2](#api-v2)
+
+---
+
+## AI sprint velocity forecasting
+
+Sprint planning now includes AI-generated velocity forecasts based on your team's historical delivery data. Forecasts account for team size, sprint length, and ticket complexity to produce a confidence-ranged estimate before each sprint begins.
+
+Forecasts appear in the sprint planning view and can be overridden by the Scrum Master at any time. Historical forecast accuracy is tracked in the Team Observability dashboard.
+
+<Note>
+  Velocity forecasting requires at least four completed sprints of data to generate a baseline.
+</Note>
+
+---
+
+## Team observability dashboard v2
+
+The team observability dashboard has been redesigned for faster access to the metrics that matter most.
+
+**What changed:**
+
+- Cycle time, lead time, and throughput now display as trend charts over rolling 30/60/90-day windows
+- Blocked ticket heatmap shows which team members are most frequently blocked and by what type of issue
+- Sprint burndown and burnup charts are now available side by side
+- Export to CSV is available for all chart data
+
+---
+
+## Governance policy controls
+
+Workspace administrators can now define and enforce governance policies directly within Scrums.com.
+
+**New controls include:**
+
+- Minimum Definition of Done criteria per project type
+- Required reviewer roles before ticket status advancement
+- Automated escalation rules when blocked tickets exceed a configurable threshold
+- Audit log with full history of policy changes and enforcement events
+
+Governance settings are available under **Administration → Governance**.
+
+---
+
+## Staff augmentation marketplace
+
+Finding and onboarding augmented staff is faster with the redesigned marketplace.
+
+**Improvements:**
+
+- Role-based filtering by technology stack, seniority, and availability
+- Pre-vetted talent pools organized by delivery model
+- One-click engagement requests with SLA-backed response times
+- Integrated background check and compliance status visible on each profile
+
+---
+
+## API v2
+
+The Scrums.com public API has been updated to v2.
+
+**Breaking changes from v1:**
+
+- All endpoints now use `/v2/` path prefix
+- Webhook payloads use a standardized envelope format
+- Deprecated `/plants` demo endpoints have been removed from production
+
+**New endpoints:**
+
+- `GET /v2/teams` — list teams and their current sprint status
+- `POST /v2/sprints/{id}/forecast` — trigger an AI velocity forecast
+- `GET /v2/governance/audit-log` — retrieve governance audit events
+
+See the [API Reference](/api-reference/introduction) for full documentation.
+
+---
+
+## Bug fixes and improvements
+
+- Fixed an issue where sprint capacity was not recalculated after team member removal mid-sprint
+- Improved load time for workspaces with more than 500 active tickets
+- Slack integration now correctly threads replies to the originating notification
+- SAML SSO session tokens now expire in alignment with the configured identity provider policy

@@ -1,0 +1,421 @@
+---
+title: 'AI Agent Gateway API'
+description: 'Governed agent execution on the Scrums.com platform. Configure agents, define policies, grant tool access, execute runs, and audit every action — through a single, controlled gateway.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+The AI Agent Gateway is the controlled execution environment for all AI agents on the Scrums.com platform. Every agent invocation on the platform flows through the gateway, which enforces policies, controls tool access, routes requests to the appropriate execution context, and records a complete audit trail.
+
+Agents are not raw API callers. They operate within a governed runtime: their capabilities are declared, their tool access is explicitly granted, their outputs are logged, and every action is auditable. The gateway is designed for production use in enterprise environments where agent behavior must be predictable, auditable, and constrained.
+
+Every active agent deployment is a [Service Line](/api-reference/core/service-lines) with `execution_model: agent_runtime`. Usage is metered in runs and tokens. All run outputs are traceable back to the `RUN-*` record and the originating `AGT-*`.
+
+## Core Concepts
+
+### Agents
+
+An agent (`AGT-*`) is a configured execution unit with a defined purpose, model, system prompt, tool access list, and governing policy. Agents are not general-purpose. Each agent is scoped to a specific task domain and its capabilities are explicitly bounded by its configuration and policy.
+
+### Policies
+
+A policy (`POL-*`) is a governance rule set applied to an agent. It defines:
+- Which tools the agent is permitted to access
+- Which data sources the agent can read or write
+- Rate limits on invocations
+- Required human approval steps
+- Output filtering rules
+
+Policies are the primary control mechanism. An agent without a policy cannot be activated.
+
+### Tools
+
+Tools are the capabilities granted to an agent — the external systems it can interact with. Tools are declared on the gateway and granted to agents explicitly via policy. Available tool types:
+
+| Tool type | Description |
+|-----------|-------------|
+| `github` | Read repos, PRs, issues; create comments |
+| `jira` | Read and write issues, sprints, transitions |
+| `clickup` | Read and write tasks, lists |
+| `scrums_tasks` | Create and update platform tasks (`TSK-*`) |
+| `scrums_observability` | Read observability and metric data |
+| `code_executor` | Execute sandboxed code |
+| `web_fetch` | Fetch public URLs |
+| `slack_notify` | Send messages to configured Slack channels |
+
+### Runs
+
+A run (`RUN-*`) is a single agent invocation. Runs have structured inputs, outputs, tool call logs, token usage, duration, and an outcome status. Every run is immutable after completion and is recorded in the [Audit Logs](/api-reference/core/audit-logs).
+
+### Human-in-the-loop
+
+Policies can require human approval before certain agent actions. When an agent reaches an approval gate, the run is paused with `status: "awaiting_approval"`. A human reviews the pending action and approves or rejects it via the API. The run then resumes or terminates.
+
+## Endpoints
+
+### GET /v1/agents
+
+List agents in a workspace.
+
+#### Request
+
+```bash
+GET /v1/agents?workspace_id=WS-26-000021&status=active
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "AGT-26-000012",
+      "workspace_id": "WS-26-000021",
+      "service_line_id": "LIN-26-091100",
+      "name": "Delivery Summary Agent",
+      "description": "Generates weekly delivery summaries from task and metric data.",
+      "model": "claude-opus-4-6",
+      "status": "active",
+      "policy_id": "POL-26-000004",
+      "tools": ["scrums_tasks", "scrums_observability", "slack_notify"],
+      "run_count": 1203,
+      "last_run_at": "2026-04-15T09:12:44Z",
+      "created_at": "2026-01-10T10:00:00Z"
+    }
+  ]
+}
+```
+
+### POST /v1/agents
+
+Create and deploy a new agent.
+
+#### Request
+
+```json
+{
+  "workspace_id": "WS-26-000021",
+  "subscription_id": "SUB-26-001122",
+  "name": "Delivery Summary Agent",
+  "description": "Generates weekly delivery summaries from task and metric data.",
+  "model": "claude-opus-4-6",
+  "system_prompt": "You are a delivery reporting assistant. When invoked, you retrieve task completion data and metric summaries for the specified workspace and period, then produce a structured delivery summary report.",
+  "policy_id": "POL-26-000004",
+  "tools": ["scrums_tasks", "scrums_observability", "slack_notify"],
+  "project_tags": []
+}
+```
+
+#### Response
+
+Returns the created agent with `status: "active"` and a linked `LIN-*` Service Line.
+
+#### Notes
+
+- `policy_id` is required. An agent cannot be created without a governing policy.
+- Tools listed in `tools` must all be permitted by the referenced policy. A mismatch returns `422`.
+- Creating an agent activates a Service Line immediately.
+
+### GET /v1/agents/{agent_id}
+
+Retrieve an agent with full configuration and recent run summary.
+
+### PATCH /v1/agents/{agent_id}
+
+Update an agent's configuration.
+
+#### Request
+
+```json
+{
+  "system_prompt": "Updated system prompt...",
+  "tools": ["scrums_tasks", "scrums_observability", "slack_notify", "jira"]
+}
+```
+
+#### Notes
+
+- Adding a tool that is not permitted by the current policy returns `422`. Update the policy first, then update the agent.
+- Changes to `system_prompt` or `tools` take effect on the next run. In-progress runs are not affected.
+
+### POST /v1/agents/{agent_id}/runs
+
+Trigger an agent run.
+
+#### Request
+
+```json
+{
+  "input": {
+    "workspace_id": "WS-26-000021",
+    "period": "2026-W15",
+    "report_channel": "C08DELIVERY"
+  },
+  "triggered_by": "USR-26-000044"
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "RUN-26-001812",
+    "agent_id": "AGT-26-000012",
+    "service_line_id": "LIN-26-091100",
+    "status": "running",
+    "input": {
+      "workspace_id": "WS-26-000021",
+      "period": "2026-W15",
+      "report_channel": "C08DELIVERY"
+    },
+    "triggered_by": "USR-26-000044",
+    "started_at": "2026-04-15T09:12:44Z"
+  }
+}
+```
+
+### GET /v1/agents/runs/{run_id}
+
+Retrieve a completed run with full output, tool call log, and token usage.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "RUN-26-001812",
+    "agent_id": "AGT-26-000012",
+    "service_line_id": "LIN-26-091100",
+    "status": "completed",
+    "input": {
+      "workspace_id": "WS-26-000021",
+      "period": "2026-W15"
+    },
+    "output": {
+      "report": "Week 15 delivery summary: 19 tasks completed, velocity up 12% vs W14...",
+      "delivered_to_slack": true,
+      "channel": "C08DELIVERY"
+    },
+    "tool_calls": [
+      {
+        "tool": "scrums_tasks",
+        "action": "list",
+        "input": { "workspace_id": "WS-26-000021", "status": "done", "updated_after": "2026-04-07" },
+        "output_summary": "19 tasks returned",
+        "at": "2026-04-15T09:12:44Z"
+      },
+      {
+        "tool": "scrums_observability",
+        "action": "metrics",
+        "input": { "workspace_id": "WS-26-000021", "metric": "delivery_velocity", "period": "2026-W15" },
+        "output_summary": "Velocity: 19 tasks, +12% vs prior week",
+        "at": "2026-04-15T09:12:45Z"
+      },
+      {
+        "tool": "slack_notify",
+        "action": "send_message",
+        "input": { "channel": "C08DELIVERY", "text": "Week 15 delivery summary..." },
+        "output_summary": "Message delivered",
+        "at": "2026-04-15T09:12:46Z"
+      }
+    ],
+    "tokens_used": 1840,
+    "duration_ms": 2411,
+    "started_at": "2026-04-15T09:12:44Z",
+    "completed_at": "2026-04-15T09:12:46Z"
+  }
+}
+```
+
+### GET /v1/agents/tools
+
+List all available tools that can be granted to agents.
+
+### POST /v1/agents/tools
+
+Register a custom tool endpoint for use by agents in a workspace.
+
+#### Request
+
+```json
+{
+  "workspace_id": "WS-26-000021",
+  "name": "internal_metrics_api",
+  "description": "Access internal Apex Digital metrics API",
+  "endpoint": "https://metrics.internal.apexdigital.com/v1",
+  "auth_type": "bearer",
+  "auth_secret_ref": "secret/metrics-api-token",
+  "schema": { ... }
+}
+```
+
+### GET /v1/agents/policies
+
+List agent policies for a workspace.
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "POL-26-000004",
+      "workspace_id": "WS-26-000021",
+      "name": "Reporting Agents Policy",
+      "status": "active",
+      "permitted_tools": ["scrums_tasks", "scrums_observability", "slack_notify"],
+      "rate_limit": { "runs_per_hour": 10, "tokens_per_day": 500000 },
+      "require_approval_for": [],
+      "output_filtering": { "redact_pii": true }
+    }
+  ]
+}
+```
+
+### POST /v1/agents/policies
+
+Create a new agent policy.
+
+#### Request
+
+```json
+{
+  "workspace_id": "WS-26-000021",
+  "name": "Code Analysis Policy",
+  "permitted_tools": ["github", "scrums_tasks", "code_executor"],
+  "rate_limit": {
+    "runs_per_hour": 5,
+    "tokens_per_day": 1000000
+  },
+  "require_approval_for": [
+    { "tool": "code_executor", "action": "execute" }
+  ],
+  "output_filtering": {
+    "redact_pii": true,
+    "block_secret_patterns": true
+  },
+  "data_access": {
+    "allowed_repositories": ["apex-digital/payments-api"],
+    "allowed_jira_projects": []
+  }
+}
+```
+
+### GET /v1/agents/audit
+
+Query the agent audit log for a workspace — every run, every tool call, every approval, every policy violation.
+
+#### Request
+
+```bash
+GET /v1/agents/audit?workspace_id=WS-26-000021&from=2026-04-01&event_type=policy_violation
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "AAUDIT-26-000041",
+      "agent_id": "AGT-26-000012",
+      "run_id": "RUN-26-001801",
+      "event_type": "policy_violation",
+      "detail": "Agent attempted to call tool 'jira' which is not in the permitted_tools list for policy POL-26-000004.",
+      "action_taken": "tool_call_blocked",
+      "occurred_at": "2026-04-12T14:22:00Z"
+    }
+  ]
+}
+```
+
+## Common Workflows
+
+### Deploying a governed agent
+
+```bash
+# 1. Create a policy defining tool access and limits
+POST /v1/agents/policies
+{ "name": "Reporting Agents Policy", "permitted_tools": ["scrums_tasks", "scrums_observability", "slack_notify"], ... }
+
+# 2. Create the agent, referencing the policy
+POST /v1/agents
+{ "name": "Delivery Summary Agent", "policy_id": "POL-26-000004", "tools": ["scrums_tasks", "scrums_observability", "slack_notify"], ... }
+
+# 3. Trigger a run
+POST /v1/agents/AGT-26-000012/runs
+{ "input": { "workspace_id": "WS-26-000021", "period": "2026-W15" } }
+
+# 4. Retrieve the run result
+GET /v1/agents/runs/RUN-26-001812
+
+# 5. Audit run activity
+GET /v1/agents/audit?agent_id=AGT-26-000012
+```
+
+### Reviewing policy violations
+
+```bash
+GET /v1/agents/audit?workspace_id=WS-26-000021&event_type=policy_violation&from=2026-04-01
+```
+
+## Objects
+
+### Agent (`AGT-*`)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `AGT-*` identifier |
+| `workspace_id` | string | Scoped workspace |
+| `service_line_id` | string | Linked `LIN-*` (execution contract) |
+| `name` | string | Agent display name |
+| `model` | string | Model identifier |
+| `status` | enum | `active`, `disabled`, `error` |
+| `policy_id` | string | Governing policy (`POL-*`) |
+| `tools` | array | Granted tool identifiers |
+| `run_count` | integer | Total runs executed |
+| `last_run_at` | datetime | Most recent run timestamp |
+
+### Policy (`POL-*`)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `POL-*` identifier |
+| `workspace_id` | string | Scoped workspace |
+| `name` | string | Policy name |
+| `permitted_tools` | array | Tools the agent may use |
+| `rate_limit` | object | Runs and tokens per period |
+| `require_approval_for` | array | Tool/action pairs requiring human approval |
+| `output_filtering` | object | PII and secret redaction config |
+| `data_access` | object | Explicit data source access list |
+
+### Run (`RUN-*`)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `RUN-*` identifier |
+| `agent_id` | string | Originating agent |
+| `service_line_id` | string | Linked `LIN-*` |
+| `status` | enum | `pending`, `running`, `awaiting_approval`, `completed`, `failed`, `cancelled` |
+| `input` | object | Run input payload |
+| `output` | object | Run output (populated on completion) |
+| `tool_calls` | array | Ordered log of tool calls made |
+| `tokens_used` | integer | Total tokens consumed |
+| `duration_ms` | integer | Wall-clock execution duration |
+| `started_at` | datetime | Run start timestamp |
+| `completed_at` | datetime | Completion timestamp |
+
+## Best Practices
+
+- **Policy before agent, always.** Never create an agent without a policy. An agent without a policy cannot be activated. Design the access model before writing the system prompt.
+- **Start with narrow tool lists and expand.** Granting an agent access to every tool available is not a starting point — it is a governance failure. Start with the minimum set of tools the agent needs for its defined purpose.
+- **Review the tool call log, not just the output.** The output tells you what the agent produced. The tool call log tells you how it got there and whether it stayed within expected behavior. Both matter for production agents.
+- **Use `require_approval_for` on destructive actions.** Any tool call that modifies data in an external system — creating Jira issues, updating tasks, executing code — should be gated behind human approval until the agent has demonstrated reliable behavior in your context.
+- **Audit policy violations weekly.** A pattern of violations indicates either a misconfigured agent (system prompt is asking for capabilities the policy doesn't grant) or a misconfigured policy (the agent legitimately needs a tool that isn't permitted). Both need fixing.

@@ -1,0 +1,45 @@
+---
+title: 'Accounts'
+description: 'Billing and access units within an organization. Accounts allow large organizations to segment billing, quotas, and permissions across teams or divisions.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+Accounts are sub-entities within an organization. They allow large organizations to segment billing, cost allocation, and access controls across departments, divisions, or products — each with its own configuration and usage tracking.
+
+## Base path
+
+```
+/v1/organizations/{organization_id}/accounts
+```
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/organizations/{org_id}/accounts` | List accounts within an organization |
+| `POST` | `/v1/organizations/{org_id}/accounts` | Create a new account |
+| `GET` | `/v1/organizations/{org_id}/accounts/{id}` | Get an account |
+| `PATCH` | `/v1/organizations/{org_id}/accounts/{id}` | Update an account |
+| `DELETE` | `/v1/organizations/{org_id}/accounts/{id}` | Delete an account |
+
+## Attributes
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier |
+| `organization_id` | string | Parent organization reference |
+| `name` | string | Display name |
+| `type` | enum | `default`, `department`, `division`, `product` |
+| `billing_email` | string | Contact email for billing |
+| `status` | enum | `active`, `suspended`, `closed` |
+| `created_at` | datetime | ISO 8601 timestamp |
+| `updated_at` | datetime | ISO 8601 timestamp |
+
+## Relationships
+
+<Note>
+  Accounts belong to [Organizations](/api-reference/core/organizations) and are linked to [Subscriptions](/api-reference/core/subscriptions), [Invoices](/api-reference/core/invoices), and [Usage Records](/api-reference/core/usage-records).
+</Note>

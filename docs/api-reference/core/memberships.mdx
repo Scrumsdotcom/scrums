@@ -1,0 +1,45 @@
+---
+title: 'Memberships'
+description: 'Role-based associations between users and organizations, workspaces, or projects. Memberships drive all access control on the platform.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+Memberships are the join between a user and a platform scope — an organization, workspace, or project. Every membership carries a role that determines what the user can read and write within that scope. All platform access control is derived from memberships.
+
+## Base path
+
+```
+/v1/memberships
+```
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/organizations/{org_id}/memberships` | List memberships within an organization |
+| `POST` | `/v1/organizations/{org_id}/memberships` | Add a member to an organization |
+| `GET` | `/v1/memberships/{id}` | Get a membership |
+| `PATCH` | `/v1/memberships/{id}` | Update a membership role |
+| `DELETE` | `/v1/memberships/{id}` | Remove a member |
+
+## Attributes
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier |
+| `user_id` | string | Reference to the user |
+| `subject_type` | enum | `organization`, `workspace`, `project` |
+| `subject_id` | string | ID of the scoped entity |
+| `role` | enum | `owner`, `admin`, `member`, `viewer`, `billing` |
+| `status` | enum | `active`, `pending`, `revoked` |
+| `invited_by` | string | User ID of the inviting member |
+| `created_at` | datetime | ISO 8601 timestamp |
+
+## Relationships
+
+<Note>
+  Memberships link [Users](/api-reference/core/users) to [Organizations](/api-reference/core/organizations), [Workspaces](/api-reference/core/workspaces), and [Projects](/api-reference/core/projects). Access is evaluated by traversing the membership chain from project → workspace → organization.
+</Note>

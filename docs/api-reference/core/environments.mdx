@@ -1,0 +1,47 @@
+---
+title: 'Environments'
+description: 'Named deployment and configuration contexts for a project — development, staging, production, or custom.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+Environments represent named deployment and configuration contexts within a project. Each environment holds its own variables, resources, and deployment state. Standard environment types include `development`, `staging`, and `production`, with support for custom named environments.
+
+## Base path
+
+```
+/v1/projects/{project_id}/environments
+```
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/projects/{project_id}/environments` | List environments for a project |
+| `POST` | `/v1/projects/{project_id}/environments` | Create an environment |
+| `GET` | `/v1/environments/{id}` | Get an environment |
+| `PATCH` | `/v1/environments/{id}` | Update an environment |
+| `DELETE` | `/v1/environments/{id}` | Delete an environment |
+| `GET` | `/v1/environments/{id}/variables` | List environment variables |
+| `PUT` | `/v1/environments/{id}/variables` | Set environment variables |
+
+## Attributes
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier |
+| `project_id` | string | Parent project reference |
+| `name` | string | Display name |
+| `slug` | string | URL-safe identifier (e.g. `production`) |
+| `type` | enum | `development`, `staging`, `production`, `custom` |
+| `protected` | boolean | Restricts direct deployments if true |
+| `created_at` | datetime | ISO 8601 timestamp |
+| `updated_at` | datetime | ISO 8601 timestamp |
+
+## Relationships
+
+<Note>
+  Environments belong to [Projects](/api-reference/core/projects) and are associated with [Resources](/api-reference/core/resources) and [Usage Records](/api-reference/core/usage-records).
+</Note>

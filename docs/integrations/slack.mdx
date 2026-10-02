@@ -1,0 +1,48 @@
+---
+title: "Slack"
+description: "Receive Scrums.com delivery notifications and risk alerts in your Slack workspace."
+---
+
+## Overview
+
+The Slack integration sends automated delivery notifications from SEOP directly to your Slack channels. Sprint completions, blocked ticket alerts, deployment confirmations, and risk flags arrive in the channels your team already monitors — without requiring anyone to log into the Scrums.com platform to stay informed.
+
+## What you receive
+
+| Notification type | Trigger | Details |
+|---|---|---|
+| Sprint started | Sprint begins | Sprint name, team, goals, and start date |
+| Sprint completed | Sprint ends | Completion rate, story points delivered, blockers resolved |
+| Blocked ticket alert | Ticket blocked for 24h+ | Ticket name, assignee, and blocker description |
+| Risk flag | AI detects delivery risk | Risk type, affected sprint, and recommended action |
+| Deployment confirmation | Deployment event detected | Repository, environment, and deploying engineer |
+| AI agent activity | AI agent completes a task | Agent type, outcome, and link to full report |
+
+## Requirements
+
+- Slack workspace Admin access (to authorise the Scrums.com Slack app)
+- Scrums.com workspace Admin access
+
+## Setup
+
+<Steps>
+  <Step title="Open Integrations">
+    In your Scrums.com workspace, go to **Settings > Integrations** and select **Slack**.
+  </Step>
+  <Step title="Connect to Slack">
+    Click **Connect**. You will be redirected to Slack's OAuth page. Select the Slack workspace to connect and click **Allow**.
+  </Step>
+  <Step title="Choose notification channels">
+    Map each notification type to a Slack channel. For example, route sprint updates to `#delivery` and risk alerts to `#engineering-leads`.
+  </Step>
+  <Step title="Select projects">
+    Choose which Scrums.com projects trigger Slack notifications. You can connect all projects or limit notifications to specific ones.
+  </Step>
+  <Step title="Save and test">
+    Click **Save**. Use the **Send test notification** button to verify the connection is working.
+  </Step>
+</Steps>
+
+## Managing notifications
+
+Adjust which events trigger Slack messages at any time in **Settings > Integrations > Slack > Notification Settings**. To temporarily pause notifications (e.g. during a holiday period), toggle the integration off without disconnecting it.

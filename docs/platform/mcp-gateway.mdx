@@ -1,0 +1,47 @@
+---
+title: "MCP Gateway"
+description: "Govern how people and AI agents discover and call tools through one Model Context Protocol control plane."
+---
+
+## Overview
+
+The MCP Gateway sits between AI clients and the tools they call. It centralizes connections, credentials, scopes, policies, approvals, and audit records.
+
+<Note>
+Availability may depend on your plan and deployment. Confirm current availability with your Scrums.com contact before designing a production dependency.
+</Note>
+
+## Core objects
+
+| Object | Meaning |
+|---|---|
+| Integration | An MCP server, API, or internal system |
+| Connection | A credential reference for an integration |
+| Scope | An organization, team, member, or agent boundary |
+| Policy | An allow, approval-required, or block decision |
+| Toolkit | A curated set of tools exposed through an endpoint |
+| Run | An append-only record of a call or configuration change |
+
+## Governance model
+
+- Give each person and agent its own identity.
+- Store credentials in a broker instead of client configuration files.
+- Apply policy at organization, team, and individual scopes.
+- Require a separate approver for sensitive actions.
+- Record tool, principal, policy, latency, and outcome for every call.
+- Revoke an agent without revoking the person who configured it.
+
+## Connect a client
+
+1. Add and verify an integration.
+2. Place its connection in the appropriate scope.
+3. Assign tool-level policies.
+4. Create a toolkit for the intended workflow.
+5. Connect the client to the scoped endpoint.
+6. Review audit and approval records.
+
+## Related
+
+- [AI Agent Harness](/platform/agent-harness)
+- [Authentication and access control](/security/authentication)
+- [MCP Gateway capability](https://www.scrums.com/platform/mcp-gateway)

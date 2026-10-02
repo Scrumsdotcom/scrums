@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /company/entity.json
+Disallow: /company/graph.json

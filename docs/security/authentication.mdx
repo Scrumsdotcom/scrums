@@ -1,0 +1,62 @@
+---
+title: "Authentication & Access Control"
+description: "How authentication and access permissions are managed within the Scrums.com platform."
+---
+
+## Overview
+
+Scrums.com applies defence-in-depth security principles to protect client workspaces, delivery data, and engineering assets. All users authenticate before accessing any workspace data, and access is scoped to the roles and permissions assigned by your workspace Admin.
+
+## Authentication methods
+
+### Email and password
+
+Email and password authentication is available for platform users. Strong password requirements are enforced at account creation and password change.
+
+### Two-factor authentication (2FA)
+
+Available to all users; strongly recommended for all Admin accounts. 2FA is supported via authenticator app (TOTP-compatible apps such as Google Authenticator, Authy, or 1Password).
+
+To enable 2FA: **Settings > Security > Two-Factor Authentication**.
+
+### SSO / SAML 2.0
+
+Available on the Enterprise plan. Allows organisations to authenticate Scrums.com users through their own identity provider.
+
+Supported identity providers include:
+- Okta
+- Azure Active Directory
+- Google Workspace
+- Any SAML 2.0-compliant provider
+
+Configure SSO in **Settings > Security > SSO**. Your Enablement Partner can assist with configuration during onboarding.
+
+## Session management
+
+Sessions expire after a period of inactivity. Workspace Admins can configure the session timeout duration in **Settings > Security**.
+
+All active sessions can be viewed and terminated at any time in **Settings > Security > Active Sessions**. This is useful for revoking access if a device is lost or a user leaves the organisation.
+
+## Role-based access control (RBAC)
+
+Access within a workspace is governed by roles:
+
+| Role | Capabilities |
+|---|---|
+| Admin | Full workspace control: users, billing, settings, all data |
+| Manager | View dashboards, manage team tasks, approve work, download reports |
+| Viewer | Read-only access to dashboards and delivery reports |
+
+Business and Enterprise plans add more granular role-based access control:
+
+- Restrict specific users to specific projects
+- Control which analytics data is visible to which roles
+- Manage read/write access to backlog and sprint boards per user group
+
+Configure RBAC in **Settings > Access Control**.
+
+## Audit logs (Enterprise)
+
+On Enterprise plans, all authentication events and permission changes are captured in the audit log — including login attempts, session terminations, role changes, and SSO events.
+
+Access audit logs at **Settings > Security > Audit Logs**.

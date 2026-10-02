@@ -1,0 +1,46 @@
+---
+title: 'Invoices'
+description: 'Billing invoices generated from subscriptions and metered usage. Invoices are issued per billing period and are read-only once finalized.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+Invoices are generated at the end of each billing period. They consolidate subscription charges and metered usage into a single document. Once finalized, invoices are immutable.
+
+## Base path
+
+```
+/v1/organizations/{organization_id}/invoices
+```
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/organizations/{org_id}/invoices` | List invoices for an organization |
+| `GET` | `/v1/invoices/{id}` | Get an invoice |
+| `GET` | `/v1/invoices/{id}/line-items` | List line items on an invoice |
+| `POST` | `/v1/invoices/{id}/pay` | Trigger payment on an open invoice |
+
+## Attributes
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier |
+| `organization_id` | string | Parent organization reference |
+| `subscription_id` | string | Associated subscription reference |
+| `status` | enum | `draft`, `open`, `paid`, `void`, `uncollectible` |
+| `total` | number | Total invoice amount |
+| `currency` | string | ISO 4217 currency code |
+| `period_start` | datetime | Start of the billing period |
+| `period_end` | datetime | End of the billing period |
+| `due_date` | datetime | Payment due date |
+| `paid_at` | datetime | When payment was received |
+
+## Relationships
+
+<Note>
+  Invoices belong to [Organizations](/api-reference/core/organizations) and [Subscriptions](/api-reference/core/subscriptions), and are built from [Usage Records](/api-reference/core/usage-records).
+</Note>

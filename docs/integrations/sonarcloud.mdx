@@ -1,0 +1,54 @@
+---
+title: "SonarCloud"
+description: "Connect SonarCloud to surface code quality gates and vulnerability data in your Scrums.com workspace."
+---
+
+## Overview
+
+The SonarCloud integration pulls code quality gate results and vulnerability counts into SEOP's delivery analytics. Code quality becomes a first-class delivery metric alongside velocity and DORA data — giving engineering leaders visibility into the health of the codebase, not just the speed of delivery.
+
+## What syncs
+
+| Data | Direction | Details |
+|---|---|---|
+| Quality gate status | Inbound | Pass/fail status per project |
+| Code smells | Inbound | Count by severity |
+| Security vulnerabilities | Inbound | OWASP category breakdown |
+| Test coverage | Inbound | Coverage percentage per project |
+| Duplication | Inbound | Percentage of duplicated code |
+
+## Requirements
+
+- SonarCloud account with access to the organisation you want to connect
+- SonarCloud User Token with Read access
+- Scrums.com workspace Admin access
+
+## Setup
+
+<Steps>
+  <Step title="Generate a SonarCloud token">
+    In SonarCloud, go to **My Account > Security > Generate Tokens**. Create a token with a descriptive name (e.g. `Scrums.com Integration`) and copy the value. Tokens are shown only once.
+  </Step>
+  <Step title="Open Integrations">
+    In your Scrums.com workspace, go to **Settings > Integrations** and select **SonarCloud**.
+  </Step>
+  <Step title="Enter your credentials">
+    Paste your SonarCloud token and enter your SonarCloud organisation key.
+  </Step>
+  <Step title="Select projects">
+    Choose which SonarCloud projects to connect. Each project maps to a repository in your Scrums.com workspace.
+  </Step>
+  <Step title="Save and verify">
+    Click **Save**. Quality gate data will appear in your Analytics dashboard within the next analysis run.
+  </Step>
+</Steps>
+
+## Using code quality data
+
+Once connected, SonarCloud data appears in:
+
+- **Analytics > Code Quality** — Quality gate trends over time
+- **Sprint Board** — Quality gate status badges on active PRs
+- **Delivery Reports** — Quality metrics included in reports when enabled for your plan
+
+Code quality thresholds can be configured as governance controls in **Administration > Governance**, allowing you to block sprint closure if quality gates are failing.

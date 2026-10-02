@@ -1,0 +1,60 @@
+---
+title: "Deployments"
+description: "How a catalog item becomes a running deployment: cart, checkout, claim, and the deployment lifecycle."
+---
+
+## What a deployment is
+
+A **deployment** is one provisioned service line — a single quoted or sold unit of delivery, tracked end to end.
+
+Every deployment carries a permanent identifier:
+
+```
+DEP-10000001
+```
+
+The code is `DEP-` followed by 8 digits. It is minted once and never changes, even when the deployment is paused, superseded, or completed.
+
+## Cart
+
+You add deployable records from `/catalog/{class}/{slug}`, `/ai-development/scopes/{slug}`, or `/hire/engineers/{public_slug}`. A cart may mix classes and delivery surfaces when the selected records support checkout.
+
+Nothing is provisioned while items are in the cart. No deployment code exists yet.
+
+## Checkout
+
+Checkout converts the cart into an order. At this point Scrums.com:
+
+1. Records the order against your organisation.
+2. Mints a `DEP-` code for each service line in the order.
+3. Starts matching and provisioning for each line.
+
+Each line becomes its own deployment. One order with three service lines produces three deployment codes.
+
+## Claim
+
+Claiming links a deployment to the person or team who will run it.
+
+An unclaimed deployment is provisioned but has no owner in your workspace. Claim it to attach it to a workspace, grant access, and start delivery.
+
+<Note>
+Claim is an ownership action, not a payment action. Checkout creates the deployment. Claim decides who operates it.
+</Note>
+
+## Deployment lifecycle
+
+| Status | Meaning |
+| --- | --- |
+| `pending_match` | Provisioned and awaiting a match — talent, agent, or resource. |
+| `active` | Running and delivering. |
+| `paused` | Temporarily stopped. The code and history are retained. |
+| `completed` | Delivered and closed normally. |
+| `cancelled` | Stopped before completion. |
+| `superseded` | Replaced by a newer deployment. The old code stays for audit. |
+
+A deployment never loses its code. Status changes; identity does not.
+
+## Where to look next
+
+- [AI Catalog Overview](/catalog/overview) — how catalog classes are organised
+- [Administration](/administration/billing) — billing against deployments

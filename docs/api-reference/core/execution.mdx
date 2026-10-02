@@ -1,0 +1,288 @@
+---
+title: 'Execution API'
+description: 'Cross-platform execution state for all active Service Lines. The unified operational layer across talent delivery, managed pods, ODS cycles, infrastructure, and agent runtimes.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+The Execution API provides a unified view of all active and historical execution across [Service Lines](/api-reference/core/service-lines). Regardless of whether execution is running through a talent engagement, a managed delivery pod, an ODS outcome cycle, infrastructure operations, or an agent runtime, this API surfaces operational state consistently under a single interface.
+
+The Execution API is a read and management layer. Work is initiated through product line APIs (talent requests, ODS scopes, agent runs). Execution records reflect the operational state of each active `LIN-*`.
+
+## Core Concepts
+
+### Execution records
+
+Every `LIN-*` in `active` or `paused` status has a corresponding execution record. Execution records are created automatically when a Service Line activates and closed when it terminates.
+
+### Execution states
+
+| State | Description |
+|-------|-------------|
+| `running` | Work is actively in progress |
+| `idle` | Line is active but no current activity |
+| `paused` | Temporarily suspended; can resume |
+| `blocked` | Action required to proceed (approval gap, capacity issue, policy violation) |
+| `closed` | Execution has ended |
+
+### Runs
+
+For execution models that have discrete invocations (`agent_runtime`, `timeboxed_outcome`), execution is tracked as individual runs (`RUN-*`). For continuous models (`capacity`, `ongoing_sla`, `infra_managed`), execution is tracked as a continuous record with periodic check-ins.
+
+### Execution models and their records
+
+| Execution model | Record type | Run identifier |
+|-----------------|-------------|----------------|
+| `capacity` | Continuous | Not applicable |
+| `ongoing_sla` | Continuous | Not applicable |
+| `timeboxed_outcome` | Cycle-based | `RUN-*` per ODS cycle |
+| `infra_managed` | Continuous | Not applicable |
+| `observability` | Continuous | Not applicable |
+| `agent_runtime` | Invocation-based | `RUN-*` per agent run |
+
+## Endpoints
+
+### GET /v1/execution
+
+List all execution records for the authenticated context.
+
+#### Request
+
+```bash
+GET /v1/execution?workspace_id=WS-26-000021&state=running
+Authorization: Bearer <token>
+```
+
+**Query parameters**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `workspace_id` | string | Filter by workspace |
+| `state` | enum | `running`, `idle`, `paused`, `blocked`, `closed` |
+| `execution_model` | enum | Filter by execution model |
+| `product_line` | enum | Filter by product line |
+| `project_tag` | string | Filter by project label |
+| `cursor` | string | Pagination cursor |
+| `limit` | integer | Results per page (max 100, default 25) |
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "RUN-26-000419",
+      "service_line_id": "LIN-26-084729",
+      "execution_model": "capacity",
+      "state": "running",
+      "workspace_id": "WS-26-000021",
+      "product_line": "talent",
+      "project_tags": ["PROJ-26-004281"],
+      "started_at": "2026-01-15T00:00:00Z",
+      "last_activity_at": "2026-04-15T08:30:00Z",
+      "metrics": {
+        "hours_this_week": 32.0,
+        "hours_total": 1248.5,
+        "health_score": 94
+      }
+    },
+    {
+      "id": "RUN-26-000388",
+      "service_line_id": "LIN-26-091100",
+      "execution_model": "agent_runtime",
+      "state": "running",
+      "workspace_id": "WS-26-000021",
+      "product_line": "agent_gateway",
+      "project_tags": [],
+      "started_at": "2026-04-10T12:00:00Z",
+      "last_activity_at": "2026-04-15T09:12:44Z",
+      "metrics": {
+        "invocations_today": 47,
+        "invocations_total": 1203,
+        "last_run_duration_ms": 2411
+      }
+    }
+  ],
+  "meta": {
+    "cursor": "eyJpZCI6IlJVTi0yNi0wMDA0MTkifQ",
+    "has_more": false
+  }
+}
+```
+
+### GET /v1/execution/{lin_code}
+
+Retrieve the execution record for a specific Service Line.
+
+#### Request
+
+```bash
+GET /v1/execution/LIN-26-084729
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "service_line_id": "LIN-26-084729",
+    "execution_model": "capacity",
+    "state": "running",
+    "workspace_id": "WS-26-000021",
+    "product_line": "talent",
+    "project_tags": ["PROJ-26-004281"],
+    "resources": [
+      {
+        "type": "talent",
+        "id": "SCR-128491",
+        "name": "Allocated engineer",
+        "role": "senior_backend_engineer",
+        "allocated_hours_per_week": 40,
+        "status": "active"
+      }
+    ],
+    "health": {
+      "score": 94,
+      "signals": [
+        { "signal": "hours_on_target", "status": "green" },
+        { "signal": "sla_compliance", "status": "green" },
+        { "signal": "capacity_utilisation", "status": "amber" }
+      ]
+    },
+    "started_at": "2026-01-15T00:00:00Z",
+    "last_activity_at": "2026-04-15T08:30:00Z"
+  }
+}
+```
+
+### GET /v1/execution/{lin_code}/runs
+
+List discrete runs for execution models that support them (`agent_runtime`, `timeboxed_outcome`).
+
+#### Request
+
+```bash
+GET /v1/execution/LIN-26-091100/runs?limit=10
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "RUN-26-001812",
+      "service_line_id": "LIN-26-091100",
+      "status": "completed",
+      "triggered_by": {
+        "type": "api",
+        "actor_id": "USR-26-000044"
+      },
+      "input": {
+        "prompt": "Summarise open tasks for project PROJ-26-004281"
+      },
+      "output": {
+        "summary": "14 open tasks across 3 sprints. 2 are blocked.",
+        "artifact_id": "ART-26-000991"
+      },
+      "duration_ms": 2411,
+      "tokens_used": 1840,
+      "started_at": "2026-04-15T09:12:44Z",
+      "completed_at": "2026-04-15T09:12:46Z"
+    }
+  ],
+  "meta": {
+    "cursor": "eyJpZCI6IlJVTi0yNi0wMDE4MTIifQ",
+    "has_more": true
+  }
+}
+```
+
+#### Notes
+
+- Only available for `agent_runtime` and `timeboxed_outcome` Service Lines.
+- Continuous execution models (`capacity`, `ongoing_sla`, `infra_managed`) do not produce discrete run records.
+
+### POST /v1/execution/{lin_code}/pause
+
+Pause an active execution. The Service Line remains active but work stops.
+
+#### Request
+
+```json
+{
+  "reason": "Stakeholder review period - resuming 2026-05-01"
+}
+```
+
+### POST /v1/execution/{lin_code}/resume
+
+Resume a paused execution.
+
+## Common Workflows
+
+### Cross-platform execution dashboard
+
+```bash
+# All running Service Lines across a workspace
+GET /v1/execution?workspace_id=WS-26-000021&state=running
+
+# Drill into any blocked lines
+GET /v1/execution?workspace_id=WS-26-000021&state=blocked
+
+# Get detail on a specific line
+GET /v1/execution/LIN-26-084729
+```
+
+### Checking execution health before invoicing
+
+```bash
+# Before generating a monthly report, confirm all active lines are healthy
+GET /v1/execution?workspace_id=WS-26-000021&state=running
+
+# Review health signals for any amber/red lines
+GET /v1/execution/LIN-26-084729
+```
+
+## Objects
+
+### Execution record
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `service_line_id` | string | Linked `LIN-*` identifier |
+| `execution_model` | enum | Execution model of the Service Line |
+| `state` | enum | `running`, `idle`, `paused`, `blocked`, `closed` |
+| `workspace_id` | string | Parent workspace |
+| `product_line` | enum | Product line driving execution |
+| `project_tags` | array | Inherited from the Service Line |
+| `resources` | array | Allocated resources contributing to execution |
+| `health` | object | Health score and individual signal statuses |
+| `started_at` | datetime | When execution began |
+| `last_activity_at` | datetime | Most recent activity timestamp |
+
+### Run record (`RUN-*`)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `RUN-*` identifier |
+| `service_line_id` | string | Linked `LIN-*` identifier |
+| `status` | enum | `pending`, `running`, `completed`, `failed`, `cancelled` |
+| `triggered_by` | object | Actor type and ID |
+| `input` | object | Run input payload |
+| `output` | object | Run output payload (populated on completion) |
+| `duration_ms` | integer | Execution duration in milliseconds |
+| `started_at` | datetime | Run start timestamp |
+| `completed_at` | datetime | Run completion timestamp |
+
+## Best Practices
+
+- **Poll execution state, not individual product line APIs.** The Execution API gives a consistent state view regardless of product line. Build operational dashboards here, not against talent, ODS, or agent-specific endpoints.
+- **Monitor blocked states proactively.** A `blocked` execution record requires human or system action. Subscribe to `execution.blocked` events via webhooks to catch these immediately.
+- **Use run records for agent audit trails.** For `agent_runtime` Service Lines, run records provide the complete execution history including inputs, outputs, and durations. This data feeds [Audit Logs](/api-reference/core/audit-logs).

@@ -1,0 +1,250 @@
+---
+title: 'Platforms & Infrastructure API'
+description: 'Provision, manage, and observe cloud infrastructure through the Scrums.com platform. Infrastructure estates are Service Lines with full cost visibility, policy control, and incident tracking.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+The Platforms & Infrastructure API gives you a platform-managed interface for cloud infrastructure — provisioning environments, managing deployment services, tracking costs, enforcing infrastructure policies, and handling operational incidents.
+
+Every infrastructure estate is an active [Service Line](/api-reference/core/service-lines) with `execution_model: infra_managed`. Usage is metered in compute hours, storage, and resource-specific units. Cost visibility, health signals, and incident tracking are all wired through the standard platform layers.
+
+This API abstracts over cloud providers. The same API surface manages AWS, GCP, and Azure infrastructure through a consistent interface.
+
+## Core Concepts
+
+### Estates
+
+An estate is the top-level infrastructure grouping — a named collection of environments, services, and policies for a workspace. An estate maps to a single Service Line.
+
+### Environments
+
+Environments within an estate (not the same as project environments) represent named deployment contexts: `production`, `staging`, `development`. Each environment holds its own services and configuration.
+
+### Services
+
+A service is a deployed workload within an environment — a container service, serverless function, managed database, or message queue.
+
+### Cost visibility
+
+All compute and storage consumption is metered and surfaced via the [Usage & Metering API](/api-reference/core/usage-metering) under the estate's `LIN-*`. Costs are visible in real time and broken down by environment and service.
+
+## Endpoints
+
+### GET /v1/infrastructure/estates
+
+List infrastructure estates for a workspace.
+
+#### Request
+
+```bash
+GET /v1/infrastructure/estates?workspace_id=WS-26-000021
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "ESTATE-26-000004",
+      "workspace_id": "WS-26-000021",
+      "service_line_id": "LIN-26-091100",
+      "name": "Payments Platform Infrastructure",
+      "provider": "aws",
+      "region": "eu-west-1",
+      "status": "active",
+      "environment_count": 3,
+      "cost_mtd": 4820.00,
+      "currency": "USD",
+      "health_score": 91,
+      "created_at": "2024-06-01T00:00:00Z"
+    }
+  ]
+}
+```
+
+### POST /v1/infrastructure/estates
+
+Provision a new infrastructure estate.
+
+#### Request
+
+```json
+{
+  "workspace_id": "WS-26-000021",
+  "subscription_id": "SUB-26-001122",
+  "project_tags": ["PROJ-26-004281"],
+  "name": "Payments Platform Infrastructure",
+  "provider": "aws",
+  "region": "eu-west-1",
+  "tier": "managed",
+  "config": {
+    "vpc_cidr": "10.0.0.0/16",
+    "availability_zones": ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  }
+}
+```
+
+#### Response
+
+Returns the estate record with `status: "provisioning"`. A `infrastructure.estate.ready` event fires when provisioning completes.
+
+### GET /v1/infrastructure/environments
+
+List environments within an estate.
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "INFENV-26-000011",
+      "estate_id": "ESTATE-26-000004",
+      "name": "production",
+      "type": "production",
+      "status": "active",
+      "service_count": 8,
+      "cost_mtd": 3240.00,
+      "currency": "USD"
+    },
+    {
+      "id": "INFENV-26-000012",
+      "estate_id": "ESTATE-26-000004",
+      "name": "staging",
+      "type": "staging",
+      "status": "active",
+      "service_count": 8,
+      "cost_mtd": 980.00,
+      "currency": "USD"
+    }
+  ]
+}
+```
+
+### POST /v1/infrastructure/environments
+
+Create a new environment within an estate.
+
+### GET /v1/infrastructure/services
+
+List services running within an environment.
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "INFSVC-26-000041",
+      "environment_id": "INFENV-26-000011",
+      "name": "payments-api",
+      "type": "container_service",
+      "status": "running",
+      "provider_resource": "ecs/payments-api-prod",
+      "cost_mtd": 890.00,
+      "currency": "USD",
+      "health": {
+        "score": 99,
+        "status": "healthy"
+      }
+    }
+  ]
+}
+```
+
+### POST /v1/infrastructure/deployments
+
+Trigger a deployment to an environment.
+
+#### Request
+
+```json
+{
+  "environment_id": "INFENV-26-000011",
+  "service_id": "INFSVC-26-000041",
+  "image": "ghcr.io/apex-digital/payments-api:v2.4.1",
+  "strategy": "rolling",
+  "triggered_by": "USR-26-000044"
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "deployment_id": "DEPLOY-26-001221",
+    "status": "in_progress",
+    "strategy": "rolling",
+    "started_at": "2026-04-15T10:30:00Z"
+  }
+}
+```
+
+### GET /v1/infrastructure/costs
+
+Retrieve cost breakdown for an estate or environment.
+
+#### Request
+
+```bash
+GET /v1/infrastructure/costs?estate_id=ESTATE-26-000004&from=2026-04-01&to=2026-04-15&group_by=environment
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "estate_id": "ESTATE-26-000004",
+    "period": { "from": "2026-04-01", "to": "2026-04-15" },
+    "total": 4820.00,
+    "currency": "USD",
+    "breakdown": [
+      { "group": "production", "cost": 3240.00, "percent": 67.2 },
+      { "group": "staging", "cost": 980.00, "percent": 20.3 },
+      { "group": "development", "cost": 600.00, "percent": 12.5 }
+    ]
+  }
+}
+```
+
+### GET /v1/infrastructure/policies
+
+List infrastructure policies applied to an estate.
+
+### GET /v1/infrastructure/incidents
+
+List infrastructure incidents for an estate.
+
+Returns incidents of type `infrastructure_failure` linked to this estate's `LIN-*`. Cross-references [Incidents & Alerts](/api-reference/core/incidents).
+
+## Objects
+
+### Estate
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `ESTATE-*` identifier |
+| `workspace_id` | string | Parent workspace |
+| `service_line_id` | string | Linked `LIN-*` |
+| `name` | string | Display name |
+| `provider` | enum | `aws`, `gcp`, `azure` |
+| `region` | string | Primary deployment region |
+| `status` | enum | `provisioning`, `active`, `degraded`, `deprovisioned` |
+| `environment_count` | integer | Number of environments |
+| `cost_mtd` | number | Month-to-date cost |
+| `health_score` | integer | Current health (0-100) |
+
+## Best Practices
+
+- **Cost-tag at the estate level, report at the service level.** The estate is your billing unit (via `LIN-*`). Individual service costs help you identify cost drivers within the estate.
+- **Deploy to staging before production.** The deployment API does not enforce environment order. Build that control into your pipeline: staging deployment must succeed before a production deployment is allowed.
+- **Set infrastructure policies before adding services.** Policies applied to an estate govern all services within it. Adding services first and policies later leaves a window of uncontrolled access.

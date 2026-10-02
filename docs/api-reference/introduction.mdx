@@ -1,0 +1,228 @@
+---
+title: 'API Reference'
+description: 'The Scrums.com REST API. One platform, consistently exposed across identity, delivery, talent, infrastructure, intelligence, and agents.'
+---
+
+<Warning>
+  The Scrums.com API is **not yet publicly available**. Access is currently limited to design partners and internal teams. This reference documents the API as designed. If you are interested in early access, contact [support@scrums.com](mailto:support@scrums.com).
+</Warning>
+
+## What you can build
+
+The Scrums.com API lets you embed the full Software Engineering Orchestration Platform into your own tooling:
+
+- **Finance and billing dashboards** — query Service Line usage, cost accruals, and invoice line items in real time
+- **Delivery portals** — surface task progress, team health, and ODS deliverables inside your own product
+- **Internal automation** — trigger agent runs, create tasks, manage talent requests, and react to platform events via webhooks
+- **Observability integrations** — pull engineering metrics, health scores, and risk signals into your existing reporting stack
+- **Access management** — provision workspaces, users, and API keys programmatically as part of onboarding workflows
+
+## Base URL
+
+```
+https://api.scrums.com/v1
+```
+
+## Authentication
+
+All requests require a Bearer token. Tokens are scoped to an organization and optionally narrowed to a workspace.
+
+```bash
+Authorization: Bearer <token>
+```
+
+API keys are also supported for server-to-server integrations via the same header. See [API Keys](/api-reference/core/api-keys).
+
+## A quick example
+
+Retrieve all active Service Lines for a workspace and get the usage summary for each:
+
+```bash
+# List active Service Lines
+curl https://api.scrums.com/v1/service-lines \
+  -H "Authorization: Bearer <token>" \
+  -G -d workspace_id=WS-26-000021 \
+  -d status=active
+```
+
+```json
+{
+  "data": [
+    {
+      "id": "LIN-26-084729",
+      "name": "Backend Engineering - Q2 2026",
+      "product_line": "talent",
+      "execution_model": "capacity",
+      "billing_model": "time_and_materials",
+      "status": "active"
+    }
+  ],
+  "meta": { "cursor": "eyJpZCI6...", "has_more": false }
+}
+```
+
+```bash
+# Get usage for a specific line
+curl https://api.scrums.com/v1/service-lines/LIN-26-084729/usage \
+  -H "Authorization: Bearer <token>" \
+  -G -d from=2026-04-01 -d to=2026-04-30
+```
+
+```json
+{
+  "data": {
+    "service_line_id": "LIN-26-084729",
+    "metrics": [
+      { "metric": "talent.hours", "quantity": 640.0, "cost": 60800.00, "currency": "USD" }
+    ],
+    "total_cost": 60800.00
+  }
+}
+```
+
+## Platform model
+
+Three things make the entire API predictable:
+
+**1. The hierarchy is Organization → Workspace → Service Line.**
+Organizations own Workspaces. Workspaces activate Service Lines. Service Lines (`LIN-*`) are the execution contracts that all delivery, billing, and observability are anchored to.
+
+**2. Projects are labels, not hierarchy.**
+A `PROJ-*` identifier is a tag applied to Service Lines and work items. It groups work across product lines and workspaces without creating structural nesting. There is no "project container" in the hierarchy.
+
+**3. Every capability operates through a Service Line.**
+A talent engagement, a managed delivery pod, an ODS outcome scope, infrastructure under management, an intelligence analysis, and a running agent are all `LIN-*` Service Lines. The Service Line is the universal execution primitive.
+
+## Versioning
+
+The current version is `v1`, declared in the URL path. Breaking changes will be introduced in new versions with advance notice and a deprecation window.
+
+## Pagination
+
+All list endpoints use cursor-based pagination:
+
+```bash
+GET /v1/service-lines?limit=25&cursor=eyJpZCI6IkxJTi0yNi0wODQ3MjkifQ
+```
+
+Responses include `meta.cursor` for the next page and `meta.has_more` as a boolean.
+
+## Response format
+
+```json
+{
+  "data": { ... },
+  "meta": {
+    "cursor": "eyJpZCI6IkxJTi0yNi0wODQ3MjkifQ",
+    "has_more": true
+  }
+}
+```
+
+## Errors
+
+```json
+{
+  "error": {
+    "code": "not_found",
+    "message": "Service Line LIN-26-084729 not found.",
+    "status": 404
+  }
+}
+```
+
+| Status | Code | Meaning |
+|--------|------|---------|
+| `400` | `bad_request` | Invalid request parameters |
+| `401` | `unauthorized` | Missing or invalid token |
+| `403` | `forbidden` | Insufficient permissions or plan limit exceeded |
+| `404` | `not_found` | Resource does not exist |
+| `409` | `conflict` | State conflict |
+| `422` | `unprocessable` | Validation error |
+| `429` | `rate_limited` | Too many requests |
+| `500` | `server_error` | Internal error |
+
+## Core Platform
+
+<CardGroup cols={3}>
+  <Card title="Organizations" icon="building" href="/api-reference/core/organizations">
+    Top-level entities. All workspaces and billing are scoped here.
+  </Card>
+  <Card title="Workspaces" icon="grid-2" href="/api-reference/core/workspaces">
+    Operational units that activate and own Service Lines.
+  </Card>
+  <Card title="Projects" icon="tag" href="/api-reference/core/projects">
+    Labels applied to Service Lines and work items. Not hierarchy.
+  </Card>
+  <Card title="Users & Roles" icon="user" href="/api-reference/core/users">
+    Identity, role-based access, and workspace membership.
+  </Card>
+  <Card title="Plans" icon="rectangle-list" href="/api-reference/core/plans">
+    Platform tiers that gate which Service Lines can be activated.
+  </Card>
+  <Card title="Subscriptions" icon="credit-card" href="/api-reference/core/subscriptions">
+    Active plan subscriptions held by an organization.
+  </Card>
+  <Card title="Service Lines" icon="sitemap" href="/api-reference/core/service-lines">
+    The central execution primitive. Every capability operates through a LIN-*.
+  </Card>
+  <Card title="Usage & Metering" icon="chart-bar" href="/api-reference/core/usage-metering">
+    Metered usage events and consumption summaries per Service Line.
+  </Card>
+  <Card title="Billing & Invoices" icon="file-invoice" href="/api-reference/core/billing-invoices">
+    Invoices and billing history derived from Service Line usage.
+  </Card>
+  <Card title="Execution API" icon="play" href="/api-reference/core/execution">
+    Cross-platform execution state across all active Service Lines.
+  </Card>
+  <Card title="Capacity & Allocation" icon="server" href="/api-reference/core/capacity">
+    Capacity pools and resource allocation per Service Line.
+  </Card>
+  <Card title="Observability & Metrics" icon="activity" href="/api-reference/core/observability">
+    Platform-wide metrics, health scores, and risk signals.
+  </Card>
+  <Card title="Incidents & Alerts" icon="triangle-alert" href="/api-reference/core/incidents">
+    Incident tracking and alert configuration per Service Line.
+  </Card>
+  <Card title="Integrations" icon="plug" href="/api-reference/core/integrations">
+    Third-party tool connections per workspace.
+  </Card>
+  <Card title="Webhooks" icon="webhook" href="/api-reference/core/webhooks">
+    Event delivery endpoints and configuration.
+  </Card>
+  <Card title="API Keys" icon="key" href="/api-reference/core/api-keys">
+    API key management for server-to-server access.
+  </Card>
+  <Card title="Audit Logs" icon="shield-check" href="/api-reference/core/audit-logs">
+    Immutable audit trail for all platform actions.
+  </Card>
+  <Card title="Events" icon="bell" href="/api-reference/core/events">
+    Platform event stream and structured event records.
+  </Card>
+  <Card title="Tasks & Work Items" icon="list-check" href="/api-reference/core/tasks">
+    Work items linked to Service Lines and project labels.
+  </Card>
+</CardGroup>
+
+## Product Lines
+
+<CardGroup cols={3}>
+  <Card title="Talent Marketplace" icon="user-tie" href="/api-reference/product/talent">
+    Talent supply, matching, allocation, and staffing. Mints LIN-* on engagement.
+  </Card>
+  <Card title="Managed Services" icon="handshake" href="/api-reference/product/managed-services">
+    SLA-based delivery pods under Scrums coordination. Mints LIN-* on activation.
+  </Card>
+  <Card title="ODS" icon="bolt" href="/api-reference/product/ods">
+    Scoped, time-boxed outcome delivery. Buy a result, not a sprint.
+  </Card>
+  <Card title="Platforms & Infrastructure" icon="cloud" href="/api-reference/product/infrastructure">
+    Infrastructure and platform engineering management. Mints LIN-* per estate.
+  </Card>
+  <Card title="Developer Intelligence" icon="brain" href="/api-reference/product/intelligence">
+    Engineering metrics, delivery insights, scorecards, and risk.
+  </Card>
+  <Card title="AI Agent Gateway" icon="network-wired" href="/api-reference/product/agent-gateway">
+    Governed agent execution with policies, audit, and tool access control.
+  </Card>
+</CardGroup>

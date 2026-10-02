@@ -1,0 +1,206 @@
+---
+title: 'Subscriptions'
+description: "An organization's active plan subscription. Subscriptions determine which Service Lines can be activated, gate usage limits, and generate invoices at the end of each billing period."
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+A subscription (`SUB-*`) represents an organization's active commitment to a [Plan](/api-reference/core/plans). Subscriptions are the commercial activation layer: when an organization subscribes to a plan, it unlocks the permitted product lines and usage limits across all its workspaces.
+
+Every [Service Line](/api-reference/core/service-lines) is created against a subscription. This is how usage metering and billing trace back to the commercial contract. When a billing period closes, [Invoices](/api-reference/core/billing-invoices) are generated from the subscription's accrued usage.
+
+## Core Concepts
+
+### One or more subscriptions per organization
+
+An organization may hold multiple subscriptions if it has different commercial arrangements for different product lines or billing entities. Each subscription maps to one Plan and generates its own invoice series.
+
+### Subscription lifecycle
+
+```
+trialing -> active -> past_due -> cancelled
+   |                     ^
+   +---> active ---------+  (if payment received)
+```
+
+A subscription transitions to `past_due` if the invoice is not settled by the due date. `past_due` subscriptions remain functional for a grace period before Service Lines are suspended.
+
+### Subscription and Service Line relationship
+
+A `LIN-*` always references a `SUB-*`. This ensures every unit of work has a clear commercial owner. Creating a Service Line requires a `subscription_id` referencing an active subscription on the same organization.
+
+## Endpoints
+
+### GET /v1/subscriptions
+
+List subscriptions for an organization.
+
+#### Request
+
+```bash
+GET /v1/subscriptions?organization_id=ORG-26-090500
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "SUB-26-001122",
+      "organization_id": "ORG-26-090500",
+      "plan_id": "plan_enterprise_annual",
+      "plan_name": "Enterprise",
+      "status": "active",
+      "current_period_start": "2026-01-01T00:00:00Z",
+      "current_period_end": "2026-12-31T23:59:59Z",
+      "cancel_at_period_end": false,
+      "active_service_lines": 11,
+      "accrued_this_period": 142650.00,
+      "currency": "USD",
+      "created_at": "2025-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  ]
+}
+```
+
+### POST /v1/subscriptions
+
+Create a new subscription for an organization.
+
+#### Request
+
+```json
+{
+  "organization_id": "ORG-26-090500",
+  "plan_id": "plan_enterprise_annual",
+  "billing_email": "billing@apexdigital.com",
+  "payment_method_id": "pm_1234567890"
+}
+```
+
+#### Response
+
+Returns the created subscription. Status is `trialing` if the plan has a trial period, otherwise `active`.
+
+#### Notes
+
+- Only org `owner` or `billing` role can create subscriptions.
+- `payment_method_id` references a payment method stored in the billing system.
+
+### GET /v1/subscriptions/{subscription_id}
+
+Retrieve a subscription with current period accruals.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "SUB-26-001122",
+    "organization_id": "ORG-26-090500",
+    "plan_id": "plan_enterprise_annual",
+    "plan_name": "Enterprise",
+    "status": "active",
+    "current_period_start": "2026-01-01T00:00:00Z",
+    "current_period_end": "2026-12-31T23:59:59Z",
+    "cancel_at_period_end": false,
+    "active_service_lines": 11,
+    "service_line_ids": [
+      "LIN-26-084729",
+      "LIN-26-088401",
+      "LIN-26-091100"
+    ],
+    "accrued_this_period": 142650.00,
+    "forecast_this_period": 298400.00,
+    "currency": "USD",
+    "invoice_ids": ["INV-26-000881"],
+    "created_at": "2025-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  }
+}
+```
+
+### PATCH /v1/subscriptions/{subscription_id}
+
+Update a subscription. Used primarily to change plans, update billing email, or schedule cancellation.
+
+#### Request
+
+```json
+{
+  "cancel_at_period_end": true
+}
+```
+
+#### Notes
+
+- Plan changes (`plan_id`) take effect at the start of the next billing period.
+- Setting `cancel_at_period_end: true` does not immediately cancel. The subscription continues until the period ends.
+- Changing to a plan with fewer `allowed_product_lines` may suspend active Service Lines that exceed the new plan's limits.
+
+### DELETE /v1/subscriptions/{subscription_id}
+
+Cancel a subscription immediately. Outstanding usage is invoiced at the time of cancellation.
+
+#### Notes
+
+- Requires explicit confirmation. Pass `{ "confirm": true }` in the request body.
+- All Service Lines referencing this subscription are closed on cancellation.
+- This action cannot be undone.
+
+## Common Workflows
+
+### Checking subscription health before quarter-end
+
+```bash
+# Current period accrual vs forecast
+GET /v1/subscriptions/SUB-26-001122
+
+# Verify no invoices are past due
+GET /v1/billing/invoices?subscription_id=SUB-26-001122&status=past_due
+```
+
+### Validating a subscription before creating a Service Line
+
+```bash
+# Check the subscription is active and the product line is permitted
+GET /v1/subscriptions/SUB-26-001122
+
+# Verify plan allows the product line
+GET /v1/plans/plan_enterprise_annual
+```
+
+## Objects
+
+### Subscription
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `SUB-*` identifier |
+| `organization_id` | string | Parent organization (`ORG-*`) |
+| `plan_id` | string | Active plan reference |
+| `plan_name` | string | Plan display name |
+| `status` | enum | `trialing`, `active`, `past_due`, `cancelled`, `paused` |
+| `current_period_start` | datetime | Start of the current billing period |
+| `current_period_end` | datetime | End of the current billing period |
+| `cancel_at_period_end` | boolean | Whether cancellation is scheduled at period end |
+| `active_service_lines` | integer | Number of active `LIN-*` under this subscription |
+| `service_line_ids` | array | `LIN-*` identifiers (returned on GET by ID) |
+| `accrued_this_period` | number | Costs accrued in the current billing period |
+| `forecast_this_period` | number | Projected total for the current period |
+| `currency` | string | ISO 4217 currency code |
+| `invoice_ids` | array | Historical invoice references |
+| `created_at` | datetime | Subscription creation timestamp |
+
+## Best Practices
+
+- **Always reference the correct `subscription_id` on Service Lines.** If an organization has multiple subscriptions, ensure each Service Line references the correct one. Misaligned subscriptions cause incorrect invoice attribution.
+- **Monitor `accrued_this_period` against forecast.** Significant divergence between accrual and forecast usually means a new Service Line was activated unexpectedly. Set up webhooks for `service_line.activated` events to catch this in real time.
+- **Do not cancel subscriptions to pause work.** Use `PATCH /v1/service-lines/{lin_code}/transitions` to pause individual Service Lines. Cancelling the subscription closes all Service Lines and invoices immediately.

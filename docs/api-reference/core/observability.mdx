@@ -1,0 +1,276 @@
+---
+title: 'Observability & Metrics'
+description: 'Platform-wide health, delivery metrics, utilisation signals, and risk indicators across all active Service Lines.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+The Observability API provides a platform-wide view of operational health, delivery performance, and risk signals across all active [Service Lines](/api-reference/core/service-lines). It aggregates data from execution records, capacity allocations, usage metering, and product-line signals into a unified observability surface.
+
+This is not a metrics store you write to. Observability data is computed from the platform's operational state. You query it to answer questions like:
+
+- Which Service Lines are at risk of SLA breach?
+- What is the delivery health score across this workspace?
+- Which teams have been consistently under-utilising allocated capacity?
+- Are there anomalies in agent execution that warrant investigation?
+
+## Core Concepts
+
+### Health scores
+
+Every active Service Line has a health score (0-100) computed from a weighted set of signals. Scores are refreshed every 15 minutes. Scores below 70 are `amber`; scores below 50 are `red`.
+
+### Signal types
+
+| Signal | Description | Relevant models |
+|--------|-------------|-----------------|
+| `hours_on_target` | Actual hours vs committed allocation | `capacity` |
+| `sla_compliance` | SLA breaches vs commitments | `ongoing_sla` |
+| `delivery_velocity` | Task completion rate vs baseline | All |
+| `capacity_utilisation` | Utilisation against allocated capacity | All |
+| `incident_frequency` | Open incident rate | `infra_managed`, `ongoing_sla` |
+| `agent_error_rate` | Agent run failure rate | `agent_runtime` |
+| `outcome_progress` | ODS cycle progress vs deadline | `timeboxed_outcome` |
+
+### Risk levels
+
+Platform risk indicators are derived from aggregated signals across all Service Lines in a workspace:
+
+- `low` — No signals below green; delivery on track
+- `medium` — One or more amber signals; monitor and investigate
+- `high` — One or more red signals; action required
+
+## Endpoints
+
+### GET /v1/observability
+
+Platform observability summary for a workspace or organization.
+
+#### Request
+
+```bash
+GET /v1/observability?workspace_id=WS-26-000021
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "workspace_id": "WS-26-000021",
+    "computed_at": "2026-04-15T10:00:00Z",
+    "summary": {
+      "active_service_lines": 8,
+      "health_score": 87,
+      "risk_level": "medium",
+      "lines_at_risk": 2,
+      "lines_healthy": 6
+    },
+    "signal_summary": {
+      "green": 41,
+      "amber": 6,
+      "red": 1
+    }
+  }
+}
+```
+
+### GET /v1/observability/metrics
+
+Retrieve metrics for Service Lines over a time range, with optional breakdown.
+
+#### Request
+
+```bash
+GET /v1/observability/metrics?workspace_id=WS-26-000021&from=2026-04-01&to=2026-04-15&metric=delivery_velocity
+Authorization: Bearer <token>
+```
+
+**Query parameters**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `workspace_id` | string | Filter by workspace |
+| `service_line_id` | string | Filter to a specific `LIN-*` |
+| `metric` | string | Metric name (e.g. `delivery_velocity`, `capacity_utilisation`) |
+| `from` | date | Period start |
+| `to` | date | Period end |
+| `granularity` | enum | `daily`, `weekly`, `monthly` |
+
+#### Response
+
+```json
+{
+  "data": {
+    "metric": "delivery_velocity",
+    "workspace_id": "WS-26-000021",
+    "period": {
+      "from": "2026-04-01",
+      "to": "2026-04-15",
+      "granularity": "weekly"
+    },
+    "series": [
+      {
+        "week": "2026-W14",
+        "value": 14.2,
+        "unit": "tasks_completed",
+        "breakdown": [
+          { "service_line_id": "LIN-26-084729", "value": 9.1 },
+          { "service_line_id": "LIN-26-091100", "value": 5.1 }
+        ]
+      },
+      {
+        "week": "2026-W15",
+        "value": 11.8,
+        "unit": "tasks_completed",
+        "breakdown": [
+          { "service_line_id": "LIN-26-084729", "value": 7.3 },
+          { "service_line_id": "LIN-26-091100", "value": 4.5 }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### GET /v1/observability/health
+
+Health scores and signal breakdown for all Service Lines in scope.
+
+#### Request
+
+```bash
+GET /v1/observability/health?workspace_id=WS-26-000021
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "service_line_id": "LIN-26-084729",
+      "name": "Backend Engineering - Q2 2026",
+      "health_score": 94,
+      "risk_level": "low",
+      "signals": [
+        { "signal": "hours_on_target", "status": "green", "value": 96.3 },
+        { "signal": "delivery_velocity", "status": "green", "value": 103.2 },
+        { "signal": "capacity_utilisation", "status": "amber", "value": 68.1 }
+      ]
+    },
+    {
+      "service_line_id": "LIN-26-088401",
+      "name": "Platform Infra - Production",
+      "health_score": 48,
+      "risk_level": "high",
+      "signals": [
+        { "signal": "incident_frequency", "status": "red", "value": 4.2 },
+        { "signal": "sla_compliance", "status": "amber", "value": 88.0 },
+        { "signal": "capacity_utilisation", "status": "green", "value": 91.0 }
+      ]
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+### GET /v1/observability/risk
+
+Aggregated risk assessment for a workspace. Includes risk factors, contributing Service Lines, and recommended actions.
+
+#### Request
+
+```bash
+GET /v1/observability/risk?workspace_id=WS-26-000021
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "workspace_id": "WS-26-000021",
+    "computed_at": "2026-04-15T10:00:00Z",
+    "risk_level": "medium",
+    "risk_factors": [
+      {
+        "factor": "incident_frequency",
+        "severity": "high",
+        "contributing_lines": ["LIN-26-088401"],
+        "detail": "4.2 incidents per week over the last 14 days, above the 2.0 threshold.",
+        "recommended_action": "Review incident log and escalate to infrastructure team."
+      },
+      {
+        "factor": "capacity_utilisation",
+        "severity": "medium",
+        "contributing_lines": ["LIN-26-084729"],
+        "detail": "Utilisation at 68% for 3 consecutive weeks.",
+        "recommended_action": "Review allocation and consider reducing committed hours."
+      }
+    ]
+  }
+}
+```
+
+## Common Workflows
+
+### Weekly health review
+
+```bash
+# Overall workspace summary
+GET /v1/observability?workspace_id=WS-26-000021
+
+# Service lines needing attention
+GET /v1/observability/health?workspace_id=WS-26-000021
+
+# Risk detail with recommended actions
+GET /v1/observability/risk?workspace_id=WS-26-000021
+```
+
+### Trend analysis before a quarterly review
+
+```bash
+# Delivery velocity over the quarter
+GET /v1/observability/metrics?workspace_id=WS-26-000021&metric=delivery_velocity&from=2026-01-01&to=2026-03-31&granularity=weekly
+
+# Capacity utilisation over the same period
+GET /v1/observability/metrics?workspace_id=WS-26-000021&metric=capacity_utilisation&from=2026-01-01&to=2026-03-31&granularity=weekly
+```
+
+## Objects
+
+### Health signal
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `signal` | string | Signal type identifier |
+| `status` | enum | `green`, `amber`, `red` |
+| `value` | number | Current measured value |
+
+### Risk factor
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `factor` | string | Risk factor type |
+| `severity` | enum | `low`, `medium`, `high`, `critical` |
+| `contributing_lines` | array | `LIN-*` identifiers contributing to this risk |
+| `detail` | string | Human-readable explanation |
+| `recommended_action` | string | Suggested response |
+
+## Best Practices
+
+- **Automate the weekly health check.** Schedule a webhook or polling job to run `GET /v1/observability/risk` every Monday morning. Route `high` severity risk factors to the right team via your integration.
+- **Do not use observability as a substitute for real-time alerts.** Observability scores are computed every 15 minutes. For real-time incident detection, use [Incidents & Alerts](/api-reference/core/incidents).
+- **Correlate observability signals with usage costs.** Low utilisation on a `capacity` Service Line combined with high invoiced cost is a commercial issue, not just a delivery one.
+- **Build trend views, not point-in-time views.** A single health score tells you the current state. Weekly metric series tell you the direction. Direction matters more for stakeholder reporting.

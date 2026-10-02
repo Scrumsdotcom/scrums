@@ -1,0 +1,47 @@
+---
+title: "Microsoft Teams"
+description: "Receive Scrums.com delivery updates and platform notifications in Microsoft Teams."
+---
+
+## Overview
+
+The Microsoft Teams integration delivers delivery updates and platform notifications from SEOP into your Teams channels. Teams that work within the Microsoft 365 ecosystem can receive sprint updates, risk alerts, and delivery confirmations without leaving their primary collaboration tool.
+
+## What you receive
+
+| Notification type | Trigger |
+|---|---|
+| Sprint started | Sprint begins in a connected project |
+| Sprint completed | Sprint ends — includes completion rate summary |
+| Blocked ticket alert | Ticket blocked for 24 hours or more |
+| Risk flag | AI delivery risk detected |
+| Delivery report available | Monthly delivery report generated |
+
+## Requirements
+
+- Microsoft Teams Admin or Team Owner access (to install the connector)
+- Scrums.com workspace Admin access
+
+## Setup
+
+<Steps>
+  <Step title="Open Integrations">
+    In your Scrums.com workspace, go to **Settings > Integrations** and select **Microsoft Teams**.
+  </Step>
+  <Step title="Generate webhook URL">
+    In Microsoft Teams, navigate to the channel where you want to receive notifications. Click the **...** menu > **Connectors** > **Incoming Webhook**. Create a webhook and copy the URL.
+  </Step>
+  <Step title="Paste webhook URL">
+    Back in Scrums.com, paste the Teams webhook URL into the configuration field.
+  </Step>
+  <Step title="Select notification types">
+    Choose which events trigger Teams messages for this channel.
+  </Step>
+  <Step title="Save and test">
+    Click **Save** and use **Send test notification** to confirm the connection.
+  </Step>
+</Steps>
+
+<Note>
+  You can configure multiple webhook URLs to route different notification types to different Teams channels.
+</Note>

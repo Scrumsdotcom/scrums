@@ -1,0 +1,88 @@
+---
+title: "Azure DevOps"
+description: "Connect Azure DevOps to sync work items, pipelines, and repository data with Scrums.com."
+---
+
+## Overview
+
+Our Azure DevOps integration collects metadata about your organization’s activity across repositories, pull requests, pipelines, and deployments. **We never read, transmit, or store source code.** Sensitive data, such as branch names and work item titles, are always encrypted.
+
+## Why Integrate Azure DevOps with [Scrums.com](https://www.scrums.com)?
+
+- **Automated Analytics:** Gain insights into your team's delivery performance, DORA metrics, code churn, and more.
+- **No Code Changes Needed:** Integration is secure and token-based, requiring no changes to your repositories.
+- **Real-Time & Historical Data:** See results in minutes, with both real-time and historical analysis.
+
+ 
+
+## Permissions
+
+We request only the necessary permissions to analyze Git metadata and pipeline activity. Below is a description of the scopes requested when connecting to Azure DevOps:
+
+- **Code:** Read access to repositories, commits, branches, and pull requests.
+- **Build:** Read access to build pipelines and results.
+- **Release:** Read access to release pipelines and deployments.
+- **Project and Team:** Read access to project and team metadata.
+- **User:** Read access to your Azure DevOps profile and email address.
+
+ 
+
+We require read access to metadata for commits, branches, pipelines, and releases. Azure DevOps’ API requires broad read permissions to access these endpoints. **Please note that we never read, transmit, or store source code.**
+
+You can learn more about Azure DevOps permissions in [Microsoft’s documentation](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/authentication-guidance?view=azure-devops).
+
+> Please note our Azure Devops integration is in Alpha. If you'd like your account connected, please reach out to us at [support@scrums.com](mailto:support@scrums.com) to have this enabled.
+
+## Step-by-Step Integration Instructions
+
+### 1. Log in to [Scrums.com](https://www.scrums.com)
+
+- Go to [Scrums.com](https://www.scrums.com) and sign in to your account.
+
+### 2. Navigate to Integrations
+
+- In your dashboard, click on your profile or account menu.
+- Select **Integrations** from the dropdown or sidebar.
+
+### 3. Add a New Azure DevOps Integration
+
+- Click **Add Integration** and select **Azure DevOps** from the list of available integrations.
+- Choose the project you want to link to Azure DevOps.
+
+### 4. Authorize [Scrums.com](https://www.scrums.com) to Access Azure DevOps
+
+- You will be prompted to enter your Azure DevOps organization name (just the handle, e.g., `scrumsdotcom`).
+- Generate a [personal access token on Azure DevOps](https://dev.azure.com/):
+  - Go to **User Settings \> Personal access tokens**
+  - Click **New Token**
+  - Set expiry as required by your security policy
+  - Under **Scopes**, select:
+    - `Code (Read)`
+    - `Build (Read)`
+    - `Release (Read)`
+    - `Project and Team (Read)`
+    - `User Profile (Read)`
+- Copy the generated token and paste it into the [Scrums.com](https://www.scrums.com) integration form.
+
+### 5. Add Azure DevOps Projects/Repositories
+
+- After authorizing, click **Add** next to Azure DevOps projects or repositories.
+- Select your organization, enter the project or repository name, and specify the branch (usually `main` or `master`).
+- Save your changes.
+
+### 6. Data Sync & Dashboard
+
+- [Scrums.com](https://www.scrums.com) will begin syncing your Azure DevOps data. Initial results appear within minutes, and the platform will continue to backfill historical data.
+- Explore your analytics dashboards for real-time insights.
+
+## Best Practices
+
+- **Use a Long-Term Admin Account:** Set up integrations using an account that will remain active to avoid disruptions.
+- **Token Security:** Store your Azure DevOps personal access token securely. Do not share it publicly.
+- **Project Selection:** Only connect projects and repositories relevant to your analytics needs.
+
+## Troubleshooting & Support
+
+- **Authorization Issues:** Ensure your Azure DevOps account has the required permissions and correct token scopes.
+- **Data Not Syncing:** Double-check your token permissions and project/repository names. Our integration page will alert you if a token has expired or a name is invalid.
+- **Need Help?** Contact support through your [Scrums.com](https://www.scrums.com) dashboard.

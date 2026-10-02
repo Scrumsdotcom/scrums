@@ -1,0 +1,279 @@
+---
+title: 'Billing & Invoices'
+description: 'Invoices generated from Service Line usage at the end of each billing period. Every line item traces back to a LIN-* identifier.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+Invoices (`INV-*`) are generated at the close of each billing period for each active [Subscription](/api-reference/core/subscriptions). They consolidate charges from all [Service Lines](/api-reference/core/service-lines) under that subscription into a single billable document.
+
+Every invoice line item traces to a `LIN-*` identifier. This makes invoice data directly reconcilable with usage summaries and execution records.
+
+Invoices are immutable once finalized. Draft invoices exist during the billing period as the accrual grows.
+
+## Core Concepts
+
+### Invoice lifecycle
+
+```
+draft -> open -> paid
+              |
+              +-> void
+              +-> uncollectible
+```
+
+Invoices move from `draft` (accruing usage) to `open` (issued, awaiting payment) at period close. Successful payment moves them to `paid`. Finance teams can void an invoice if there is a billing dispute.
+
+### Line items and Service Lines
+
+Each line item on an invoice corresponds to one Service Line's usage for the period. The line item shows the `service_line_id`, the billing model applied, the quantity consumed, the rate or price, and the total. This structure makes the invoice auditable at the delivery level.
+
+### Billing models and line item shapes
+
+| Billing model | Line item structure |
+|---------------|---------------------|
+| `time_and_materials` | Hours x rate |
+| `subscription` | Flat period charge |
+| `fixed_scope` | Agreed scope total |
+| `usage_plus_subscription` | Base charge + usage overage |
+| `usage` | Quantity x rate per meter |
+
+## Endpoints
+
+### GET /v1/invoices
+
+List invoices for an organization.
+
+#### Request
+
+```bash
+GET /v1/invoices?organization_id=ORG-26-090500&status=open
+Authorization: Bearer <token>
+```
+
+**Query parameters**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `organization_id` | string | Scope to organization (required) |
+| `subscription_id` | string | Filter by subscription |
+| `status` | enum | `draft`, `open`, `paid`, `void`, `uncollectible` |
+| `from` | date | Period start filter |
+| `to` | date | Period end filter |
+| `cursor` | string | Pagination cursor |
+| `limit` | integer | Results per page (max 100, default 25) |
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "INV-26-001341",
+      "organization_id": "ORG-26-090500",
+      "subscription_id": "SUB-26-001122",
+      "status": "open",
+      "total": 142650.00,
+      "subtotal": 142650.00,
+      "tax": 0.00,
+      "currency": "USD",
+      "period_start": "2026-03-01T00:00:00Z",
+      "period_end": "2026-03-31T23:59:59Z",
+      "due_date": "2026-04-14T23:59:59Z",
+      "issued_at": "2026-04-01T06:00:00Z",
+      "paid_at": null,
+      "line_item_count": 6
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+### GET /v1/invoices/{invoice_id}
+
+Retrieve a single invoice with full line item detail.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "INV-26-001341",
+    "organization_id": "ORG-26-090500",
+    "subscription_id": "SUB-26-001122",
+    "status": "open",
+    "total": 142650.00,
+    "subtotal": 142650.00,
+    "tax": 0.00,
+    "currency": "USD",
+    "period_start": "2026-03-01T00:00:00Z",
+    "period_end": "2026-03-31T23:59:59Z",
+    "due_date": "2026-04-14T23:59:59Z",
+    "issued_at": "2026-04-01T06:00:00Z",
+    "paid_at": null,
+    "line_items": [
+      {
+        "service_line_id": "LIN-26-084729",
+        "service_line_name": "Backend Engineering - Q2 2026",
+        "product_line": "talent",
+        "billing_model": "time_and_materials",
+        "meter": "talent.hours",
+        "quantity": 640.0,
+        "unit": "hours",
+        "rate": 95.00,
+        "total": 60800.00,
+        "currency": "USD"
+      },
+      {
+        "service_line_id": "LIN-26-088401",
+        "service_line_name": "Managed Delivery Pod - Payments",
+        "product_line": "managed_services",
+        "billing_model": "ongoing_sla",
+        "meter": "talent.days",
+        "quantity": 88.0,
+        "unit": "days",
+        "rate": 760.00,
+        "total": 66880.00,
+        "currency": "USD"
+      },
+      {
+        "service_line_id": "LIN-26-091100",
+        "service_line_name": "Agent Gateway - Production",
+        "product_line": "agent_gateway",
+        "billing_model": "usage",
+        "meter": "agent.tokens",
+        "quantity": 15800000,
+        "unit": "tokens",
+        "rate": 0.00095,
+        "total": 15010.00,
+        "currency": "USD"
+      }
+    ]
+  }
+}
+```
+
+### GET /v1/invoices/{invoice_id}/pdf
+
+Returns a signed URL for downloading the invoice as a PDF document. The URL expires after 15 minutes.
+
+#### Response
+
+```json
+{
+  "data": {
+    "url": "https://billing.scrums.com/invoices/INV-26-001341.pdf?token=...",
+    "expires_at": "2026-04-15T10:15:00Z"
+  }
+}
+```
+
+### POST /v1/invoices/{invoice_id}/pay
+
+Trigger payment on an open invoice using the organization's default payment method.
+
+#### Request
+
+```json
+{
+  "payment_method_id": "pm_1234567890"
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "INV-26-001341",
+    "status": "paid",
+    "paid_at": "2026-04-15T10:00:00Z",
+    "payment_reference": "txn_9988776655"
+  }
+}
+```
+
+#### Notes
+
+- If `payment_method_id` is omitted, the organization's default payment method is used.
+- If payment fails, the invoice status remains `open` and a `invoice.payment_failed` event is emitted.
+- Only org `owner` or `billing` role can trigger payment.
+
+## Common Workflows
+
+### Finance reconciliation workflow
+
+```bash
+# List all open invoices
+GET /v1/invoices?organization_id=ORG-26-090500&status=open
+
+# Get full line item detail for each invoice
+GET /v1/invoices/INV-26-001341
+
+# Download PDF for approval workflow
+GET /v1/invoices/INV-26-001341/pdf
+
+# Pay once approved
+POST /v1/invoices/INV-26-001341/pay
+```
+
+### Allocating costs to internal teams
+
+Each line item carries a `service_line_id`. Cross-reference that against Service Line `project_tags` to attribute costs to the correct internal projects or cost centres.
+
+```bash
+# Get the invoice line items
+GET /v1/invoices/INV-26-001341
+
+# For each line item, check the project tags on the service line
+GET /v1/service-lines/LIN-26-084729  # -> project_tags: ["PROJ-26-004281"]
+```
+
+## Objects
+
+### Invoice
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `INV-*` identifier |
+| `organization_id` | string | Billing organization |
+| `subscription_id` | string | Source subscription (`SUB-*`) |
+| `status` | enum | `draft`, `open`, `paid`, `void`, `uncollectible` |
+| `total` | number | Total amount due |
+| `subtotal` | number | Pre-tax total |
+| `tax` | number | Tax amount |
+| `currency` | string | ISO 4217 currency code |
+| `period_start` | datetime | Billing period start |
+| `period_end` | datetime | Billing period end |
+| `due_date` | datetime | Payment due date |
+| `issued_at` | datetime | When the invoice was finalized |
+| `paid_at` | datetime | Payment timestamp (null if unpaid) |
+| `line_items` | array | Individual line items (returned on GET by ID) |
+
+### Line item
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `service_line_id` | string | Source `LIN-*` |
+| `service_line_name` | string | Service Line display name |
+| `product_line` | enum | Product line that generated the charge |
+| `billing_model` | enum | Model used to calculate this line |
+| `meter` | string | Meter name for consumption lines |
+| `quantity` | number | Consumed quantity |
+| `unit` | string | Unit of measure |
+| `rate` | number | Rate applied |
+| `total` | number | Line total |
+| `currency` | string | ISO 4217 currency code |
+
+## Best Practices
+
+- **Build finance tooling against line items, not invoice totals.** The `total` field is useful for payment flows, but cost attribution, reporting, and reconciliation require line-item-level data tied to `service_line_id`.
+- **Subscribe to `invoice.finalized` webhooks.** When an invoice moves from `draft` to `open`, the platform emits `invoice.finalized`. Use this to trigger finance approval workflows rather than polling.
+- **Verify `due_date` before invoking `POST /pay`.** Some plans have extended payment terms. Do not auto-pay immediately on `invoice.finalized`; respect the due date.

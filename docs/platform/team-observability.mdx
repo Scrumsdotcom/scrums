@@ -1,0 +1,61 @@
+---
+title: "Team Observability"
+description: "Use DORA, workflow, quality, and capacity signals to understand and improve your engineering system."
+---
+
+## Overview
+
+Team observability gives you a shared view of how your engineering system performs. Scrums.com combines delivery, workflow, quality, and capacity signals from your connected tools.
+
+Use these signals to find constraints and improve the system. Do not use them to rank individual engineers.
+
+## DORA metrics
+
+Scrums.com tracks the four DORA software delivery metrics:
+
+| Metric | What it measures |
+|---|---|
+| Deployment frequency | How often you successfully release to production |
+| Lead time for changes | Time from a commit landing in trunk to production |
+| Change failure rate | Percentage of production changes that require remediation |
+| Time to restore service | Time needed to restore service after a production failure |
+
+Scrums.com derives these metrics from version control, CI/CD, deployment, and incident signals. See the [DORA metrics capability](https://www.scrums.com/platform/dora-metrics) for research bands and platform details.
+
+## Workflow and productivity signals
+
+| Metric | Description |
+|---|---|
+| Cycle time | Time from first commit to production, split into coding, review, and deployment stages |
+| Review wait | Time a pull request waits for its first review |
+| Throughput | Work completed over a defined period |
+| Code churn | Code rewritten shortly after it merges |
+| Blocked work | Work that remains idle beyond your configured threshold |
+
+These are team-level signals. Compare a team with its own history instead of comparing teams against each other.
+
+## Quality and capacity signals
+
+| Metric | Description |
+|---|---|
+| Sprint completion | Planned work completed within the sprint |
+| Scope movement | Work added after the sprint begins |
+| Allocation | Capacity spent on features, maintenance, technical debt, support, and unplanned work |
+| Quality gates | Test coverage, static analysis, and security checks from connected tools |
+| Delivery risk | Constraints and trends that threaten a commitment |
+
+## Use metrics responsibly
+
+Metrics help you start a conversation. They are not a verdict on a person.
+
+- Review trends during planning and retrospectives.
+- Investigate queues and system constraints before individual activity.
+- Record the change you make and watch whether the trend improves.
+- Use consistent definitions across teams and connected tools.
+- Restrict sensitive data through workspace roles and policies.
+
+## Related
+
+- [Developer productivity](/platform/developer-productivity)
+- [Engineering capacity planning](/platform/engineering-capacity-planning)
+- [Integrations](/integrations/integrations)

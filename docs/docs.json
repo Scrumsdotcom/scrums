@@ -1,0 +1,699 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Scrums.com Docs",
+  "openapi": "api-reference/openapi.json",
+  "colors": {
+    "primary": "#145aff",
+    "light": "#4a7fff",
+    "dark": "#0d3eb3"
+  },
+  "fonts": {
+    "heading": {
+      "family": "IBM Plex Mono"
+    },
+    "body": {
+      "family": "IBM Plex Sans"
+    }
+  },
+  "favicon": "/favicon.png",
+  "redirects": [
+    {
+      "source": "/platform/on-demand-solutions",
+      "destination": "/ai-development/outcome-driven-sprints"
+    },
+    {
+      "source": "/platform/comparing-delivery-models",
+      "destination": "/ai-development/choose-delivery-model"
+    },
+    {
+      "source": "/platform/staff-augmentation",
+      "destination": "/hire/engineers"
+    },
+    {
+      "source": "/platform/dedicated-teams",
+      "destination": "/hire/teams"
+    },
+    {
+      "source": "/platform/ai-vetting",
+      "destination": "/hire/vetting-and-matching"
+    },
+    {
+      "source": "/platform/managed-delivery",
+      "destination": "/ai-development/managed-delivery"
+    },
+    {
+      "source": "/platform/outcome-driven-sprints",
+      "destination": "/ai-development/outcome-driven-sprints"
+    },
+    {
+      "source": "/platform/ai-agents",
+      "destination": "/catalog/agents"
+    },
+    {
+      "source": "/platform/ai-delivery",
+      "destination": "/products/agents/ai-delivery"
+    },
+    {
+      "source": "/platform/ai-controls",
+      "destination": "/products/agents/ai-controls"
+    },
+    {
+      "source": "/platform/infrastructure-tooling",
+      "destination": "/catalog/infrastructure"
+    },
+    {
+      "source": "/platform/supported-technologies",
+      "destination": "/hire/technologies"
+    },
+    {
+      "source": "/ai-tools/claude-code",
+      "destination": "/integrations/claude-code"
+    },
+    {
+      "source": "/ai-tools/cursor",
+      "destination": "/integrations/cursor"
+    },
+    {
+      "source": "/ai-tools/windsurf",
+      "destination": "/integrations/windsurf"
+    },
+    {
+      "source": "/platform/platform-and-products",
+      "destination": "/platform/overview",
+      "permanent": true
+    },
+    {
+      "source": "/platform/how-seop-works",
+      "destination": "/platform/how-it-works",
+      "permanent": true
+    },
+    {
+      "source": "/products/overview",
+      "destination": "/ai-development/choose-delivery-model",
+      "permanent": true
+    },
+    {
+      "source": "/products/catalog",
+      "destination": "/catalog/overview",
+      "permanent": true
+    },
+    {
+      "source": "/products/agents/overview",
+      "destination": "/catalog/agents",
+      "permanent": true
+    },
+    {
+      "source": "/products/infra/overview",
+      "destination": "/catalog/infrastructure",
+      "permanent": true
+    },
+    {
+      "source": "/products/infra/supported-technologies",
+      "destination": "/hire/technologies",
+      "permanent": true
+    },
+    {
+      "source": "/products/delivery/overview",
+      "destination": "/ai-development/overview",
+      "permanent": true
+    },
+    {
+      "source": "/products/delivery/managed-delivery",
+      "destination": "/ai-development/managed-delivery",
+      "permanent": true
+    },
+    {
+      "source": "/products/delivery/outcome-driven-sprints",
+      "destination": "/ai-development/outcome-driven-sprints",
+      "permanent": true
+    },
+    {
+      "source": "/products/talent/overview",
+      "destination": "/hire/overview",
+      "permanent": true
+    },
+    {
+      "source": "/products/talent/individual-experts",
+      "destination": "/hire/engineers",
+      "permanent": true
+    },
+    {
+      "source": "/products/talent/dedicated-teams",
+      "destination": "/hire/teams",
+      "permanent": true
+    },
+    {
+      "source": "/products/talent/ai-vetting",
+      "destination": "/hire/vetting-and-matching",
+      "permanent": true
+    },
+    {
+      "source": "/resources/resources",
+      "destination": "/resources/overview",
+      "permanent": true
+    },
+    {
+      "source": "/resources/release-notes",
+      "destination": "/changelog",
+      "permanent": true
+    },
+    {
+      "source": "/support",
+      "destination": "/resources/support",
+      "permanent": true
+    },
+    {
+      "source": "/company/entity",
+      "destination": "/company/entity-graph",
+      "permanent": true
+    }
+  ],
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Get Started",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "index",
+              "getting-started/sign-up",
+              "getting-started/first-time-setup",
+              "getting-started/onboarding-kickoff",
+              "getting-started/workspace-ui",
+              "getting-started/tutorials",
+              "getting-started/glossary"
+            ]
+          },
+          {
+            "group": "Security & Compliance",
+            "pages": [
+              "security/security-and-compliance",
+              "security/authentication",
+              "security/compliance",
+              "security/data-protection",
+              "security/ip-ownership",
+              "security/legal"
+            ]
+          },
+          {
+            "group": "Resources",
+            "pages": [
+              "resources/overview",
+              "resources/faqs",
+              "resources/best-practices",
+              "resources/support"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Enterprise AI Platform",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "platform/overview",
+              "platform/how-it-works",
+              "platform/core-concepts",
+              "platform/plans",
+              "platform/human-ai-collaboration"
+            ]
+          },
+          {
+            "group": "Capabilities",
+            "pages": [
+              "platform/ai-gateway",
+              "platform/dora-metrics",
+              "platform/developer-productivity",
+              "platform/engineering-capacity-planning",
+              "platform/agent-harness",
+              "platform/mcp-gateway",
+              "platform/team-observability"
+            ]
+          },
+          {
+            "group": "Operate",
+            "pages": [
+              "administration/administration",
+              "administration/account-admin",
+              "administration/billing",
+              "governance/governance"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "AI Catalog",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "catalog/overview",
+              "products/deployments"
+            ]
+          },
+          {
+            "group": "Catalog classes",
+            "pages": [
+              "catalog/agents",
+              "catalog/models",
+              "catalog/mcp-servers",
+              "catalog/skills",
+              "catalog/apis",
+              "catalog/infrastructure"
+            ]
+          },
+          {
+            "group": "Agent guidance",
+            "pages": [
+              "products/agents/ai-delivery",
+              "products/agents/ai-controls"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Platform Services",
+        "groups": [
+          {
+            "group": "AI Development",
+            "pages": [
+              "ai-development/overview",
+              "ai-development/choose-delivery-model",
+              "ai-development/scopes",
+              "ai-development/managed-delivery",
+              "ai-development/outcome-driven-sprints"
+            ]
+          },
+          {
+            "group": "AI Development services",
+            "pages": [
+              "ai-development/ai-agent-development",
+              "ai-development/generative-ai-development",
+              "ai-development/custom-software-development",
+              "ai-development/product-development",
+              "ai-development/web-development",
+              "ai-development/mobile-app-development",
+              "ai-development/ui-ux-design",
+              "ai-development/application-modernization",
+              "ai-development/data-engineering-analytics",
+              "ai-development/devops-engineering",
+              "ai-development/software-testing-qa",
+              "ai-development/software-maintenance-and-support"
+            ]
+          },
+          {
+            "group": "Hire Engineers",
+            "pages": [
+              "hire/overview",
+              "hire/engineers",
+              "hire/teams",
+              "hire/staff-augmentation",
+              "hire/forward-deployed-engineers",
+              "hire/global-capability-center",
+              "hire/vetting-and-matching",
+              "hire/technologies"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Integrations",
+        "groups": [
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/integrations",
+              "integrations/supported-integrations",
+              "integrations/integration-setup"
+            ]
+          },
+          {
+            "group": "Source Control",
+            "pages": [
+              "integrations/github",
+              "integrations/bitbucket",
+              "integrations/gitlab",
+              "integrations/azure-devops"
+            ]
+          },
+          {
+            "group": "AI Coding Tools",
+            "pages": [
+              "integrations/github-copilot",
+              "integrations/cursor",
+              "integrations/windsurf",
+              "integrations/claude-code"
+            ]
+          },
+          {
+            "group": "Project Management",
+            "pages": [
+              "integrations/jira",
+              "integrations/clickup",
+              "integrations/azure-boards"
+            ]
+          },
+          {
+            "group": "Monitoring & Communication",
+            "pages": [
+              "integrations/slack",
+              "integrations/microsoft-teams",
+              "integrations/datadog",
+              "integrations/sonarcloud"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API & CLI",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Organizations",
+            "pages": [
+              "api-reference/core/organizations",
+              "api-reference/endpoints/organizations/list-orgs"
+            ]
+          },
+          {
+            "group": "Workspaces",
+            "pages": [
+              "api-reference/core/workspaces",
+              "api-reference/endpoints/workspaces/list-workspaces"
+            ]
+          },
+          {
+            "group": "Service Lines",
+            "pages": [
+              "api-reference/core/service-lines",
+              "api-reference/endpoints/service-lines/list-service-lines",
+              "api-reference/endpoints/service-lines/create-service-line",
+              "api-reference/endpoints/service-lines/get-service-line",
+              "api-reference/endpoints/service-lines/get-service-line-usage"
+            ]
+          },
+          {
+            "group": "Core Platform",
+            "pages": [
+              "api-reference/core/accounts",
+              "api-reference/core/agents",
+              "api-reference/core/api-keys",
+              "api-reference/core/artifacts",
+              "api-reference/core/audit-logs",
+              "api-reference/core/billing-invoices",
+              "api-reference/core/capacity",
+              "api-reference/core/environments",
+              "api-reference/core/events",
+              "api-reference/core/execution",
+              "api-reference/core/incidents",
+              "api-reference/core/integrations",
+              "api-reference/core/invoices",
+              "api-reference/core/memberships",
+              "api-reference/core/plans",
+              "api-reference/core/policies",
+              "api-reference/core/projects",
+              "api-reference/core/resources",
+              "api-reference/core/subscriptions",
+              "api-reference/core/tasks",
+              "api-reference/core/usage-metering",
+              "api-reference/core/usage-records",
+              "api-reference/core/users",
+              "api-reference/core/webhooks"
+            ]
+          },
+          {
+            "group": "Observability & Metrics",
+            "pages": [
+              "api-reference/core/observability",
+              "api-reference/endpoints/observability/get-health"
+            ]
+          },
+          {
+            "group": "ODS",
+            "pages": [
+              "api-reference/product/ods",
+              "api-reference/endpoints/ods/create-ods-request"
+            ]
+          },
+          {
+            "group": "Talent Marketplace",
+            "pages": [
+              "api-reference/product/talent",
+              "api-reference/endpoints/talent/create-talent-request"
+            ]
+          },
+          {
+            "group": "AI Agent Gateway",
+            "pages": [
+              "api-reference/product/agent-gateway",
+              "api-reference/endpoints/agents/create-agent-run"
+            ]
+          },
+          {
+            "group": "Product Lines",
+            "pages": [
+              "api-reference/product/managed-services",
+              "api-reference/product/infrastructure",
+              "api-reference/product/intelligence"
+            ]
+          },
+          {
+            "group": "Machine-Readable Company Data",
+            "pages": [
+              "company/entity-graph"
+            ]
+          },
+          {
+            "group": "CLI",
+            "pages": [
+              "cli/introduction"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Changelog",
+        "groups": [
+          {
+            "group": "Releases",
+            "pages": [
+              "changelog",
+              "changelog/2026-summer",
+              "changelog/2025-winter"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/docs-logo-white.svg",
+    "dark": "/logo/docs-logo-white.svg",
+    "href": "https://www.scrums.com"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Status",
+        "href": "https://status.scrums.com"
+      },
+      {
+        "label": "Support",
+        "href": "mailto:support@scrums.com"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://www.scrums.com/sign-up"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/scrumsdotcom",
+      "linkedin": "https://www.linkedin.com/company/scrumsdotcom",
+      "youtube": "https://www.youtube.com/@scrumsdotcom"
+    },
+    "links": [
+      {
+        "header": "Enterprise AI Platform",
+        "items": [
+          {
+            "label": "Platform (SEOP)",
+            "href": "https://www.scrums.com/platform"
+          },
+          {
+            "label": "AI Agent Gateway",
+            "href": "https://www.scrums.com/platform/ai-gateway"
+          },
+          {
+            "label": "DORA Metrics",
+            "href": "https://www.scrums.com/platform/dora-metrics"
+          },
+          {
+            "label": "Developer Productivity",
+            "href": "https://www.scrums.com/platform/developer-productivity"
+          },
+          {
+            "label": "Engineering Capacity Planning",
+            "href": "https://www.scrums.com/platform/engineering-capacity-planning"
+          },
+          {
+            "label": "AI Agent Harness",
+            "href": "https://www.scrums.com/platform/agent-harness"
+          },
+          {
+            "label": "Pricing",
+            "href": "https://www.scrums.com/pricing"
+          }
+        ]
+      },
+      {
+        "header": "AI Development",
+        "items": [
+          {
+            "label": "AI Development Services",
+            "href": "https://www.scrums.com/ai-development"
+          },
+          {
+            "label": "AI Agent Development",
+            "href": "https://www.scrums.com/ai-development/ai-agent-development"
+          },
+          {
+            "label": "Generative AI Development",
+            "href": "https://www.scrums.com/ai-development/generative-ai-development"
+          },
+          {
+            "label": "Custom Software Development",
+            "href": "https://www.scrums.com/ai-development/custom-software-development"
+          },
+          {
+            "label": "Mobile App Development",
+            "href": "https://www.scrums.com/ai-development/mobile-app-development"
+          },
+          {
+            "label": "Scopes",
+            "href": "https://www.scrums.com/ai-development/scopes"
+          }
+        ]
+      },
+      {
+        "header": "Hire Engineers",
+        "items": [
+          {
+            "label": "Hire AI Developers",
+            "href": "https://www.scrums.com/hire"
+          },
+          {
+            "label": "Engineers",
+            "href": "https://www.scrums.com/hire/engineers"
+          },
+          {
+            "label": "Dedicated Development Team",
+            "href": "https://www.scrums.com/hire/teams"
+          },
+          {
+            "label": "Staff Augmentation",
+            "href": "https://www.scrums.com/hire/staff-augmentation"
+          },
+          {
+            "label": "Forward Deployed Engineers",
+            "href": "https://www.scrums.com/hire/forward-deployed-engineers"
+          },
+          {
+            "label": "AI Catalog",
+            "href": "https://www.scrums.com/catalog"
+          }
+        ]
+      },
+      {
+        "header": "Company",
+        "items": [
+          {
+            "label": "About Us",
+            "href": "https://www.scrums.com/about-us"
+          },
+          {
+            "label": "Contact Us",
+            "href": "https://www.scrums.com/contact-us"
+          },
+          {
+            "label": "Blog",
+            "href": "https://www.scrums.com/blog"
+          },
+          {
+            "label": "Careers",
+            "href": "https://www.scrums.com/careers"
+          },
+          {
+            "label": "Legal Policies",
+            "href": "https://www.scrums.com/legal"
+          },
+          {
+            "label": "Scrums.com Status",
+            "href": "https://status.scrums.com"
+          }
+        ]
+      }
+    ]
+  },
+  "description": "Documentation for the Scrums.com Enterprise AI Software Engineering Orchestration Platform (SEOP). Scrums.com is the enterprise AI platform for software engineering: deploy AI agents, models, AI engineers and infrastructure from one catalog, then govern and measure all of it on one platform. Software Engineering. Sorted.",
+  "seo": {
+    "indexing": "navigable",
+    "metatags": {
+      "og:site_name": "Scrums.com Docs",
+      "keywords": "Scrums.com, enterprise AI platform for software engineering, Software Engineering Orchestration Platform, SEOP, AI gateway, DORA metrics, developer productivity platform, engineering capacity planning, AI agent harness, MCP gateway, AI development services, hire AI engineers"
+    },
+    "organization": {
+      "name": "Scrums.com",
+      "url": "https://www.scrums.com",
+      "sameAs": [
+        "https://x.com/scrumsdotcom",
+        "https://www.linkedin.com/company/scrumsdotcom",
+        "https://www.youtube.com/@scrumsdotcom"
+      ]
+    }
+  },
+  "search": {
+    "prompt": "Search the Scrums.com Enterprise AI Platform docs"
+  },
+  "markdown": {
+    "instructions": [
+      "Scrums.com is the enterprise AI platform for software engineering. SEOP, the Enterprise AI Software Engineering Orchestration Platform, is the architecture of the platform: one control plane for AI agents, models, engineers and infrastructure.",
+      "Write the entity name as Scrums.com. Never write the bare word Scrums.",
+      "Platform capabilities are documented under /platform. AI Development services and Hire Engineers are documented under Platform Services. The AI Catalog is documented under /catalog. Each docs page links to its page on https://www.scrums.com."
+    ]
+  },
+  "appearance": {
+    "default": "system"
+  },
+  "interaction": {
+    "drilldown": true
+  },
+  "background": {
+    "decoration": "gradient"
+  },
+  "metadata": {
+    "timestamp": true
+  }
+}

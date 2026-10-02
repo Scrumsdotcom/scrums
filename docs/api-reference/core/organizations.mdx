@@ -1,0 +1,216 @@
+---
+title: 'Organizations'
+description: 'Top-level entities on the Scrums.com platform. Organizations own workspaces, hold subscriptions, and are the root scope for all billing and access control.'
+---
+
+<Warning>
+  The Scrums.com API is **planned and not yet publicly available**. Endpoints and behaviour are subject to change before release.
+</Warning>
+
+## Overview
+
+An organization (`ORG-*`) is the top-level entity on the Scrums.com platform. It represents a company or enterprise customer. All workspaces, subscriptions, billing, and platform-level governance are scoped to an organization.
+
+The organization is the commercial entity: it holds a [Plan](/api-reference/core/plans), activates [Subscriptions](/api-reference/core/subscriptions), and receives [Invoices](/api-reference/core/invoices). Every [Service Line](/api-reference/core/service-lines) active on the platform traces back to an organization.
+
+## Core Concepts
+
+### Org-to-workspace relationship
+
+An organization can own multiple workspaces. Each workspace is an independent operational unit with its own members, integrations, and Service Lines. Organizations provide the commercial and governance envelope; workspaces provide the operational context.
+
+### Plan and subscription scope
+
+The organization's active Plan determines which [Service Lines](/api-reference/core/service-lines) can be activated across its workspaces. Subscriptions are held at the organization level and apply to all workspaces unless workspace-scoped subscriptions are configured.
+
+### Members and roles
+
+Organization-level membership grants access across all workspaces within the org. Roles at the organization level are: `owner`, `admin`, `billing`, `viewer`. Workspace-specific roles are managed via [Users & Roles](/api-reference/core/users).
+
+## Endpoints
+
+### GET /v1/orgs
+
+List organizations accessible to the authenticated token.
+
+#### Request
+
+```bash
+GET /v1/orgs
+Authorization: Bearer <token>
+```
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "ORG-26-090500",
+      "name": "Apex Digital Ltd",
+      "slug": "apex-digital",
+      "status": "active",
+      "plan_id": "plan_enterprise_annual",
+      "owner_id": "USR-26-000001",
+      "workspace_count": 4,
+      "created_at": "2024-03-01T10:00:00Z",
+      "updated_at": "2026-04-01T09:22:00Z"
+    }
+  ],
+  "meta": {
+    "cursor": null,
+    "has_more": false
+  }
+}
+```
+
+### POST /v1/orgs
+
+Create a new organization.
+
+#### Request
+
+```json
+{
+  "name": "Apex Digital Ltd",
+  "slug": "apex-digital",
+  "billing_email": "billing@apexdigital.com",
+  "owner_id": "USR-26-000001"
+}
+```
+
+#### Response
+
+Returns the created organization object with `status: "active"`.
+
+#### Notes
+
+- `slug` must be globally unique.
+- The `owner_id` user is automatically added as an `owner` member.
+- A default workspace is not automatically created. Use `POST /v1/workspaces`.
+
+### GET /v1/orgs/{org_id}
+
+Retrieve an organization by ID.
+
+#### Response
+
+```json
+{
+  "data": {
+    "id": "ORG-26-090500",
+    "name": "Apex Digital Ltd",
+    "slug": "apex-digital",
+    "status": "active",
+    "plan_id": "plan_enterprise_annual",
+    "owner_id": "USR-26-000001",
+    "settings": {
+      "enforce_sso": true,
+      "require_mfa": true,
+      "default_currency": "USD"
+    },
+    "workspace_count": 4,
+    "active_service_lines": 11,
+    "created_at": "2024-03-01T10:00:00Z",
+    "updated_at": "2026-04-01T09:22:00Z"
+  }
+}
+```
+
+### PATCH /v1/orgs/{org_id}
+
+Update mutable organization fields.
+
+#### Request
+
+```json
+{
+  "name": "Apex Digital Group",
+  "settings": {
+    "enforce_sso": true,
+    "require_mfa": true,
+    "default_currency": "GBP"
+  }
+}
+```
+
+#### Notes
+
+- `slug` cannot be changed after creation.
+- Changing `settings.enforce_sso` to `true` immediately affects all subsequent authentication attempts.
+
+### GET /v1/orgs/{org_id}/members
+
+List members of an organization.
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "user_id": "USR-26-000001",
+      "name": "Jordan Ellis",
+      "email": "jordan@apexdigital.com",
+      "role": "owner",
+      "status": "active",
+      "joined_at": "2024-03-01T10:00:00Z"
+    }
+  ]
+}
+```
+
+### POST /v1/orgs/{org_id}/members
+
+Invite a user to the organization.
+
+#### Request
+
+```json
+{
+  "email": "alex@apexdigital.com",
+  "role": "admin"
+}
+```
+
+## Common Workflows
+
+### Setting up a new organization
+
+```bash
+# Create the organization
+POST /v1/orgs
+{ "name": "Apex Digital Ltd", "slug": "apex-digital", "billing_email": "billing@apexdigital.com", "owner_id": "USR-26-000001" }
+
+# Create the first workspace
+POST /v1/workspaces
+{ "organization_id": "ORG-26-090500", "name": "Engineering", "slug": "engineering" }
+
+# Invite team members
+POST /v1/orgs/ORG-26-090500/members
+{ "email": "alex@apexdigital.com", "role": "admin" }
+```
+
+## Objects
+
+### Organization
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | `ORG-*` identifier |
+| `name` | string | Display name |
+| `slug` | string | Globally unique URL-safe identifier |
+| `status` | enum | `active`, `suspended`, `closed` |
+| `plan_id` | string | Active plan reference |
+| `owner_id` | string | `USR-*` of the organization owner |
+| `settings` | object | Org-level configuration (SSO, MFA, currency, etc.) |
+| `workspace_count` | integer | Number of active workspaces |
+| `active_service_lines` | integer | Number of active `LIN-*` across all workspaces |
+| `created_at` | datetime | Creation timestamp |
+| `updated_at` | datetime | Last modification timestamp |
+
+## Best Practices
+
+- **One organization per company.** Multiple workspaces within one organization provide the operational separation needed for teams and divisions. Creating multiple organizations for the same company complicates billing, cross-workspace visibility, and governance.
+- **Set `billing_email` explicitly.** Invoice delivery depends on this field. Ensure it reaches a team that can action payment rather than a personal inbox.
+- **Apply settings before inviting users.** Configure `enforce_sso` and `require_mfa` before adding members, so new users join under the correct security posture from the start.

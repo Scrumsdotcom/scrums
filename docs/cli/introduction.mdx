@@ -1,0 +1,292 @@
+---
+title: "CLI"
+description: "A fast, scriptable command line interface for the Scrums.com platform — for developers, operators, and CI pipelines."
+---
+
+<Warning>
+  The Scrums CLI is **planned and not yet publicly available**. This page describes the intended design and command structure. Commands and behaviour are subject to change before release.
+</Warning>
+
+The Scrums CLI gives you a fast, scriptable way to work with the Scrums platform from your terminal, CI pipelines, and internal tooling — without needing the web application for every action.
+
+The primary command is:
+
+```bash
+scrums
+```
+
+## Design principles
+
+The CLI is built around five principles:
+
+- **Brand-native** — feels like a first-class part of the Scrums platform
+- **Resource-based** — predictable `scrums <resource> <action>` structure
+- **Scriptable** — works cleanly in automation, CI pipelines, and orchestrators
+- **Human-readable by default** — clear terminal output out of the box
+- **Machine-readable when needed** — `--json` flag for structured output
+
+## Command structure
+
+All commands follow this pattern:
+
+```bash
+scrums <resource> <action> [arguments] [flags]
+```
+
+```bash
+scrums auth login
+scrums projects list
+scrums env set API_KEY=value
+scrums deploy create --env production
+scrums logs tail --service api
+scrums agents run sync-org-codes
+```
+
+## Command reference
+
+<AccordionGroup>
+
+  <Accordion title="scrums auth" icon="lock">
+    Authentication and account access.
+
+    ```bash
+    scrums auth login       # Sign in via browser
+    scrums auth logout      # Clear local session
+    scrums auth whoami      # Inspect active account
+    scrums auth token       # Manage access tokens for CI/CD
+    ```
+
+    Supports browser-based login for interactive users and access token authentication for CI and automation workflows.
+  </Accordion>
+
+  <Accordion title="scrums config" icon="sliders">
+    Local CLI configuration.
+
+    ```bash
+    scrums config get
+    scrums config set
+    scrums config list
+    ```
+
+    Manage local defaults, select workspaces or environments, and configure output and profile settings.
+  </Accordion>
+
+  <Accordion title="scrums init" icon="wand-magic-sparkles">
+    Initialize a project or local platform configuration.
+
+    ```bash
+    scrums init
+    scrums init project
+    scrums init agent
+    ```
+
+    Bootstrap local project settings, create configuration files, and connect local repositories to the platform.
+  </Accordion>
+
+  <Accordion title="scrums projects" icon="folder">
+    Project and workspace operations.
+
+    ```bash
+    scrums projects list
+    scrums projects create
+    scrums projects view <project-id>
+    scrums projects link
+    ```
+
+    View and manage projects, connect repositories or services, and inspect workspace state.
+  </Accordion>
+
+  <Accordion title="scrums env" icon="key">
+    Environment and secrets management.
+
+    ```bash
+    scrums env list
+    scrums env pull
+    scrums env push
+    scrums env set KEY=value
+    scrums env remove KEY
+    ```
+
+    Manage environment configuration, sync variables between local and remote environments, and support deployment workflows.
+  </Accordion>
+
+  <Accordion title="scrums deploy" icon="rocket">
+    Deployment and release operations.
+
+    ```bash
+    scrums deploy
+    scrums deploy create
+    scrums deploy list
+    scrums deploy rollback
+    ```
+
+    Trigger deployments, inspect release state, and support operational workflows and CI pipelines.
+  </Accordion>
+
+  <Accordion title="scrums logs" icon="terminal">
+    Logs and runtime diagnostics.
+
+    ```bash
+    scrums logs
+    scrums logs tail
+    scrums logs service <service-name>
+    ```
+
+    Inspect runtime output, tail logs from services or agents, and support debugging and operational visibility.
+  </Accordion>
+
+  <Accordion title="scrums status" icon="circle-check">
+    Platform and service status.
+
+    ```bash
+    scrums status
+    scrums status services
+    scrums status project <project-id>
+    ```
+
+    Inspect platform health, check service availability, and view environment or deployment state.
+  </Accordion>
+
+  <Accordion title="scrums agents" icon="robot">
+    Agent operations.
+
+    ```bash
+    scrums agents list
+    scrums agents run <agent-name>
+    scrums agents logs <agent-name>
+    scrums agents status
+    ```
+
+    Interact with platform agents, trigger agent workflows, and inspect execution and output. This command group is expected to grow significantly as Scrums expands its AI and orchestration capabilities.
+  </Accordion>
+
+  <Accordion title="scrums api" icon="code">
+    API utilities for developers and operators.
+
+    ```bash
+    scrums api whoami
+    scrums api call GET /v1/projects
+    scrums api openapi
+    ```
+
+    Test API access, make authenticated API calls, and inspect API metadata and schemas.
+  </Accordion>
+
+  <Accordion title="scrums talent" icon="users">
+    Talent network operations.
+
+    ```bash
+    scrums talent search
+    scrums talent view <talent-id>
+    scrums talent skills <talent-id>
+    ```
+
+    Command-line access to talent-facing and operator-facing workflows. This area is planned but will be more limited than core platform commands in the first release.
+  </Accordion>
+
+</AccordionGroup>
+
+## Global flags
+
+All commands support a standard set of global flags:
+
+| Flag | Description |
+|---|---|
+| `--help` | Show help for any command |
+| `--json` | Output as structured JSON |
+| `--profile` | Use a named config profile |
+| `--workspace` | Target a specific workspace |
+| `--project` | Target a specific project |
+| `--env` | Target a specific environment |
+| `--verbose` | Show detailed output |
+
+```bash
+scrums projects list --json
+scrums deploy create --env production --verbose
+```
+
+## Output
+
+By default, output is optimized for humans — compact, readable, and table or list based where appropriate.
+
+<CodeGroup>
+
+```bash Human output
+scrums projects list
+
+  ID          NAME              STATUS
+  proj-001    payments-api      active
+  proj-002    auth-service      active
+  proj-003    data-pipeline     inactive
+```
+
+```bash JSON output
+scrums projects list --json
+
+[
+  { "id": "proj-001", "name": "payments-api", "status": "active" },
+  { "id": "proj-002", "name": "auth-service", "status": "active" },
+  { "id": "proj-003", "name": "data-pipeline", "status": "inactive" }
+]
+```
+
+</CodeGroup>
+
+## Example workflows
+
+<Steps>
+  <Step title="Login and initialize">
+    ```bash
+    scrums auth login
+    scrums init
+    ```
+  </Step>
+
+  <Step title="Check project status">
+    ```bash
+    scrums projects list
+    scrums status
+    ```
+  </Step>
+
+  <Step title="Deploy and tail logs">
+    ```bash
+    scrums deploy create --env production
+    scrums logs tail
+    ```
+  </Step>
+
+  <Step title="Run an agent">
+    ```bash
+    scrums agents run sync-org-codes
+    ```
+  </Step>
+</Steps>
+
+## Planned v1 scope
+
+The initial release will focus on core platform and developer workflows:
+
+<CardGroup cols={2}>
+  <Card title="Included in v1" icon="circle-check">
+    - `auth`
+    - `config`
+    - `init`
+    - `projects`
+    - `env`
+    - `deploy`
+    - `logs`
+    - `status`
+  </Card>
+  <Card title="Post-v1" icon="clock">
+    - `agents`
+    - `api`
+    - `talent`
+    - `integrations`
+    - `marketplace`
+  </Card>
+</CardGroup>
+
+<Note>
+  This page will be updated as the CLI moves from planned to available. Commands will be clearly marked as **planned**, **available**, or **deprecated** as the release progresses.
+</Note>
