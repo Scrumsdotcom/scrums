@@ -1,29 +1,24 @@
 ---
 title: "Scrums.com Entity Graph"
-description: "Machine-readable organization identity, relationships, provenance, and canonical Scrums.com terminology."
+description: "Machine-readable organization identity and relationships for Scrums.com."
 ---
 
 ## Overview
 
-The Scrums.com entity graph provides machine-readable organization data and relationships for search, retrieval, and integration use cases.
+Scrums.com publishes two machine-readable files about the company. Search engines, AI assistants and integrations can use them to identify Scrums.com and its relationships.
 
-<Warning>
-The structured exports are still being verified. Fields containing `VERIFY` are placeholders and must not be treated as confirmed facts.
-</Warning>
+- [Organization entity (entity.json)](https://www.scrums.com/entity.json)
+- [Relationship graph (graph.json)](https://www.scrums.com/graph.json)
 
-## Exports
+`entity.json` is a Schema.org `Organization` record. It contains the company identity, offers, locations, contact points, public profiles and the product taxonomy.
 
-- [Organization entity JSON](/company/entity.json)
-- [Relationship graph JSON](/company/graph.json)
+`graph.json` contains relationships about the company: leadership, founders, key events, semantic triples and certifications.
 
-`entity.json` contains the primary organization record and canonical product taxonomy. `graph.json` contains relationships, semantic triples, provenance, and verification status.
+## Identifiers and URLs
 
-## Canonical URL rules
-
-- Use `https://www.scrums.com` for public website URLs.
-- Use `/catalog` for AI Catalog classes and records.
-- Use `/ai-development/scopes` for delivery scopes.
-- Use `/hire/engineers` for engineer profiles.
-- Use `/docs` for product and API documentation.
-
-Only values marked as verified in the exports should be reused as factual claims.
+- The organization identifier is `https://www.scrums.com/#organization`.
+- Public website URLs use `https://www.scrums.com`.
+- AI Catalog classes and records use `/catalog`.
+- Delivery scopes use `/ai-development/scopes`.
+- Engineer profiles use `/hire/engineers`.
+- Product and API documentation uses `/docs`.

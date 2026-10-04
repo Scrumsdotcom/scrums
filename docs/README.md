@@ -10,7 +10,7 @@ This folder is the source of the Scrums.com documentation at https://www.scrums.
 
 ## Entity facts
 
-`company/entity.json` and `company/graph.json` are the canonical, machine-readable facts about Scrums.com. They are served at `/docs/company/entity.json` and `/docs/company/graph.json`. The Scrums.com team maintains them. Do not change them in a pull request; open an issue instead.
+The machine-readable facts about Scrums.com are served from the website root: `https://www.scrums.com/entity.json` and `https://www.scrums.com/graph.json`. The page `company/entity-graph.mdx` explains them.
 
 ## Contributing
 
