@@ -14,7 +14,7 @@ This folder is the Mintlify source for the Scrums.com documentation at https://w
 
 1. **`docs.json` is the only navigation source.** Register every new page there. Do not auto-generate, reformat, reorder or "tidy" it. Change it only for intentional navigation work.
 2. **Frontmatter.** Every page uses `title` and `description` frontmatter.
-3. **Entity facts.** `company/entity.json` and `company/graph.json` are canonical entity facts, governed by the Scrums.com digital constitution. They are served at `/docs/company/entity.json` and `/docs/company/graph.json`. The Scrums.com team maintains them. Do not change them in a pull request.
+3. **Entity facts.** The machine-readable entity files are served from the website root: `https://www.scrums.com/entity.json` and `https://www.scrums.com/graph.json`. They are not in this repository. `company/entity-graph.mdx` explains them and links to them.
 4. **Drafts.** Put unpublished pages under `drafts/` or name them `*.draft.mdx`. `.mintignore` keeps them out of the build.
 5. **Test before you push.** When you add a page or change `docs.json`, run `mint dev` and `mint broken-links` in this folder. Do not push a change that breaks the Mintlify build.
 6. **No secrets.** Example keys and tokens use obvious placeholders, for example `sk_live_xxxxxxxxxxxxxxxx`. This repository is public.
