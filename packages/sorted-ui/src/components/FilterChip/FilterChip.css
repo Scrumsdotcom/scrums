@@ -1,0 +1,65 @@
+@import "../../tokens/tokens.css";
+
+.ds-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--fs-body);
+  line-height: 1;
+  padding: var(--space-8) var(--space-12);
+  border: 1px solid var(--hair-3);
+  border-radius: var(--r);
+  background: var(--paper);
+  color: var(--ink-2);
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color var(--motion), background var(--motion), color var(--motion);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-chip:hover {
+  border-color: var(--hair-4);
+  background: var(--paper-2);
+}
+
+.ds-chip__label {
+  white-space: nowrap;
+}
+
+.ds-chip__x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: var(--fs-body);
+  color: var(--ink-5);
+  transition: color var(--motion);
+}
+
+.ds-chip:hover .ds-chip__x {
+  color: var(--blue);
+}
+
+.ds-chip__count {
+  font-size: var(--fs-micro);
+  color: var(--ink-5);
+  padding-left: var(--space-4);
+}
+
+.ds-chip--active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: var(--on-blue);
+}
+
+.ds-chip--active:hover {
+  background: var(--blue-2);
+  border-color: var(--blue-2);
+}
+
+.ds-chip--active .ds-chip__x,
+.ds-chip--active .ds-chip__count {
+  color: var(--on-blue-soft);
+}

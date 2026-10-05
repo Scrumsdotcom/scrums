@@ -36,6 +36,7 @@ SEOP is the architecture of the Scrums.com platform: one control plane for AI ag
 | Path | Contents |
 |---|---|
 | [`docs/`](docs) | Source of the Scrums.com documentation at [scrums.com/docs](https://www.scrums.com/docs), built with [Mintlify](https://mintlify.com). |
+| [`packages/sorted-ui/`](packages/sorted-ui) | Source of [`@scrums/sorted-ui`](https://www.npmjs.com/package/@scrums/sorted-ui), the Sorted UI React components and design tokens. |
 
 ## Documentation
 
@@ -62,4 +63,4 @@ Please practice responsible disclosure. Do not report security issues in public 
 
 ## License
 
-[Apache 2.0](LICENSE)
+[Apache 2.0](LICENSE), except [`packages/sorted-ui/`](packages/sorted-ui), which is [MIT](packages/sorted-ui/LICENSE). The Scrums.com name and logo are trademarks and are not licensed. See [`packages/sorted-ui/TRADEMARKS.md`](packages/sorted-ui/TRADEMARKS.md).

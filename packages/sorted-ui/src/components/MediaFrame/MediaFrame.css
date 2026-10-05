@@ -1,0 +1,47 @@
+@import "../../tokens/tokens.css";
+
+.ds-mediaframe { margin: 0; }
+.ds-mediaframe__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--ink-1);
+  border-radius: var(--r);
+  background: #0a0d14;
+  overflow: hidden;
+}
+.ds-mediaframe__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+  object-fit: cover;
+}
+.ds-mediaframe__chip {
+  position: absolute;
+  left: 12px;
+  bottom: 11px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-7);
+  background: rgba(10, 13, 20, 0.66);
+  border: 1px solid #232a39;
+  border-radius: var(--r);
+  padding: 3px 9px;
+  pointer-events: none;
+}
+.ds-mediaframe__play {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4px 0 4px 6px;
+  border-color: transparent transparent transparent var(--ink-7);
+}

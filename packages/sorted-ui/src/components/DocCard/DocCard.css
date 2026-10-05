@@ -1,0 +1,82 @@
+@import "../../tokens/tokens.css";
+
+.ds-doccard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-20) var(--space-16) var(--space-16);
+  min-height: 158px;
+  background: var(--paper);
+  font-family: var(--font-mono);
+  color: var(--ink-1);
+  text-decoration: none;
+  transition: background var(--motion);
+}
+.ds-doccard:hover { background: var(--blue-soft); text-decoration: none; }
+.ds-doccard--hl { border-top: 2px solid var(--blue); }
+
+.ds-doccard__top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+.ds-doccard__idx {
+  font-size: var(--fs-micro);
+  letter-spacing: 0.06em;
+  color: var(--ink-5);
+  font-variant-numeric: tabular-nums;
+}
+.ds-doccard__badge {
+  font-size: 9px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--blue-ink);
+  border: 1px solid var(--blue-hi);
+  border-radius: var(--r);
+  padding: 2px 7px;
+}
+.ds-doccard__diamond {
+  width: 7px;
+  height: 7px;
+  background: var(--blue);
+  transform: rotate(45deg);
+  margin-left: auto;
+  flex: none;
+}
+
+.ds-doccard__title {
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink-1);
+}
+.ds-doccard__desc {
+  font-family: var(--font-prose);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-4);
+  flex: 1;
+}
+
+.ds-doccard__foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-size: var(--fs-meta);
+  color: var(--ink-5);
+  border-top: 1px solid var(--hair-1);
+  padding-top: var(--space-12);
+  font-variant-numeric: tabular-nums;
+}
+.ds-doccard__dot { color: var(--hair-3); }
+.ds-doccard__read {
+  margin-left: auto;
+  color: var(--blue-ink);
+  font-weight: 500;
+}
+.ds-doccard:hover .ds-doccard__read { color: var(--blue); }
+.ds-doccard__arrow {
+  display: inline-block;
+  transition: transform var(--motion);
+}
+.ds-doccard:hover .ds-doccard__arrow { transform: translateX(3px); }

@@ -1,0 +1,77 @@
+@import "../../tokens/tokens.css";
+
+.ds-captile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  border: 1px solid var(--hair-2);
+  border-radius: var(--r);
+  background: var(--paper);
+  font-family: var(--font-mono);
+  color: var(--ink-1);
+  text-decoration: none;
+  transition: border-color var(--motion), background var(--motion);
+}
+
+.ds-captile:hover {
+  border-color: var(--blue);
+  background: var(--paper-2);
+}
+
+.ds-captile:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.ds-captile__arrow {
+  position: absolute;
+  top: var(--space-12);
+  right: var(--space-16);
+  color: var(--ink-6);
+}
+
+.ds-captile__glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--hair-3);
+  border-radius: var(--r);
+  background: var(--paper-2);
+}
+
+.ds-captile__glyph-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--blue);
+}
+
+.ds-captile__name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink-1);
+}
+
+.ds-captile__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  font-size: var(--fs-meta);
+  color: var(--ink-5);
+}
+
+.ds-captile__count-num {
+  font-weight: 600;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-captile__from {
+  color: var(--ink-5);
+  font-variant-numeric: tabular-nums;
+}

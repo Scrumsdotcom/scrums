@@ -1,0 +1,57 @@
+@import "../../tokens/tokens.css";
+
+.ds-painpoint {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: var(--space-20);
+  background: var(--paper);
+  border: 1px solid var(--hair-2);
+  border-radius: var(--r);
+  font-family: var(--font-prose);
+  height: 100%;
+}
+.ds-painpoint__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ds-painpoint__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--warn);
+  background: var(--paper-2);
+  border-radius: var(--r);
+}
+.ds-painpoint__diamond {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  background: var(--warn);
+  transform: rotate(45deg);
+}
+.ds-painpoint__idx {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: var(--tracking-label);
+  color: var(--ink-7);
+}
+.ds-painpoint__title {
+  font-family: var(--font-prose);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--ink-1);
+  margin: 0;
+}
+.ds-painpoint__desc {
+  font-family: var(--font-prose);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-4);
+  margin: 0;
+}

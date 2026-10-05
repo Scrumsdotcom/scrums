@@ -1,0 +1,195 @@
+@import "../../tokens/tokens.css";
+
+.ds-opcard {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-20);
+  border: var(--border-hairline-2);
+  border-radius: var(--r);
+  background: var(--paper);
+  font-family: var(--font-mono);
+  color: var(--ink-1);
+  text-decoration: none;
+  transition: background var(--motion), border-color var(--motion);
+}
+
+.ds-opcard:hover {
+  background: var(--paper-2);
+  border-color: var(--hair-4);
+}
+
+.ds-opcard:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.ds-opcard__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+.ds-opcard__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-6);
+  flex: none;
+}
+
+.ds-opcard__dot--live,
+.ds-opcard__dot--available,
+.ds-opcard__dot--operational,
+.ds-opcard__dot--linked {
+  background: var(--live);
+}
+.ds-opcard__dot--accent {
+  background: var(--blue);
+}
+.ds-opcard__dot--idle {
+  background: var(--ink-6);
+}
+.ds-opcard__dot--busy {
+  background: var(--warn);
+}
+
+.ds-opcard__status {
+  color: var(--ink-4);
+}
+
+.ds-opcard__code {
+  margin-left: auto;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-opcard__title {
+  margin: var(--space-12) 0 0;
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink-1);
+}
+
+.ds-opcard__summary {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-prose);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-4);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ds-opcard__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+}
+
+.ds-opcard__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-8);
+  border: 1px solid var(--hair-3);
+  border-radius: var(--r);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+.ds-opcard__telemetry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-20);
+  margin-top: var(--space-16);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-opcard__stat-label {
+  margin-right: var(--space-4);
+}
+
+.ds-opcard__stat-value {
+  color: var(--ink-2);
+}
+
+.ds-opcard__meter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+}
+
+.ds-opcard__meter-track {
+  display: inline-flex;
+  gap: var(--space-2);
+  padding: 2px;
+  background: var(--paper-2);
+  border: 1px solid var(--hair-3);
+  border-radius: var(--r);
+}
+
+.ds-opcard__block {
+  width: 6px;
+  height: 12px;
+  background: var(--hair-3);
+  border-radius: 1px;
+}
+
+.ds-opcard__block--on {
+  background: var(--blue);
+}
+
+.ds-opcard__meter-value {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--blue-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-opcard__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-16);
+  margin-top: var(--space-20);
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--hair-2);
+}
+
+.ds-opcard__price-lead,
+.ds-opcard__provider {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+.ds-opcard__price-value {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-opcard__action {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--blue);
+  white-space: nowrap;
+}

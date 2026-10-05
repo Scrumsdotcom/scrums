@@ -1,0 +1,82 @@
+@import "../../tokens/tokens.css";
+
+.ds-pricepanel {
+  border: 1px solid var(--hair-3);
+  border-radius: var(--r);
+  background: var(--paper);
+  font-family: var(--font-mono);
+  color: var(--ink-1);
+  overflow: hidden;
+}
+
+.ds-pricepanel__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-8) var(--space-20);
+  background: var(--ink-1);
+  color: var(--paper);
+  border-bottom: 1px solid var(--hair-3);
+}
+
+.ds-pricepanel__state {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-size: var(--fs-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.ds-pricepanel__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--live);
+  flex: none;
+}
+
+.ds-pricepanel__code {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--blue-hi);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-pricepanel__body {
+  padding: var(--space-20);
+}
+
+.ds-pricepanel__note {
+  display: block;
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+.ds-pricepanel__price {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.05;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-pricepanel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  margin-top: var(--space-16);
+}
+
+.ds-pricepanel__fine {
+  margin: var(--space-12) 0 0;
+  font-family: var(--font-prose);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-5);
+}
