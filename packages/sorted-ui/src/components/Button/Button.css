@@ -1,0 +1,66 @@
+@import "../../tokens/tokens.css";
+
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--fs-body);
+  padding: var(--space-12) var(--space-24);
+  border: 0;
+  border-radius: var(--r);
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: background var(--motion), border-color var(--motion), color var(--motion),
+    transform 120ms ease;
+}
+
+.ds-btn:active {
+  transform: translateY(1px);
+}
+
+.ds-btn:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.ds-btn--primary {
+  background: var(--blue);
+  color: var(--on-blue);
+}
+
+.ds-btn--primary:hover {
+  background: var(--blue-2);
+}
+
+.ds-btn--secondary {
+  background: var(--paper);
+  color: var(--blue);
+  border: var(--border-hairline-2);
+}
+
+.ds-btn--secondary:hover {
+  border-color: var(--ink-3);
+  color: var(--ink-1);
+}
+
+.ds-btn--ghost {
+  background: transparent;
+  color: var(--blue);
+}
+
+.ds-btn__icon {
+  display: inline-block;
+  width: var(--space-16);
+  height: var(--space-16);
+  background: currentColor;
+  border-radius: var(--r);
+}
+
+.ds-btn__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}

@@ -1,0 +1,48 @@
+@import "../../tokens/tokens.css";
+
+.ds-tagrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-mono);
+}
+
+.ds-tagrow__label {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+.ds-tagrow--pill .ds-tagrow__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-8);
+  border: 1px solid var(--hair-3);
+  border-radius: var(--r);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  text-decoration: none;
+  transition: border-color var(--motion), color var(--motion);
+}
+
+.ds-tagrow--pill a.ds-tagrow__tag:hover {
+  border-color: var(--hair-4);
+  color: var(--blue-ink);
+}
+
+.ds-tagrow--link {
+  gap: var(--space-4) var(--space-16);
+}
+
+.ds-tagrow--link .ds-tagrow__tag {
+  font-size: var(--fs-meta);
+  color: var(--blue-ink);
+  text-decoration: none;
+}
+
+.ds-tagrow--link a.ds-tagrow__tag:hover {
+  text-decoration: underline;
+}

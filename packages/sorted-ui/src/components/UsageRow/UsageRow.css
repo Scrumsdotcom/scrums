@@ -1,0 +1,77 @@
+@import "../../tokens/tokens.css";
+
+.ds-usagerow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  min-height: 150px;
+  padding: var(--space-16);
+  background: var(--paper);
+  border: 1px solid var(--hair-2);
+  border-radius: var(--r);
+  font-family: var(--font-mono);
+  color: var(--ink-1);
+}
+.ds-usagerow__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  align-self: flex-start;
+  font-size: 9px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--blue-ink);
+  border: 1px solid var(--blue-hi);
+  background: var(--blue-soft);
+  border-radius: var(--r);
+  padding: 3px 8px;
+}
+.ds-usagerow__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+  flex: none;
+}
+.ds-usagerow__name {
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: var(--space-4) 0 0;
+  color: var(--ink-1);
+}
+.ds-usagerow__blurb {
+  font-family: var(--font-prose);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-5);
+  margin: 0;
+}
+.ds-usagerow__foot {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-top: auto;
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--hair-2);
+}
+.ds-usagerow__from {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-6);
+  margin-right: var(--space-4);
+}
+.ds-usagerow__price {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+.ds-usagerow__unit {
+  font-size: 11px;
+  color: var(--ink-6);
+}

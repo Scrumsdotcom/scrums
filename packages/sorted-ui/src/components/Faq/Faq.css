@@ -1,0 +1,111 @@
+@import "../../tokens/tokens.css";
+
+.ds-faq {
+  font-family: var(--font-mono);
+  background: var(--bg);
+  padding: var(--space-56) var(--space-40);
+  color: var(--ink-1);
+}
+
+.ds-faq__head {
+  max-width: 880px;
+  margin: 0 auto var(--space-24);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-16);
+  border-bottom: var(--border-hairline);
+  padding-bottom: var(--space-12);
+}
+
+.ds-faq__index {
+  font-size: var(--fs-meta);
+  color: var(--blue-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-faq__title {
+  margin: 0;
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+}
+
+.ds-faq__tail {
+  margin-left: auto;
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+.ds-faq__list {
+  max-width: 880px;
+  margin: 0 auto;
+  border-top: var(--border-hairline);
+}
+
+.ds-faq__item {
+  border-bottom: var(--border-hairline);
+}
+
+.ds-faq__q {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  padding: var(--space-20) var(--space-4);
+  cursor: pointer;
+  list-style: none;
+  font-size: 15px;
+  color: var(--ink-1);
+}
+
+.ds-faq__q::-webkit-details-marker {
+  display: none;
+}
+
+.ds-faq__q:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.ds-faq__idx {
+  font-size: var(--fs-micro);
+  color: var(--blue-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-faq__q-text {
+  flex: 1;
+}
+
+.ds-faq__caret {
+  color: var(--ink-5);
+  transition: transform var(--motion), color var(--motion);
+}
+
+.ds-faq__item[open] .ds-faq__caret {
+  transform: rotate(90deg);
+  color: var(--blue);
+}
+
+.ds-faq__a {
+  padding: 0 var(--space-4) var(--space-20) calc(var(--fs-micro) + var(--space-16) + var(--space-4));
+}
+
+.ds-faq__a p {
+  margin: 0;
+  max-width: 64ch;
+  font-family: var(--font-prose);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-4);
+}
+
+@media (max-width: 699px) {
+  .ds-faq {
+    padding: var(--space-32) var(--space-24);
+  }
+  .ds-faq__a {
+    padding-left: var(--space-4);
+  }
+}

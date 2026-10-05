@@ -1,0 +1,46 @@
+@import "../../tokens/tokens.css";
+
+.ds-demobenefits {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ds-demobenefits__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.ds-demobenefits__check {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--blue-hi);
+  border-radius: var(--r);
+  background: var(--blue-soft);
+  color: var(--blue-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.ds-demobenefits__h {
+  font-family: var(--font-prose);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink-1);
+}
+
+.ds-demobenefits__p {
+  font-family: var(--font-prose);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-5);
+  margin-top: 2px;
+}

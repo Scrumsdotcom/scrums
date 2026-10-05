@@ -1,0 +1,123 @@
+@import "../../tokens/tokens.css";
+
+.ds-integ {
+  font-family: var(--font-mono);
+  background: var(--bg);
+  padding: var(--space-80) var(--space-40);
+}
+
+.ds-integ__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ds-integ__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin-bottom: var(--space-24);
+  padding-bottom: var(--space-12);
+  border-bottom: var(--border-hairline-2);
+}
+
+.ds-integ__eyebrow {
+  font-size: var(--fs-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--blue-ink);
+}
+
+.ds-integ__summary {
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-integ__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--hair-3);
+  border: var(--border-hairline-2);
+}
+
+.ds-integ__tile {
+  background: var(--bg);
+  padding: var(--space-20);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  text-decoration: none;
+  transition: background var(--motion);
+}
+
+a.ds-integ__tile:hover {
+  background: var(--paper-2);
+}
+
+.ds-integ__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.ds-integ__logo {
+  height: 20px;
+  width: auto;
+  max-width: 60%;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.ds-integ__name {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-1);
+}
+
+.ds-integ__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ok);
+}
+
+.ds-integ__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--live);
+}
+
+.ds-integ__meta {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1100px) {
+  .ds-integ__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 699px) {
+  .ds-integ {
+    padding: var(--space-56) var(--space-24);
+  }
+  .ds-integ__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

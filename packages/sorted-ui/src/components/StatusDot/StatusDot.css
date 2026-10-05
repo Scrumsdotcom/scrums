@@ -1,0 +1,72 @@
+@import "../../tokens/tokens.css";
+
+.ds-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.ds-status__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-6);
+  flex: none;
+}
+
+.ds-status__label {
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-status--live,
+.ds-status--available,
+.ds-status--operational,
+.ds-status--linked {
+  color: var(--ok);
+}
+.ds-status--live .ds-status__dot,
+.ds-status--available .ds-status__dot,
+.ds-status--operational .ds-status__dot,
+.ds-status--linked .ds-status__dot {
+  background: var(--live);
+}
+
+.ds-status--accent {
+  color: var(--blue-ink);
+}
+.ds-status--accent .ds-status__dot {
+  background: var(--blue);
+}
+
+.ds-status--idle {
+  color: var(--ink-5);
+}
+.ds-status--idle .ds-status__dot {
+  background: var(--ink-6);
+}
+
+.ds-status--busy {
+  color: var(--warn);
+}
+.ds-status--busy .ds-status__dot {
+  background: var(--warn);
+}
+
+.ds-status__dot--pulse {
+  animation: ds-status-pulse 1600ms ease-in-out infinite;
+}
+
+@keyframes ds-status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}

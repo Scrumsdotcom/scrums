@@ -1,0 +1,36 @@
+@import "../../tokens/tokens.css";
+
+.ds-loadmore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--paper);
+  border: 1px dashed var(--hair-3);
+  border-radius: var(--r);
+  padding: var(--space-16);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color var(--motion), color var(--motion), background var(--motion);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-loadmore:hover {
+  border-color: var(--blue);
+  color: var(--blue-ink);
+  background: var(--blue-soft);
+}
+
+.ds-loadmore__caret {
+  transition: transform var(--motion);
+}
+
+.ds-loadmore:hover .ds-loadmore__caret {
+  transform: translateY(2px);
+}

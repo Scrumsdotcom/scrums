@@ -1,0 +1,42 @@
+@import "../../tokens/tokens.css";
+
+.ds-comprow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  background: var(--paper);
+  font-family: var(--font-mono);
+  color: var(--ink-1);
+  text-decoration: none;
+  transition: background var(--motion);
+}
+.ds-comprow:hover { background: var(--blue-soft); text-decoration: none; }
+.ds-comprow--static { cursor: default; }
+.ds-comprow--static:hover { background: var(--paper); }
+
+.ds-comprow__diamond {
+  width: 9px;
+  height: 9px;
+  background: var(--live);
+  transform: rotate(45deg);
+  flex: none;
+}
+.ds-comprow__body { flex: 1; }
+.ds-comprow__label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-1);
+}
+.ds-comprow__sub {
+  display: block;
+  font-family: var(--font-prose);
+  font-size: 11.5px;
+  color: var(--ink-5);
+  margin-top: 1px;
+}
+.ds-comprow__arrow {
+  color: var(--ink-6);
+  font-size: 13px;
+}

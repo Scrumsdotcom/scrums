@@ -1,0 +1,192 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "_meta": {
+    "version": "alpha",
+    "name": "scrums-ds",
+    "description": "Sorted UI, the Scrums.com console/field-ops design system. This file holds structure and rules; colours/typography/spacing values come from design-tokens.json v1.1. Theme variants (light/dark/blue) share these same token names — only values swap.",
+    "themePointer": "theme.$modes = [light, dark, blue]",
+    "sourceOfTruth": "code repository (React components + JSON tokens) — Figma is experimental iteration only"
+  },
+
+  "foundations": {
+    "colors": {
+      "_note": "Full palette lives in design-tokens.json. Structure only: one accent, one status colour, a 7-step ink ramp, a 4-step hair ramp, per-theme surfaces, plus three CONSTANT surfaces that never re-theme (notif/nav/footer).",
+      "accent": { "blue": "{primitive.blue.500}", "_rule": "blue is the ONLY accent — buttons, active nav, links, key figures" },
+      "status": { "live": "{primitive.green.live}", "_rule": "green appears ONLY on the live-status dot" },
+      "instrumentation": { "tokens": ["instrument-bg", "instrument-panel", "instrument-line", "instrument-text", "instrument-text-dim", "instrument-accent", "instrument-good", "instrument-warn", "instrument-crit"], "_rule": "terminal/telemetry surfaces (command and terminal templates, hero HUD chrome) alias the primary-blue scale (950/900/700/400/200) plus the shared status/warning/error scales — never a hardcoded hex — so terminal surfaces can't drift off the brand shade" },
+      "ink": ["ink-1", "ink-2", "ink-3", "ink-4", "ink-5", "ink-6", "ink-7"],
+      "hair": ["hair-1", "hair-2", "hair-3", "hair-4"],
+      "constantSurfaces": ["notif", "nav", "footer", "hero"],
+      "_constantRule": "constant surfaces are defined once in :root and never repeated inside a theme override — that's what keeps nav/notif/footer fixed across light/dark/blue"
+    },
+
+    "typography": {
+      "_note": "Role-based families, each a numbered/named scale: heading-*, label-*, data-*, ui-*, body-*. data-* is the family for tabular telemetry.",
+      "families": {
+        "heading-*": { "tokens": ["hero", "h1", "h2", "h3", "h4"], "purpose": "titles, section headers — Plex Mono 600, tightens letter-spacing as size increases" },
+        "label-*": { "tokens": ["default", "small", "tiny"], "purpose": "uppercase tracked UI labels, coordinates, addresses" },
+        "data-*": { "tokens": ["hero", "large", "medium", "small", "tiny"], "purpose": "telemetry/metrics — always font-variant-numeric: tabular-nums" },
+        "ui-*": { "tokens": ["button", "button-sm", "nav", "nav-index", "tag"], "purpose": "interface controls" },
+        "body-*": { "tokens": ["large", "default", "small", "tiny"], "purpose": "long-form prose — the ONLY place Plex Sans is used" }
+      },
+      "workhorse": { "prose": "body-default (15px/1.6, a11y floor)", "label": "label-default (10px, 0.08em)" },
+      "monoVsSans": "The base face is MONO (~95% of all text), with body-* as the one Plex Sans exception for prose. Most systems are sans-first with mono for code; this one is mono-first, so an agent must not default to sans.",
+      "example": {
+        "heading-h1": { "fontFamily": "{primitive.font.mono}", "fontWeight": 600, "fontSize": "48px", "fontSizeMobile": "36px", "lineHeight": "1.05", "letterSpacing": "-0.05em" },
+        "body-default": { "fontFamily": "{primitive.font.sans}", "fontWeight": 400, "fontSize": "15px", "lineHeight": "1.6", "note": "a11y floor — never below 15px for prose" }
+      }
+    },
+
+    "spacing": {
+      "base": "4px",
+      "scale": { "2": "2px", "4": "4px", "8": "8px", "12": "12px", "16": "16px", "20": "20px", "24": "24px", "32": "32px", "40": "40px", "56": "56px", "80": "80px" },
+      "_gaps": "Indices skip deliberately (6,10,14,18-19,22...) — reserved so a value can be inserted later without renumbering.",
+      "banned": [18, 22, 28, 36, 48, 64],
+      "rhythm": {
+        "tight": "inside a group (space-4 / space-8)",
+        "medium": "between groups (space-16 / space-24)",
+        "loose": "between sections (space-40 / space-80)"
+      },
+      "_rule": "gridline gaps (the 1px shared border between compartments) are structure, not spacing — never drawn from this scale"
+    },
+
+    "rounded": {
+      "_note": "A deliberate 2-value enum — radius caps at 3px everywhere, so there is no size-based radius ladder (no sm/md/lg/full).",
+      "none": "0px",
+      "default": "3px",
+      "_rule": "3px is the MAX radius anywhere. Never exceed it. No pills (rounded-full does not exist in this system — badges/tags are square, not pill-shaped)."
+    },
+
+    "materials": {
+      "_note": "A Material fuses radius and elevation into one property — 3 tiers only, because radius never varies (always {rounded.default}) and elevation is shadow-free. The structural RULES below still apply even though the value ladder is shorter.",
+      "material-surface": { "radius": "{rounded.default}", "border": "{hair-2}", "fill": "{paper}", "accentEdge": "none", "usage": "resting compartments — cards, table cells, form fields" },
+      "material-elevated": { "radius": "{rounded.default}", "border": "{hair-4}", "fill": "{paper}/{paper-2}", "accentEdge": "2px {blue} top edge", "usage": "menus, modals, dropdowns — ONE tier covers all of these; there are no separate menu/modal/fullscreen tiers" },
+      "material-overlay": { "scrim": "rgba(ink-1, .40) light / rgba(ink-1, .55) dark", "usage": "backdrop behind an elevated surface (modal, drawer)" },
+      "structuralRules": [
+        "One property, not two — a component declares material=\"elevated\", never sets border-width and accent-edge separately.",
+        "No stacking — two Materials never nest; a child needing more lift becomes its own Material, not a layered one.",
+        "Decorative, not semantic — role=\"dialog\"/role=\"tooltip\" is still set independently; Material carries zero ARIA meaning.",
+        "Lowest-tier-that-works wins — reach for material-surface before material-elevated."
+      ]
+    },
+
+    "grid": {
+      "_note": "Grid is not an opt-in component: the gridline construction IS the default compartment method. The grid is built with gridlines, not gaps.",
+      "technique": "gap-as-gridline — 1px gap over a {hair-2}-coloured parent, cells filled {paper}. Adjacent compartments share a single hairline; zero visual gaps, no floating cards, no radius on the shared edge.",
+      "breakpoints": { "mobile-max": "699px", "tablet-max": "1099px", "desktop-min": "1100px", "content-max": "1340px" },
+      "structuralRules": [
+        "Columns/rows are set explicitly at all three breakpoints — no implicit fallback.",
+        "Reserve visible-gridline construction for compartments meant to read as an instrument panel; plain n-column content (card lists) can use an invisible CSS grid instead.",
+        "Never nest more than one level deep — overlapping guides become noise."
+      ]
+    },
+
+    "motion": {
+      "_note": "Governed as decision logic — not a flat list of durations to pick from.",
+      "defaultPosture": "prefer 0ms (no motion) unless it clarifies a state change",
+      "curve": "cubic-bezier(0.2, 0, 0, 1) — the one shared ease for everything",
+      "durationBands": { "fast": "120ms — hover/press state changes", "base": "150ms — default transition (colour, border, transform)", "slow": "200ms — larger surface changes" },
+      "vocabulary": ["carets rotate", "underlines slide", "counters roll", "boot reveals line-by-line"],
+      "banned": ["bounce", "scale-on-hover", "parallax-for-its-own-sake", "glow/bloom"],
+      "a11y": "honour prefers-reduced-motion — all decorative motion (radar sweep, boot sequence) must have a static fallback"
+    }
+  },
+
+  "assets": {
+    "_note": "The literal files an agent should fetch/import, never regenerate — kept as a separate top-level peer to foundations.",
+    "brandAssets": { "logoMark": "SCRUMS.COM wordmark + diamond glyph", "usage": "use the official logo files only — never redraw, recolour or re-letter the mark; brand guidelines outrank this file on conflict" },
+    "typeface": {
+      "mono": { "family": "IBM Plex Mono", "weights": [300, 400, 500, 600, 700], "source": "Google Fonts (static weights — no variable-font axis published for this family)", "role": "primary — ~95% of all text", "_note": "expanded from [400,500,600] — light(300)/bold(700) added so weight, not size, can carry legibility and hierarchy on high-impact brand layouts. A wght@300..700 variable-range request was tried first and silently dropped Mono from the Google Fonts response entirely (no variable axis exists for this family) — reverted to the explicit static weight list." },
+      "sans": { "family": "IBM Plex Sans", "weights": [400, 500], "source": "Google Fonts", "role": "long-form prose only" }
+    },
+    "icons": {
+      "library": "Untitled UI",
+      "package": "@untitledui/icons",
+      "style": "Line — 24x24 viewBox, single-weight outline, no fills, stroke-width 2, round linecap/linejoin",
+      "_rule": "Hard rule: every icon anywhere in the system is Untitled UI. No hand-drawn, redrawn, or approximated icons — import the real asset/component from @untitledui/icons rather than recreating its path data."
+    }
+  },
+
+  "components": {
+    "_note": "Every variant is a flat object of REFERENCES, not raw styling — the mechanism that makes this a system rather than a style guide.",
+    "example": {
+      "button-primary": {
+        "backgroundColor": "{colors.accent.blue}",
+        "textColor": "#fff",
+        "typography": "{typography.ui-button}",
+        "rounded": "{rounded.default}",
+        "padding": "10px 18px"
+      }
+    },
+    "axes": {
+      "emphasis": { "variants": ["primary", "secondary"], "_rule": "siblings sharing typography + radius + height; differ only in fill/border treatment. (2 emphasis tiers today — tertiary and error are a documented gap.)" },
+      "size": { "variants": ["default", "-sm"], "_rule": "default is unsuffixed — the unlabeled variant is always the default" },
+      "state": { "progression": "default → hover (--blue-2) → active (translateY(1px)) → disabled (opacity .45)", "_rule": "states are a fixed recipe applied once per component family, not hand-picked per instance" }
+    },
+    "universalStates": {
+      "disabled": "opacity: 0.45, cursor: not-allowed — fixed recipe, no per-component override",
+      "focusVisible": "2px {blue} outline, offset 2px — never removed, never replaced with an outline-color-only change"
+    }
+  },
+
+  "componentInventory": {
+    "_note": "The real, live inventory from @scrums/sorted-ui (69 components across 14 groups) — grouped exactly as the library's own gallery groups them, not re-bucketed into a generic UI-kit taxonomy.",
+    "chrome": { "count": 4, "components": ["NavBar", "NotificationBar", "Breadcrumb", "Footer"] },
+    "sections": { "count": 15, "components": ["Hero", "Stats", "FeatureCards", "Faq", "Pricing", "Testimonials", "LogoStrip", "ProcessTimeline", "CapabilityMatrix", "ComparisonTable", "CaseStudyGrid", "IntegrationsGrid", "BlogList", "ContactForm", "RelatedArticles"] },
+    "content": { "count": 2, "components": ["ContentBody", "ArticleHeader"] },
+    "cta": { "count": 2, "components": ["CtaCentered", "CtaCommandStrip"] },
+    "catalogTelemetry": { "count": 14, "components": ["OperatorResultCard", "PrimitiveSelectorCard", "TelemetryTable", "StatStrip", "SegmentedMeter", "StatusDot", "SectionLabel", "CommitRail", "IncludedList", "FacetGroup", "FilterChip", "FilterDrawer", "SortControl", "LoadMore"] },
+    "catalogItem": { "count": 7, "components": ["CommandHero", "AtAGlance", "PricePanel", "SpecList", "ReviewScore", "TagRow", "CapabilityTile"] },
+    "partners": { "count": 1, "components": ["PartnerCard"] },
+    "rewards": { "count": 5, "components": ["RewardCard", "RewardOfferCard", "BenefitCard", "CtaSplit", "MediaFrame"] },
+    "feed": { "count": 1, "components": ["ResourceCard"] },
+    "legal": { "count": 3, "components": ["DocCard", "ComplianceRow", "BlueprintGrid"] },
+    "pricing": { "count": 3, "components": ["PlanCard", "BillingToggle", "UsageRow"] },
+    "collections": { "count": 5, "components": ["GuideCard", "PainPointCard", "SolutionCard", "CaseStudyCard", "GlanceBar"] },
+    "mediaPodcast": { "count": 3, "components": ["VideoEmbed", "EpisodeCard", "ListenLinks"] },
+    "formsCta": { "count": 3, "components": ["DemoBenefitList", "BookingForm", "CatalogCta"] },
+    "primitives": { "count": 1, "components": ["Button"] },
+    "structuralObservations": [
+      "Naming favours the concrete: PlanCard / BillingToggle / UsageRow are three distinct components inside 'pricing', not one PlanCard with three modes — containers and content stay separate components.",
+      "Status is inline-only in real production: StatusDot exists, but Feedback and Toast have not shipped as real @scrums/sorted-ui components yet. Target designs for both already exist as gap-doc illustrations on the docs site (see gapCatalog) — the design work is done, only the real build is outstanding.",
+      "No real demo-chrome component exists (Browser/Phone/Window mockups) — but gap-doc illustrations for Browser and Phone already exist on the docs site (see gapCatalog), same status as Feedback/Toast above."
+    ]
+  },
+
+  "gapCatalog": {
+    "_note": "Components documented on the docs site as illustrative target designs (data-kind=\"gap\", dgd-*-styled) — NOT real, live @scrums/sorted-ui components. Distinct from componentInventory above, which is production-only. A component appearing here means the design/spec work exists but the real build doesn't yet; check here before claiming a component 'doesn't exist' anywhere in the system, and check componentInventory before claiming one 'isn't real production yet'.",
+    "count": 74,
+    "foundationsAtoms": { "count": 21, "components": ["Avatar", "Badge", "Checkbox", "Choicebox", "Code", "Input", "Keyboard Input", "Label", "Loading Dots", "Pill", "Progress", "Radio", "Rating", "Separator", "Skeleton", "Slider", "Spinner", "Switch", "Textarea", "Toggle", "Tooltip"] },
+    "componentsMolecules": { "count": 25, "components": ["Alert", "Button Group", "Carousel", "Clearable Input", "Code Block", "Combobox", "Copy Button", "Description", "Dots Menu", "Menu", "MiddleTruncate", "Multi Select", "Note", "Pagination", "Phone", "Relative Time Card", "Search Input", "Show more", "Snippet", "Split Button", "Stepper", "Tabs", "Text With Copy Button", "Theme Switcher", "Toast"] },
+    "sharedComponentsOrganisms": { "count": 23, "components": ["Activity Feed", "Activity Gauges", "Browser", "Calendar", "Card", "Command Menu", "Context Card", "Context Menu", "Empty State", "Entity", "Error", "Error Card", "Fieldset", "File Tree", "File Uploader", "Graph", "Line & Bar Charts", "Modal", "Pie Charts", "Radar Charts", "Rich Text Editor", "Sheet", "Table"] },
+    "marketingComponents": { "count": 5, "components": ["Book", "Feedback", "Navigation Banner", "Newsletter CTA", "Project Banner"] }
+  },
+
+  "voiceAndContent": {
+    "_note": "Written as formulas (template + worked example).",
+    "languageAlways": ["Deploy", "Operate", "Observe", "Route", "Orchestrate", "Scale", "Synchronize", "Instrument", "Coordinate", "Provision", "Resolve", "Mount", "Sync", "Audit", "Monitor"],
+    "languageNever": ["Empower", "Unlock", "Revolutionize", "Transform", "Supercharge", "Elevate", "Magic", "Amazing", "Seamless", "Effortless", "Game-changing", "Cutting-edge", "Next-level"],
+    "narrativeArc": "OBSERVE → UNDERSTAND → ORCHESTRATE → DEPLOY → IMPROVE (never Problem → Solution → Benefits → Features → Pricing)",
+    "copyRegisterFormula": "{system} · {real metric} · {real metric} — e.g. \"TALENT · 400 operators · 21d ramp\", never a narrated sentence like \"Orchestrate talent: vetted engineers embedded in weeks.\"",
+    "eyebrowFormula": "[{SEC-NN}] {CATEGORY} // {SUBJECT} — an address, not a section label like \"Why Scrums.com\"",
+    "signatureDevices": { "floor": 3, "list": ["indexing (/01 /02)", "coordinates (SECTOR 04)", "telemetry (UPTIME 99.999%)", "status (● LIVE)", "region IDs (af-cpt)", "build/version (BUILD 2026.07.01)", "timestamps (08:42:01)", "calibration marks", "grid references"] }
+  },
+
+  "dosAndDonts": [
+    "DO share gridlines between adjacent compartments — zero visual gaps, no floating cards.",
+    "DON'T set border-radius above {rounded.default} (3px) anywhere.",
+    "DO pair every status signal with a dot AND text — never colour alone.",
+    "DON'T use green outside the live-status dot.",
+    "DO use font-variant-numeric: tabular-nums on every data-* value.",
+    "DON'T set body prose below 15px (the documented a11y floor).",
+    "DO honour prefers-reduced-motion on every decorative animation.",
+    "DON'T mix rounded and sharp corners in the same view.",
+    "DO reference tokens ({colors.accent.blue}) in component definitions — never hardcode a hex value inline.",
+    "DON'T stack two Materials on one element — delegate extra lift outward to a new element."
+  ],
+
+  "suggestedShape": {
+    "_note": "The v1 skeleton of this file — colours stay a swappable leaf so light/dark/blue can be re-themed without touching structure.",
+    "order": ["metadata", "foundations.colors", "foundations.typography", "foundations.spacing", "foundations.rounded", "foundations.materials", "foundations.grid", "foundations.motion", "assets", "components", "componentInventory", "voiceAndContent", "dosAndDonts"]
+  }
+}

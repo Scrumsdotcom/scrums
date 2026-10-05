@@ -36,6 +36,7 @@ SEOP is the architecture of the Scrums.com platform: one control plane for AI ag
 | Path | Contents |
 |---|---|
 | [`docs/`](docs) | Source of the Scrums.com documentation at [scrums.com/docs](https://www.scrums.com/docs), built with [Mintlify](https://mintlify.com). |
+| [`packages/sorted-ui/`](packages/sorted-ui) | Source of [`@scrums/sorted-ui`](https://www.npmjs.com/package/@scrums/sorted-ui), the Sorted UI React components and design tokens. |
 
 ## Documentation
 
@@ -49,17 +50,21 @@ cd docs
 mint dev
 ```
 
+## Releases
+
+We publish a release on the 1st of each month. The tag format is `vYYYY.MM`.
+Each release lists the pull requests that merged in that month.
+See [Releases](https://github.com/Scrumsdotcom/scrums/releases).
+For changes to the platform, see the [changelog](https://www.scrums.com/docs/changelog).
+
 ## Contributing
 
 Read [`docs/AGENTS.md`](docs/AGENTS.md) before you change a page. It applies to people and to coding agents. To suggest a change, open an [issue](https://github.com/Scrumsdotcom/scrums/issues) or a pull request.
 
 ## Security
 
-Please practice responsible disclosure. Do not report security issues in public issues. Report them in one of two ways:
-
-- [GitHub private vulnerability reporting](https://github.com/Scrumsdotcom/scrums/security/advisories/new)
-- Email [security@scrums.com](mailto:security@scrums.com)
+To report a vulnerability, see [`SECURITY.md`](.github/SECURITY.md).
 
 ## License
 
-[Apache 2.0](LICENSE)
+[Apache 2.0](LICENSE), except [`packages/sorted-ui/`](packages/sorted-ui), which is [MIT](packages/sorted-ui/LICENSE). The Scrums.com name and logo are trademarks and are not licensed. See [`packages/sorted-ui/TRADEMARKS.md`](packages/sorted-ui/TRADEMARKS.md).

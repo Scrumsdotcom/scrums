@@ -1,0 +1,108 @@
+:host,
+:root {
+
+  --blue: #135bff;
+  --blue-2: #0d46db;
+  --blue-ink: #0b3db0;
+  --blue-hi: #7fa8ff;
+  --blue-soft: #eaf0ff;
+  --live: #3fd08a;
+  --ok: #1e8f5a;
+  --warn: #c77700;
+
+  --ink-1: #10141f;
+  --ink-2: #262c3b;
+  --ink-3: #3c4453;
+  --ink-4: #545c6e;
+  --ink-5: #6c7689;
+  --ink-6: #8791a2;
+  --ink-7: #a2aab8;
+
+  --hair-1: #e9ecf2;
+  --hair-2: #e2e6ee;
+  --hair-3: #cdd3df;
+  --hair-4: #b0b8c6;
+
+  --ink: var(--ink-1);
+  --hair: var(--hair-2);
+
+  --bg: #f7f8fa;
+  --paper: #ffffff;
+  --paper-2: #f3f5f8;
+  --paper-3: #edf0f5;
+
+  --notif: #041745;       --notif-hair: #15347e;
+  --nav: #0d46db;         --nav-ash: #bcd0ff;  --nav-hair: rgba(255, 255, 255, 0.16);
+  --foot: #07256a;        --foot-panel: #0a2d7a; --foot-hair: #1e458f;
+  --foot-ash: #aec2ec;    --foot-dim: #8499c8;
+  --drawer: #071a40;
+
+  --on-blue: #ffffff;
+  --on-blue-soft: #bcd0ff;
+  --on-blue-accent: #9fc2ff;
+
+  --elev-edge: var(--blue);
+  --elev-border: var(--hair-4);
+  --elev-fill: var(--paper);
+  --scrim: rgba(16, 20, 31, 0.4);
+
+  --white-10: rgba(255, 255, 255, 0.1);
+  --white-16: rgba(255, 255, 255, 0.16);
+  --white-28: rgba(255, 255, 255, 0.28);
+
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-prose: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-primary: var(--font-mono);
+  --font-sans: var(--font-primary);
+
+  --fs-micro: 10px;
+  --fs-label: 10.5px;
+  --fs-meta: 11px;
+  --fs-body: 13px;
+  --fs-h3: 20px;
+  --fs-h2: 28px;
+  --fs-h1: clamp(40px, 8vw, 72px);
+  --tracking-label: 0.08em;
+  --tracking-tight: -0.05em;
+  --lh-tight: 0.92;
+
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-56: 56px;
+  --space-80: 80px;
+
+  --r: 3px;
+  --radius-none: 0;
+
+  --border-hairline: 1px solid var(--hair);
+  --border-hairline-2: 1px solid var(--hair-3);
+
+  --motion: 150ms ease;
+}
+
+:host {
+  box-sizing: border-box;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

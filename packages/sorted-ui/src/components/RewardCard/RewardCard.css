@@ -1,0 +1,103 @@
+@import "../../tokens/tokens.css";
+
+.ds-rewardcard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: var(--space-20);
+  min-height: 200px;
+  background: var(--paper);
+  border: 1px solid var(--hair-2);
+  border-radius: var(--r);
+  font-family: var(--font-mono);
+  color: var(--ink-1);
+  text-decoration: none;
+  transition: border-color var(--motion), background var(--motion);
+}
+.ds-rewardcard:hover {
+  border-color: var(--blue-hi);
+  background: var(--blue-soft);
+  text-decoration: none;
+}
+
+.ds-rewardcard__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  min-height: 32px;
+}
+.ds-rewardcard__icon {
+  display: block;
+  max-width: 108px;
+  max-height: 32px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.ds-rewardcard__monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--hair-3);
+  background: var(--paper-2);
+  border-radius: var(--r);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+}
+.ds-rewardcard__chip {
+  font-size: 9px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--blue-ink);
+  border: 1px solid var(--blue-hi);
+  background: var(--blue-soft);
+  border-radius: var(--r);
+  padding: 1px 7px;
+  flex: none;
+}
+
+.ds-rewardcard__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+.ds-rewardcard__name {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink-1);
+  margin: 0;
+}
+.ds-rewardcard__deal {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ok);
+}
+.ds-rewardcard__desc {
+  font-family: var(--font-prose);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-4);
+  margin: 0;
+  flex: 1;
+}
+.ds-rewardcard__go {
+  margin-top: auto;
+  font-size: var(--fs-meta);
+  font-weight: 500;
+  color: var(--blue-ink);
+}
+.ds-rewardcard:hover .ds-rewardcard__go { color: var(--blue); }
+.ds-rewardcard__arrow {
+  display: inline-block;
+  transition: transform var(--motion);
+}
+.ds-rewardcard:hover .ds-rewardcard__arrow { transform: translateX(3px); }

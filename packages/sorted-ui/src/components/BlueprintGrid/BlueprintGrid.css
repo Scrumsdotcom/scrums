@@ -1,0 +1,8 @@
+@import "../../tokens/tokens.css";
+
+.ds-blueprint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}

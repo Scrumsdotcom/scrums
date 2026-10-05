@@ -1,0 +1,54 @@
+{
+  "name": "@scrums/sorted-ui",
+  "version": "0.1.2",
+  "description": "Sorted UI, the Scrums.com design system: React components and design tokens. One blue accent, IBM Plex Mono first, square corners, no shadows, hairline grids.",
+  "license": "MIT",
+  "homepage": "https://www.scrums.com/company/sorted-ui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Scrumsdotcom/scrums.git",
+    "directory": "packages/sorted-ui"
+  },
+  "bugs": {
+    "url": "https://github.com/Scrumsdotcom/scrums/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tokens/tokens.css": "./dist/tokens/tokens.css",
+    "./components/*": "./dist/components/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "TRADEMARKS.md"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "prepack": "node scripts/build.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.6.3"
+  }
+}

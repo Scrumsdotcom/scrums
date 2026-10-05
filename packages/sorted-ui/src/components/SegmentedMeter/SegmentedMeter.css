@@ -1,0 +1,36 @@
+@import "../../tokens/tokens.css";
+
+.ds-meter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-mono);
+}
+
+.ds-meter__track {
+  display: inline-flex;
+  gap: var(--space-2);
+  padding: 2px;
+  background: var(--paper-2);
+  border: 1px solid var(--hair-3);
+  border-radius: var(--r);
+}
+
+.ds-meter__block {
+  width: 6px;
+  height: 12px;
+  background: var(--hair-3);
+  border-radius: 1px;
+}
+
+.ds-meter__block--on {
+  background: var(--blue);
+}
+
+.ds-meter__value {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--blue-ink);
+  font-variant-numeric: tabular-nums;
+}

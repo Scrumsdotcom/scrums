@@ -1,0 +1,124 @@
+@import "../../tokens/tokens.css";
+
+.ds-content {
+  font-family: var(--font-mono);
+  background: var(--bg);
+  padding: var(--space-56) var(--space-40);
+  color: var(--ink-1);
+}
+
+.ds-content__head {
+  max-width: 72ch;
+  margin: 0 auto var(--space-32);
+  border-bottom: var(--border-hairline);
+  padding-bottom: var(--space-16);
+}
+
+.ds-content__eyebrow {
+  display: block;
+  font-size: var(--fs-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--blue-ink);
+  margin-bottom: var(--space-12);
+}
+
+.ds-content__title {
+  margin: 0;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: var(--tracking-tight);
+}
+
+.ds-content__meta {
+  display: block;
+  margin-top: var(--space-12);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-content__body {
+  max-width: 72ch;
+  margin: 0 auto;
+  font-family: var(--font-prose);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink-3);
+}
+
+.ds-content__body > :first-child {
+  margin-top: 0;
+}
+
+.ds-content__body h2,
+.ds-content__body h3 {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink-1);
+  margin: var(--space-32) 0 var(--space-12);
+}
+
+.ds-content__body h2 {
+  font-size: var(--fs-h3);
+}
+
+.ds-content__body h3 {
+  font-size: 17px;
+}
+
+.ds-content__body p {
+  margin: 0 0 var(--space-16);
+}
+
+.ds-content__body ul,
+.ds-content__body ol {
+  margin: 0 0 var(--space-16);
+  padding-left: var(--space-20);
+}
+
+.ds-content__body li {
+  margin-bottom: var(--space-8);
+}
+
+.ds-content__body a {
+  color: var(--blue-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--blue);
+}
+
+.ds-content__body a:hover {
+  color: var(--blue);
+}
+
+.ds-content__body blockquote {
+  margin: var(--space-24) 0;
+  padding-left: var(--space-20);
+  border-left: 2px solid var(--blue);
+  color: var(--ink-2);
+}
+
+.ds-content__body code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--paper-2);
+  border: var(--border-hairline);
+  border-radius: var(--r);
+  padding: 0 var(--space-4);
+}
+
+.ds-content__body img {
+  max-width: 100%;
+  height: auto;
+  border: var(--border-hairline);
+}
+
+@media (max-width: 699px) {
+  .ds-content {
+    padding: var(--space-32) var(--space-24);
+  }
+}

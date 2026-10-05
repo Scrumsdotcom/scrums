@@ -1,0 +1,53 @@
+@import "../../tokens/tokens.css";
+
+.ds-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-12);
+  font-family: var(--font-mono);
+  flex-wrap: wrap;
+}
+
+.ds-sort__label {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+.ds-sort__set {
+  display: inline-flex;
+  gap: 1px;
+  background: var(--hair-3);
+  border: 1px solid var(--hair-3);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.ds-sort__btn {
+  font-family: var(--font-mono);
+  font-size: var(--fs-body);
+  line-height: 1;
+  padding: var(--space-8) var(--space-16);
+  border: 0;
+  background: var(--paper);
+  color: var(--ink-4);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--motion), color var(--motion);
+}
+
+.ds-sort__btn:hover {
+  background: var(--paper-2);
+  color: var(--ink-2);
+}
+
+.ds-sort__btn--on {
+  background: var(--ink-1);
+  color: var(--on-blue);
+}
+
+.ds-sort__btn--on:hover {
+  background: var(--ink-1);
+  color: var(--on-blue);
+}

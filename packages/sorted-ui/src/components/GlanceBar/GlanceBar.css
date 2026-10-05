@@ -1,0 +1,53 @@
+@import "../../tokens/tokens.css";
+
+.ds-glancebar {
+  display: grid;
+  grid-template-columns: repeat(var(--ds-gcols, 4), minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  background: var(--hair-3);
+  border: var(--border-hairline-2);
+  border-radius: var(--r);
+  overflow: hidden;
+  font-family: var(--font-mono);
+}
+
+.ds-glancebar__cell {
+  background: var(--paper);
+  padding: var(--space-20) var(--space-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.ds-glancebar__label {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+.ds-glancebar__value {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1100px) {
+  .ds-glancebar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .ds-glancebar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ds-glancebar__cell {
+    padding: var(--space-16) var(--space-20);
+  }
+}

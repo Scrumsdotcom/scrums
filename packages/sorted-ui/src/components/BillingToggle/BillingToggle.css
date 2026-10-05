@@ -1,0 +1,53 @@
+@import "../../tokens/tokens.css";
+
+.ds-billtoggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  font-family: var(--font-mono);
+}
+.ds-billtoggle__seg {
+  display: inline-flex;
+  border: 1px solid var(--hair-3);
+  border-radius: var(--r);
+  background: var(--paper);
+  overflow: hidden;
+}
+.ds-billtoggle__opt {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink-4);
+  padding: 8px var(--space-16);
+  transition: background var(--motion), color var(--motion);
+}
+.ds-billtoggle__opt + .ds-billtoggle__opt {
+  border-left: 1px solid var(--hair-3);
+}
+.ds-billtoggle__opt:hover {
+  background: var(--paper-2);
+}
+.ds-billtoggle__opt.is-active {
+  background: var(--blue);
+  color: var(--on-blue);
+  font-weight: 600;
+}
+.ds-billtoggle__opt.is-active:hover {
+  background: var(--blue-2);
+}
+.ds-billtoggle__save {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ok);
+  border: 1px solid var(--blue-hi);
+  background: var(--blue-soft);
+  border-radius: var(--r);
+  padding: 4px 9px;
+}

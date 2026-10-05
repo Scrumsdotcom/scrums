@@ -1,0 +1,79 @@
+name: monthly-release
+
+# Publishes a GitHub release each month, with a CalVer tag.
+#
+#   Schedule (06:00 UTC on the 1st): tags the last commit on main from the
+#   previous month as vYYYY.MM. The title is the month, for example "October 2026".
+#   Manual run: tags main as a current-month update, vYYYY.MM.N (N = 1, 2, ...).
+#
+# A run with no new commits since the previous release does not release.
+# The notes are GitHub generated notes, grouped by .github/release.yml.
+
+on:
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monthly-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EVENT: ${{ github.event_name }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Release
+        run: |
+          set -euo pipefail
+          month_start="$(date -u +%Y-%m-01)"
+
+          if [ "$EVENT" = "schedule" ]; then
+            # The previous month: the day before the 1st of this month.
+            last_day="$(date -u -d "$month_start -1 day" +%Y-%m-%d)"
+            tag="v$(date -u -d "$last_day" +%Y.%m)"
+            title="$(date -u -d "$last_day" '+%B %Y')"
+            # The last commit on main before this month started.
+            target="$(git rev-list -1 --before="${month_start}T00:00:00Z" HEAD)"
+            # The previous monthly release (vYYYY.MM, no update suffix).
+            prev="$(git tag --list 'v[0-9][0-9][0-9][0-9].[0-9][0-9]' --sort=-v:refname | grep -vx "$tag" | head -n 1 || true)"
+          else
+            base="v$(date -u +%Y.%m)"
+            n=1
+            while git rev-parse -q --verify "refs/tags/$base.$n" >/dev/null; do n=$((n + 1)); done
+            tag="$base.$n"
+            title="$(date -u '+%B %Y') (update $n)"
+            target="$(git rev-parse HEAD)"
+            # The previous release of any kind.
+            prev="$(git tag --list 'v[0-9]*' --sort=-v:refname | head -n 1 || true)"
+          fi
+
+          if [ -z "$target" ]; then
+            echo "No commit on main before $month_start. Nothing to release."
+            exit 0
+          fi
+          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+            echo "$tag exists. Nothing to release."
+            exit 0
+          fi
+          if [ -n "$prev" ] && [ "$(git rev-list --count "$prev..$target")" = "0" ]; then
+            echo "Nothing merged since $prev. Nothing to release."
+            exit 0
+          fi
+
+          args=(--target "$target" --title "$title" --generate-notes
+                --notes "For changes to the Scrums.com platform, see the [changelog](https://www.scrums.com/docs/changelog).")
+          if [ -n "$prev" ]; then args+=(--notes-start-tag "$prev"); fi
+          echo "Releasing $tag ($title) at $target, notes from ${prev:-the first commit}."
+          gh release create "$tag" "${args[@]}"

@@ -1,0 +1,47 @@
+@import "../../tokens/tokens.css";
+
+.ds-speclist {
+  margin: 0;
+  font-family: var(--font-mono);
+  border-top: 1px solid var(--hair-2);
+}
+
+.ds-speclist__row {
+  border-bottom: 1px solid var(--hair-2);
+}
+
+.ds-speclist__label {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-5);
+}
+
+.ds-speclist__value {
+  margin: 0;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-speclist--row .ds-speclist__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-16);
+  padding: var(--space-12) var(--space-20);
+}
+
+.ds-speclist--row .ds-speclist__value {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  text-align: right;
+}
+
+.ds-speclist--stack .ds-speclist__row {
+  padding: var(--space-16) var(--space-20);
+}
+
+.ds-speclist--stack .ds-speclist__value {
+  margin-top: var(--space-4);
+  font-size: var(--fs-body);
+}

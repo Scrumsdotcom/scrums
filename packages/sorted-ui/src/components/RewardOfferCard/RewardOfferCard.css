@@ -1,0 +1,96 @@
+@import "../../tokens/tokens.css";
+
+.ds-offercard {
+  border: 1px solid var(--ink-1);
+  border-radius: var(--r);
+  background: var(--paper);
+  overflow: hidden;
+  font-family: var(--font-mono);
+}
+
+.ds-offercard__head {
+  background: var(--ink-1);
+  color: #fff;
+  padding: var(--space-16) var(--space-20);
+}
+.ds-offercard__eyebrow {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--on-blue-soft);
+  font-weight: 600;
+  margin-bottom: var(--space-8);
+}
+.ds-offercard__title {
+  font-family: var(--font-prose);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #fff;
+}
+.ds-offercard__sub {
+  font-size: 12px;
+  color: var(--blue-hi);
+  margin-top: 7px;
+  letter-spacing: 0.02em;
+}
+
+.ds-offercard__body { padding: var(--space-16) var(--space-20); }
+.ds-offercard__label {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-6);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.ds-offercard__includes {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+.ds-offercard__inc {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+.ds-offercard__plus { flex: none; color: var(--blue-ink); font-weight: 700; }
+
+.ds-offercard__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--hair-1);
+  font-size: 12px;
+}
+.ds-offercard__rowk { color: var(--ink-3); }
+.ds-offercard__rowv { font-weight: 600; color: var(--ink-1); }
+
+.ds-offercard__claim {
+  display: block;
+  text-align: center;
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--font-prose);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 13px;
+  margin-top: 14px;
+  border-radius: var(--r);
+  text-decoration: none;
+  transition: background var(--motion);
+}
+.ds-offercard__claim:hover { background: var(--blue-2); text-decoration: none; }
+.ds-offercard__note {
+  font-size: var(--fs-label);
+  color: var(--ink-6);
+  line-height: 1.5;
+  margin: 12px 0 0;
+  text-align: center;
+}

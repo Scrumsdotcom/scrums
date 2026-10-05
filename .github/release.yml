@@ -1,0 +1,27 @@
+# Groups the generated release notes by pull request label.
+changelog:
+  exclude:
+    labels:
+      - skip-changelog
+    authors:
+      - dependabot[bot]
+      - dependabot
+  categories:
+    - title: Documentation
+      labels:
+        - docs
+    - title: API reference
+      labels:
+        - api
+    - title: CLI
+      labels:
+        - cli
+    - title: Sorted UI
+      labels:
+        - sorted-ui
+    - title: Fixes
+      labels:
+        - fix
+    - title: Other changes
+      labels:
+        - "*"

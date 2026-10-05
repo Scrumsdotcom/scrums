@@ -1,0 +1,184 @@
+@import "../../tokens/tokens.css";
+
+.ds-catalogcta {
+  background: #041640;
+  color: #9fb3d8;
+  font-family: var(--font-mono);
+}
+.ds-catalogcta__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 40px);
+  align-items: start;
+  padding: clamp(28px, 4vw, 44px) clamp(18px, 4vw, 40px);
+}
+@media (max-width: 900px) {
+  .ds-catalogcta__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ds-catalogcta__eyebrow {
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5e79b0;
+  margin-bottom: 14px;
+}
+.ds-catalogcta__plus {
+  color: var(--blue-hi);
+}
+.ds-catalogcta__title {
+  font-family: var(--font-mono);
+  font-size: clamp(20px, 2.4vw, 27px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #fff;
+  margin: 0 0 12px;
+}
+.ds-catalogcta__title-accent {
+  color: var(--blue-hi);
+}
+.ds-catalogcta__body {
+  font-family: var(--font-prose);
+  font-size: 14px;
+  line-height: 1.6;
+  color: #8fa6ce;
+  margin: 0 0 20px;
+}
+.ds-catalogcta__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.ds-catalogcta__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 13px 22px;
+  border-radius: var(--r);
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+.ds-catalogcta__btn--white {
+  background: #fff;
+  color: var(--nav);
+}
+.ds-catalogcta__btn--white:hover {
+  text-decoration: none;
+}
+.ds-catalogcta__btn--outline {
+  border-color: var(--white-28);
+  color: #fff;
+}
+.ds-catalogcta__btn--outline:hover {
+  border-color: #fff;
+  text-decoration: none;
+}
+
+.ds-catalogcta__proof {
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid #13306e;
+  max-width: 52ch;
+}
+.ds-catalogcta__proof-quote {
+  margin: 0;
+  font-family: var(--font-prose);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #8fa6ce;
+}
+.ds-catalogcta__proof-by {
+  margin-top: 8px;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5e79b0;
+}
+.ds-catalogcta__proof-fact {
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5e79b0;
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-catalogcta__demand {
+  border: 1px solid #13306e;
+  border-radius: var(--r);
+  background: #06205a;
+  min-width: 0;
+}
+.ds-catalogcta__demand-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  border-bottom: 1px solid #13306e;
+}
+.ds-catalogcta__demand-eyebrow {
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue-hi);
+}
+.ds-catalogcta__demand-note {
+  font-family: var(--font-prose);
+  font-size: 12.5px;
+  color: #7e96c4;
+}
+.ds-catalogcta__demand-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ds-catalogcta__row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.ds-catalogcta__row + .ds-catalogcta__row {
+  border-top: 1px solid #0e2a60;
+  padding-top: 14px;
+}
+.ds-catalogcta__rowk {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: #5e79b0;
+  width: 62px;
+  flex: none;
+  padding-top: 7px;
+}
+.ds-catalogcta__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+}
+.ds-catalogcta__chip {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: #c3d2f2;
+  border: 1px solid var(--foot-hair);
+  padding: 5px 10px;
+  border-radius: var(--r);
+}
+.ds-catalogcta__count {
+  color: var(--blue-hi);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}

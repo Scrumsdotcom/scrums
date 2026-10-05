@@ -1,0 +1,200 @@
+@import "../../tokens/tokens.css";
+
+.ds-plancard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  background: var(--paper);
+  border: 1px solid var(--hair-2);
+  border-radius: var(--r);
+  font-family: var(--font-mono);
+  color: var(--ink-1);
+}
+.ds-plancard--featured {
+  border-color: var(--hair-3);
+  border-top: 2px solid var(--blue);
+}
+.ds-plancard__badge {
+  position: absolute;
+  top: -1px;
+  right: var(--space-16);
+  transform: translateY(-50%);
+  font-size: 9px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--on-blue);
+  background: var(--blue);
+  border-radius: var(--r);
+  padding: 4px 9px;
+}
+
+.ds-plancard__body {
+  padding: var(--space-24) var(--space-20) var(--space-20);
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-plancard__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+.ds-plancard__diamond {
+  width: 9px;
+  height: 9px;
+  background: var(--ink-5);
+  transform: rotate(45deg);
+  flex: none;
+}
+.ds-plancard--featured .ds-plancard__diamond {
+  background: var(--blue);
+}
+.ds-plancard__name {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--ink-1);
+}
+.ds-plancard__tagline {
+  font-family: var(--font-prose);
+  font-size: 12.5px;
+  color: var(--ink-5);
+  margin-top: var(--space-4);
+
+  min-height: 36px;
+}
+
+.ds-plancard__amount {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-top: var(--space-16);
+}
+.ds-plancard__price {
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+.ds-plancard__period {
+  font-size: 13px;
+  color: var(--ink-6);
+}
+.ds-plancard__sub {
+  font-family: var(--font-prose);
+  font-size: 12px;
+  color: var(--warn);
+  margin-top: var(--space-4);
+  min-height: 17px;
+}
+
+.ds-plancard__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+}
+.ds-plancard__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 11px var(--space-16);
+  border-radius: var(--r);
+  border: 1px solid var(--blue);
+  color: var(--blue-ink);
+  background: var(--paper);
+  transition: background var(--motion), color var(--motion);
+}
+.ds-plancard--featured .ds-plancard__cta {
+  color: var(--on-blue);
+  background: var(--blue);
+}
+.ds-plancard__cta:hover {
+  background: var(--blue);
+  color: var(--on-blue);
+  text-decoration: none;
+}
+.ds-plancard__aws {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  font-family: var(--font-prose);
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 10px var(--space-16);
+  border-radius: var(--r);
+  border: 1px solid var(--hair-3);
+  color: var(--ink-3);
+  background: var(--paper);
+  transition: background var(--motion);
+}
+.ds-plancard__aws:hover {
+  background: var(--paper-2);
+  text-decoration: none;
+}
+.ds-plancard__aws-mark {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--warn);
+  letter-spacing: 0.02em;
+}
+
+.ds-plancard__terms {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-12);
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--hair-1);
+  font-size: var(--fs-label);
+  color: var(--ink-6);
+}
+.ds-plancard__terms-k {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.ds-plancard__terms-v {
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-plancard__features {
+  list-style: none;
+  margin: var(--space-16) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+.ds-plancard__features li {
+  display: flex;
+  gap: var(--space-8);
+  align-items: flex-start;
+}
+.ds-plancard__check {
+  flex: none;
+  color: var(--ok);
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+.ds-plancard__feature-text {
+  font-family: var(--font-prose);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}

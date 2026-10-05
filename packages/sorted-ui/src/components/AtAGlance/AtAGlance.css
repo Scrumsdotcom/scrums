@@ -1,0 +1,54 @@
+@import "../../tokens/tokens.css";
+
+.ds-glance {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-4) var(--space-16);
+  padding: var(--space-8) var(--space-20);
+  background: var(--paper);
+  border-bottom: 1px solid var(--hair-2);
+  font-family: var(--font-mono);
+}
+
+.ds-glance__label {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-6);
+}
+
+.ds-glance__summary {
+  flex: 1 1 240px;
+  min-width: 0;
+  font-family: var(--font-prose);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.ds-glance__readouts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-8);
+  font-size: var(--fs-meta);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-glance__sep {
+  color: var(--hair-4);
+}
+
+.ds-glance__price {
+  color: var(--blue-ink);
+}
+
+.ds-glance__avail {
+  color: var(--ok);
+}
+
+.ds-glance__trust {
+  color: var(--ink-3);
+}
