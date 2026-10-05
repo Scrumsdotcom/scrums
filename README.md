@@ -50,16 +50,20 @@ cd docs
 mint dev
 ```
 
+## Releases
+
+We publish a release on the 1st of each month. The tag format is `vYYYY.MM`.
+Each release lists the pull requests that merged in that month.
+See [Releases](https://github.com/Scrumsdotcom/scrums/releases).
+For changes to the platform, see the [changelog](https://www.scrums.com/docs/changelog).
+
 ## Contributing
 
 Read [`docs/AGENTS.md`](docs/AGENTS.md) before you change a page. It applies to people and to coding agents. To suggest a change, open an [issue](https://github.com/Scrumsdotcom/scrums/issues) or a pull request.
 
 ## Security
 
-Please practice responsible disclosure. Do not report security issues in public issues. Report them in one of two ways:
-
-- [GitHub private vulnerability reporting](https://github.com/Scrumsdotcom/scrums/security/advisories/new)
-- Email [security@scrums.com](mailto:security@scrums.com)
+To report a vulnerability, see [`SECURITY.md`](.github/SECURITY.md).
 
 ## License
 
