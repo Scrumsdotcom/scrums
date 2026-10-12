@@ -286,9 +286,7 @@
             "group": "AI Development",
             "pages": [
               "ai-development/overview",
-              "ai-development/delivery-plans",
               "ai-development/scopes",
-              "ai-development/enterprise-delivery",
               "ai-development/choose-delivery-model",
               "ai-development/managed-delivery",
               "ai-development/outcome-driven-sprints"
@@ -687,7 +685,7 @@
     "instructions": [
       "Scrums.com is the enterprise AI platform for software engineering. SEOP, the Enterprise AI Software Engineering Orchestration Platform, is the architecture of the platform: one control plane for AI agents, models, engineers and infrastructure.",
       "Write the entity name as Scrums.com. Never write the bare word Scrums.",
-      "Platform capabilities are documented under /platform. Delivery Plans, AI Development services, scopes, Enterprise delivery and Hire Engineers are documented under Platform Services. The AI Catalog is documented under /catalog. Each docs page links to its page on https://www.scrums.com."
+      "Platform capabilities are documented under /platform. AI Development services (with the Delivery Plan, scopes and enterprise delivery) and Hire Engineers are documented under Platform Services. The AI Catalog is documented under /catalog. Each docs page links to its page on https://www.scrums.com."
     ]
   },
   "appearance": {
