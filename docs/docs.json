@@ -167,6 +167,11 @@
       "source": "/company/entity",
       "destination": "/company/entity-graph",
       "permanent": true
+    },
+    {
+      "source": "/ai-development/product-development",
+      "destination": "/ai-development/custom-software-development",
+      "permanent": true
     }
   ],
   "navigation": {
@@ -281,8 +286,10 @@
             "group": "AI Development",
             "pages": [
               "ai-development/overview",
-              "ai-development/choose-delivery-model",
+              "ai-development/delivery-plans",
               "ai-development/scopes",
+              "ai-development/enterprise-delivery",
+              "ai-development/choose-delivery-model",
               "ai-development/managed-delivery",
               "ai-development/outcome-driven-sprints"
             ]
@@ -290,17 +297,16 @@
           {
             "group": "AI Development services",
             "pages": [
-              "ai-development/ai-agent-development",
               "ai-development/generative-ai-development",
+              "ai-development/ai-agent-development",
+              "ai-development/data-engineering-analytics",
               "ai-development/custom-software-development",
-              "ai-development/product-development",
               "ai-development/web-development",
               "ai-development/mobile-app-development",
               "ai-development/ui-ux-design",
-              "ai-development/application-modernization",
-              "ai-development/data-engineering-analytics",
-              "ai-development/devops-engineering",
               "ai-development/software-testing-qa",
+              "ai-development/devops-engineering",
+              "ai-development/application-modernization",
               "ai-development/software-maintenance-and-support"
             ]
           },
@@ -681,7 +687,7 @@
     "instructions": [
       "Scrums.com is the enterprise AI platform for software engineering. SEOP, the Enterprise AI Software Engineering Orchestration Platform, is the architecture of the platform: one control plane for AI agents, models, engineers and infrastructure.",
       "Write the entity name as Scrums.com. Never write the bare word Scrums.",
-      "Platform capabilities are documented under /platform. AI Development services and Hire Engineers are documented under Platform Services. The AI Catalog is documented under /catalog. Each docs page links to its page on https://www.scrums.com."
+      "Platform capabilities are documented under /platform. Delivery Plans, AI Development services, scopes, Enterprise delivery and Hire Engineers are documented under Platform Services. The AI Catalog is documented under /catalog. Each docs page links to its page on https://www.scrums.com."
     ]
   },
   "appearance": {
