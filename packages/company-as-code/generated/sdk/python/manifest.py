@@ -50,7 +50,7 @@ class ModuleManifestContactsItem(TypedDict):
 class ModuleManifest(TypedDict):
     """Declarative source of truth for a module. Every module at every level of the organizational graph has a manifest.yaml at its root."""
     """Schema contract version."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Manifest"]
     """Kebab-case module identifier, unique within the parent domain."""
     name: str

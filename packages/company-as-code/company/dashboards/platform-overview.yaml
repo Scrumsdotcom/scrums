@@ -5,7 +5,7 @@
 # - company/domains/product-operations/platform/agents/identity-drift-detector.yaml
 # - company/domains/product-operations/platform/agents/billing-reconciler.yaml
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Dashboard
 name: platform-overview
 

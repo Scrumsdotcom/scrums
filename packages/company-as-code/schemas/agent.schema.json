@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/agent.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/agent.schema.json",
   "title": "Agent",
   "description": "Autonomous execution unit. Declared in a module manifest and elaborated in /agents/<name>.yaml.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "name", "module", "purpose", "autonomy", "cadence"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Agent" },
     "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
     "module": {

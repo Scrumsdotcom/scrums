@@ -58,6 +58,12 @@ These are enforced by schema, CI, or merge protection. Do not fight them.
 | End-to-end scenarios | [`docs/scenarios/`](./docs/scenarios) |
 | FAQ | [`docs/faq.md`](./docs/faq.md) |
 | Forking guide | [`docs/forking.md`](./docs/forking.md) |
+| Framework/instance boundary (what a fork owns) | [`docs/standards/framework-boundary.md`](./docs/standards/framework-boundary.md) |
+| Taking an upstream release (`cac upgrade`, `cac migrate`) | [`docs/upgrading.md`](./docs/upgrading.md) |
+| Versioning (release number vs document version) | [`docs/standards/versioning.md`](./docs/standards/versioning.md) |
+| Conformance suite for other implementations | [`conformance/README.md`](./conformance/README.md) |
+| Drafting documents from existing records (`cac import`) | [`docs/importing.md`](./docs/importing.md) |
+| Stewardship and open governance questions | [`docs/governance/`](./docs/governance) |
 | Roadmap (shipped / in flight / considered / declined) | [`docs/roadmap.md`](./docs/roadmap.md) |
 | Canonical schemas | [`schemas/`](./schemas) |
 | Authoring templates | [`templates/`](./templates) |
@@ -110,6 +116,8 @@ CI runs `validate.yml` and `generate-check.yml` on every PR. If you push without
 - [ ] All affected manifests are valid (`npm run validate`)
 - [ ] Generated registries are up to date (`npm run generate:check`)
 - [ ] Tests pass (`npm test`)
+- [ ] The boundary is clean (`npm run boundary`); every new top-level path is classified in `cli/src/boundary.ts`
+- [ ] If a change makes an existing valid document invalid: it ships with a migration in `cli/src/migrations/` and an ADR (see `docs/standards/versioning.md`)
 - [ ] If a new module: it has a manifest with at least one accountable contact
 - [ ] If a new interface: declared in the owning module's `exposes`
 - [ ] If a new write path: dry-run support is in place; sync verification protocol is documented

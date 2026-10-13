@@ -14,6 +14,7 @@ export type { Event } from "./event.js";
 export type { Goal } from "./goal.js";
 export type { HubModule } from "./hub-module.js";
 export type { Initiative } from "./initiative.js";
+export type { Instance } from "./instance.js";
 export type { Integration } from "./integration.js";
 export type { Interface } from "./interface.js";
 export type { ModuleManifest } from "./manifest.js";
@@ -41,6 +42,7 @@ import type { Event as _Event } from "./event.js";
 import type { Goal as _Goal } from "./goal.js";
 import type { HubModule as _HubModule } from "./hub-module.js";
 import type { Initiative as _Initiative } from "./initiative.js";
+import type { Instance as _Instance } from "./instance.js";
 import type { Integration as _Integration } from "./integration.js";
 import type { Interface as _Interface } from "./interface.js";
 import type { ModuleManifest as _ModuleManifest } from "./manifest.js";
@@ -70,6 +72,7 @@ export type CompanyDocument =
   | _Goal
   | _HubModule
   | _Initiative
+  | _Instance
   | _Integration
   | _Interface
   | _ModuleManifest

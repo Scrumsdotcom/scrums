@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/event-type-registry.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/event-type-registry.schema.json",
   "title": "Event Type Registry",
   "description": "The enum-controlled registry of typed event names. One document for the company. Adding a new type requires a schema migration and an ADR.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "version", "events"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "EventTypeRegistry" },
     "version": {
       "type": "integer",

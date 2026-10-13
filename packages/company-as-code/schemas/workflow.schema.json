@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/workflow.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/workflow.schema.json",
   "title": "Workflow",
   "description": "Multi-step orchestration definition. May be triggered by event, schedule, or human action.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "name", "module", "purpose", "steps", "trigger"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Workflow" },
     "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
     "module": { "type": "string", "x-cac-ref": ["Manifest"] },

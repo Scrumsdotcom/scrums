@@ -46,7 +46,7 @@ artefact. See [`/generated/sdk/README.md`](../generated/sdk/README.md).
 
 ## Conventions
 
-- Every primitive carries `apiVersion: company-as-code/v1` and a `kind` discriminator
+- Every primitive carries `apiVersion: company-as-code/v1alpha1` and a `kind` discriminator; every `$id` carries the same version (see [`versioning.md`](../docs/standards/versioning.md))
 - Every cross-document reference field carries `x-cac-ref`, naming the primitive kinds it may point at. The resolver in `cli/src/refs.ts` checks all of them; the edge set is inventoried in a test. See [ADR-0007](../docs/adr/0007-typed-reference-edges.md)
 - Canonical IDs are stable and prefixed (`TASK-…`, `INIT-…`, `GOAL-…`, `METRIC-…`, `ORG-…`, `PERSON-…`)
 - External system IDs live under `externalIds` arrays: never as primary keys

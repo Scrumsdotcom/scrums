@@ -36,7 +36,7 @@ class AutomationObservability(TypedDict):
 
 class Automation(TypedDict):
     """Deterministic execution unit between the agent layer and the integration layer. Every automation supports dryRun, declares its mutation surface, and lists known failure modes."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Automation"]
     name: str
     owner: "AutomationOwner"

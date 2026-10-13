@@ -36,7 +36,7 @@ class AgentContactsItem(TypedDict):
 
 class Agent(TypedDict):
     """Autonomous execution unit. Declared in a module manifest and elaborated in /agents/<name>.yaml."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Agent"]
     name: str
     """Owning module path (must match the agent's declaration in that module's manifest)."""

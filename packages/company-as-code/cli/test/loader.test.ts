@@ -27,7 +27,7 @@ describe("loadCorpusWithDiagnostics", () => {
   it("reports a misspelled kind as unclassified instead of dropping it", async () => {
     await writeFixture(
       "typo-kind.yaml",
-      "apiVersion: company-as-code/v1\nkind: Agnet\nname: typo-agent\n",
+      "apiVersion: company-as-code/v1alpha1\nkind: Agnet\nname: typo-agent\n",
     );
     const { unclassified } = await loadCorpusWithDiagnostics();
     const hit = unclassified.find((u) => u.file.endsWith("typo-kind.yaml"));
@@ -38,7 +38,7 @@ describe("loadCorpusWithDiagnostics", () => {
   });
 
   it("reports a document with no kind as unclassified", async () => {
-    await writeFixture("no-kind.yaml", "apiVersion: company-as-code/v1\nname: nameless\n");
+    await writeFixture("no-kind.yaml", "apiVersion: company-as-code/v1alpha1\nname: nameless\n");
     const { unclassified } = await loadCorpusWithDiagnostics();
     const hit = unclassified.find((u) => u.file.endsWith("no-kind.yaml"));
     expect(hit).toBeDefined();

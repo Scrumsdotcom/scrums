@@ -1,7 +1,7 @@
 # Module manifest template.
 # Copy to <module>/manifest.yaml, fill in placeholders, run `cd cli && npm run validate`.
 # Schema: /schemas/manifest.schema.json
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Manifest
 
 # Kebab-case identifier, unique within parent domain.

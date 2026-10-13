@@ -28,7 +28,7 @@ class EventSource(TypedDict):
 
 class Event(TypedDict):
     """Typed event ledger row. One row per state transition on a canonical entity. Event types are enum-controlled."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Event"]
     """Globally unique event ID (ULID/UUID)."""
     id: str

@@ -12,7 +12,7 @@ export interface Severity {
 
 /** Severity → SLA mapping; on-call role bindings; vendor-neutral channel routing. Singleton runtime configuration document. */
 export interface EscalationPolicy {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "EscalationPolicy";
   version: number;
   severities: {

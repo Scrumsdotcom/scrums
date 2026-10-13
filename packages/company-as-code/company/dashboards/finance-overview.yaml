@@ -8,7 +8,7 @@
 #
 # Schema status: illustrative. A `Dashboard` schema is on the roadmap.
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Dashboard
 name: finance-overview
 

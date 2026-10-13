@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/integration.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/integration.schema.json",
   "title": "Integration",
   "description": "Mapping between the coordination layer and an external system. No vendor names are canonical; integrations are pluggable.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "name", "category", "status", "ownerModule", "mutationDirection"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Integration" },
     "name": {
       "type": "string",

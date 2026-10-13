@@ -10,7 +10,7 @@ describe("crossDocumentChecks", () => {
     corpus.workflows.push({
       file: "company/test/workflows/bad.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Workflow",
         name: "bad",
         module: "company/test",
@@ -30,7 +30,7 @@ describe("crossDocumentChecks", () => {
     corpus.agents.push({
       file: "company/test/agents/bad.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Agent",
         name: "bad",
         module: "company/test",
@@ -56,7 +56,7 @@ describe("crossDocumentChecks", () => {
     corpus.capabilities.push({
       file: "company/capabilities/CAP-X.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Capability",
         id: "CAP-X",
         name: "x",
@@ -76,7 +76,7 @@ describe("crossDocumentChecks", () => {
     corpus.capabilities.push({
       file: "company/capabilities/CAP-Y.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Capability",
         id: "CAP-Y",
         name: "y",
@@ -95,7 +95,7 @@ describe("crossDocumentChecks", () => {
     corpus.requirements.push({
       file: "company/requirements/REQ-X.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Requirement",
         id: "REQ-X",
         framework: "internal",
@@ -115,7 +115,7 @@ describe("crossDocumentChecks", () => {
     corpus.proposals.push({
       file: "company/proposals/PROP-9999.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Proposal",
         id: "PROP-9999",
         title: "Applied on a rejection",
@@ -145,7 +145,7 @@ describe("typed references", () => {
     corpus.initiatives.push({
       file: "company/initiatives/INIT-X.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Initiative",
         id: "INIT-X-0001",
         title: "Test",
@@ -164,7 +164,7 @@ describe("typed references", () => {
     corpus.goals.push({
       file: "company/goals/GOAL-X.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Goal",
         id: "GOAL-X-0001",
         title: "Test",
@@ -183,7 +183,7 @@ describe("typed references", () => {
     corpus.agents.push({
       file: "company/test/agents/dangling-skill.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Agent",
         name: "dangling-skill",
         module: "company/test",
@@ -202,7 +202,7 @@ describe("typed references", () => {
     corpus.skills.push({
       file: "company/skills/lonely.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Skill",
         name: "lonely",
         description: "Test skill with a dangling relatedSkills entry.",
@@ -218,12 +218,12 @@ describe("typed references", () => {
     const corpus = emptyCorpus();
     corpus.metrics.push({
       file: "company/metrics/METRIC-REAL.yaml",
-      data: { apiVersion: "company-as-code/v1", kind: "Metric", id: "METRIC-REAL", name: "Real" },
+      data: { apiVersion: "company-as-code/v1alpha1", kind: "Metric", id: "METRIC-REAL", name: "Real" },
     });
     corpus.goals.push({
       file: "company/goals/GOAL-X.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Goal",
         id: "GOAL-X-0001",
         title: "Test",
@@ -310,7 +310,7 @@ describe("schemaValidate", () => {
     corpus.agents.push({
       file: "company/test/agents/missing-purpose.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Agent",
         name: "no-purpose",
         module: "company/test",
@@ -332,7 +332,7 @@ describe("schemaValidate", () => {
     corpus.integrations.push({
       file: "company/integrations/bad.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Integration",
         name: "bad",
         category: "crm",
@@ -353,7 +353,7 @@ describe("schemaValidate", () => {
     corpus.skills.push({
       file: "company/skills/no-body.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Skill",
         name: "no-body",
         description: "Has no body. This should fail.",
@@ -372,7 +372,7 @@ describe("schemaValidate", () => {
     corpus.skills.push({
       file: "company/skills/minimal.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Skill",
         name: "minimal",
         description: "A minimal valid skill.",
@@ -390,7 +390,7 @@ describe("schemaValidate", () => {
     corpus.dashboards.push({
       file: "company/dashboards/no-audience.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Dashboard",
         name: "no-audience",
         owner: { module: "company/test" },
@@ -411,7 +411,7 @@ describe("schemaValidate", () => {
     corpus.automations.push({
       file: "company/automations/no-audit.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Automation",
         name: "no-audit",
         owner: { module: "company/test" },
@@ -432,7 +432,7 @@ describe("schemaValidate", () => {
     corpus.automations.push({
       file: "company/automations/bad.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Automation",
         name: "bad",
         owner: { module: "company/test" },
@@ -455,7 +455,7 @@ describe("schemaValidate", () => {
     corpus.eventTypeRegistries.push({
       file: "company/events/event-types.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "EventTypeRegistry",
         version: 1,
         events: [
@@ -478,7 +478,7 @@ describe("schemaValidate", () => {
     corpus.eventTypeRegistries.push({
       file: "company/events/event-types.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "EventTypeRegistry",
         version: 1,
         events: [
@@ -494,7 +494,7 @@ describe("schemaValidate", () => {
     corpus.workflows.push({
       file: "company/workflows/test.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Workflow",
         name: "test",
         module: "company/test",
@@ -515,7 +515,7 @@ describe("schemaValidate", () => {
       corpus.autonomyPolicies.push({
         file,
         data: {
-          apiVersion: "company-as-code/v1",
+          apiVersion: "company-as-code/v1alpha1",
           kind: "AutonomyPolicy",
           version: 1,
           classes: {
@@ -537,7 +537,7 @@ describe("schemaValidate", () => {
     corpus.escalationPolicies.push({
       file: "company/runtime/escalation-policy.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "EscalationPolicy",
         version: 1,
         severities: {
@@ -563,7 +563,7 @@ describe("schemaValidate", () => {
     corpus.manifests.push({
       file: "company/test/manifest.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Manifest",
         name: "test",
         domain: "finance-ops",

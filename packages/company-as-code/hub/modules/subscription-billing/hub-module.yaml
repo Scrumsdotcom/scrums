@@ -1,4 +1,4 @@
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: HubModule
 
 name: subscription-billing
@@ -16,7 +16,7 @@ description: >
 
 category: integration
 maturity: experimental
-frameworkVersion: company-as-code/v1
+frameworkVersion: company-as-code/v1alpha1
 
 provenance:
   author: Company-as-Code maintainers

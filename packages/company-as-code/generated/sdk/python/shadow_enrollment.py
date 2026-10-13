@@ -31,7 +31,7 @@ class ShadowEnrollmentPromotionGate(TypedDict):
 
 class ShadowEnrollment(TypedDict):
     """An agent's enrollment in Shadow Mode plus the Reliability Evidence accumulated against it. A shadow agent runs in perpetual dry-run alongside human operators; every invocation is a row of evidence. When the evidence clears the AutonomyPolicy's promotion bar, an ADR proposal promotes the agent to autonomous."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["ShadowEnrollment"]
     """Canonical agent name enrolled in shadow mode."""
     agent: str

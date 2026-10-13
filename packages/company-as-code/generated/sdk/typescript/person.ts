@@ -3,7 +3,7 @@
 
 /** Canonical actor identity. Employee, contractor, supplier, AI operator, or agent identity. */
 export interface Person {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Person";
   /** Permanent internal ID. */
   canonicalId: string;

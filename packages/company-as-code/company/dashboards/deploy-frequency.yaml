@@ -5,7 +5,7 @@
 # - company/domains/product-operations/platform/agents/deploy-watchdog.yaml
 # - company/domains/product-operations/platform/workflows/production-deploy.yaml
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Dashboard
 name: deploy-frequency
 

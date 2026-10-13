@@ -46,7 +46,7 @@ class EscalationPolicyChannelsItem(TypedDict):
 
 class EscalationPolicy(TypedDict):
     """Severity → SLA mapping; on-call role bindings; vendor-neutral channel routing. Singleton runtime configuration document."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["EscalationPolicy"]
     version: int
     severities: "EscalationPolicySeverities"

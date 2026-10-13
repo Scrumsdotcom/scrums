@@ -53,7 +53,7 @@ class WorkflowObservability(TypedDict):
 
 class Workflow(TypedDict):
     """Multi-step orchestration definition. May be triggered by event, schedule, or human action."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Workflow"]
     name: str
     module: str

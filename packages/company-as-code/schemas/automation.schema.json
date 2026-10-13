@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/automation.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/automation.schema.json",
   "title": "Automation",
   "description": "Deterministic execution unit between the agent layer and the integration layer. Every automation supports dryRun, declares its mutation surface, and lists known failure modes.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "name", "owner", "purpose", "cadence", "inputs", "invariants"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Automation" },
     "name": {
       "type": "string",

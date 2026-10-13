@@ -4,7 +4,7 @@
 /** Declarative source of truth for a module. Every module at every level of the organizational graph has a manifest.yaml at its root. */
 export interface ModuleManifest {
   /** Schema contract version. */
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Manifest";
   /** Kebab-case module identifier, unique within the parent domain. */
   name: string;

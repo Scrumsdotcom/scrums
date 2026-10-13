@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/task.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/task.schema.json",
   "title": "Task",
   "description": "Canonical unit of execution. Tasks are state machines with typed transitions.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "title", "state", "owner"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Task" },
     "id": {
       "type": "string",

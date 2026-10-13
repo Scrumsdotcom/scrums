@@ -1,5 +1,5 @@
 {
-  "edgeCount": 165,
+  "edgeCount": 170,
   "edges": [
     {
       "from": "Agent:billing-reconciler",
@@ -728,6 +728,36 @@
       "to": "Party:person:ceo"
     },
     {
+      "from": "Proposal:PROP-0002",
+      "origin": "reference",
+      "relation": "author",
+      "to": "Party:person:ceo"
+    },
+    {
+      "from": "Proposal:PROP-0003",
+      "origin": "reference",
+      "relation": "author",
+      "to": "Party:person:ceo"
+    },
+    {
+      "from": "Proposal:PROP-0004",
+      "origin": "reference",
+      "relation": "author",
+      "to": "Party:person:ceo"
+    },
+    {
+      "from": "Proposal:PROP-0005",
+      "origin": "reference",
+      "relation": "author",
+      "to": "Party:person:ceo"
+    },
+    {
+      "from": "Proposal:PROP-0006",
+      "origin": "reference",
+      "relation": "author",
+      "to": "Party:person:ceo"
+    },
+    {
       "from": "Requirement:REQ-EU-AI-ACT-ART-14",
       "origin": "reference",
       "relation": "owner",
@@ -994,7 +1024,7 @@
   ],
   "edgesByRelation": {
     "appliesTo[]": 5,
-    "author": 1,
+    "author": 6,
     "automation.workflow": 1,
     "consumes[].from": 21,
     "contains": 15,
@@ -1020,7 +1050,7 @@
     "steps[].automation": 4
   },
   "generatedFrom": "/company/**/*.yaml + x-cac-ref annotations in /schemas",
-  "nodeCount": 89,
+  "nodeCount": 94,
   "nodes": [
     {
       "file": "company/domains/product-operations/platform/agents/billing-reconciler.yaml",
@@ -1465,6 +1495,36 @@
       "label": "Add requirements, controls, capabilities, and proposals to the canonical structure"
     },
     {
+      "file": "company/proposals/PROP-0002-framework-instance-boundary.yaml",
+      "id": "Proposal:PROP-0002",
+      "kind": "Proposal",
+      "label": "Declare and enforce the framework/instance boundary, and make upgrades a supported operation"
+    },
+    {
+      "file": "company/proposals/PROP-0003-honest-versioning.yaml",
+      "id": "Proposal:PROP-0003",
+      "kind": "Proposal",
+      "label": "Rename the document version to v1alpha1, version every schema $id, and ship format changes with migrations"
+    },
+    {
+      "file": "company/proposals/PROP-0004-fork-namespacing.yaml",
+      "id": "Proposal:PROP-0004",
+      "kind": "Proposal",
+      "label": "Namespace everything a fork creates next to upstream"
+    },
+    {
+      "file": "company/proposals/PROP-0005-conformance-suite.yaml",
+      "id": "Proposal:PROP-0005",
+      "kind": "Proposal",
+      "label": "Define correct behaviour as a conformance suite that any implementation can run"
+    },
+    {
+      "file": "company/proposals/PROP-0006-stewardship.yaml",
+      "id": "Proposal:PROP-0006",
+      "kind": "Proposal",
+      "label": "Publish a plain-language stewardship guideline and the open governance questions"
+    },
+    {
       "file": "company/requirements/REQ-EU-AI-ACT-ART-14.yaml",
       "id": "Requirement:REQ-EU-AI-ACT-ART-14",
       "kind": "Requirement",
@@ -1589,7 +1649,7 @@
     "Organization": 1,
     "Party": 11,
     "Person": 1,
-    "Proposal": 1,
+    "Proposal": 6,
     "Requirement": 7,
     "Skill": 5,
     "Task": 1,

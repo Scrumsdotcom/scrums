@@ -23,7 +23,7 @@ class EventTypeRegistryEventsItem(TypedDict):
 
 class EventTypeRegistry(TypedDict):
     """The enum-controlled registry of typed event names. One document for the company. Adding a new type requires a schema migration and an ADR."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["EventTypeRegistry"]
     """Registry schema version. Bumped only via ADR + migration."""
     version: int

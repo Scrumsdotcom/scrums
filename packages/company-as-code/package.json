@@ -11,6 +11,7 @@
     "generate": "npm --prefix cli run --silent generate",
     "generate:check": "npm --prefix cli run --silent generate:check",
     "doctor": "npm --prefix cli run --silent doctor",
+    "boundary": "npm --prefix cli run --silent boundary",
     "test": "npm --prefix cli test && npm --prefix runtime test",
     "host": "npm --prefix runtime run --silent start --"
   }

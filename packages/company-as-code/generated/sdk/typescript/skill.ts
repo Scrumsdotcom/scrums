@@ -3,7 +3,7 @@
 
 /** Tier-3 knowledge primitive: composable, reusable expertise referenced by name. One canonical YAML source; adapter generators emit per-runtime variants (Claude SKILL.md, provider-neutral AGENTS.md, Gemini Gem JSON). */
 export interface Skill {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Skill";
   /** Kebab-case skill identifier. Unique across the company. */
   name: string;

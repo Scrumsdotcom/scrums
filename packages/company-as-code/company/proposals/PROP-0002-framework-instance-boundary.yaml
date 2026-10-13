@@ -1,0 +1,75 @@
+# Draw the line between the framework and the company running on it.
+#
+# Status stays 'open' until the lead maintainer records a ruling below. The
+# ruling is the decision; the merge is only its mechanical half.
+
+apiVersion: company-as-code/v1alpha1
+kind: Proposal
+
+id: PROP-0002
+title: Declare and enforce the framework/instance boundary, and make upgrades a supported operation
+
+status: open
+opened: 2026-10-12
+
+author:
+  kind: person
+  id: ceo
+
+targets:
+  - path: docs/spec/company-as-code-spec.md
+    surface: spec
+    change: The canonical repository structure gains cac.yaml, framework.lock.json, and company/decisions; a short section names the four boundary classes.
+  - path: docs/standards/framework-boundary.md
+    surface: standard
+    change: New standard. The four path classes, the two files that enforce them, and what a fork may and may not do.
+  - path: schemas/instance.schema.json
+    surface: schema
+    change: New schema for cac.yaml.
+  - path: docs/adr/0008-framework-instance-boundary.md
+    surface: adr
+    change: New ADR recording the boundary, the lock, and the upgrade path.
+  - path: schemas/proposal.schema.json
+    surface: schema
+    change: The target surface enum gains 'ci' and 'governance', so changes to CI workflows and GOVERNANCE.md, both already conserved, can be named honestly.
+  - path: .github/workflows/validate.yml
+    surface: ci
+    change: CI runs 'cac boundary check' so an unclassified path or a stale lock fails the build.
+
+reason: >
+  The framework and the example company share one tree with nothing marking
+  the line between them. A fork has to work out from a twenty-row table which
+  files it owns, and then absorb upstream by merging monthly. Those merges
+  collide on the example company, on generated files, and on any framework
+  file the fork touched, and nothing records which release the fork is on or
+  what it changed. Forks that find upstream merges expensive stop taking them.
+
+evidence:
+  - docs/forking.md lists twenty-one paths a fork must individually keep, replace, or adapt, and its upgrade advice is "merge upstream monthly".
+  - No file in the repository records which framework release a fork is on.
+  - Module identity is the module's path, and every worked example spells the company/ prefix in its references, so the examples cannot be moved without rewriting identifiers. The boundary has to be declared rather than achieved by moving files.
+
+benefit: >
+  A fork can list every framework file it changed, with a reason for each,
+  using one command. Upgrades replace untouched framework files and stop at
+  touched ones with a named cause, instead of arriving as a merge. Upstream
+  cannot add a top-level path without saying who owns it.
+
+validation: >
+  Mechanical. 'cac boundary check' passes on upstream, and its test suite
+  shows a fork being failed for an undeclared framework edit, passed for a
+  declared one, and pointed to company/decisions/ for an ADR added in
+  upstream's numbering. 'npm run generate:check' fails when the lock is stale.
+  The real test comes later: the first external fork takes two upstream
+  releases with 'cac upgrade' and reports whether either needed a manual merge.
+
+rollback: >
+  Delete cac.yaml, framework.lock.json, schemas/instance.schema.json,
+  cli/src/boundary.ts and its call sites in generate, validate, doctor, and the
+  CLI entry point, and remove the CI step. Nothing else reads them. What is
+  lost is the record of which release a fork is on, and with it any upgrade
+  path other than a manual merge.
+
+adr: docs/adr/0008-framework-instance-boundary.md
+
+tags: [forking, upgrades, boundary]

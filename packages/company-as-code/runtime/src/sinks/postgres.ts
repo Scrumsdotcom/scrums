@@ -244,7 +244,7 @@ export class PostgresSinks {
 
 function rowToAudit(r: any): AuditRecord {
   return {
-    apiVersion: "company-as-code/v1",
+    apiVersion: "company-as-code/v1alpha1",
     kind: "AuditRecord",
     id: r.id,
     actor: { kind: r.actor_kind, id: r.actor_id },
@@ -270,7 +270,7 @@ function rowToAudit(r: any): AuditRecord {
 
 function rowToEvent(r: any): TypedEvent {
   return {
-    apiVersion: "company-as-code/v1",
+    apiVersion: "company-as-code/v1alpha1",
     kind: "Event",
     id: r.id,
     type: r.type,

@@ -18,7 +18,7 @@ class AuditRecordError(TypedDict):
 
 class AuditRecord(TypedDict):
     """One row per orchestration action. Loose schema for what happened in the runtime, debugging, post-hoc reasoning, compliance."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["AuditRecord"]
     id: str
     actor: "AuditRecordActor"

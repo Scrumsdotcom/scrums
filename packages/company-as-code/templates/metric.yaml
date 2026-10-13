@@ -1,7 +1,7 @@
 # Metric template.
 # Place at /company/metrics/<id>.yaml.
 # Schema: /schemas/metric.schema.json
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Metric
 
 id: METRIC-EXAMPLE-EXAMPLE

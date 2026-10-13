@@ -12,6 +12,7 @@
 
 import type { RepoCorpus } from "./loader.js";
 import type { GeneratedFile } from "./sdk.js";
+import { API_VERSION } from "./version.js";
 
 function manifestPath(file: string): string {
   return file.replace(/\/manifest\.ya?ml$/, "");
@@ -169,7 +170,7 @@ export function cognitionGraph(corpus: RepoCorpus): GeneratedFile {
     }));
 
   const out = {
-    apiVersion: "company-as-code/v1",
+    apiVersion: API_VERSION,
     kind: "CognitionGraph",
     generatedFrom: "/company/**/manifest.yaml + agents + workflows + metrics",
     stats: {

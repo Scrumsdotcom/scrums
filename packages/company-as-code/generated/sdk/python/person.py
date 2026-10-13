@@ -27,7 +27,7 @@ class PersonTombstone(TypedDict):
 
 class Person(TypedDict):
     """Canonical actor identity. Employee, contractor, supplier, AI operator, or agent identity."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Person"]
     """Permanent internal ID."""
     canonicalId: str

@@ -83,7 +83,7 @@ describe("WorkflowExecutor", () => {
 
     // Synthetic workflow with a live-write that is NOT preceded by a dry-run step.
     const wf: WorkflowDoc = {
-      apiVersion: "company-as-code/v1",
+      apiVersion: "company-as-code/v1alpha1",
       kind: "Workflow",
       name: "synthetic-no-dryrun",
       module: "company/test",
@@ -109,7 +109,7 @@ describe("WorkflowExecutor", () => {
   it("refuses to load a hitl workflow with a scheduled trigger", async () => {
     const { repo: _repo, executor } = await newExecutor();
     const wf: WorkflowDoc = {
-      apiVersion: "company-as-code/v1",
+      apiVersion: "company-as-code/v1alpha1",
       kind: "Workflow",
       name: "bad",
       module: "company/test",
@@ -126,7 +126,7 @@ describe("WorkflowExecutor", () => {
   it("branch steps actually jump: the skipped step does NOT execute", async () => {
     const { executor } = await newExecutor();
     const wf: WorkflowDoc = {
-      apiVersion: "company-as-code/v1",
+      apiVersion: "company-as-code/v1alpha1",
       kind: "Workflow",
       name: "branchy",
       module: "company/test",
@@ -158,7 +158,7 @@ describe("WorkflowExecutor", () => {
   it("halts with an audited failure when a branch targets an unknown step", async () => {
     const { executor } = await newExecutor();
     const wf: WorkflowDoc = {
-      apiVersion: "company-as-code/v1",
+      apiVersion: "company-as-code/v1alpha1",
       kind: "Workflow",
       name: "branch-bad-target",
       module: "company/test",
@@ -186,7 +186,7 @@ describe("WorkflowExecutor", () => {
   it("halts a branch cycle via the max-iterations guard", async () => {
     const { executor } = await newExecutor();
     const wf: WorkflowDoc = {
-      apiVersion: "company-as-code/v1",
+      apiVersion: "company-as-code/v1alpha1",
       kind: "Workflow",
       name: "branch-cycle",
       module: "company/test",
@@ -209,7 +209,7 @@ describe("WorkflowExecutor", () => {
   it("rejects emit-event for a type not in the registry", async () => {
     const { repo: _repo, executor } = await newExecutor();
     const wf: WorkflowDoc = {
-      apiVersion: "company-as-code/v1",
+      apiVersion: "company-as-code/v1alpha1",
       kind: "Workflow",
       name: "emit-bad",
       module: "company/test",

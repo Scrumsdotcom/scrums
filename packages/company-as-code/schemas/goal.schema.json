@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/goal.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/goal.schema.json",
   "title": "Goal",
   "description": "Measurable objective: KPI, OKR, SLA, or metric target. Goals are owned and time-bounded.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "title", "type", "owner", "metric", "target"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Goal" },
     "id": { "type": "string", "pattern": "^GOAL-[A-Z0-9]+-[0-9]{4,}$" },
     "title": { "type": "string", "minLength": 4 },

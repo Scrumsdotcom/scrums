@@ -24,7 +24,7 @@ class InitiativeMilestonesItem(TypedDict):
 
 class Initiative(TypedDict):
     """Strategic change, time-bounded and decomposable. Initiatives roll up into goals and decompose into tasks."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Initiative"]
     id: str
     title: str

@@ -32,7 +32,7 @@ class ControlEvidenceItem(TypedDict):
 
 class Control(TypedDict):
     """A verifiable mechanism that keeps one or more Requirements true, plus the evidence it produces. A Control declares what it implements, how it is checked, how often, and where the proof lands. Controls whose verification is 'automated' point at a runnable check; controls that are only prose are declared 'manual' and carry a review cadence."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Control"]
     """Canonical, permanent control ID (e.g. CTRL-HITL-EXTERNAL-WRITES)."""
     id: str

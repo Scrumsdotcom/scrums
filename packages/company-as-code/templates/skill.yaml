@@ -9,7 +9,7 @@
 #   - /generated/skills/agents-md/<name>.md       (Codex/Cursor/AGENTS.md/etc)
 #   - /generated/skills/gemini/<name>.gem.json    (Gemini Gem / OpenAI-compatible)
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Skill
 
 name: example-skill

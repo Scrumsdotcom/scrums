@@ -16,7 +16,7 @@ class Holder(TypedDict):
 
 class Capability(TypedDict):
     """Something the company must be able to do, with a declared chain of who does it. Every capability names a primary owner, an ordered fallback chain, and a final fallback that can never itself be absent. A company can lose people, agents, and whole modules without losing a capability: the chain says who picks it up and how much of it survives."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Capability"]
     """Canonical, permanent capability ID (e.g. CAP-MONTH-END-CLOSE)."""
     id: str

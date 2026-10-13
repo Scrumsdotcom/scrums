@@ -3,7 +3,7 @@
 
 /** Measurable objective: KPI, OKR, SLA, or metric target. Goals are owned and time-bounded. */
 export interface Goal {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Goal";
   id: string;
   title: string;

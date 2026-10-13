@@ -35,6 +35,11 @@ jobs:
       - name: Validate manifests, agents, workflows, primitives
         working-directory: cli
         run: npm run validate
+      - name: Framework/instance boundary
+        working-directory: cli
+        # Upstream: every path is classified and framework.lock.json is current.
+        # Fork: no framework file was changed without being declared in cac.yaml.
+        run: npm run boundary
       - name: Unit tests (CLI)
         working-directory: cli
         run: npm test

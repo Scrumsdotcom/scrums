@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/person.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/person.schema.json",
   "title": "Person",
   "description": "Canonical actor identity. Employee, contractor, supplier, AI operator, or agent identity.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "canonicalId", "displayName", "type", "status"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Person" },
     "canonicalId": {
       "type": "string",

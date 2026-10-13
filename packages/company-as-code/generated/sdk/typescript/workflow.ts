@@ -3,7 +3,7 @@
 
 /** Multi-step orchestration definition. May be triggered by event, schedule, or human action. */
 export interface Workflow {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Workflow";
   name: string;
   module: string;

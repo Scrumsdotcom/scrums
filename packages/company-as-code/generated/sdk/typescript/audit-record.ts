@@ -3,7 +3,7 @@
 
 /** One row per orchestration action. Loose schema for what happened in the runtime, debugging, post-hoc reasoning, compliance. */
 export interface AuditRecord {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "AuditRecord";
   id: string;
   actor: {

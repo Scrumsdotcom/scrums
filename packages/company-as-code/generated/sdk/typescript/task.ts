@@ -3,7 +3,7 @@
 
 /** Canonical unit of execution. Tasks are state machines with typed transitions. */
 export interface Task {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Task";
   /** Canonical task ID, e.g. TASK-FIN-0042. Module prefix is opaque. */
   id: string;

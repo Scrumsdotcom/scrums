@@ -79,7 +79,7 @@ describe("SqliteHitlInbox", () => {
 describe("QueuedApprovalProvider, workflow integration", () => {
   function syntheticHitlWorkflow(): WorkflowDoc {
     return {
-      apiVersion: "company-as-code/v1",
+      apiVersion: "company-as-code/v1alpha1",
       kind: "Workflow",
       name: "synthetic-hitl",
       module: "company/test",

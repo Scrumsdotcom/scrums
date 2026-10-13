@@ -3,18 +3,25 @@
 A company graph only this framework can read is a private format with extra
 steps. Three things make the model consumable from outside it.
 
-## 1. Versioned, immutable schema identifiers
+## 1. Versioned schema identifiers
 
-Every schema carries a `$id` under `https://company-as-code.dev/schemas/`.
-Consumers pin a version and resolve it. The rule for the framework is the one
-that makes pinning worth anything:
+Every schema carries a `$id` under `https://company-as-code.dev/schemas/`, and
+the path names the document version:
 
-**A published schema version serves the same bytes forever.** Changes ship as a
-new version. A schema is never edited in place after release.
+```
+https://company-as-code.dev/schemas/v1alpha1/agent.schema.json
+```
 
-Within a version, the compatible changes are: adding an optional property,
-widening an enum, relaxing a pattern, adding a `$def`. Everything else is a new
-version and an [ADR](./adr).
+The `$id` changes when the document version changes, and at no other time. The
+exact bytes of a schema at a given framework release are pinned by the release
+tag and recorded, with a hash, in `framework.lock.json`.
+
+The format is `v1alpha1`, so it can still change between releases. Every
+change that would invalidate an existing document ships with a migration that
+`cac migrate` applies, and an [ADR](./adr). Once the format reaches stable
+`v1`, changes within it are additive only: adding an optional property,
+widening an enum, relaxing a pattern, adding a `$def`. The full ladder is in
+[`docs/standards/versioning.md`](./standards/versioning.md).
 
 ## 2. Typed reference edges
 
@@ -90,6 +97,13 @@ company's source of truth.
 
 That last one is load-bearing. Model names in canonical documents are the
 fastest way to build something that is stale within a quarter.
+
+## Conformance
+
+A second implementation is only interoperable if it agrees with the first on
+what is valid. The cases in [`/conformance`](../conformance) define that
+agreement, and `cac conformance --impl "<command>"` measures any
+implementation against them.
 
 ## See also
 

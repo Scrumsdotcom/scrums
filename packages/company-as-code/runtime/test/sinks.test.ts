@@ -10,7 +10,7 @@ afterEach(() => {
 
 function mkAudit(over: Partial<AuditRecord> = {}): AuditRecord {
   return {
-    apiVersion: "company-as-code/v1",
+    apiVersion: "company-as-code/v1alpha1",
     kind: "AuditRecord",
     id: over.id ?? "a-1",
     actor: { kind: "person", id: "people:finance-lead" },
@@ -25,7 +25,7 @@ function mkAudit(over: Partial<AuditRecord> = {}): AuditRecord {
 
 function mkEvent(over: Partial<TypedEvent> = {}): TypedEvent {
   return {
-    apiVersion: "company-as-code/v1",
+    apiVersion: "company-as-code/v1alpha1",
     kind: "Event",
     id: over.id ?? "e-1",
     type: "finance.period_closed",

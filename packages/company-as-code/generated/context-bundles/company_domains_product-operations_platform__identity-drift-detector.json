@@ -8,7 +8,7 @@
     "runtime": "scheduled-job",
     "schedule": "0 * * * *"
   },
-  "apiVersion": "company-as-code/v1",
+  "apiVersion": "company-as-code/v1alpha1",
   "canonicalEvents": [
     "platform.identity_drift_detected"
   ],

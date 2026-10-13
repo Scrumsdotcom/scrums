@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/capability.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/capability.schema.json",
   "title": "Capability",
   "description": "Something the company must be able to do, with a declared chain of who does it. Every capability names a primary owner, an ordered fallback chain, and a final fallback that can never itself be absent. A company can lose people, agents, and whole modules without losing a capability: the chain says who picks it up and how much of it survives.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "name", "description", "criticality", "primaryOwner", "finalFallback"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Capability" },
     "id": {
       "type": "string",

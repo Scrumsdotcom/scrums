@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/skill.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/skill.schema.json",
   "title": "Skill",
   "description": "Tier-3 knowledge primitive: composable, reusable expertise referenced by name. One canonical YAML source; adapter generators emit per-runtime variants (Claude SKILL.md, provider-neutral AGENTS.md, Gemini Gem JSON).",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "name", "description", "body"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Skill" },
     "name": {
       "type": "string",

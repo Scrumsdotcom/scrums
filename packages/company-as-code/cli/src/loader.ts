@@ -187,17 +187,24 @@ export function emptyCorpus(): RepoCorpus {
   ) as unknown as RepoCorpus;
 }
 
-export async function loadCorpusWithDiagnostics(): Promise<CorpusLoad> {
+/**
+ * `companyDir` and `root` default to this repository. The conformance runner
+ * points them at a test case instead, so one loader serves both.
+ */
+export async function loadCorpusWithDiagnostics(
+  companyDir: string = COMPANY_DIR,
+  root: string = REPO_ROOT,
+): Promise<CorpusLoad> {
   const corpus: RepoCorpus = emptyCorpus();
   const unclassified: UnclassifiedFile[] = [];
 
   const patterns = ["**/*.yaml", "**/*.yml"];
   const ignore = ["**/node_modules/**"];
-  const files = await fg(patterns, { cwd: COMPANY_DIR, ignore, dot: false });
+  const files = await fg(patterns, { cwd: companyDir, ignore, dot: false });
   files.sort();
 
   for (const rel of files) {
-    const absolute = path.join(COMPANY_DIR, rel);
+    const absolute = path.join(companyDir, rel);
     const text = await fs.readFile(absolute, "utf8");
     let parsed: any;
     try {
@@ -205,7 +212,7 @@ export async function loadCorpusWithDiagnostics(): Promise<CorpusLoad> {
     } catch (e) {
       throw new Error(`Failed to parse YAML in ${rel}: ${(e as Error).message}`);
     }
-    const repoRelative = path.relative(REPO_ROOT, absolute).split(path.sep).join("/");
+    const repoRelative = path.relative(root, absolute).split(path.sep).join("/");
     if (!parsed || typeof parsed !== "object") {
       if (!hasIgnorePragma(text)) {
         unclassified.push({ file: repoRelative, reason: "non-object" });

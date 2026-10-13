@@ -1,4 +1,4 @@
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Integration
 
 # Local canonical name. Vendor-neutral: swap the underlying provider

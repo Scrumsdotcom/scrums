@@ -4,7 +4,7 @@
 # - company/domains/finance-ops/finance/workflows/month-end-close.yaml
 #   (steps dry-run-close and live-close call this automation)
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Automation
 name: post-period-close
 

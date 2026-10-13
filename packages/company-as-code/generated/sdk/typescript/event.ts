@@ -6,7 +6,7 @@ export type EventType = string;
 
 /** Typed event ledger row. One row per state transition on a canonical entity. Event types are enum-controlled. */
 export interface Event {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Event";
   /** Globally unique event ID (ULID/UUID). */
   id: string;

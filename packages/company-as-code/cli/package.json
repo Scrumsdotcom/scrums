@@ -13,6 +13,7 @@
     "generate:check": "tsx src/index.ts generate --check",
     "doctor": "tsx src/index.ts doctor",
     "hub": "tsx src/index.ts hub",
+    "boundary": "tsx src/index.ts boundary check",
     "nl2m": "tsx src/index.ts nl2m",
     "test": "vitest run",
     "test:e2e": "tsx src/index.ts validate && tsx src/index.ts generate --check"

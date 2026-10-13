@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/event.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/event.schema.json",
   "title": "Event",
   "description": "Typed event ledger row. One row per state transition on a canonical entity. Event types are enum-controlled.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "type", "entity", "occurredAt", "actor"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Event" },
     "id": {
       "type": "string",

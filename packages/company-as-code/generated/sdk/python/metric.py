@@ -38,7 +38,7 @@ class MetricHistory(TypedDict):
 
 class Metric(TypedDict):
     """Typed observable quantity with declared ownership, lineage, freshness, formula, and thresholds."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Metric"]
     id: str
     name: str

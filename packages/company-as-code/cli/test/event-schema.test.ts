@@ -29,7 +29,7 @@ describe("event schema ↔ event type registry", () => {
     expect(types.length).toBeGreaterThan(0);
     for (const type of types) {
       const sample = {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Event",
         id: "01J0000000000000000000TEST",
         type,
@@ -48,7 +48,7 @@ describe("event schema ↔ event type registry", () => {
     const validate = ajv.getSchema("event.schema.json")!;
     for (const bad of ["NoDots", "Upper.case", "task.", ".task", "task", "task.State_Changed"]) {
       const sample = {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Event",
         id: "01J0000000000000000000TEST",
         type: bad,

@@ -5,7 +5,7 @@
 # to canonical Person IDs at request time. The routing layer is one
 # integration away, but the policy is declared here.
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: EscalationPolicy
 version: 1
 

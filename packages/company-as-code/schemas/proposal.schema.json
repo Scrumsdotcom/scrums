@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/proposal.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/proposal.schema.json",
   "title": "Proposal",
   "description": "The mutation queue for the conserved core. Changing the spec, a standard, an authority grant, a schema, or an autonomy policy is not an ordinary edit: it goes through a Proposal that states the reason, the evidence, the expected benefit, how the change will be validated, and how it is rolled back. A Proposal reaching a terminal status carries a Ruling with the decider's canonical ID and their words verbatim.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "title", "status", "author", "targets", "reason", "benefit", "validation", "rollback"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Proposal" },
     "id": {
       "type": "string",
@@ -43,7 +43,7 @@
           "path": { "type": "string", "description": "Repo-relative path of the conserved file." },
           "surface": {
             "type": "string",
-            "enum": ["spec", "standard", "schema", "policy", "autonomy-policy", "escalation-policy", "adr", "manifest", "control", "requirement"]
+            "enum": ["spec", "standard", "schema", "policy", "autonomy-policy", "escalation-policy", "adr", "manifest", "control", "requirement", "ci", "governance"]
           },
           "change": { "type": "string", "description": "One line on what changes in this file." }
         }

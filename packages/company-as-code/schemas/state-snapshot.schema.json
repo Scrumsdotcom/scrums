@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/state-snapshot.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/state-snapshot.schema.json",
   "title": "State Snapshot",
   "description": "An immutable, versioned checkpoint of the company's canonical coordination state, canonical entity IDs and their evolving external system mappings. Snapshots make rollback to a known-good state a first-class runtime operation. The append-only audit log and typed-event ledger are never rewound; a rollback rolls history forward by emitting a coordination.state_rolled_back event.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "createdAt", "contentHash", "entityCount", "mappingCount", "entities", "mappings"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "StateSnapshot" },
     "id": { "type": "string", "description": "Snapshot ID, e.g. 'snap-01jh...'." },
     "label": { "type": "string", "description": "Optional human label, e.g. 'pre-billing-migration'." },

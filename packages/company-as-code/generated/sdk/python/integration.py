@@ -37,7 +37,7 @@ class IntegrationObservability(TypedDict):
 
 class Integration(TypedDict):
     """Mapping between the coordination layer and an external system. No vendor names are canonical; integrations are pluggable."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Integration"]
     """Local canonical name for the integration. The vendor name lives in 'system', not here."""
     name: str

@@ -43,6 +43,7 @@ code is a spec violation caught at compile time.
 | `goal.schema.json` | `Goal` |
 | `hub-module.schema.json` | `HubModule` |
 | `initiative.schema.json` | `Initiative` |
+| `instance.schema.json` | `Instance` |
 | `integration.schema.json` | `Integration` |
 | `interface.schema.json` | `Interface` |
 | `manifest.schema.json` | `ModuleManifest` |

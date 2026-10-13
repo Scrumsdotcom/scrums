@@ -3,7 +3,7 @@
 
 /** Read-only observability surface. Declares the metrics, audience, refresh cadence, and panel layout. Dashboards never trigger writes; control surfaces are workflows. */
 export interface Dashboard {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Dashboard";
   /** Kebab-case identifier, globally unique. */
   name: string;

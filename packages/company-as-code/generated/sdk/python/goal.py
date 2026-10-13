@@ -26,7 +26,7 @@ class GoalHorizon(TypedDict):
 
 class Goal(TypedDict):
     """Measurable objective: KPI, OKR, SLA, or metric target. Goals are owned and time-bounded."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Goal"]
     id: str
     title: str

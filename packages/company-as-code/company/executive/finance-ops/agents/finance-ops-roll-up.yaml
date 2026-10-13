@@ -1,4 +1,4 @@
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Agent
 
 name: finance-ops-roll-up

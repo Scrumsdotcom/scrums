@@ -3,7 +3,7 @@
 
 /** Declared interface a module exposes to other modules. The contract; the code implements it. */
 export interface Interface {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Interface";
   name: string;
   /** Module that owns this interface. */

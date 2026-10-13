@@ -8,9 +8,9 @@ Schema: [`/schemas/manifest.schema.json`](../../schemas/manifest.schema.json). T
 
 ## Required fields
 
-### `apiVersion: company-as-code/v1`
+### `apiVersion: company-as-code/v1alpha1`
 
-The schema contract version. **Always** `company-as-code/v1` for this generation of the framework. When a breaking change requires a `v2`, that's an ADR + a migration window. Never edit the bare string `v1` to test something, the validator pins to it.
+The document format version. **Always** `company-as-code/v1alpha1` for this generation of the framework; the validator pins to it. `alpha` is deliberate: the format can still change between releases, and every change ships with a migration that `cac migrate` applies. See [`versioning.md`](../standards/versioning.md).
 
 ### `kind: Manifest`
 

@@ -13,7 +13,7 @@ export interface Class {
 
 /** Operational expression of the three autonomy classes. Singleton runtime configuration document. The CLI validates that an agent's declared autonomy is consistent with this policy. */
 export interface AutonomyPolicy {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "AutonomyPolicy";
   version: number;
   classes: {

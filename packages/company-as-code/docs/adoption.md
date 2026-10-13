@@ -106,6 +106,14 @@ Unhealthy adoption:
 - The last proposal was six months ago and the spec has changed three times.
   The conserved core has become decorative.
 
+## Importing people and teams
+
+Typing in a hundred people by hand is not a good use of the first week, and
+neither is a bulk load nobody reads. `cac import org-chart` turns a CSV export
+into draft Person and Organization documents in a folder the graph ignores,
+all marked `proposed`. A human reviews them and accepts them in. See
+[`importing.md`](./importing.md).
+
 ## Migrating doctrine from old tooling
 
 When you find operating knowledge trapped in a wiki, a prompt library, or a

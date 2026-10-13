@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/manifest.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/manifest.schema.json",
   "title": "Module Manifest",
   "description": "Declarative source of truth for a module. Every module at every level of the organizational graph has a manifest.yaml at its root.",
   "type": "object",
@@ -9,7 +9,7 @@
   "properties": {
     "apiVersion": {
       "type": "string",
-      "const": "company-as-code/v1",
+      "const": "company-as-code/v1alpha1",
       "description": "Schema contract version."
     },
     "kind": {

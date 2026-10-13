@@ -3,7 +3,7 @@
 
 /** Canonical organizational unit, company, business unit, team, pod, department. Forms the executable org graph. */
 export interface Organization {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Organization";
   /** Permanent internal ID. Never changes for the lifetime of the entity. */
   canonicalId: string;

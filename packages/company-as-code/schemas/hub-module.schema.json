@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/hub-module.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/hub-module.schema.json",
   "title": "Hub Module",
   "description": "Metadata for a community-contributed, importable module in the CaC-Hub. A hub module bundles a validated payload (manifest, workflows, agents, policies) that `cac hub add` scaffolds into a company's /company tree. The hub is how a company forks or imports shared building blocks while keeping every artefact schema-valid.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "name", "version", "summary", "category", "maturity", "provenance", "scaffolds"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "HubModule" },
     "name": {
       "type": "string",
@@ -40,7 +40,7 @@
     },
     "frameworkVersion": {
       "type": "string",
-      "const": "company-as-code/v1",
+      "const": "company-as-code/v1alpha1",
       "description": "The CaC apiVersion this module's payload targets."
     },
     "provenance": {

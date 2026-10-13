@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/organization.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/organization.schema.json",
   "title": "Organization",
   "description": "Canonical organizational unit, company, business unit, team, pod, department. Forms the executable org graph.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "canonicalId", "name", "type", "status"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Organization" },
     "canonicalId": {
       "type": "string",

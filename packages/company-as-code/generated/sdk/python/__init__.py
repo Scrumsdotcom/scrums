@@ -14,6 +14,7 @@ from .event import Event as Event
 from .goal import Goal as Goal
 from .hub_module import HubModule as HubModule
 from .initiative import Initiative as Initiative
+from .instance import Instance as Instance
 from .integration import Integration as Integration
 from .interface import Interface as Interface
 from .manifest import ModuleManifest as ModuleManifest
@@ -42,6 +43,7 @@ __all__ = [
     "Goal",
     "HubModule",
     "Initiative",
+    "Instance",
     "Integration",
     "Interface",
     "ModuleManifest",

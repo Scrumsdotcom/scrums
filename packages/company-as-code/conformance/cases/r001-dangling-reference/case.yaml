@@ -1,0 +1,10 @@
+id: r001-dangling-reference
+level: validate
+description: >
+  A goal measured by a metric that does not exist. Typed references must
+  resolve; the failure belongs to the document holding the reference.
+expect:
+  valid: false
+  failures:
+    - rule: reference
+      file: company/goals/GOAL-LEDGER-0001.yaml

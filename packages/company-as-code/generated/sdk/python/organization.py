@@ -21,7 +21,7 @@ class OrganizationExternalIdsItem(TypedDict):
 
 class Organization(TypedDict):
     """Canonical organizational unit, company, business unit, team, pod, department. Forms the executable org graph."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Organization"]
     """Permanent internal ID. Never changes for the lifetime of the entity."""
     canonicalId: str

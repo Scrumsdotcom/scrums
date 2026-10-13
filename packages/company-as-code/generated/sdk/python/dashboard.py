@@ -51,7 +51,7 @@ class DashboardAlertsItem(TypedDict):
 
 class Dashboard(TypedDict):
     """Read-only observability surface. Declares the metrics, audience, refresh cadence, and panel layout. Dashboards never trigger writes; control surfaces are workflows."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Dashboard"]
     """Kebab-case identifier, globally unique."""
     name: str

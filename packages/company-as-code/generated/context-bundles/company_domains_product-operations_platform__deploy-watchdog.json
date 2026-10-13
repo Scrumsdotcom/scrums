@@ -12,7 +12,7 @@
     "runtime": "event-handler",
     "schedule": "on-demand"
   },
-  "apiVersion": "company-as-code/v1",
+  "apiVersion": "company-as-code/v1alpha1",
   "canonicalEvents": [
     "platform.deploy_failed"
   ],

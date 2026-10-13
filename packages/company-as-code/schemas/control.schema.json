@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/control.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/control.schema.json",
   "title": "Control",
   "description": "A verifiable mechanism that keeps one or more Requirements true, plus the evidence it produces. A Control declares what it implements, how it is checked, how often, and where the proof lands. Controls whose verification is 'automated' point at a runnable check; controls that are only prose are declared 'manual' and carry a review cadence.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "title", "description", "implements", "owner", "verification", "severity", "status"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Control" },
     "id": {
       "type": "string",

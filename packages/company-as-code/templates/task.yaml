@@ -1,7 +1,7 @@
 # Task template.
 # Place at <module>/tasks/<id>.yaml or /company/tasks/<id>.yaml.
 # Schema: /schemas/task.schema.json
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Task
 
 # Canonical ID: TASK-<MODULE>-<seq>

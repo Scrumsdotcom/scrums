@@ -16,7 +16,7 @@ Company-as-Code separates **framework-level** content (rarely edited in a fork) 
 | `/runtime/` | Optional, reference runtime host. Replace pluggable invokers (`AgentInvoker`, `AutomationInvoker`, `ApprovalProvider`) with your real implementations, or write your own runtime against the same schemas |
 | `/docs/spec/company-as-code-spec.md` | Treat as upstream, don't edit; track upstream changes |
 | `/docs/standards/`, `/docs/architecture.md` | Edit if your fork changes a standard (record via ADR) |
-| `/docs/adr/` | Add your own ADRs as `0010-…`, `0011-…` (leave 0001-0004 in place as bootstrap history) |
+| `/docs/adr/` | No. These are upstream's decisions. Record your own in `/company/decisions/`, numbered from `0001`, so the two sequences never collide. See [`fork-namespacing.md`](./standards/fork-namespacing.md) |
 | `/company/**` | **Yes**. This is your company; replace everything under here |
 | `/company/requirements/`, `/company/controls/` | **Yes**, and start small. One real obligation with one real control beats a full framework mapping nobody maintains |
 | `/company/capabilities/` | **Yes**. Start with the two or three functions whose loss would hurt most |
@@ -50,14 +50,19 @@ That's the minimum. Everything else is incremental.
 
 ## How to absorb upstream changes
 
-Track the upstream `gez-scrumsdotcom/Company-as-Code` repo. When a framework-level change lands upstream:
+Don't merge upstream. Upgrade from it.
 
-- Schema additions: usually safe to take wholesale. Re-validate your `/company/` content; new optional fields are backwards compatible.
-- Schema deletions: never silent: they ship with an ADR and a deprecation window. Take action within the window.
-- Generator changes: regenerate `/generated/` and commit; the drift gate will tell you if anything broke.
-- Standards changes: read the ADR; adapt your fork's standards if needed.
+Your fork's `framework.lock.json` records exactly which framework release you
+are on. `cac upgrade --from <release checkout>` compares that lock, the new
+release's lock, and your files, then replaces only the framework files you
+never touched. Anything you did touch stops the upgrade with a named reason.
+`cac migrate` then moves your `company/` documents to the new format.
 
-A reasonable cadence is to merge upstream monthly and have a regular reviewer for the framework diff.
+The full walkthrough, including how to resolve a conflict, is in
+[`upgrading.md`](./upgrading.md).
+
+A reasonable cadence is to upgrade on every minor release, and to keep the
+list of declared deviations in `cac.yaml` short enough to read in one sitting.
 
 ---
 

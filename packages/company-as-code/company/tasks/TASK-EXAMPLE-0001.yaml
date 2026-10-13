@@ -4,7 +4,7 @@
 # This top-level example demonstrates a cross-cutting task: coordinating the
 # first incident-response dry-run after the policy lands.
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Task
 
 id: TASK-EXAMPLE-0001

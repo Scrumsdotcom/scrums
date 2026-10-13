@@ -12,7 +12,7 @@ This file lists the current maintainers of Company-as-Code. Security reports sho
 
 The project is currently maintained by Scrums.com as a reference implementation for the operating-system pattern behind Scrums.com's **Software Engineering Orchestration Platform (SEOP)**.
 
-External maintainers are added through demonstrated contribution + an ADR proposing the addition. See [`/docs/adr/`](./docs/adr) for the precedent.
+External maintainers are added through demonstrated contribution and a Proposal naming the person. The path, and the plan for a second code owner who does not work for the sponsor, are in [`docs/governance/stewardship.md`](./docs/governance/stewardship.md).
 
 ## How to reach a maintainer
 

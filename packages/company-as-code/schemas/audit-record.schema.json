@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/audit-record.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/audit-record.schema.json",
   "title": "Audit Record",
   "description": "One row per orchestration action. Loose schema for what happened in the runtime, debugging, post-hoc reasoning, compliance.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "actor", "action", "startedAt", "status"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "AuditRecord" },
     "id": { "type": "string" },
     "actor": {

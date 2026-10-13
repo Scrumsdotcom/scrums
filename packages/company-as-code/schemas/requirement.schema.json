@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/requirement.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/requirement.schema.json",
   "title": "Requirement",
   "description": "An external obligation the company is held to: a certification clause, a regulation article, a contractual commitment, or an internally-imposed rule. Requirements state WHAT must be true. Controls state HOW it is made true and verified. A Requirement never names its own controls; the coverage direction is one-way so there is exactly one writer per edge.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "framework", "clause", "title", "statement", "owner", "status"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Requirement" },
     "id": {
       "type": "string",

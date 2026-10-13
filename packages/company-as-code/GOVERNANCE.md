@@ -22,6 +22,18 @@ Added through demonstrated contribution plus an ADR proposing the addition.
 No agreement to sign beyond the Apache-2.0 terms recorded in
 [`MAINTAINERS.md`](./MAINTAINERS.md).
 
+## Stewardship
+
+Today one person decides and one company sponsors the work. What that means
+for anyone building on the project, what will not change if the sponsor's
+priorities do, how someone becomes a maintainer, and when a foundation would
+make sense are written down in plain language in
+[`docs/governance/stewardship.md`](./docs/governance/stewardship.md).
+
+Questions that are still open, each with options and a current leaning, are
+in [`docs/governance/discussion.md`](./docs/governance/discussion.md). That
+page exists to be argued with.
+
 ## The conserved core
 
 The paths in [`.github/CODEOWNERS`](./.github/CODEOWNERS) change only through a
@@ -59,6 +71,13 @@ validates against them is portable.
 
 A fork that diverges from the specification is not a defect. It is the point.
 Divergence worth upstreaming comes back as a Proposal.
+
+A fork owns its company and its governance, including this file and
+`docs/governance/`. It does not own the framework it runs on. The line
+between the two is declared in
+[`docs/standards/framework-boundary.md`](./docs/standards/framework-boundary.md),
+and keeping to it is what lets a fork take upstream releases with
+`cac upgrade` instead of a merge.
 
 ## Changing this document
 

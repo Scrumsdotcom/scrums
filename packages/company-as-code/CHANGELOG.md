@@ -4,11 +4,49 @@ All notable changes to this project are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-When the schema for a canonical primitive changes in a backwards-incompatible way, that's a **major** bump. New optional fields or new primitives are **minor**. Tooling and documentation fixes are **patch**.
+Release numbers follow [`docs/standards/versioning.md`](./docs/standards/versioning.md#release-numbers). While the framework is 0.x, a backwards-incompatible change to document shape ships with a migration and is a **minor** release; after 1.0.0 it is **major**. New optional fields or new primitives are **minor**. Tooling and documentation fixes are **patch**. Releases up to and including 0.6.0 were numbered under the earlier wording of this paragraph.
 
 ---
 
 ## [Unreleased]
+
+Making a fork a long-term asset rather than a snapshot. The theme: a fork
+should be able to take the next release with a command, not a merge.
+
+### Added, The framework/instance boundary
+
+- **Four path classes.** Every file is framework (upstream's, replaced on upgrade), adapt (a starting point the fork edits), instance (the fork's, never touched), or derived (regenerated). Declared once in `cli/src/boundary.ts`. See [ADR-0008](./docs/adr/0008-framework-instance-boundary.md) and [`framework-boundary.md`](./docs/standards/framework-boundary.md).
+- **`cac.yaml`**, validated against the new `Instance` schema, says whether a tree is upstream or a fork, its namespace, and the framework release it is on. **`framework.lock.json`** records a hash of every framework and adapt file, regenerated and drift-gated upstream.
+- **`cac boundary check` and `cac boundary explain`**, plus `cac init` to declare a fork. CI runs the boundary check. `cac doctor` warns on what the check would fail.
+- **Fork namespacing.** Fork decisions live in `company/decisions/`; fork hub modules are named `<namespace>-<name>`. See [`fork-namespacing.md`](./docs/standards/fork-namespacing.md).
+
+### Added, Upgrades and migrations (scaffold)
+
+- **`cac upgrade --from <release>`** compares the fork's lock, the new release's lock, and the files on disk, and decides each file: update, add, remove, keep the fork's change, or stop at a conflict. Dry-run by default; refuses to write past a conflict. See [`docs/upgrading.md`](./docs/upgrading.md).
+- **`cac migrate`** moves documents to the current document version through a numbered chain of text-transform migrations in `cli/src/migrations/`.
+
+### Changed, Honest versioning (breaking)
+
+- **Documents are now `company-as-code/v1alpha1`**, and every schema `$id` is `https://company-as-code.dev/schemas/v1alpha1/<name>.schema.json`. The old `company-as-code/v1` promised a stability the format did not have. Run `cac migrate --write` to move existing documents; `cac validate` names any document that still needs it. See [ADR-0009](./docs/adr/0009-honest-versioning.md) and [`versioning.md`](./docs/standards/versioning.md).
+- The release checklist's versioning policy now matches the 0.x release line.
+
+### Added, Conformance suite (scaffold)
+
+- **`conformance/`** holds cases with an expected verdict, and a protocol any implementation can run: read a directory, print `{valid, failures:[{rule, file}]}`. `cac conformance` runs the suite against the reference implementation or any `--impl` command. Ten cases across classification, schema, reference, and cross-document rules. See [ADR-0010](./docs/adr/0010-conformance-suite.md).
+
+### Added, Importers (scaffold)
+
+- **`cac import`** drafts documents from existing records into `company/.drafts/`, where validate and generate cannot see them, and `cac import accept` moves them into the corpus after validation, refusing to overwrite an existing identity. Ships with an org-chart CSV importer for people and teams. See [`docs/importing.md`](./docs/importing.md).
+
+### Added, Stewardship
+
+- **[`docs/governance/stewardship.md`](./docs/governance/stewardship.md)**: who decides today, what will not change if the sponsor's priorities do, the path to maintainer and to a second code owner, the hand-over commitment, and when a foundation would make sense.
+- **[`docs/governance/discussion.md`](./docs/governance/discussion.md)**: seven open governance questions, each with options and a current leaning.
+
+### Changed, Tooling
+
+- CLI test files run sequentially (`fileParallelism: false`). Several suites write scratch documents into the shared corpus, and running them in parallel let one suite see another's scratch files.
+- The Proposal `surface` enum gains `ci` and `governance`.
 
 ---
 

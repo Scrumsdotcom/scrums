@@ -31,7 +31,7 @@ class HubModuleConsumesItem(TypedDict):
 
 class HubModule(TypedDict):
     """Metadata for a community-contributed, importable module in the CaC-Hub. A hub module bundles a validated payload (manifest, workflows, agents, policies) that `cac hub add` scaffolds into a company's /company tree. The hub is how a company forks or imports shared building blocks while keeping every artefact schema-valid."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["HubModule"]
     """Kebab-case hub module identifier, unique within the hub."""
     name: str
@@ -46,7 +46,7 @@ class HubModule(TypedDict):
     """How battle-tested the module is. New community contributions start experimental."""
     maturity: Literal["experimental", "beta", "stable"]
     """The CaC apiVersion this module's payload targets."""
-    frameworkVersion: NotRequired[Literal["company-as-code/v1"]]
+    frameworkVersion: NotRequired[Literal["company-as-code/v1alpha1"]]
     """Where the module came from. The hub is open-source and attribution matters."""
     provenance: "HubModuleProvenance"
     """Default domain the payload manifest belongs to. `cac hub add` derives the install path from this unless --into is given."""

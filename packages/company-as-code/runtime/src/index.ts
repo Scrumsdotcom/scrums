@@ -441,7 +441,7 @@ async function main(): Promise<void> {
             console.error(`snapshot show: no snapshot '${id}'`);
             process.exit(1);
           }
-          console.log(JSON.stringify({ apiVersion: "company-as-code/v1", kind: "StateSnapshot", ...snap }, null, 2));
+          console.log(JSON.stringify({ apiVersion: "company-as-code/v1alpha1", kind: "StateSnapshot", ...snap }, null, 2));
         } else if (sub === "rollback") {
           const id = args.rest[1];
           if (!id) {
@@ -829,7 +829,7 @@ async function recordRuntimeAudit(
 ): Promise<void> {
   const now = new Date().toISOString();
   await sinks.audit().record({
-    apiVersion: "company-as-code/v1",
+    apiVersion: "company-as-code/v1alpha1",
     kind: "AuditRecord",
     id: ulid(),
     actor: { kind: "system", id: "runtime-host" },
@@ -853,7 +853,7 @@ async function emitRuntimeEvent(
 ): Promise<void> {
   const now = new Date().toISOString();
   const event: TypedEvent = {
-    apiVersion: "company-as-code/v1",
+    apiVersion: "company-as-code/v1alpha1",
     kind: "Event",
     id: ulid(),
     type: fields.type,

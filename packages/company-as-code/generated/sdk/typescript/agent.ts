@@ -3,7 +3,7 @@
 
 /** Autonomous execution unit. Declared in a module manifest and elaborated in /agents/<name>.yaml. */
 export interface Agent {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Agent";
   name: string;
   /** Owning module path (must match the agent's declaration in that module's manifest). */

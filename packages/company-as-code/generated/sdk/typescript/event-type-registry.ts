@@ -6,7 +6,7 @@ export type EventType = string;
 
 /** The enum-controlled registry of typed event names. One document for the company. Adding a new type requires a schema migration and an ADR. */
 export interface EventTypeRegistry {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "EventTypeRegistry";
   /** Registry schema version. Bumped only via ADR + migration. */
   version: number;

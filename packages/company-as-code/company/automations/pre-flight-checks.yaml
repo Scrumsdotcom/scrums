@@ -4,7 +4,7 @@
 # - company/domains/product-operations/platform/workflows/production-deploy.yaml
 #   (step pre-flight)
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Automation
 name: pre-flight-checks
 

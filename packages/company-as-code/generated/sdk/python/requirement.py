@@ -18,7 +18,7 @@ class RequirementExternalIdsItem(TypedDict):
 
 class Requirement(TypedDict):
     """An external obligation the company is held to: a certification clause, a regulation article, a contractual commitment, or an internally-imposed rule. Requirements state WHAT must be true. Controls state HOW it is made true and verified. A Requirement never names its own controls; the coverage direction is one-way so there is exactly one writer per edge."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Requirement"]
     """Canonical, permanent requirement ID (e.g. REQ-ISO27001-A-8-5)."""
     id: str

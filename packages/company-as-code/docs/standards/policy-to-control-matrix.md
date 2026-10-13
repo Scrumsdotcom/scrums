@@ -6,7 +6,7 @@ If you discover a row where the "Enforcement" column says "operator discipline" 
 
 | # | Rule | Source | Enforcement |
 |---|---|---|---|
-| 1 | Every primitive carries `apiVersion: company-as-code/v1` + `kind` discriminator | `/schemas/*.schema.json` (`const` constraints) | **CI**, `cli/src/validate.ts` schema validation, `validate.yml` |
+| 1 | Every primitive carries `apiVersion: company-as-code/v1alpha1` + `kind` discriminator | `/schemas/*.schema.json` (`const` constraints) | **CI**, `cli/src/validate.ts` schema validation, `validate.yml` |
 | 2 | No code without a manifest | Spec, `/docs/standards/code-organization.md` | **Generators surface the gap**, modules without manifests don't appear in `dependency-graph.json`. (Stricter check is roadmap item.) |
 | 3 | No interface without a declaration | Spec | **CI**, `consumes[].interface` must match producer's `exposes[].interface` (via dependency-graph generator + manifest schema) |
 | 4 | Modular monolith: cross-module communication only via declared interfaces | Spec, ADR-0002 | **Generator output**, `/generated/dependency-graph.json` surfaces every cross-module edge for review. Code-level import enforcement is fork-specific. |

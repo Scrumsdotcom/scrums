@@ -6,7 +6,7 @@
 #
 # Copy to /company/controls/<ID>.yaml and edit.
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Control
 
 id: CTRL-EXAMPLE-0001

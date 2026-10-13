@@ -4,7 +4,7 @@
 # spec, and the spec is the source of authority. Adding four folders to it is
 # therefore not an ordinary edit. This is what the ruling looked like.
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Proposal
 
 id: PROP-0001

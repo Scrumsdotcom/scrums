@@ -18,7 +18,7 @@ describe("negative fixtures (must fail validation)", () => {
     corpus.workflows.push({
       file: "neg/schedule-no-cron.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Workflow",
         name: "schedule-no-cron",
         module: "company/test",
@@ -36,7 +36,7 @@ describe("negative fixtures (must fail validation)", () => {
     corpus.workflows.push({
       file: "neg/event-no-type.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Workflow",
         name: "event-no-type",
         module: "company/test",
@@ -54,7 +54,7 @@ describe("negative fixtures (must fail validation)", () => {
     corpus.workflows.push({
       file: "neg/human-no-actor.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Workflow",
         name: "human-no-actor",
         module: "company/test",
@@ -72,7 +72,7 @@ describe("negative fixtures (must fail validation)", () => {
     corpus.workflows.push({
       file: "neg/agent-step-no-agent.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Workflow",
         name: "agent-step-no-agent",
         module: "company/test",
@@ -90,7 +90,7 @@ describe("negative fixtures (must fail validation)", () => {
     corpus.workflows.push({
       file: "neg/automation-step-no-automation.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Workflow",
         name: "automation-step-no-automation",
         module: "company/test",
@@ -108,7 +108,7 @@ describe("negative fixtures (must fail validation)", () => {
     corpus.workflows.push({
       file: "neg/approval-step-no-approver.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Workflow",
         name: "approval-step-no-approver",
         module: "company/test",
@@ -127,7 +127,7 @@ describe("negative fixtures (must fail validation)", () => {
     corpus.workflows.push({
       file: "neg/emit-step-no-event.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Workflow",
         name: "emit-step-no-event",
         module: "company/test",
@@ -152,7 +152,7 @@ describe("negative fixtures (must fail validation)", () => {
     corpus.integrations.push({
       file: "neg/integration-bad-category.yaml",
       data: {
-        apiVersion: "company-as-code/v1",
+        apiVersion: "company-as-code/v1alpha1",
         kind: "Integration",
         name: "bad",
         category: "not-a-real-category",

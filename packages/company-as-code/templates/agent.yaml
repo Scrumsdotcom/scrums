@@ -1,7 +1,7 @@
 # Agent template.
 # Place at <module>/agents/<name>.yaml or /company/agents/<name>.yaml.
 # Schema: /schemas/agent.schema.json
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Agent
 
 name: example-agent

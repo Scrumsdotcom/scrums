@@ -1,7 +1,7 @@
 # Initiative template.
 # Place at /company/initiatives/<id>.yaml.
 # Schema: /schemas/initiative.schema.json
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Initiative
 
 id: INIT-EXAMPLE-0001

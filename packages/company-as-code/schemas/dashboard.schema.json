@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/dashboard.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/dashboard.schema.json",
   "title": "Dashboard",
   "description": "Read-only observability surface. Declares the metrics, audience, refresh cadence, and panel layout. Dashboards never trigger writes; control surfaces are workflows.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "name", "owner", "purpose", "audience", "refresh", "panels"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Dashboard" },
     "name": {
       "type": "string",

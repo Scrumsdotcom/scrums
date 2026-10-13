@@ -208,12 +208,15 @@ Each of these is expanded in [`docs/architecture.md`](./docs/architecture.md) an
 ├── /schemas                     # JSON Schemas for every canonical primitive
 ├── /templates                   # authoring templates (manifests, agents, etc.)
 ├── /cli                         # TypeScript reference CLI: validate + generate
+├── /conformance                 # cases any implementation can run to prove it validates the same way
 ├── /docs                        # architecture, getting-started, standards, ADRs
 ├── /.github                     # CI workflows, PR templates, drift gates
-└── /generated                   # committed generator outputs (do not hand-edit)
+├── /generated                   # committed generator outputs (do not hand-edit)
+├── cac.yaml                     # what this tree is: upstream or a fork, and which framework release
+└── framework.lock.json          # a hash of every framework file, so upgrades know what changed
 ```
 
-The top-level `/schemas` and `/templates` are framework-level (define the shape). The `/company/schemas` and `/company/templates` are company-level (your domain entities and your in-house starting points). Forks should rarely touch the former.
+Every path belongs to one of four classes: **framework** (shipped by upstream, replaced on upgrade), **adapt** (shipped as a starting point, then yours), **instance** (yours, never touched by an upgrade), and **derived** (regenerated). `company/` is instance; `schemas/`, `cli/`, `runtime/`, `templates/`, and `docs/` are framework. `npm run boundary` checks the line, and [`docs/standards/framework-boundary.md`](./docs/standards/framework-boundary.md) explains it.
 
 ---
 
@@ -237,7 +240,24 @@ npm run generate:check
 # 5. Standing health inspection: rotted links, stale controls,
 #    unwatched autonomous agents, modules with nobody accountable
 npm run doctor
+
+# 6. Check the framework/instance boundary (CI runs this too)
+npm run boundary
 ```
+
+Running your own company on it? Fork, then declare the fork and take upstream
+releases with the CLI instead of a merge:
+
+```bash
+cd cli
+npx tsx src/index.ts init --name "Acme" --namespace acme --write
+npx tsx src/index.ts upgrade --from ../path/to/new-release      # dry run
+npx tsx src/index.ts migrate                                    # dry run
+```
+
+See [`docs/forking.md`](./docs/forking.md), [`docs/upgrading.md`](./docs/upgrading.md),
+and [`docs/importing.md`](./docs/importing.md) for drafting people and teams
+from an existing org chart.
 
 New to the pattern? [`docs/adoption.md`](./docs/adoption.md) is the honest
 version of how to start: federate rather than migrate, and get one real
@@ -296,6 +316,9 @@ This is a **seed repository**. It ships:
 - the complete canonical structure
 - JSON Schemas for every primitive, with typed reference edges between them
 - a working TypeScript CLI: validation, deterministic generators, drift gate, and a standing health inspection (`cac doctor`)
+- a declared framework/instance boundary, with `cac upgrade` and `cac migrate` so forks can take releases
+- a conformance suite, so a second implementation can show it reaches the same verdicts
+- a document format that says how stable it is: `company-as-code/v1alpha1`
 - a reference TypeScript **runtime host** that loads the manifest graph and executes workflows with audit + event persistence (SQLite or Postgres)
 - a compliance layer where an uncovered obligation fails CI rather than surfacing at audit time
 - CI workflows enforcing schema validity, unit tests, zero generator drift, blocking secret scanning, and dependency audit
@@ -324,6 +347,7 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the contribution workflow. The sh
 |---|---|
 | How to contribute | [`CONTRIBUTING.md`](./CONTRIBUTING.md) |
 | Who decides what, and how it is recorded | [`GOVERNANCE.md`](./GOVERNANCE.md) |
+| Who stewards the project, and what is promised | [`docs/governance/stewardship.md`](./docs/governance/stewardship.md) |
 | Where each kind of question goes | [`SUPPORT.md`](./SUPPORT.md) |
 | Reporting a vulnerability | [`SECURITY.md`](./SECURITY.md) |
 | Community expectations | [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) |

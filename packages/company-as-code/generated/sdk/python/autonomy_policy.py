@@ -42,7 +42,7 @@ class AutonomyPolicyPreflightItem(TypedDict):
 
 class AutonomyPolicy(TypedDict):
     """Operational expression of the three autonomy classes. Singleton runtime configuration document. The CLI validates that an agent's declared autonomy is consistent with this policy."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["AutonomyPolicy"]
     version: int
     classes: "AutonomyPolicyClasses"

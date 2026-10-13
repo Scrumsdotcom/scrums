@@ -1,7 +1,7 @@
 # Workflow template.
 # Place at <module>/workflows/<name>.yaml.
 # Schema: /schemas/workflow.schema.json
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Workflow
 
 name: example-workflow

@@ -11,6 +11,9 @@ Numbered, dated, status-tracked records of architectural decisions. Use [`/templ
 | [0005](./0005-cac-hub-in-repo-registry.md) | CaC-Hub as an in-repo module registry | Accepted |
 | [0006](./0006-compliance-and-capability-layer.md) | Compliance and capability as typed primitives | Accepted |
 | [0007](./0007-typed-reference-edges.md) | Typed reference edges in the schemas | Accepted |
+| [0008](./0008-framework-instance-boundary.md) | A declared boundary between the framework and the instance | Proposed |
+| [0009](./0009-honest-versioning.md) | The document format is v1alpha1 until it earns more | Proposed |
+| [0010](./0010-conformance-suite.md) | A conformance suite defines correct, not the reference CLI | Proposed |
 
 ## Adding an ADR
 

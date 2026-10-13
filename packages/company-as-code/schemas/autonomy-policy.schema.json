@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/autonomy-policy.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/autonomy-policy.schema.json",
   "title": "Autonomy Policy",
   "description": "Operational expression of the three autonomy classes. Singleton runtime configuration document. The CLI validates that an agent's declared autonomy is consistent with this policy.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "version", "classes"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "AutonomyPolicy" },
     "version": { "type": "integer", "minimum": 1 },
     "classes": {

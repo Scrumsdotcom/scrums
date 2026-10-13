@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/metric.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/metric.schema.json",
   "title": "Metric",
   "description": "Typed observable quantity with declared ownership, lineage, freshness, formula, and thresholds.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "name", "owner", "type", "unit", "freshness"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Metric" },
     "id": { "type": "string", "pattern": "^METRIC-[A-Z0-9]+-[A-Z0-9-]+$" },
     "name": { "type": "string", "minLength": 3 },

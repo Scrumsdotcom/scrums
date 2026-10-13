@@ -45,7 +45,7 @@ class TaskHistoryItem(TypedDict):
 
 class Task(TypedDict):
     """Canonical unit of execution. Tasks are state machines with typed transitions."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Task"]
     """Canonical task ID, e.g. TASK-FIN-0042. Module prefix is opaque."""
     id: str

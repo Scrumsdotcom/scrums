@@ -4,7 +4,7 @@
 # - company/domains/sales-marketing/growth/workflows/customer-acquisition.yaml
 #   (dry-run-allocation and apply call this automation)
 
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Automation
 name: apply-channel-allocation
 

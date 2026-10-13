@@ -19,7 +19,7 @@ class InterfaceOperationsItem(TypedDict):
 
 class Interface(TypedDict):
     """Declared interface a module exposes to other modules. The contract; the code implements it."""
-    apiVersion: Literal["company-as-code/v1"]
+    apiVersion: Literal["company-as-code/v1alpha1"]
     kind: Literal["Interface"]
     name: str
     """Module that owns this interface."""

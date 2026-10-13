@@ -20,6 +20,7 @@ import { COMPANY_DIR } from "./paths.js";
 import { strictParse } from "./cli-args.js";
 import { loadCorpus, loadSchemas } from "./loader.js";
 import { buildAjv } from "./validate.js";
+import { API_VERSION } from "./version.js";
 
 type Domain =
   | "executive"
@@ -310,7 +311,7 @@ export function synthesize(
   const initiativeDomain: Domain = intent.domain;
 
   const initiative = {
-    apiVersion: "company-as-code/v1",
+    apiVersion: API_VERSION,
     kind: "Initiative",
     id: ids.initiativeId,
     title: intent.title,
@@ -326,7 +327,7 @@ export function synthesize(
   };
 
   const goal = {
-    apiVersion: "company-as-code/v1",
+    apiVersion: API_VERSION,
     kind: "Goal",
     id: ids.goalId,
     title: `${intent.title}, measurable goal`,
@@ -343,7 +344,7 @@ export function synthesize(
   };
 
   const metric = {
-    apiVersion: "company-as-code/v1",
+    apiVersion: API_VERSION,
     kind: "Metric",
     id: ids.metricId,
     name: intent.metricName,

@@ -3,7 +3,7 @@
 
 /** Strategic change, time-bounded and decomposable. Initiatives roll up into goals and decompose into tasks. */
 export interface Initiative {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Initiative";
   id: string;
   title: string;

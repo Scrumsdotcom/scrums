@@ -1,7 +1,7 @@
 # Goal template.
 # Place at /company/goals/<id>.yaml.
 # Schema: /schemas/goal.schema.json
-apiVersion: company-as-code/v1
+apiVersion: company-as-code/v1alpha1
 kind: Goal
 
 id: GOAL-EXAMPLE-0001

@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/initiative.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/initiative.schema.json",
   "title": "Initiative",
   "description": "Strategic change, time-bounded and decomposable. Initiatives roll up into goals and decompose into tasks.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "id", "title", "status", "owner", "startDate"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Initiative" },
     "id": { "type": "string", "pattern": "^INIT-[A-Z0-9]+-[0-9]{4,}$" },
     "title": { "type": "string", "minLength": 4 },

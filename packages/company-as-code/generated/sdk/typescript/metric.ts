@@ -3,7 +3,7 @@
 
 /** Typed observable quantity with declared ownership, lineage, freshness, formula, and thresholds. */
 export interface Metric {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Metric";
   id: string;
   name: string;

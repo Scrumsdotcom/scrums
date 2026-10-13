@@ -20,6 +20,7 @@ import fg from "fast-glob";
 import { COMPANY_DIR, REPO_ROOT } from "./paths.js";
 import { loadCorpus, loadSchemas, modulePathOf, type RepoCorpus } from "./loader.js";
 import { buildGraph } from "./graph.js";
+import { checkBoundary, failing } from "./boundary.js";
 
 export type Severity = "finding" | "warning";
 
@@ -59,6 +60,7 @@ export async function doctorCommand(opts: { strict: boolean }): Promise<boolean>
   results.push(...uncoveredCapabilities(corpus));
   results.push(...isolatedEntities(corpus, schemas));
   results.push(...unrulesProposals(corpus));
+  results.push(...(await boundaryHealth()));
 
   results.sort((a, b) =>
     `${a.severity === "finding" ? 0 : 1}${a.check}${a.where}`.localeCompare(
@@ -312,6 +314,25 @@ function unrulesProposals(corpus: RepoCorpus): DoctorResult[] {
     });
   }
   return out;
+}
+
+// --- D9: the framework/instance boundary -----------------------------------
+//
+// Upstream's lock is already drift-gated by `generate --check`, so here only
+// unclassified paths are reported. In a fork, every undeclared edit to a
+// framework file is a future upgrade conflict, and doctor says so before the
+// upgrade does.
+
+async function boundaryHealth(): Promise<DoctorResult[]> {
+  const report = await checkBoundary(REPO_ROOT);
+  return failing(report)
+    .filter((f) => report.role === "fork" || (f.kind !== "lock-stale" && f.kind !== "no-lock"))
+    .map((f) => ({
+      check: "boundary",
+      severity: "warning" as const,
+      where: f.path,
+      message: `${f.kind}: ${f.message}`,
+    }));
 }
 
 /** Exported for tests: the company directory doctor reads. */

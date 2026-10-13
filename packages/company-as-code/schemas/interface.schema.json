@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/interface.schema.json",
+  "$id": "https://company-as-code.dev/schemas/v1alpha1/interface.schema.json",
   "title": "Interface",
   "description": "Declared interface a module exposes to other modules. The contract; the code implements it.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "name", "owner", "stability", "operations"],
   "properties": {
-    "apiVersion": { "type": "string", "const": "company-as-code/v1" },
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
     "kind": { "type": "string", "const": "Interface" },
     "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
     "owner": {

@@ -81,7 +81,7 @@ describe("ShadowAgentInvoker", () => {
       return {
         output: { agent: args.agent, sawDryRun: args.dryRun },
         emittedEvent: {
-          apiVersion: "company-as-code/v1",
+          apiVersion: "company-as-code/v1alpha1",
           kind: "Event",
           id: "e1",
           type: "test.thing_happened",

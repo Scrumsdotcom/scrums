@@ -9,7 +9,7 @@
 export type AutonomyClass = "autonomous" | "human-gated" | "escalated";
 
 export interface AuditRecord {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "AuditRecord";
   id: string;
   actor: { kind: "person" | "agent" | "automation" | "system"; id: string };
@@ -35,7 +35,7 @@ export interface AuditRecord {
 }
 
 export interface TypedEvent {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Event";
   id: string;
   type: string;
@@ -81,7 +81,7 @@ export interface WorkflowStep {
 }
 
 export interface WorkflowDoc {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Workflow";
   name: string;
   module: string;

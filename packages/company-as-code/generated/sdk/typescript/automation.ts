@@ -3,7 +3,7 @@
 
 /** Deterministic execution unit between the agent layer and the integration layer. Every automation supports dryRun, declares its mutation surface, and lists known failure modes. */
 export interface Automation {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Automation";
   name: string;
   owner: {

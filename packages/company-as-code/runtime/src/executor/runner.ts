@@ -382,7 +382,7 @@ export class WorkflowExecutor {
   ): TypedEvent {
     const now = this.deps.now ?? (() => new Date());
     return {
-      apiVersion: "company-as-code/v1",
+      apiVersion: "company-as-code/v1alpha1",
       kind: "Event",
       id: ulid(),
       type,
@@ -428,7 +428,7 @@ export class WorkflowExecutor {
     const startedAt = now().toISOString();
     const tc = activeTraceContext();
     const row: AuditRecord = {
-      apiVersion: "company-as-code/v1",
+      apiVersion: "company-as-code/v1alpha1",
       kind: "AuditRecord",
       id: ulid(),
       actor: args.actor,

@@ -3,7 +3,7 @@
 
 /** Mapping between the coordination layer and an external system. No vendor names are canonical; integrations are pluggable. */
 export interface Integration {
-  apiVersion: "company-as-code/v1";
+  apiVersion: "company-as-code/v1alpha1";
   kind: "Integration";
   /** Local canonical name for the integration. The vendor name lives in 'system', not here. */
   name: string;
