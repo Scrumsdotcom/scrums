@@ -159,6 +159,16 @@
       "permanent": true
     },
     {
+      "source": "/changelog/2026-summer",
+      "destination": "/changelog",
+      "permanent": true
+    },
+    {
+      "source": "/changelog/2025-winter",
+      "destination": "/changelog",
+      "permanent": true
+    },
+    {
       "source": "/support",
       "destination": "/resources/support",
       "permanent": true
@@ -485,9 +495,7 @@
           {
             "group": "Releases",
             "pages": [
-              "changelog",
-              "changelog/2026-summer",
-              "changelog/2025-winter"
+              "changelog"
             ]
           }
         ]
