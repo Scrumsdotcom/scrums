@@ -37,6 +37,7 @@ SEOP is the architecture of the Scrums.com platform: one control plane for AI ag
 |---|---|
 | [`docs/`](docs) | Source of the Scrums.com documentation at [scrums.com/docs](https://www.scrums.com/docs), built with [Mintlify](https://mintlify.com). |
 | [`packages/sorted-ui/`](packages/sorted-ui) | Source of [`@scrums/sorted-ui`](https://www.npmjs.com/package/@scrums/sorted-ui), the Sorted UI React components and design tokens. |
+| [`packages/nexttype/`](packages/nexttype) | Tooling for [NextType](https://github.com/Scrumsdotcom/nexttype), the experimental execution language for agents. The language lives in [`Scrumsdotcom/nexttype`](https://github.com/Scrumsdotcom/nexttype). |
 
 ## Documentation
 
