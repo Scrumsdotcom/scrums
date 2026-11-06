@@ -6,7 +6,8 @@ order: 1
 
 # Examples
 
-> **Disclaimer.** Illustrative design example. There is no NextType compiler yet; this code has not been compiled, checked or run.
+> **Checked.** Each example's NTΔ form is a `.ntd` file with a `manifest.json`. CI checks all three with `ntc`.
+> The readable views are illustrative: the readable view has no parser yet.
 
 Each example shows one contract in two views:
 
@@ -15,11 +16,10 @@ Each example shows one contract in two views:
 
 | Example | Rule | Files |
 | --- | --- | --- |
-| [Invoice](invoice/README.md) | The total equals the exact sum of its lines. | `invoice.nt` · `sum.ntd` |
-| [Vector](vector/README.md) | The vector contains at least one element. | `head.nt` · `head.ntd` |
-| [State](state/README.md) | A paid state requires a validated confirmation. | `pay.nt` · `step.ntd` |
+| [Invoice](invoice/README.md) | The total equals the exact sum of its lines. | [`sum.ntd`](invoice/sum.ntd) · [`manifest.json`](invoice/manifest.json) |
+| [Vector](vector/README.md) | The vector contains at least one element. | [`head.ntd`](vector/head.ntd) · [`manifest.json`](vector/manifest.json) |
+| [State](state/README.md) | A paid state requires a validated confirmation. | [`step.ntd`](state/step.ntd) · [`manifest.json`](state/manifest.json) |
 
-The file names are illustrative.
+The readable-view file names (`invoice.nt`, `head.nt`, `pay.nt`) are illustrative.
 The website playground runs one fixed-value fixture check for each example.
-Those checks are browser code, not NextType.
-They do not execute the NTΔ shown here.
+Those checks are browser code. `ntc` checks the NTΔ forms for all inputs.

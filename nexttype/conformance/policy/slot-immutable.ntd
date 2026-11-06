@@ -1,0 +1,7 @@
+; expect: invalid - SLOT f0 @5
+; expect: proved o0 TY f0 @4
+c0 Z
+f0 1
+f0 2
+put f0 c0 @b0
+ck f0 @a0

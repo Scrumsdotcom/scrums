@@ -1,0 +1,11 @@
+; Obligation slots are numbered in ck order.
+; context: n:N, xs:V Z n
+; expect: proved o0 TY f0 @6
+; expect: proved o1 TY f1 @7
+c0 Z
+f0 (sum xs)
+f1 (add (sum xs) 1)
+put f0 c0 @b0
+put f1 c0 @b0
+ck f0 @a0
+ck f1 @a0

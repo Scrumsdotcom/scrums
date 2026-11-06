@@ -1,0 +1,6 @@
+; ck needs an approval alias (@a…); a base alias is rejected.
+; expect: invalid - ALIAS f0 @6
+c0 Z
+f0 1
+put f0 c0 @b0
+ck f0 @b0

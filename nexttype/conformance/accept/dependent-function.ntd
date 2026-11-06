@@ -1,0 +1,6 @@
+; A polymorphic identity, checked against a dependent function type.
+; expect: proved o0 TY f0 @4
+c0 (pi A U0 (pi x A A))
+f0 (lam A (lam x x))
+put f0 c0 @b0
+ck f0 @a0

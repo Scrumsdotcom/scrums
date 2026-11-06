@@ -1,0 +1,7 @@
+; head on a vector whose length may be 0 needs a nil branch.
+; context: A:U0, n:N, v:V A n
+; expect: invalid o0 CASE f0 @5
+c0 A
+f0 (case v (cons (x _) x))
+put f0 c0 @b0
+ck f0 @a0
