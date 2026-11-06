@@ -1,0 +1,3 @@
+; A get budget must be positive.
+; expect: invalid - LIM - @3
+get o0 0
