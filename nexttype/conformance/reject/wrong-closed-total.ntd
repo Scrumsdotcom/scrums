@@ -1,0 +1,6 @@
+; Two closed, distinct values: the equality is refuted, not unknown.
+; expect: refuted o0 EQ f0 @4
+c0 (= (sum (cons 6000 (cons 6000 nil))) 12500)
+f0 refl
+put f0 c0 @b0
+ck f0 @a0

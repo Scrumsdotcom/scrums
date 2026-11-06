@@ -1,0 +1,6 @@
+; U0 is not in U0.
+; expect: invalid o0 UNIV f0 @4
+c0 U0
+f0 U0
+put f0 c0 @b0
+ck f0 @a0

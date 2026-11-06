@@ -1,0 +1,3 @@
+; A request stream cannot carry a result frame.
+; expect: invalid - SYN - @3
+proved o0 TY f0

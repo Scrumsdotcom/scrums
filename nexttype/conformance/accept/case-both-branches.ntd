@@ -1,0 +1,7 @@
+; With an unknown length both branches are reachable and both are required.
+; context: A:U0, n:N, v:V A n, d:A
+; expect: proved o0 TY f0 @5
+c0 A
+f0 (case v (nil () d) (cons (x _) x))
+put f0 c0 @b0
+ck f0 @a0

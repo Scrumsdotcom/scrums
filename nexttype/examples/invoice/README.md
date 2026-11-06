@@ -6,7 +6,8 @@ order: 2
 
 # Invoice
 
-> **Disclaimer.** Illustrative design example. There is no NextType compiler yet; this code has not been compiled, checked or run.
+> **Checked.** The NTΔ form below is [`sum.ntd`](sum.ntd), checked in CI by `ntc` against [`manifest.json`](manifest.json).
+> The readable view is illustrative: the readable view has no parser yet.
 
 **Rule:** the total equals the exact sum of its lines.
 
@@ -30,6 +31,12 @@ c0 (sig t Z (= t (sum xs)))
 f0 (pair (sum xs) refl)
 put f0 c0 @b0
 ck f0 @a0
+```
+
+## Check it
+
+```sh
+ntc check --manifest examples/invoice/manifest.json examples/invoice/sum.ntd
 ```
 
 ## What the contract guarantees

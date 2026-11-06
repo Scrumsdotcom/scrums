@@ -9,7 +9,7 @@ order: 3
 > **Status: Designed (restricted core), with Planned extensions.**
 > The first implementation proposes a closed set of built-in type constructors.
 > The public description calls this a *restricted dependent core*.
-> No type checker exists.
+> `ntc` 0.1 implements `U0`, `N`, `Z`, `V`, `S`, `pi`, `sig`, and `=`. The other constructors on this page are designs.
 
 ## The type outline
 

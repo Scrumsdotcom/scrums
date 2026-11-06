@@ -1,0 +1,3 @@
+; expect: invalid - SYN - @3
+c0 Z
+f0 (add 1 2

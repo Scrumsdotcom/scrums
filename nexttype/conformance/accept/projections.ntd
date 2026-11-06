@@ -1,0 +1,7 @@
+; snd of a sig value has the predicate with fst substituted.
+; context: n:N, xs:V Z n, p:sig t Z (= t (sum xs))
+; expect: proved o0 TY f0 @5
+c0 (= (fst p) (sum xs))
+f0 (snd p)
+put f0 c0 @b0
+ck f0 @a0

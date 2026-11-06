@@ -8,7 +8,7 @@ order: 8
 
 > **Status: Designed (semantics), Planned (codec).**
 > The patch semantics are in the language plan (sections 3.3 and 9).
-> The text codec is a draft. These frames are not executable today.
+> The `ntd/1` codec and the `put`, `ck`, and `get` frames are implemented in `ntc` 0.1. `build` and `run` are reserved.
 
 NTΔ is an edit stream, not a source file.
 An agent sends *frames*.

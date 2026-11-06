@@ -6,7 +6,8 @@ order: 3
 
 # Vector
 
-> **Disclaimer.** Illustrative design example. There is no NextType compiler yet; this code has not been compiled, checked or run.
+> **Checked.** The NTΔ form below is [`head.ntd`](head.ntd), checked in CI by `ntc` against [`manifest.json`](manifest.json).
+> The readable view is illustrative: the readable view has no parser yet.
 
 **Rule:** the vector contains at least one element.
 
@@ -31,6 +32,12 @@ c1 A
 f1 (case v (cons (x _) x))
 put f1 c1 @b0
 ck f1 @a0
+```
+
+## Check it
+
+```sh
+ntc check --manifest examples/vector/manifest.json examples/vector/head.ntd
 ```
 
 ## What the contract guarantees

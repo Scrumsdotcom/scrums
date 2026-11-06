@@ -1,0 +1,3 @@
+; Bidirectional controls are rejected, even in comments.
+; expect: invalid - SYN - @3
+c0 Z ; ‮ hidden

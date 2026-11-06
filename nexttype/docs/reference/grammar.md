@@ -1,68 +1,110 @@
 ---
 title: Grammar
-description: An EBNF summary of the draft NTΔ agent form, the manifest projection, and the semantic outline. Descriptive, not normative.
+description: "The normative grammar of the NTΔ stream format ntd/1, as implemented by ntc 0.1, plus the draft manifest projection and the semantic outline."
 order: 12
 ---
 
 # Grammar
 
-> **Status: Draft summary. Not normative.**
-> The language plan has no formal grammar yet.
-> This page describes the shapes that appear in the design examples.
-> A versioned grammar with a round-trip corpus is planned before any stable codec claim (C01).
+> **Status: `ntd/1` is normative and implemented in `ntc` 0.1.**
+> The NTΔ frames and terms below are the grammar that the reference checker decodes.
+> The conformance suite and the property tests check it.
+> The manifest projection and the semantic outline later on this page are still drafts.
 
 The notation is ISO-style EBNF:
 `=` defines, `,` concatenates, `|` separates choices, `{ }` repeats zero or more times, `[ ]` is optional, and `(* *)` is a comment.
 
-## NTΔ frames
+## NTΔ stream format `ntd/1`
 
 ```ebnf
-(* A stream is a sequence of frames, one per line in the examples. *)
-stream          = { frame , newline } ;
-frame           = slot-definition | command | diagnostic ;
+(* A stream is UTF-8 text. A line ends with LF or CRLF.            *)
+(* Each line holds at most one frame, then an optional comment.     *)
+stream          = { line } ;
+line            = [ ws ] , [ frame , [ ws ] ] , [ comment ] , eol ;
+comment         = ";" , { any-char - eol } ;
+ws              = ( " " | tab ) , { " " | tab } ;
 
-(* Slot definitions *)
-slot-definition = contract-slot , space , term
-                | fragment-slot , space , term ;
+frame           = slot-definition | command | response ;
 
-(* Commands *)
-command         = "put" , space , fragment-slot , space , contract-slot , space , alias
-                | "ck" , space , fragment-slot , space , alias
-                | "get" , space , obligation-slot , space , natural
-                | "build" , space , alias , space , alias
-                | "run" , space , alias , space , alias ;
+slot-definition = contract-slot , ws , term
+                | fragment-slot , ws , term ;
 
-(* Diagnostics, as returned to the agent *)
-diagnostic      = result , space , obligation-slot , space , code , space , fragment-slot
-                | "ctx" , space , alias ;
+command         = "put" , ws , fragment-slot , ws , contract-slot , ws , alias
+                | "ck" , ws , fragment-slot , ws , alias
+                | "get" , ws , obligation-slot , ws , positive
+                | "build" , ws , alias , ws , alias
+                | "run" , ws , alias , ws , alias ;
+
+(* Responses appear only in checker output. A request stream that   *)
+(* contains one is invalid.                                          *)
+response        = result , ws , obligation-slot , ws , code , ws , fragment-slot
+                | "ctx" , ws , alias ;
 result          = "proved" | "refuted" | "unknown" | "unsupported" | "invalid" ;
-code            = upper , { upper } ;                  (* only "EQ" is designed *)
+code            = upper , { upper } ;
 
 (* Terms *)
-term            = atom | "(" , term , { space , term } , ")" ;
-atom            = core-constant | keyword | name | natural | "_" | "=" ;
-core-constant   = "U0" | "N" | "Z" | "V" | "S" ;
-keyword         = "pi" | "lam" | "app" | "sig" | "pair" | "fst" | "snd"
-                | "refl" | "case" ;
-
-(* Slots and aliases, as observed in the examples *)
-contract-slot   = "c" , digits ;
-fragment-slot   = "f" , digits ;
-obligation-slot = "o" , digits ;
-alias           = "@" , lower , digits ;              (* @b0 @a0 @k0 @p0 @t0 @x0 @r0 *)
+term            = atom | "(" , [ ws ] , term , { ws , term } , [ ws ] , ")"
+                | "(" , [ ws ] , ")" ;                 (* only as an empty binder list *)
+atom            = name | natural | integer | alias | "_" | "=" ;
 
 name            = letter , { letter | digit } ;
-natural         = digits ;
-digits          = digit , { digit } ;
+natural         = "0" | nonzero , { digit } ;
+positive        = nonzero , { digit } ;
+integer         = "-" , nonzero , { digit } ;
+alias           = "@" , lower , index ;
+contract-slot   = "c" , index ;
+fragment-slot   = "f" , index ;
+obligation-slot = "o" , index ;
+index           = "0" | nonzero , { digit } ;
+
+letter          = upper | lower ;
+upper           = "A" | … | "Z" ;
+lower           = "a" | … | "z" ;
+digit           = "0" | nonzero ;
+nonzero         = "1" | … | "9" ;
 ```
 
-Notes:
+### Lexical rules
 
-- The meaning of a term depends on its head. For example, `(sig t Z P)` binds `t : Z` in `P`, and `(case v (cons (x _) x))` binds `x`.
-- Keywords and core constants are bound to versioned core constructors through the manifest. Their exact arities are **open**.
-- The examples also use manifest-bound names in head position, such as `(sum xs)`, `(zip xs ys)`, `(step i r)`, `(I paid)`, and `(Pair A B)`.
-- Whitespace, escaping, text literals, integer literals, comments, and frame size limits are **open** (C01).
-- A slot or alias cannot mix artifact classes. This is a typing rule, not a grammar rule.
+- Outside comments, a line contains only printable ASCII (U+0021 to U+007E), space, and tab.
+- A comment may contain any UTF-8 text except control characters and bidirectional controls (U+061C, U+200E, U+200F, U+202A to U+202E, U+2066 to U+2069). These are rejected anywhere in the stream.
+- A byte order mark, a NUL, or a bare carriage return is rejected.
+- Numbers and indices have no leading zeros, and `-0` is invalid. So every value has exactly one spelling.
+- A frame may not span lines.
+
+### Term forms
+
+The head of a list decides its meaning.
+Keywords and core constants are reserved: they cannot be bound.
+
+| Form | Arity | Meaning |
+| --- | --- | --- |
+| `(pi x A B)` | 3 | Dependent function type. `x` is bound in `B`. |
+| `(sig x A B)` | 3 | Dependent pair type. `x` is bound in `B`. |
+| `(lam x e)` | 2 | Function. Needs an expected `pi` type. |
+| `(app f a)` | 2 | Application. Same as `(f a)`. |
+| `(pair a b)` | 2 | Pair. Needs an expected `sig` type. |
+| `(fst p)`, `(snd p)` | 1 | Projections. |
+| `(= a b)` | 2 | Equality type. |
+| `refl` | atom | Proof of `(= a a)`. |
+| `(case s branch …)` | 2 or more | Vector case. Needs an expected type. |
+| `(f a …)` | 1 or more | Application of any other head. |
+
+A branch is `(nil () e)`, `(cons (x t) e)`, or `(cons (m x t) e)`.
+
+Reserved words: `pi lam app sig pair fst snd refl case U0 N Z V S put ck get build run ctx proved refuted unknown unsupported invalid`, every slot spelling (`c0`, `f12`, `o3`, …), and every `U` followed by digits.
+
+### Limits
+
+A conforming decoder enforces limits and reports them as `LIM`.
+The `ntc` defaults are in the [quick reference](quick-reference.md#limits).
+A decoder may use smaller limits. It must not accept input above the limit it states.
+
+### Canonical form
+
+`ntc fmt` prints each frame with single spaces and no comments.
+Decoding a canonical stream and printing it again gives the same text.
+The property tests check this.
 
 ## Contexts
 

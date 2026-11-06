@@ -180,6 +180,20 @@ if [ -e "$work/bin3/nt" ]; then bad "tampered file was installed"; else ok "tamp
 expect 0 "install --local" env NT_INSTALL_DIR="$work/bin2" sh "$installer" --local
 expect 0 "uninstall" env NT_INSTALL_DIR="$work/bin2" sh "$installer" --uninstall
 if [ -e "$work/bin2/nt" ]; then bad "uninstall left nt"; else ok "uninstall removed nt"; fi
+# 11. Installer hardening: HTTPS only, pinned digest, consistent pin
+expect 1 "http base URL is refused" env NT_BASE_URL="http://example.invalid" NT_INSTALL_DIR="$work/bin5" sh "$installer"
+contains "must start with https://" "http refusal explained"
+mkdir -p site2
+cp "$root/cli/nt" site2/nt
+printf '\n# replaced\n' >>site2/nt
+(cd site2 && { sha256sum nt 2>/dev/null || shasum -a 256 nt; } >nt.sha256)
+expect 1 "a consistent but unpinned download is rejected" env NT_BASE_URL="file://$work/site2" NT_INSTALL_DIR="$work/bin6" sh "$installer"
+contains "pinned in this installer" "pin mismatch reported"
+if [ -e "$work/bin6/nt" ]; then bad "unpinned file was installed"; else ok "unpinned file not installed"; fi
+expect 1 "a malformed NT_SHA256 is refused" env NT_SHA256=xyz NT_INSTALL_DIR="$work/bin7" sh "$installer" --local
+pinned=$(sed -n 's/^NT_PINNED_SHA256="\([0-9a-f]*\)"$/\1/p' "$installer")
+published=$(awk '{print $1}' "$root/cli/nt.sha256")
+if [ "$pinned" = "$published" ]; then ok "installer pin matches cli/nt.sha256"; else bad "installer pin $pinned differs from cli/nt.sha256 $published"; fi
 mkdir -p "$work/bin4" && printf '#!/bin/sh\necho other\n' >"$work/bin4/nt"
 expect 1 "uninstall refuses a foreign nt" env NT_INSTALL_DIR="$work/bin4" sh "$installer" --uninstall
 expect 1 "unknown installer option" sh "$installer" --frobnicate

@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.scrums.com"><img src="https://img.shields.io/badge/Scrums.com-Research-0B5FFF" alt="Scrums.com Research"></a>
-  <a href="docs/status.md"><img src="https://img.shields.io/badge/NextType_compiler-planned-lightgrey" alt="NextType compiler: planned"></a>
+  <a href="docs/status.md"><img src="https://img.shields.io/badge/reference_checker-0.1-0B5FFF" alt="Reference checker: 0.1"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue" alt="License: Apache-2.0"></a>
 </p>
 
@@ -21,26 +21,54 @@
 
 **TypeScript that proves it.** Agents write the code. The compiler checks the contract. Humans review the spec.
 
-An experimental execution language for agents.
+An execution language for agents.
 Programs are typed compiler graphs.
 Agents exchange compact patches and receive explicit obligations.
 People approve intent and assumptions.
 Independent machines check implementations against those fixed contracts.
 
-**Current state: M0 design preview.**
-The compiler, proof service, and autonomous repair controller remain planned.
-The website contains browser fixtures and a scripted target animation.
-There is no installable language release or measured performance result.
+**Current state: design preview.**
+The [`ntc` 0.1.0 reference checker](docs/tools/ntc.md) decodes NTΔ, elaborates it to the NT0 core, re-checks every term in an independent kernel, and binds each proved obligation to a digest.
+There is no published release and no measured performance result.
+See [Status](docs/status.md).
 
-[Docs](docs/index.md) · [Examples](examples/README.md) · [Benchmarks](benchmarks/README.md) · [Research](research/README.md) · [Contribute](CONTRIBUTING.md) · [Governance](GOVERNANCE.md) · [Security](SECURITY.md)
+[Docs](docs/index.md) · [NTΔ shorthand](docs/language/shorthand.md) · [Quick reference](docs/reference/quick-reference.md) · [Patterns for agents](docs/guides/agent-patterns.md) · [Examples](examples/README.md) · [Benchmarks](benchmarks/README.md) · [Research](research/README.md) · [Contribute](CONTRIBUTING.md) · [Governance](GOVERNANCE.md) · [Security](SECURITY.md)
 
 ## Safety warning
 
-NextType is experimental.
-Expect breaking changes, rough edges, and security issues.
-Run it in isolated workspaces, not against production systems or sensitive data.
+NextType is pre-1.0.
+Expect breaking changes between minor versions; each one is listed in the [changelog](CHANGELOG.md) with a migration note.
+A manifest's constants are axioms: review them like a contract.
+See the [security model](docs/reference/security-model.md) for what a `proved` result does and does not mean.
 
-## Install (preview)
+## Check a contract
+
+Build the reference checker (Node.js 20 or later, no runtime dependencies):
+
+```sh
+cd packages/compiler && npm ci --ignore-scripts && npm run build && cd ../..
+alias ntc="node $PWD/packages/compiler/dist/src/cli.js"
+```
+
+Check the invoice example:
+
+```console
+$ ntc check --manifest examples/invoice/manifest.json examples/invoice/sum.ntd
+proved o0 TY f0
+; evidence sha256:c5ee1173d85575d1b4d30111b7f79c14e5a8af1a0f74b062a82e03e72a98ae2c
+```
+
+A wrong total is rejected:
+
+```console
+$ printf 'f0 (pair (add (sum xs) 1) refl)\nput f0 c0 @b0\nck f0 @a0\n' | ntc check --manifest examples/invoice/manifest.json
+unknown o0 EQ f0
+; 1:27 refl does not hold: (add (sum xs) 1) and (sum xs) are not definitionally equal; the checker cannot decide this equality
+```
+
+Learn the notation in [NTΔ shorthand](docs/language/shorthand.md).
+
+## Install the preview CLI
 
 > **Design preview.** This installs `nt`, a small preview script.
 > It has no compiler, type checker, or prover.
@@ -48,8 +76,13 @@ Run it in isolated workspaces, not against production systems or sensitive data.
 For humans:
 
 ```sh
-curl -fsSL https://nexttype.dev/install.sh | sh
+curl -fsSLO https://nexttype.dev/install.sh   # download
+less install.sh                               # read it
+sh install.sh                                 # run it
 ```
+
+The installer downloads over HTTPS only and refuses any file whose SHA-256 differs from the value pinned in the installer.
+Set `NT_VERIFY_PROVENANCE=1` to also require GitHub build provenance (needs `gh`).
 
 For agents:
 
@@ -59,7 +92,7 @@ npx skills add Scrumsdotcom/nexttype
 
 This installs the [NextType agent skill](skills/nexttype/SKILL.md) with the [`skills`](https://github.com/vercel-labs/skills) CLI.
 The skill tells the agent to install `nt` and to follow the habits below.
-While this repository is private, the command needs GitHub access to it (a `gh` login or a `GH_TOKEN`); when it is public, it needs no access.
+The CLI clones the repository with git. It needs no GitHub login.
 
 - `nt guide` prints the guide: what NextType is, the two views, and how to write a contract.
 - `nt proof init` writes a template obligation ledger, `PROOF.md`.
@@ -71,19 +104,21 @@ Try `nt compare`, then `nt proof init` and `nt proof`.
 
 ## One fragment, one obligation
 
-Proposed NTΔ under the manifest context `Γ = {A:U0, n:N, v:V A (S n)}`:
+NTΔ under the context `Γ = {A:U0, n:N, v:V A (S n)}`:
 
-```text
+```ntd
+; context: A:U0, n:N, v:V A (S n)
+; expect: proved o0 TY f1 @4
 c1 A
 f1 (case v (cons (x _) x))
 put f1 c1 @b0
 ck f1 @a0
 ```
 
-The index excludes an empty vector.
-The compiler reconstructs the complete typed term before checking.
-`@b0` identifies the base program; `@a0` identifies the independent approval envelope.
-These are draft notation examples, not runnable commands.
+The index excludes an empty vector, so the match needs no `nil` branch.
+The checker reconstructs the complete typed term, then the kernel re-checks it.
+`@b0` identifies the base program; `@a0` identifies the approval.
+The `; expect:` line is the test data: CI runs this block.
 
 ## Autonomous within approved contracts
 
@@ -122,28 +157,26 @@ These figures are targets and scripted illustrations only.
 CI rejection counts measure repair friction, not safety.
 All comparisons retain fixed acceptance requirements and report failures.
 
-## Planned repository
+## Repository layout
 
-| Area | Responsibility |
+| Folder | Contents |
 | --- | --- |
-| `schemas/`, `packages/core/` | Canonical terms, identities, contracts, and wire formats. |
-| `packages/compiler/`, `verifier/` | Elaboration, obligations, proof checking, lowering, and preservation. |
-| `packages/policy/`, `services/acceptance/` | Independent approval, bounded repair, and artifact acceptance. |
-| `packages/runtime/`, `stdlib/`, `targets/` | Execution, reusable checked operations, and application bindings. |
-| `tests/`, `benchmarks/` | Conformance, boundary failures, token accounting, and empirical evaluation. |
-| `docs/`, `examples/`, `research/` | Documentation (published at nexttype.dev/docs), illustrative examples, and the foundation paper. The website itself lives outside this repository. |
-
-This table is a blueprint.
-Implementation folders appear as their milestones begin.
+| `packages/compiler/` | The `ntc` reference checker: decoder, elaborator, kernel, evaluator. |
+| `conformance/` | Positive and negative conformance cases for `ntd/1`. |
+| `examples/` | Checked example streams and manifests, with readable views. |
+| `docs/` | Documentation, published at nexttype.dev/docs. |
+| `cli/`, `tests/` | The `nt` preview script, its installer, and their tests. |
+| `benchmarks/`, `research/` | The benchmark design and the foundation paper. |
 
 ## Contributing now
 
+Find a stream that `ntc` accepts but should reject: that is the most valuable report. See [SECURITY.md](SECURITY.md).
 Review the semantics, challenge incomplete contracts, or propose a minimal conformance case.
 Improve the benchmark design with reproducible comparisons.
 Follow [CONTRIBUTING.md](CONTRIBUTING.md) and label planned capabilities accurately.
 
 Licensed under the [Apache License 2.0](LICENSE).
-Release identifiers remain pending.
+Versioning follows [Versioning and stability](docs/reference/versioning.md).
 
 ## Credits
 

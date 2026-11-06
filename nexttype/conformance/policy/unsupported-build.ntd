@@ -1,0 +1,2 @@
+; expect: unsupported - CMD - @2
+build @p0 @t0

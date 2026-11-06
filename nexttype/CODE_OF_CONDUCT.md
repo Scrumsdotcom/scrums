@@ -1,7 +1,6 @@
 # Proposed contributor conduct
 
-This template needs owner ratification and named moderators before public collaboration begins.
-It is not an active moderation policy for the parent repository.
+This policy needs named moderators before it is enforced.
 
 Treat contributors with respect.
 Evaluate technical claims through evidence and clear reasoning.

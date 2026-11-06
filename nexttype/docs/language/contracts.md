@@ -6,7 +6,7 @@ order: 2
 
 # Contracts
 
-> Proposed design. No compiler exists yet.
+> Proposed design. The `ntc` reference checker checks NTΔ contracts; see [NTΔ shorthand](shorthand.md) for checked examples.
 
 ## Dependent types are the spec
 

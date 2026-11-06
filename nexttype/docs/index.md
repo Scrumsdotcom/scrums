@@ -11,8 +11,8 @@ Agents write the code.
 The compiler checks the contract.
 Humans review the spec.
 
-> **Status: M0 design preview.**
-> The compiler is planned.
+> **Status: design preview.**
+> The `ntc` 0.1.0 reference checker type-checks NTΔ against the NT0 core.
 > Nothing is measured.
 > See [Status](status.md) for what exists today.
 
@@ -46,7 +46,12 @@ Run it in isolated workspaces, not against production systems or sensitive data.
 | [One contract, two views](language/two-views.md) | Compare the readable view with the NTΔ agent form. |
 | [Language reference](reference/index.md) | Look up the precise rules: types, contracts, effects, NTΔ frames, diagnostics, the protocol, and the grammar. |
 | [Glossary](reference/glossary.md) | Look up NTΔ, NT0, Γ, obligation, and other terms. |
-| [The nt preview CLI](tools/cli.md) | Install `nt`, read the guide, and check an obligation ledger. It has no compiler. |
+| [NTΔ shorthand](language/shorthand.md) | Learn every construct, with checked examples. |
+| [Quick reference](reference/quick-reference.md) | Look up frames, terms, results, and codes on one screen. |
+| [Patterns for agents](guides/agent-patterns.md) | Write streams that pass, and read each result. |
+| [The ntc reference checker](tools/ntc.md) | Build `ntc` and check NTΔ streams. |
+| [Security model](reference/security-model.md) | See what the checker trusts, rejects, and bounds. |
+| [The nt preview CLI](tools/cli.md) | Install `nt`, read the guide, and check an obligation ledger. `nt` is not a type checker. |
 | [Examples](../examples/README.md) | Read the invoice, vector, and state examples. |
 | [Why NextType](../research/why-nexttype.md) | Understand the design position. |
 | [Benchmark design](../benchmarks/README.md) | See how the project plans to measure tokens, time, and defects. |

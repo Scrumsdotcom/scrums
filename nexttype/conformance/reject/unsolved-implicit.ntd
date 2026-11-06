@@ -1,0 +1,9 @@
+; The element type of nil cannot be inferred from (= nil nil).
+; The contract is rejected, so put and ck have nothing to refer to.
+; expect: invalid - IMPL - @6
+; expect: invalid - SLOT f0 @8
+; expect: invalid - SLOT f0 @9
+c0 (= nil nil)
+f0 refl
+put f0 c0 @b0
+ck f0 @a0

@@ -1,0 +1,7 @@
+; Vector: head of a nonempty vector. The length S n rules out nil,
+; so the case needs no nil branch.
+; Check: ntc check --manifest examples/vector/manifest.json examples/vector/head.ntd
+c1 A
+f1 (case v (cons (x _) x))
+put f1 c1 @b0
+ck f1 @a0

@@ -6,7 +6,8 @@ order: 4
 
 # State
 
-> **Disclaimer.** Illustrative design example. There is no NextType compiler yet; this code has not been compiled, checked or run.
+> **Checked.** The NTΔ form below is [`step.ntd`](step.ntd), checked in CI by `ntc` against [`manifest.json`](manifest.json).
+> The readable view is illustrative: the readable view has no parser yet.
 
 **Rule:** a paid state requires a validated confirmation.
 
@@ -32,6 +33,12 @@ c3 (I paid)
 f3 (step i r)
 put f3 c3 @b0
 ck f3 @a0
+```
+
+## Check it
+
+```sh
+ntc check --manifest examples/state/manifest.json examples/state/step.ntd
 ```
 
 ## What the contract guarantees

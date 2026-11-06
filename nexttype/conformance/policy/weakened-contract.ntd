@@ -1,0 +1,9 @@
+; The agent restates c0 with a weaker predicate. The approved contract wins,
+; the restatement is rejected, and the fragment is checked against the approval.
+; manifest: examples/invoice/manifest.json
+; expect: invalid - POLICY - @6
+; expect: unknown o0 EQ f0 @7
+c0 (sig t Z (= t 0))
+f0 (pair 0 refl)
+put f0 c0 @b0
+ck f0 @a0

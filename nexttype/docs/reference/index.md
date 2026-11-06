@@ -6,10 +6,10 @@ order: 1
 
 # Language reference
 
-> **Status: M0 design preview.**
-> No parser, compiler, or checker exists.
-> This reference describes the proposed design in the language plan.
-> Nothing on these pages is executable today.
+> **Status: the restricted core is implemented in the `ntc` 0.1 reference checker.**
+> The NTΔ codec (`ntd/1`), the NT0 core, the kernel, and the diagnostics are **Implemented**: the conformance suite checks them.
+> Effects, modules, targets, the readable-view parser, and proof integration remain designs.
+> Each page and rule says which applies.
 
 The reference is compact.
 It states rules, not tutorials.
@@ -42,10 +42,12 @@ Each page and each major rule carries one label:
 | **Planned** | The language plan names the feature. The details are not fixed. |
 | **Open** | The language plan does not decide it. The page lists the question. |
 
-No rule is **Implemented**.
+| **Implemented** | The reference checker implements the rule, and a conformance case checks it. |
+
 A rule becomes implemented only when conformance evidence exists.
 The plan's per-feature statuses are `planned`, `specified`, `implemented`, `conformant`, `deprecated`, and `unsupported`.
-Every feature is `planned` or `specified` today.
+The NTΔ codec, the restricted core, and the diagnostics are `implemented`.
+Everything else is `planned` or `specified`.
 
 ## Notation
 

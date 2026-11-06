@@ -1,0 +1,6 @@
+; Invoice: the total equals the exact sum of its lines.
+; Check: ntc check --manifest examples/invoice/manifest.json examples/invoice/sum.ntd
+c0 (sig t Z (= t (sum xs)))
+f0 (pair (sum xs) refl)
+put f0 c0 @b0
+ck f0 @a0

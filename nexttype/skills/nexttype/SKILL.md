@@ -14,7 +14,7 @@ Agents write the code. A planned compiler checks it against the fixed contract. 
 
 ## Status and safety
 
-- Status: M0 design preview. No compiler, type checker, or prover exists. Nothing is measured.
+- Status: design preview. The `ntc` reference checker type-checks NTΔ (build it from `packages/compiler`; see https://nexttype.dev/docs/tools/ntc). `nt` is a separate preview script and is not a type checker. Nothing is measured.
 - `nt proof` checks the ledger format only. It is not a type check and not a proof.
 - NextType is experimental. Run it in isolated workspaces, not against production systems or sensitive data.
 - Say what is planned and what is measured. Never claim a proof that you do not have.

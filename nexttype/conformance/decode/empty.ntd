@@ -1,0 +1,2 @@
+; A stream with only comments has no frames.
+; expect: invalid - SYN - @1

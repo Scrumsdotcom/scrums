@@ -58,7 +58,7 @@ order: 13
 | `build @p0 @t0` | Build an accepted program for a declared target. |
 | `run @x0 @r0` | Execute under a bound runtime and fixture profile. |
 
-These operations are planned.
-They are not executable today.
+`ntc` 0.1 runs `put`, `ck`, and `get`.
+`build` and `run` are reserved and report `unsupported`.
 
 The full rules are in the [language reference](index.md).
