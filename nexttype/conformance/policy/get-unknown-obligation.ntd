@@ -1,0 +1,3 @@
+; get refers to an obligation that no ck produced.
+; expect: invalid - SLOT - @3
+get o0 64
