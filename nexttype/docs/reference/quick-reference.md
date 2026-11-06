@@ -85,6 +85,19 @@ ntc fmt [FILE|-]      ntc prelude      ntc limits      ntc version
 
 Exit codes: `0` every obligation proved, `1` anything else, `2` usage or file error.
 
+Try the evaluator:
+
+```console
+$ ntc eval '(add (int 3) -5)'
+-2 : Z
+$ ntc eval '(S (S 0))'
+2 : N
+$ ntc eval '(cons 1 (cons 2 nil))'
+(cons 1 (cons 2 nil)) : (V N 2)
+```
+
+A bare literal is a natural (`N`). Where `Z` is expected, as in `(sum (cons 1 nil))`, it is an integer.
+
 ## Limits
 
 | Limit | Default |
