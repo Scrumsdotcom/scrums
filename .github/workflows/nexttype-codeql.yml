@@ -1,9 +1,15 @@
-name: codeql
+name: nexttype-codeql
 
 on:
   pull_request:
+    paths:
+      - "nexttype/**"
+      - ".github/workflows/nexttype-*.yml"
   push:
     branches: [main]
+    paths:
+      - "nexttype/**"
+      - ".github/workflows/nexttype-*.yml"
   schedule:
     - cron: "41 4 * * 3"
 
@@ -31,4 +37,11 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           queries: security-extended
+          # Scan NextType and its workflows only.
+          config: |
+            paths:
+              - nexttype
+              - .github/workflows/nexttype-*.yml
       - uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          category: nexttype-${{ matrix.language }}

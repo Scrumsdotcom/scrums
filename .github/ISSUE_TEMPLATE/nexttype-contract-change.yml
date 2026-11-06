@@ -1,5 +1,6 @@
-name: Contract change requiring owner review
+name: "NextType: Contract change requiring owner review"
 description: Request a changed guarantee, authority, assumption, or acceptance rule.
+labels: [nexttype]
 body:
   - type: textarea
     id: roots

@@ -1,5 +1,6 @@
-name: Compiler or runtime defect
+name: "NextType: Compiler or runtime defect"
 description: Report a reproducible mismatch against a fixed contract.
+labels: [nexttype]
 body:
   - type: textarea
     id: contract

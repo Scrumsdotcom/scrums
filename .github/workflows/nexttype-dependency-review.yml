@@ -1,7 +1,10 @@
-name: dependency-review
+name: nexttype-dependency-review
 
 on:
   pull_request:
+    paths:
+      - "nexttype/**"
+      - ".github/workflows/nexttype-*.yml"
 
 permissions:
   contents: read

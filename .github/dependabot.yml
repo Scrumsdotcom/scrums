@@ -8,7 +8,7 @@ updates:
       actions:
         patterns: ["*"]
   - package-ecosystem: npm
-    directory: /packages/compiler
+    directory: /nexttype/packages/compiler
     schedule:
       interval: weekly
     groups:

@@ -1,15 +1,21 @@
-name: ci
+name: nexttype-ci
 
 on:
   pull_request:
+    paths:
+      - "nexttype/**"
+      - ".github/workflows/nexttype-ci.yml"
   push:
     branches: [main]
+    paths:
+      - "nexttype/**"
+      - ".github/workflows/nexttype-ci.yml"
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: nexttype-ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -23,7 +29,7 @@ jobs:
         node: [20, 22, 24]
     defaults:
       run:
-        working-directory: packages/compiler
+        working-directory: nexttype/packages/compiler
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -42,7 +48,7 @@ jobs:
         env:
           NT_FUZZ_RUNS: "5000"
       - name: Check the examples with the CLI
-        working-directory: .
+        working-directory: nexttype
         run: |
           for ex in invoice/sum vector/head state/step; do
             node packages/compiler/dist/src/cli.js check \
@@ -53,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: packages/compiler
+        working-directory: nexttype/packages/compiler
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

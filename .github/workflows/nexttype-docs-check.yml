@@ -1,0 +1,34 @@
+name: nexttype-docs-check
+
+on:
+  pull_request:
+    paths:
+      - "nexttype/docs/**"
+      - "nexttype/examples/**"
+      - "nexttype/benchmarks/**"
+      - "nexttype/research/**"
+      - "nexttype/scripts/check_docs.py"
+      - ".github/workflows/nexttype-docs-check.yml"
+  push:
+    branches: [main]
+    paths:
+      - "nexttype/docs/**"
+      - "nexttype/examples/**"
+      - "nexttype/benchmarks/**"
+      - "nexttype/research/**"
+      - "nexttype/scripts/check_docs.py"
+      - ".github/workflows/nexttype-docs-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: nexttype
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check frontmatter, nav.json, and relative links
+        run: python3 scripts/check_docs.py

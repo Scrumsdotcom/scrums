@@ -1,5 +1,6 @@
-name: Language or tooling proposal
+name: "NextType: Language or tooling proposal"
 description: Propose a bounded capability with semantics and evidence requirements.
+labels: [nexttype]
 body:
   - type: textarea
     id: outcome

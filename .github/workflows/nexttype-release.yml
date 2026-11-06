@@ -1,13 +1,14 @@
-name: release
+name: nexttype-release
 
-# Runs when a maintainer pushes a version tag such as v0.1.0.
+# Runs when a maintainer pushes a NextType version tag such as nexttype-v0.1.0.
+# The nexttype- prefix keeps these tags apart from the monthly vYYYY.MM tags.
 # Builds from the tagged commit, runs the full test suite, writes SHA256SUMS,
 # attests build provenance with Sigstore, and creates a draft GitHub release.
 # A maintainer reviews the draft before publishing it.
 
 on:
   push:
-    tags: ["v*.*.*"]
+    tags: ["nexttype-v*.*.*"]
 
 permissions:
   contents: read
@@ -21,6 +22,9 @@ jobs:
       attestations: write
     outputs:
       version: ${{ steps.version.outputs.version }}
+    defaults:
+      run:
+        working-directory: nexttype
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -31,12 +35,12 @@ jobs:
       - name: Check that the tag matches the package version
         id: version
         run: |
-          tag="${GITHUB_REF_NAME#v}"
+          tag="${GITHUB_REF_NAME#nexttype-v}"
           pkg=$(node -p 'require("./packages/compiler/package.json").version')
           if [ "$tag" != "$pkg" ]; then echo "tag $tag does not match package version $pkg" >&2; exit 1; fi
           echo "version=$tag" >> "$GITHUB_OUTPUT"
       - name: Build and test
-        working-directory: packages/compiler
+        working-directory: nexttype/packages/compiler
         run: |
           npm ci --ignore-scripts --no-audit --no-fund
           npm test
@@ -54,14 +58,14 @@ jobs:
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: |
-            dist-release/*.tgz
-            dist-release/nt
-            dist-release/install.sh
-            dist-release/SHA256SUMS
+            nexttype/dist-release/*.tgz
+            nexttype/dist-release/nt
+            nexttype/dist-release/install.sh
+            nexttype/dist-release/SHA256SUMS
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release
-          path: dist-release/
+          path: nexttype/dist-release/
           if-no-files-found: error
 
   draft:
@@ -80,6 +84,6 @@ jobs:
           VERSION: ${{ needs.build.outputs.version }}
         run: |
           gh release create "$GITHUB_REF_NAME" dist-release/* \
-            --repo "$GITHUB_REPOSITORY" --draft --verify-tag \
+            --repo "$GITHUB_REPOSITORY" --draft --verify-tag --latest=false \
             --title "NextType $VERSION" \
-            --notes "See CHANGELOG.md. Verify a download with: gh attestation verify FILE --repo $GITHUB_REPOSITORY"
+            --notes "See nexttype/CHANGELOG.md. Verify a download with: gh attestation verify FILE --repo $GITHUB_REPOSITORY"
