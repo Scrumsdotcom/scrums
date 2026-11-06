@@ -8,7 +8,7 @@ order: 3
 
 > Both views are proposals.
 > The readable view is not arbitrary TypeScript.
-> No compiler exists yet.
+> `ntc` checks the NTΔ view. The readable view has no parser yet.
 
 NextType keeps a TypeScript lineage.
 Each contract has two views:

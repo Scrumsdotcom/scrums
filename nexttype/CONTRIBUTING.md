@@ -1,16 +1,27 @@
 # Contributing to NextType
 
-**Proposed standalone-project guidelines.**
-Maintainers must ratify this template before accepting external contributions.
-It does not govern the parent company repository.
-
 ## Current contribution scope
 
-NextType is a design preview.
-Useful contributions include semantic counterexamples, compiler designs, protocol fixtures, benchmark methods, and accurate documentation.
-There is no compiler installation command yet.
-Use the repository's actual commands when implementation packages arrive.
+NextType has a reference checker, `ntc`, in `packages/compiler/`.
+Useful contributions include streams that `ntc` wrongly accepts or rejects, new conformance cases, protocol fixtures, benchmark methods, and accurate documentation.
 Never invent passing results for a planned command.
+
+## Build and test
+
+```sh
+cd packages/compiler
+npm ci --ignore-scripts
+npm test                 # type-check, unit, property, conformance, and documentation tests
+npm run fuzz             # the fuzzer (NT_FUZZ_RUNS, NT_FUZZ_SEED)
+cd ../..
+sh tests/cli.sh          # the nt preview script and its installer
+python3 .github/scripts/check_docs.py
+```
+
+Every change to the checker needs a conformance case under `conformance/`: a positive case for new behavior and a negative case for each new rejection.
+A conformance case is an NTΔ stream with `; expect:` lines; see `packages/compiler/test/harness.ts`.
+An `ntd` or `console` code block in the documentation is a test too.
+Use a `text` block for notation that does not run.
 
 ## Start with a bounded change
 
@@ -45,7 +56,7 @@ Do not let generated patches alter their own acceptance policy.
 
 Do not submit secrets, private customer data, copyrighted datasets without rights, or fabricated benchmark records.
 Use synthetic fixtures whenever possible.
-Follow the project's configured private reporting channel for exploitable defects.
+Report exploitable defects privately, as described in [SECURITY.md](SECURITY.md).
 
 ## Proof and trust requirements
 
@@ -75,7 +86,8 @@ A failing check must be repaired or explicitly escalated through a new requireme
 Disabling a check is not a repair.
 
 The release maintainer publishes only artifacts with complete evidence and provenance.
-Signing, license terms, contributor agreements, and contact details need owner decisions before public launch.
+Releases are built by the `release` workflow from a version tag, with `SHA256SUMS` and a build-provenance attestation.
+Contributions are accepted under the [Apache License 2.0](LICENSE).
 
 ## Docs, examples and research
 
@@ -84,7 +96,7 @@ The repository keeps four kinds of content apart, like most language repositorie
 | Folder | Publishes to | What belongs there |
 | --- | --- | --- |
 | `docs/` | [nexttype.dev/docs](https://nexttype.dev/docs) | Documentation only: getting started, the language guide, the reference. |
-| `examples/` | nexttype.dev/examples | One folder per example with a `README.md`. Each starts with the disclaimer that it has not been compiled, checked or run. |
+| `examples/` | nexttype.dev/examples | One folder per example with a `README.md`, a `.ntd` stream, and a `manifest.json`. CI checks every stream. |
 | `benchmarks/` | nexttype.dev/benchmarks | The benchmark design and, later, measured results. |
 | `research/` | nexttype.dev/research | The foundation paper and positioning articles. |
 

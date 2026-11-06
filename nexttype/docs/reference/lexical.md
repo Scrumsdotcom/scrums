@@ -6,10 +6,11 @@ order: 2
 
 # Lexical structure
 
-> **Status: Planned.**
-> The draft NTΔ text uses a small S-expression vocabulary.
-> A versioned grammar, escaping rules, and frame limits are planned (C01).
-> A formal grammar and a round-trip corpus come before any stable codec claim.
+> **Status: Implemented for `ntd/1` in `ntc` 0.1.**
+> The NTΔ text uses a small S-expression vocabulary.
+> The versioned grammar, the lexical rules, and the frame limits are on the [grammar](grammar.md) page.
+> The conformance suite and the round-trip property tests check them.
+> Text literals and escapes are still planned (C01, C05).
 
 This page describes the tokens that appear in the design examples.
 The [grammar](grammar.md) page gives an EBNF summary.
@@ -21,12 +22,13 @@ The [grammar](grammar.md) page gives an EBNF summary.
 | Text is UTF-8. | Designed (C01, section 3.2). |
 | Identifiers are not normalized implicitly. | Designed (C05). |
 | Bytes, code points, and grapheme operations are distinct. | Planned (C05). |
-| A frame has a maximum size. The limit is not set. | Planned (C01). |
+| A frame has a maximum size: 64 KiB in `ntc` 0.1. A stream has at most 10,000 frames. | Implemented (C01). |
+| Outside comments, frames are printable ASCII. Bidirectional controls are rejected everywhere. | Implemented (`ntd/1`). |
 | Layout, comments, debug names, and source locations are outside semantic identity. | Designed (section 3.2). |
 
-The draft text is line oriented.
-Each line in the examples is one frame: a slot definition, a command, or a diagnostic.
-Whether a frame can span lines is an **open question**.
+The text is line oriented.
+Each non-empty line is one frame: a slot definition, a command, or a diagnostic.
+In `ntd/1` a frame cannot span lines.
 
 ## Token classes
 
@@ -46,7 +48,9 @@ Whether a frame can span lines is an **open question**.
 | Result words | `proved` `refuted` `unknown` `unsupported` `invalid` | Proof results. See [Diagnostics](diagnostics.md). |
 | Diagnostic codes | `EQ` | An obligation class in a diagnostic. |
 | Names | `xs` `sum` `zip` `cons` `step` | Context variables and manifest-bound definitions. |
-| Natural literals | `256` | A bound, such as a context budget in `get o0 256`. |
+| Natural literals | `256` | A natural number, or an integer where `Z` is expected. Also a bound, as in `get o0 256`. |
+| Integer literals | `-5` | A negative integer. Type `Z`. |
+| Comments | `; text` | From `;` to the end of the line. Outside semantic identity. |
 
 ## Slots
 
@@ -87,19 +91,20 @@ Dictionary transmission and retrieval count toward tokens.
 
 | Literal | Status |
 | --- | --- |
-| Natural numbers, such as `256`. | Appear in examples. Syntax not fixed. |
-| Exact integers. | Planned. The canonical JSON form encodes integers as strings (section 3.2). |
+| Natural numbers, such as `256`. | Implemented: no leading zeros; at most 512 digits. |
+| Exact integers, such as `-5`. | Implemented: a leading `-`, no `-0`. The canonical JSON form encodes integers as strings (section 3.2). |
 | Text and escapes. | Planned (C01, C05). Syntax not designed. |
 | Money. | Integer minor units with a currency tag. No literal syntax designed (section 4.3). |
 | Decimals and floats. | Later work (C04). Outside exact invariants. |
 
 ## Comments
 
-**Open question.**
-The plan puts comments outside semantic identity.
-It does not define comment syntax for NTΔ.
+**Implemented in `ntd/1`.**
+A comment starts with `;` and runs to the end of the line.
+It may follow a frame on the same line.
+Comments are outside semantic identity: `ntc fmt` drops them, and they never change a digest.
 Code samples on the website label the readable view with `//` lines, like TypeScript.
-Whether the readable view has comments of its own is also open.
+Whether the readable view has comments of its own is still open.
 
 ## Readable view tokens
 

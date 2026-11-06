@@ -7,7 +7,8 @@ order: 1
 # Language overview
 
 > Everything on this page is a proposal.
-> The parser, compiler, and proof integration are not implemented.
+> The NTΔ parser, the elaborator, and the NT0 kernel are implemented in the `ntc` reference checker.
+> Lowering, targets, and proof integration are not implemented.
 
 ## The program is a typed graph
 

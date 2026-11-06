@@ -6,10 +6,9 @@ order: 9
 
 # Diagnostics
 
-> **Status: Designed (result vocabulary and diagnostic shape), Planned (code catalogue).**
-> The design defines five proof results, one diagnostic frame, and a small set of codes.
-> A stable code catalogue is planned (C22).
-> No tool emits these diagnostics today.
+> **Status: Implemented in `ntc` 0.1.**
+> The reference checker emits the five proof results and the code catalogue below (C22).
+> Codes are stable: a code keeps its meaning and is never reused.
 
 ## Proof results
 
@@ -60,19 +59,44 @@ get o0 256
 Every response also has a request identity in its transport envelope.
 A bounded response declares omitted context, so a truncated answer cannot look complete.
 
-## Known codes
+## Code catalogue
 
-The design defines these codes and responses:
+| Code | Phase | Results | Meaning |
+| --- | --- | --- | --- |
+| `SYN` | Decode | `invalid` | Malformed frame or term, a response frame in a request, a `_` used as a term. |
+| `LIM` | Decode | `invalid` | An input limit was exceeded. |
+| `ALIAS` | Decode, session | `invalid` | Malformed alias, unknown alias, or an alias of the wrong class. |
+| `SLOT` | Session | `invalid` | Undefined, redefined, or misused slot; a stream without `ck`. |
+| `SCOPE` | Elaborate | `invalid` | Unbound name, or a binder that reuses a reserved word or a constant. |
+| `TYPE` | Elaborate | `invalid` | Type mismatch. The message gives the expected and found types. |
+| `IMPL` | Elaborate | `invalid` | An implicit argument could not be inferred. |
+| `UNIV` | Elaborate | `invalid` | A type is in a larger universe than expected. |
+| `CASE` | Elaborate | `invalid` | Missing, unreachable, duplicate, or malformed branch; case on a non-vector. |
+| `TY` | Obligation | `proved` | The typing obligation of a fragment. |
+| `EQ` | Obligation | `refuted`, `unknown` | `refl` against two sides with different normal forms. `refuted` when both are closed values. |
+| `CONFLICT` | Patch | `invalid` | The base alias names a stale base. The patch did not apply. |
+| `POLICY` | Policy | `invalid` | A restated contract differs from the approval, or `ck` names the wrong approval. |
+| `RES` | Any | `unknown` | The step bound or the integer-size bound was exhausted. |
+| `CMD` | Session | `unsupported` | `build` or `run`, which the reference checker does not run. |
+| `MANIFEST` | Load | `invalid` | Malformed manifest. |
+| `KERNEL` | Check | `invalid` | The kernel rejected an elaborated term, or an internal error occurred. Report it as a bug. |
 
-| Code | Kind | Meaning |
-| --- | --- | --- |
-| `EQ` | Obligation class | An unresolved equality obligation. |
-| `CONFLICT` | Patch response | The patch base is stale. The patch did not apply. |
+The plan keeps these error classes distinct: programmer fault (`KERNEL`), unsupported feature (`CMD`), resource exhaustion (`RES`), and invalid input (everything else).
+Resource exhaustion appears as a diagnostic, not as a crash.
 
-No other code is designed.
-The plan requires stable exit and diagnostic codes (C22).
-It keeps these error classes distinct: programmer fault, cancellation, unsupported feature, and resource exhaustion.
-Resource exhaustion appears as a diagnostic, not as a compiler crash.
+## Output format
+
+`ntc check` prints one line per obligation in the response form above, then comment lines:
+
+```text
+proved o0 TY f0
+; evidence sha256:…
+unknown o1 EQ f1
+; 6:12 refl does not hold: (add (sum xs) 1) and (sum xs) are not definitionally equal; …
+```
+
+A diagnostic that has no obligation, such as `CONFLICT` or `POLICY`, prints as a comment: `; LINE:COL RESULT CODE message`.
+`ntc check --json` prints all diagnostics as `nt-result/1` JSON.
 
 ## Failure sources by pass
 
@@ -104,6 +128,6 @@ The plan lists cases that must produce a rejection or an unresolved result:
 
 ## The preview CLI
 
-`nt proof` is not a compiler and does not emit these diagnostics.
+`nt proof` is not a compiler and does not emit these diagnostics. Use `ntc`.
 It prints `FILE:LINE: ID: message` lines for ledger format errors.
 See [The nt preview CLI](../tools/cli.md).

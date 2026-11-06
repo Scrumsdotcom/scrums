@@ -13,6 +13,7 @@ order: 1
 > Its token counts are estimates, not model tokenizer output.
 
 `nt` is a small POSIX shell script.
+It is not the type checker: for that, see [the ntc reference checker](ntc.md).
 It has no dependencies other than `sh` and `awk`.
 Version `0.0.2-preview` has the commands below.
 
@@ -24,11 +25,24 @@ Run it in isolated workspaces, not against production systems or sensitive data.
 
 ## Install
 
-For humans:
+For humans, download the installer, read it, then run it:
 
 ```sh
-curl -fsSL https://nexttype.dev/install.sh | sh
+curl -fsSLO https://nexttype.dev/install.sh
+less install.sh
+sh install.sh
 ```
+
+The one-line form `curl -fsSL https://nexttype.dev/install.sh | sh` does the same, without the chance to read the script first.
+
+The installer:
+
+- downloads over HTTPS only, and refuses a redirect to anything else;
+- refuses a file whose SHA-256 differs from the value pinned in the installer, even when it matches the published checksum;
+- with `NT_VERIFY_PROVENANCE=1`, also requires a GitHub build-provenance attestation from this repository (needs `gh`);
+- never uses `sudo`.
+
+`NT_SHA256` overrides the pinned value, to install a different build on purpose.
 
 For agents:
 
@@ -303,9 +317,7 @@ The skill tells the agent to:
 - write a contract in the readable view and in the NTΔ form;
 - report the status honestly: `nt proof` checks the ledger format only.
 
-The CLI clones the repository with git.
-While the repository is private, the command needs GitHub access to it: a `gh` login or a `GH_TOKEN` with access.
-When the repository is public, it needs no access.
+The CLI clones the repository with git. It needs no GitHub login.
 
 ## Relation to the planned toolchain
 

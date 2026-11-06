@@ -8,7 +8,7 @@ order: 4
 
 > **Status: Designed.**
 > The contract model, the obligation rules, and the weakening rules are in the language plan (sections 4, 6, and 14).
-> No checker exists.
+> `ntc` 0.1 checks contracts written as NT0 types. Preconditions, invariants, and effects beyond types are designs.
 > For an introduction, read [Contracts](../language/contracts.md).
 
 ## What a contract contains

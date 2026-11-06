@@ -46,6 +46,41 @@ The manifest is immutable for the session.
 A *module manifest* owns operation signatures and effect rows (section 8.3).
 Target bindings reference those operations. They do not re-declare payloads.
 
+### Manifests in the reference checker
+
+`ntc` 0.1 implements the session manifest as `nt-manifest/1` JSON:
+
+```json
+{
+  "format": "nt-manifest/1",
+  "constants": [
+    { "name": "InvoiceState", "type": "U0" },
+    { "name": "pending", "type": "InvoiceState" }
+  ],
+  "context": [
+    { "name": "n", "type": "N" },
+    { "name": "xs", "type": "V Z n" }
+  ],
+  "contracts": { "c0": "(sig t Z (= t (sum xs)))" },
+  "aliases": { "@b0": "sha256:…", "@a0": "sha256:…" }
+}
+```
+
+| Field | Required | Meaning |
+| --- | --- | --- |
+| `format` | yes | Must be `nt-manifest/1`. |
+| `constants` | no | Opaque constants, in order. Each `type` is NTΔ and may use earlier constants. `implicit` (0 to 16) marks leading arguments that the elaborator infers. Constants are axioms: review them. |
+| `context` | no | The context Γ, outermost first. Each `type` may use earlier entries. |
+| `contracts` | no | Approved contracts by slot. A stream may restate one only in the same canonical form. |
+| `aliases` | no | Alias digests the agent was given. `@b0` and `@a0` default to the current base and approval digests. A `@b0` that differs from the current base makes `put` return `CONFLICT`. |
+
+Unknown fields are rejected.
+Names must be identifiers and cannot reuse a reserved word, a built-in, or an earlier name.
+
+The **base digest** is SHA-256 over the canonical NT0 form of the constants and the context.
+The **approval digest** is SHA-256 over the base digest and the canonical approved contracts.
+Canonical forms erase binder names, so alpha-equivalent manifests have the same digests.
+
 ## Using another definition
 
 In the current design, a fragment uses a definition that the manifest binds.
