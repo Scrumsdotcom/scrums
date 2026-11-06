@@ -1,7 +1,7 @@
 <p align="center">
   <a href="https://www.scrums.com/platform/nexttype"><img src="https://img.shields.io/badge/Scrums.com-NextType-135BFF" alt="Scrums.com NextType"></a>
   <a href="docs/status.md"><img src="https://img.shields.io/badge/reference_checker-0.1-0B5FFF" alt="Reference checker: 0.1"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue" alt="License: Apache-2.0"></a>
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue" alt="License: Apache-2.0"></a>
 </p>
 
 <p align="center">
@@ -39,7 +39,7 @@ The [`ntc` 0.1.0 reference checker](docs/tools/ntc.md) decodes NTΔ, elaborates 
 There is no published release and no measured performance result.
 See [Status](docs/status.md).
 
-[Docs](docs/index.md) · [NTΔ shorthand](docs/language/shorthand.md) · [Quick reference](docs/reference/quick-reference.md) · [Patterns for agents](docs/guides/agent-patterns.md) · [Examples](examples/README.md) · [Benchmarks](benchmarks/README.md) · [Research](research/README.md) · [Contribute](CONTRIBUTING.md) · [Governance](GOVERNANCE.md) · [Security](SECURITY.md)
+[Docs](docs/index.md) · [NTΔ shorthand](docs/language/shorthand.md) · [Quick reference](docs/reference/quick-reference.md) · [Patterns for agents](docs/guides/agent-patterns.md) · [Examples](examples/README.md) · [Benchmarks](benchmarks/README.md) · [Research](research/README.md) · [Contribute](../CONTRIBUTING.md#nexttype-nexttype) · [Governance](GOVERNANCE.md) · [Security](../.github/SECURITY.md#nexttype)
 
 ## Safety warning
 
@@ -177,12 +177,12 @@ All comparisons retain fixed acceptance requirements and report failures.
 
 ## Contributing now
 
-Find a stream that `ntc` accepts but should reject: that is the most valuable report. See [SECURITY.md](SECURITY.md).
+Find a stream that `ntc` accepts but should reject: that is the most valuable report. See the [security policy](../.github/SECURITY.md#nexttype).
 Review the semantics, challenge incomplete contracts, or propose a minimal conformance case.
 Improve the benchmark design with reproducible comparisons.
-Follow [CONTRIBUTING.md](CONTRIBUTING.md) and label planned capabilities accurately.
+Follow [CONTRIBUTING.md](../CONTRIBUTING.md#nexttype-nexttype) and the [code of conduct](../CODE_OF_CONDUCT.md), and label planned capabilities accurately.
 
-Licensed under the [Apache License 2.0](LICENSE).
+Licensed under the [Apache License 2.0](../LICENSE).
 Versioning follows [Versioning and stability](docs/reference/versioning.md).
 
 ## Credits

@@ -56,4 +56,4 @@ Run it in isolated workspaces, not against production systems or sensitive data.
 | [Why NextType](../research/why-nexttype.md) | Understand the design position. |
 | [Benchmark design](../benchmarks/README.md) | See how the project plans to measure tokens, time, and defects. |
 | [Foundational paper](../research/paper/README.md) | Read the one-page concept note (PDF and HTML). |
-| [Contributing](../CONTRIBUTING.md) | Find how to help. |
+| [Contributing](https://github.com/Scrumsdotcom/scrums/blob/main/CONTRIBUTING.md#nexttype-nexttype) | Find how to help. |

@@ -40,4 +40,4 @@ See [the ntc guide](../../docs/tools/ntc.md), [NTΔ shorthand](../../docs/langua
 
 ## License
 
-Apache-2.0. See [LICENSE](../../LICENSE).
+Apache-2.0. See [LICENSE](../../../LICENSE).

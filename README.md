@@ -60,7 +60,7 @@ For changes to the platform, see the [changelog](https://www.scrums.com/docs/cha
 
 ## Contributing
 
-Read [`docs/AGENTS.md`](docs/AGENTS.md) before you change a page. It applies to people and to coding agents. To suggest a change, open an [issue](https://github.com/Scrumsdotcom/scrums/issues) or a pull request.
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md). Before you change a documentation page, also read [`docs/AGENTS.md`](docs/AGENTS.md). Both apply to people and to coding agents. To suggest a change, open an [issue](https://github.com/Scrumsdotcom/scrums/issues) or a pull request.
 
 ## Security
 

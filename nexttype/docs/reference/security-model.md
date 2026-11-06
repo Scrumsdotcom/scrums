@@ -108,5 +108,5 @@ The language design includes these guarantees. `ntc` 0.1 does not provide them:
 - independent proof checking for obligations beyond `refl`;
 - signed evidence records and approval envelopes (see [Evidence and approval](evidence.md)).
 
-Report a vulnerability through the process in [SECURITY.md](../../SECURITY.md).
+Report a vulnerability through the process in [SECURITY.md](https://github.com/Scrumsdotcom/scrums/blob/main/.github/SECURITY.md#nexttype).
 A false `proved` is a security defect even without a runtime exploit.
