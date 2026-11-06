@@ -1,0 +1,23 @@
+{
+  "name": "@scrums/nexttype-compiler",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reference decoder, elaborator, kernel checker, and evaluator for the NextType NT0 core and the NTΔ edit stream.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": { "ntc": "dist/src/cli.js" },
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": ["dist/src", "README.md"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "fuzz": "npm run build && node dist/test/fuzz.js",
+    "lint": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "typescript": "5.7.2"
+  }
+}

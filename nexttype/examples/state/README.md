@@ -1,0 +1,68 @@
+---
+title: State
+description: A payment transition where a paid state requires a validated confirmation.
+order: 4
+---
+
+# State
+
+> **Checked.** The NTΔ form below is [`step.ntd`](step.ntd), checked in CI by `ntc` against [`manifest.json`](manifest.json).
+> The readable view is illustrative: the readable view has no parser yet.
+
+**Rule:** a paid state requires a validated confirmation.
+
+## Readable view
+
+`pay.nt` — what a human reviews:
+
+```typescript
+function pay(
+  i: Invoice<"pending">,
+  r: Receipt<"confirmed">,
+): Invoice<"paid"> {
+  return step(i, r);
+}
+```
+
+## NTΔ form
+
+`step.ntd` — what an agent writes, under the context `Γ = {i:I pending, r:Receipt confirmed}`:
+
+```text
+c3 (I paid)
+f3 (step i r)
+put f3 c3 @b0
+ck f3 @a0
+```
+
+## Check it
+
+```sh
+ntc check --manifest examples/state/manifest.json examples/state/step.ntd
+```
+
+## What the contract guarantees
+
+- The result type is a paid invoice.
+- The only way to get it is `step`, an approved transition primitive.
+- `step` needs a pending invoice and a confirmed receipt.
+
+## What it does not guarantee
+
+- A string labelled `confirmed` does not create a trusted receipt. A runtime decoder must check that a provider observation belongs to this invoice and action.
+- An ambiguous payment result must stay pending until reconciliation resolves it:
+
+```text
+Draft → Sent → PaymentPending → Paid
+                    ↑    │
+                    └────┘ ambiguous result
+
+A confirmed failed result returns to Sent.
+A retry uses the same action identity.
+```
+
+## Fixture check
+
+The website playground compares a simulated payment outcome.
+The value `confirmed` passes and `pending` fails.
+This string comparison is a fixture illustration, not the planned decoder.

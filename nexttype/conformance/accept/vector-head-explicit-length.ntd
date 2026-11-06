@@ -1,0 +1,7 @@
+; A three-binder cons pattern names the tail length.
+; context: A:U0, n:N, v:V A (S n)
+; expect: proved o0 TY f0 @5
+c0 N
+f0 (case v (cons (m x t) m))
+put f0 c0 @b0
+ck f0 @a0

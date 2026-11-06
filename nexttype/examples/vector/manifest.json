@@ -1,0 +1,11 @@
+{
+  "format": "nt-manifest/1",
+  "context": [
+    { "name": "A", "type": "U0" },
+    { "name": "n", "type": "N" },
+    { "name": "v", "type": "V A (S n)" }
+  ],
+  "contracts": {
+    "c1": "A"
+  }
+}

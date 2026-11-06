@@ -1,0 +1,6 @@
+; manifest: examples/state/manifest.json
+; expect: proved o0 TY f3 @4
+c3 (I paid)
+f3 (step i r)
+put f3 c3 @b0
+ck f3 @a0

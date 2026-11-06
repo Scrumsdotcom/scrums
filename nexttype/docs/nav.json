@@ -1,0 +1,54 @@
+{
+  "sections": [
+    {
+      "title": "Getting started",
+      "pages": [
+        "index",
+        "status"
+      ]
+    },
+    {
+      "title": "Language",
+      "pages": [
+        "language/overview",
+        "language/contracts",
+        "language/two-views",
+        "language/shorthand"
+      ]
+    },
+    {
+      "title": "Guides",
+      "pages": [
+        "guides/agent-patterns"
+      ]
+    },
+    {
+      "title": "Reference",
+      "pages": [
+        "reference/index",
+        "reference/quick-reference",
+        "reference/lexical",
+        "reference/types",
+        "reference/contracts",
+        "reference/functions-effects",
+        "reference/modules",
+        "reference/views",
+        "reference/edit-frames",
+        "reference/diagnostics",
+        "reference/protocol",
+        "reference/evidence",
+        "reference/grammar",
+        "reference/glossary",
+        "reference/security-model",
+        "reference/versioning"
+      ]
+    },
+    {
+      "title": "Tools",
+      "pages": [
+        "tools/ntc",
+        "tools/cli"
+      ]
+    }
+  ]
+}

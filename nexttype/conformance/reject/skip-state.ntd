@@ -1,0 +1,7 @@
+; A pending invoice is not a paid invoice.
+; manifest: examples/state/manifest.json
+; expect: invalid o0 TYPE f3 @5
+c3 (I paid)
+f3 i
+put f3 c3 @b0
+ck f3 @a0

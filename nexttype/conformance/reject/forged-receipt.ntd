@@ -1,0 +1,7 @@
+; A state label is not a receipt: step needs a Receipt confirmed value.
+; manifest: examples/state/manifest.json
+; expect: invalid o0 TYPE f3 @5
+c3 (I paid)
+f3 (step i confirmed)
+put f3 c3 @b0
+ck f3 @a0

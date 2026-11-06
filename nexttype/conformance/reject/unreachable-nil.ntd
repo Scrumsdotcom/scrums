@@ -1,0 +1,7 @@
+; The nil branch is unreachable for a successor length and is rejected.
+; manifest: examples/vector/manifest.json
+; expect: invalid o0 CASE f1 @5
+c1 A
+f1 (case v (nil () v) (cons (x _) x))
+put f1 c1 @b0
+ck f1 @a0

@@ -1,0 +1,23 @@
+name: "NextType: Language or tooling proposal"
+description: Propose a bounded capability with semantics and evidence requirements.
+labels: [nexttype]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Required capability
+      description: State the problem, affected capability IDs, and supported profile.
+    validations:
+      required: true
+  - type: textarea
+    id: semantics
+    attributes:
+      label: Semantics and alternatives
+      description: Include compact examples, failure cases, compatibility, and alternatives.
+    validations:
+      required: true
+  - type: textarea
+    id: evaluation
+    attributes:
+      label: Acceptance evidence
+      description: Describe proof obligations, conformance cases, runtime assumptions, and complete token-cost evaluation.

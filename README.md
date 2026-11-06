@@ -37,7 +37,7 @@ SEOP is the architecture of the Scrums.com platform: one control plane for AI ag
 |---|---|
 | [`docs/`](docs) | Source of the Scrums.com documentation at [scrums.com/docs](https://www.scrums.com/docs), built with [Mintlify](https://mintlify.com). |
 | [`packages/sorted-ui/`](packages/sorted-ui) | Source of [`@scrums/sorted-ui`](https://www.npmjs.com/package/@scrums/sorted-ui), the Sorted UI React components and design tokens. |
-| [`packages/nexttype/`](packages/nexttype) | Tooling for [NextType](https://github.com/Scrumsdotcom/nexttype), the experimental execution language for agents. The language lives in [`Scrumsdotcom/nexttype`](https://github.com/Scrumsdotcom/nexttype). |
+| [`nexttype/`](nexttype) | [NextType](nexttype), the experimental execution language for agents: the `ntc` reference checker, the specification, examples, the `nt` preview CLI and research. |
 
 ## Documentation
 
@@ -60,7 +60,7 @@ For changes to the platform, see the [changelog](https://www.scrums.com/docs/cha
 
 ## Contributing
 
-Read [`docs/AGENTS.md`](docs/AGENTS.md) before you change a page. It applies to people and to coding agents. To suggest a change, open an [issue](https://github.com/Scrumsdotcom/scrums/issues) or a pull request.
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md). Before you change a documentation page, also read [`docs/AGENTS.md`](docs/AGENTS.md). Both apply to people and to coding agents. To suggest a change, open an [issue](https://github.com/Scrumsdotcom/scrums/issues) or a pull request.
 
 ## Security
 

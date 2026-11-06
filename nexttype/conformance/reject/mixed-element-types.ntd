@@ -1,0 +1,6 @@
+; context: n:N, xs:V N n
+; expect: invalid o0 TYPE f0 @4
+c0 Z
+f0 (sum xs)
+put f0 c0 @b0
+ck f0 @a0

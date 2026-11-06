@@ -1,0 +1,5 @@
+; expect: proved o0 TY f0 @3
+c0 (= (sum (cons 6000 (cons 6000 nil))) 12000)
+f0 refl
+put f0 c0 @b0
+ck f0 @a0

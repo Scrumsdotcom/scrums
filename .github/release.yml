@@ -19,6 +19,9 @@ changelog:
     - title: Sorted UI
       labels:
         - sorted-ui
+    - title: NextType
+      labels:
+        - nexttype
     - title: Fixes
       labels:
         - fix

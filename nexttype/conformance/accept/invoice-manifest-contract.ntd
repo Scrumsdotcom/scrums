@@ -1,0 +1,6 @@
+; The manifest supplies c0, so the stream need not restate it.
+; manifest: examples/invoice/manifest.json
+; expect: proved o0 TY f0 @4
+f0 (pair (sum xs) refl)
+put f0 c0 @b0
+ck f0 @a0

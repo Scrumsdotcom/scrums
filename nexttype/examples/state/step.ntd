@@ -1,0 +1,7 @@
+; State: a paid invoice needs a confirmed receipt. step is the only
+; constant that produces I paid, and it needs I pending and Receipt confirmed.
+; Check: ntc check --manifest examples/state/manifest.json examples/state/step.ntd
+c3 (I paid)
+f3 (step i r)
+put f3 c3 @b0
+ck f3 @a0
