@@ -1,0 +1,7 @@
+; _ is a binder, never a proof hole.
+; context: n:N, xs:V Z n
+; expect: invalid o0 SYN f0 @5
+c0 (sig t Z (= t (sum xs)))
+f0 (pair (sum xs) _)
+put f0 c0 @b0
+ck f0 @a0

@@ -1,0 +1,8 @@
+; @b0 in this manifest names an older base, so put returns CONFLICT.
+; manifest: conformance/policy/stale-manifest.json
+; expect: invalid - CONFLICT f0 @7
+; expect: invalid - SLOT f0 @8
+c0 Z
+f0 (sum xs)
+put f0 c0 @b0
+ck f0 @a0

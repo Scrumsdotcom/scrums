@@ -1,0 +1,144 @@
+---
+title: Benchmark design
+description: How NextType plans to measure tokens per accepted change, elapsed time, and escaped defects. No benchmark has run.
+order: 2
+---
+
+# Benchmark design
+
+> **No NextType benchmark has run.**
+> This page describes the experiment design.
+> Every number on this page is a target or a proposed gate, not a result.
+
+## The question
+
+Can NextType reduce model tokens per accepted application change while it preserves behavior and review quality?
+
+The benchmark measures the complete workflow, from task receipt to acceptance.
+It includes specification preparation, context retrieval, implementation, proof generation, diagnostics, repair, and final verification.
+One-time preparation is reported separately from recurring changes.
+
+The experiment tests both outcomes.
+Agents may spend fewer tokens with bounded obligations and exact feedback.
+They may also spend more tokens on proofs or on unfamiliar notation.
+
+## The primary metric: tokens per accepted change
+
+```text
+attempt_tokens = sum(input_tokens + output_tokens)
+
+tokens_per_accepted_change =
+  sum(tokens from every attempted task, including failures)
+  / count(accepted task attempts)
+
+token_reduction =
+  1 - candidate_tokens_per_accepted_change
+      / baseline_tokens_per_accepted_change
+```
+
+Rules:
+
+- Count context retrieval, generation, proof attempts, diagnostics, and repairs.
+- Count alias dictionaries and retrieval summaries. Do not count only the final source.
+- Report cached input and reasoning usage separately where the provider exposes them.
+- Zero accepted changes gives an undefined metric and a failed group. It never gives a zero-cost success.
+- Tokenizer counts differ between models. Compare within each model first, then report the distribution of normalized reductions.
+
+## What counts as accepted
+
+An accepted change satisfies the original task contract and its independent acceptance checks.
+
+- The evaluator checks the original requirements.
+- An agent cannot improve its score by weakening a refinement or removing a failure branch.
+- A change to the specification, checker profile, or hidden tests invalidates the attempt.
+- For NextType runs, the declared proof obligations must also complete. An `unknown` proof is not an accepted proof.
+- Integration tests remain required where behavior crosses the formal boundary.
+
+## The comparison setup
+
+| Group | Implementation | Context and tools | Purpose |
+| --- | --- | --- | --- |
+| A | Strict TypeScript and Next.js. | Normal repository tools, incremental edits, validators, and tests. | Practical baseline. |
+| B | The same TypeScript stack. | Bounded retrieval, structured diagnostics, exact dependencies, and cached results. | Isolate workflow improvements from language effects. |
+| C | NextType restricted core targeting the same stack. | The same retrieval budget plus proof obligations and checking. | Measure the extra value and cost of proofs. |
+
+Group B is the principal baseline.
+No baseline must resend the whole repository.
+Every group gets the same requirements, documentation, acceptance tests, and runtime adapters.
+Better tools alone must not count as a language saving.
+
+## Workloads
+
+The plan freezes 36 evaluation tasks in six families before comparative runs:
+
+| Family | Example changes |
+| --- | --- |
+| Indexed collections | Safe head, equal-length zip, chunking, bounded indexing. |
+| Exact domain arithmetic | Invoice total, currency rejection, explicit rounding, overflow boundary. |
+| State and authority | Legal transition, denied transition, tenant access, expired capability. |
+| Cross-tier changes | Add a field, change validation, evolve an event schema. |
+| Runtime recovery | Stale write, duplicate request, ambiguous external result, event replay. |
+| Decision handling | Abstention, timeout, malformed response, uncertain prediction. |
+
+A separate set of 12 development tasks tunes the harness.
+It produces no headline claim.
+An unsupported task stays in the denominator as a reported limitation.
+
+## Run size
+
+| Run | Tasks | Seeds | Models | Groups | Attempts |
+| --- | --- | --- | --- | --- | --- |
+| Pilot | 12 development | 3 | 2 | 3 | 216 |
+| Comparative | 36 evaluation | 5 | 3 | 3 | 1,620 |
+
+Groups are paired on task, model, seed, and tool budget.
+Each run starts from a clean snapshot.
+
+## Targets (unmeasured)
+
+These targets are goals for future evaluation.
+They are not results.
+The baseline is Group B.
+
+| Metric | Target ratio: NextType / B | Meaning | State |
+| --- | --- | --- | --- |
+| Total model tokens per accepted change | 0.50 | 50% fewer tokens across the complete workflow. | Target, unmeasured |
+| Elapsed time for matched work | 0.70 | 30% less wall-clock time, including checking and retries. | Target, unmeasured |
+| Escaped-defect rate | 0.50 | 50% lower rate of independently detected defects after acceptance. | Target, unmeasured |
+
+"30% less elapsed time" is not a 1.30 throughput multiplier.
+"50% lower defect rate" does not mean half of every possible risk.
+
+## Proposed gates
+
+| Gate | Proposed threshold |
+| --- | --- |
+| Invalid acceptance | Zero accepted seeded violations. |
+| Task completion | At least 95% accepted within budget. |
+| Relative task quality | Noninferiority margin of three percentage points against B. |
+| Tail behavior | No task family exceeds 2× baseline p95 tokens without an explicit tradeoff. |
+| Reproduction | A second clean environment reproduces acceptance and artifact identities. |
+
+A lower cost with many failures is not a saving.
+If NextType only matches Group B, the report says so.
+
+## Errors are not safety
+
+Compiler diagnostics, rejected proofs, and failed CI checks are repair events.
+They measure development friction, not escaped-defect risk.
+Fewer CI failures can mean better generation or a weaker test suite.
+The website animation shows scripted repair counts.
+Those counts are fictional.
+
+## Reporting
+
+- Results by model, task family, and group, with failures beside token results.
+- 95% confidence intervals, clustered by task.
+- Cold and warm caches reported separately.
+- Excluded or corrupted runs kept in an audit table with reasons.
+- A reproducibility bundle: digests, lockfiles, model identifiers, usage records, proof manifests, and aggregation scripts.
+
+## Results
+
+None.
+This section will link to published run data when a run exists.

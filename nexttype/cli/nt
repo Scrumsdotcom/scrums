@@ -1,0 +1,504 @@
+#!/bin/sh
+# nt - NextType preview command line (design preview).
+#
+# NextType is an M0 design preview. There is no compiler, type checker,
+# or prover. This script prints the guide, estimates token counts,
+# compares the two views of the design examples, and checks the format
+# of an obligation ledger (PROOF.md). It never claims that code is
+# verified. Token counts are estimates, not model tokenizer output.
+#
+# Licensed under the Apache License 2.0. See LICENSE in the repository.
+
+set -eu
+
+NT_VERSION="0.0.2-preview"
+NT_LEDGER_FORMAT="ntproof/0"
+NT_PREVIEW_NOTE="design preview: no compiler; this checks the ledger format only"
+NT_TOKENS_NOTE="estimate; nt uses a character heuristic, not a model tokenizer"
+
+usage() {
+  cat <<'EOF'
+nt - NextType preview command line (design preview, no compiler)
+
+Usage:
+  nt guide                   Print the guide for agents and people.
+  nt tokens [--quiet] [FILE|-]
+                             Estimate the token count of a file or stdin.
+  nt compare [EXAMPLE]       Show both views of an example with token
+                             estimates (invoice, vector, state; default invoice).
+  nt proof [FILE]            Check an obligation ledger (default: PROOF.md).
+  nt proof init [FILE]       Write a starter ledger (default: PROOF.md).
+  nt quickstart              Run compare and the ledger flow in a temporary
+                             directory (alias: nt demo). Changes no files of yours.
+  nt version                 Print the version.
+  nt help                    Print this help.
+
+Start here: nt compare, then nt proof init and nt proof.
+
+Exit codes:
+  0  success
+  1  the ledger has errors or open obligations
+  2  usage error, or the file is missing or already exists
+
+Docs: https://nexttype.dev/docs
+EOF
+}
+
+guide() {
+  cat <<'EOF'
+NextType guide (design preview)
+===============================
+
+Status: M0 design preview. No compiler exists.
+Do not treat any output of this tool as verification.
+Token counts from nt are estimates, not measurements of a model.
+
+Quickstart
+----------
+1. nt compare      See one contract in both views, with token estimates.
+2. nt proof init   Write PROOF.md with one worked example obligation.
+3. nt proof        Check the ledger. The first run passes. Then add your
+                   own obligation with "status: open": nt proof fails
+                   until you record evidence and discharge it.
+
+What NextType is
+----------------
+NextType is an experimental execution language for agents.
+Dependent types are the spec: a type can refer to a value, so a type
+can state a requirement such as "the total equals the sum of the lines".
+Agents write the code. A planned compiler checks it against the fixed
+contract. People review and approve the contract.
+
+Two views of one contract
+-------------------------
+The readable view is for people. It keeps a TypeScript lineage:
+
+  type Total<xs> = { t: Int; ok: t == sum(xs) };
+  function total(xs: Vec<Int>): Total<xs> {
+    return { t: sum(xs), ok: refl };
+  }
+
+The NTΔ agent form is for agents. It is compact:
+
+  c0 (sig t Z (= t (sum xs)))      contract slot c0
+  f0 (pair (sum xs) refl)          fragment slot f0
+  put f0 c0 @b0                    patch the hole against base @b0
+  ck f0 @a0                        check under approval envelope @a0
+
+Both views project the same planned NT0 term. Both are proposals.
+Run "nt compare" to see the token estimate of each view.
+
+The metric: tokens per accepted change
+--------------------------------------
+The goal of NextType is fewer tokens per accepted change: the tokens an
+agent spends on a change, divided by the changes that pass the check.
+A change that fails and needs a retry costs more tokens.
+Until a compiler exists, record the tokens in the ledger:
+
+  - tokens: 1840
+
+"nt proof" divides the recorded tokens of the discharged obligations by
+their count. The number is only as good as what you record.
+"nt tokens FILE" estimates the token count of a text, such as a patch.
+
+How to write a contract
+-----------------------
+1. State the rule in one sentence. Example: "The total equals the exact
+   sum of its lines."
+2. Name the inputs and their types. Example: n:N, xs:V Z n.
+3. Write the result type so that it carries the rule. Example: a pair of
+   an integer t and evidence that t equals sum xs.
+4. List what the contract does NOT say. A checker cannot recover intent
+   that the contract omits.
+5. Let a person approve the contract. An agent may repair the body, but
+   it may not weaken the contract to pass a check.
+
+Keep obligations in a ledger
+----------------------------
+Until a compiler exists, record each obligation in PROOF.md:
+
+  nt proof init        write a starter ledger with one worked example
+  nt proof             check that every obligation has evidence
+
+Each obligation is a "## ID" heading with "- claim:", "- status:" and
+"- evidence:" lines, and an optional "- tokens:" line. "nt proof" checks
+the ledger format only. It does not run tests and it does not prove
+anything.
+
+When using NextType
+-------------------
+- Run "nt guide" to learn it.
+- Keep obligations in PROOF.md.
+- Record the tokens that each change cost.
+- Run "nt proof" before you commit.
+- Never change a contract to make a check pass. Ask the owner.
+- Say what is planned and what is measured. Never claim a proof you
+  do not have.
+
+Safety warning
+--------------
+NextType is experimental. Expect breaking changes, rough edges, and
+security issues. Run it in isolated workspaces, not against production
+systems or sensitive data.
+
+Where the docs are
+------------------
+- Docs:       https://nexttype.dev/docs
+- Reference:  https://nexttype.dev/docs/reference
+- CLI:        https://nexttype.dev/docs/tools/cli
+- Source:     https://github.com/Scrumsdotcom/nexttype
+EOF
+}
+
+# estimate_tokens [FILE] -> prints an estimated token count.
+# The method (calibrated against cl100k_base and o200k_base):
+#   - a run of letters costs ceil(length / 8) tokens (a common word is
+#     one token; one leading space joins the word at no cost);
+#   - a run of digits costs ceil(length / 3) tokens;
+#   - a run of ASCII punctuation costs ceil(length / 2) tokens;
+#   - a run of two or more spaces or tabs costs 1 token;
+#   - a line break, with the blank lines and indentation after it, costs
+#     1 token, or 0 tokens directly after punctuation;
+#   - a run of other bytes (non-ASCII text) costs ceil(bytes / 2) tokens.
+# Expected error: about +/-15% on text over 100 tokens; wider on snippets.
+estimate_tokens() {
+  LC_ALL=C awk '
+    function ceil(x) { return (x == int(x)) ? x : int(x) + 1 }
+    function kind(c) {
+      if (index(L, c)) return "w"
+      if (index(D, c)) return "d"
+      if (c == " " || c == "\t") return "s"
+      if (index(P, c)) return "p"
+      return "u"
+    }
+    BEGIN {
+      L = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+      D = "0123456789"
+      P = "!\"#$%&\047()*+,-./:;<=>?@[\\]^_`{|}~"
+      t = 0; prev = ""; innl = 0
+    }
+    {
+      s = $0; n = length(s); i = 1
+      while (i <= n) {
+        k = kind(substr(s, i, 1)); j = i + 1
+        while (j <= n && kind(substr(s, j, 1)) == k) j++
+        m = j - i
+        if (k == "s") { if (!innl && m > 1) t++ }
+        else {
+          innl = 0
+          if (k == "w") t += ceil(m / 8)
+          else if (k == "d") t += ceil(m / 3)
+          else t += ceil(m / 2)
+          prev = k
+        }
+        i = j
+      }
+      if (!innl) { if (prev != "p") t++; innl = 1 }
+    }
+    END { print t }
+  ' ${1+"$1"}
+}
+
+tokens() {
+  quiet=0
+  file=""
+  for arg in "$@"; do
+    case "$arg" in
+      --quiet|-q) quiet=1 ;;
+      -) file="-" ;;
+      -*) echo "nt: tokens: unknown option \"$arg\"" >&2; exit 2 ;;
+      *)
+        if [ -n "$file" ]; then echo "nt: tokens takes at most one FILE" >&2; exit 2; fi
+        file=$arg ;;
+    esac
+  done
+  if [ -z "$file" ] || [ "$file" = "-" ]; then
+    n=$(estimate_tokens)
+  else
+    if [ ! -f "$file" ]; then echo "nt: $file not found" >&2; exit 2; fi
+    n=$(estimate_tokens "$file")
+  fi
+  if [ "$quiet" = 1 ]; then echo "$n"; else echo "~$n tokens ($NT_TOKENS_NOTE)"; fi
+}
+
+# example_form NAME rule|context|view|delta -> prints one part of a bundled
+# design example. The same text is in examples/NAME/README.md.
+example_form() {
+  case "$1:$2" in
+    invoice:rule) echo "the total equals the exact sum of its lines." ;;
+    invoice:context) echo "Γ = {n:N, xs:V Z n}" ;;
+    invoice:view) cat <<'EOF'
+type Total<xs> = { t: Int; ok: t == sum(xs) };
+function total(xs: Vec<Int>): Total<xs> {
+  return { t: sum(xs), ok: refl };
+}
+EOF
+    ;;
+    invoice:delta) cat <<'EOF'
+c0 (sig t Z (= t (sum xs)))
+f0 (pair (sum xs) refl)
+put f0 c0 @b0
+ck f0 @a0
+EOF
+    ;;
+    vector:rule) echo "the vector contains at least one element." ;;
+    vector:context) echo "Γ = {A:U0, n:N, v:V A (S n)}" ;;
+    vector:view) cat <<'EOF'
+function head<A, n>(v: Vec<A, n + 1>): A {
+  switch (v) {
+    case cons(x, _): return x;
+  }
+}
+EOF
+    ;;
+    vector:delta) cat <<'EOF'
+c1 A
+f1 (case v (cons (x _) x))
+put f1 c1 @b0
+ck f1 @a0
+EOF
+    ;;
+    state:rule) echo "a paid state requires a validated confirmation." ;;
+    state:context) echo "Γ = {i:I pending, r:Receipt confirmed}" ;;
+    state:view) cat <<'EOF'
+function pay(
+  i: Invoice<"pending">,
+  r: Receipt<"confirmed">,
+): Invoice<"paid"> {
+  return step(i, r);
+}
+EOF
+    ;;
+    state:delta) cat <<'EOF'
+c3 (I paid)
+f3 (step i r)
+put f3 c3 @b0
+ck f3 @a0
+EOF
+    ;;
+    *) return 1 ;;
+  esac
+}
+
+compare() {
+  if [ "$#" -gt 1 ]; then echo "nt: compare takes at most one EXAMPLE" >&2; exit 2; fi
+  name=${1:-invoice}
+  if ! example_form "$name" rule >/dev/null 2>&1; then
+    echo "nt: unknown example \"$name\" (use invoice, vector, or state)" >&2
+    exit 2
+  fi
+  view=$(example_form "$name" view | estimate_tokens)
+  delta=$(example_form "$name" delta | estimate_tokens)
+  echo "nt compare: $name (design notation example; token counts are estimates)"
+  echo "Rule: $(example_form "$name" rule)"
+  echo
+  echo "Readable view, for people (TypeScript lineage): ~$view tokens"
+  example_form "$name" view | sed 's/^/  /'
+  echo
+  echo "NTΔ agent form, for agents: ~$delta tokens"
+  example_form "$name" delta | sed 's/^/  /'
+  echo "  (context $(example_form "$name" context) comes from the planned toolchain; not counted)"
+  echo
+  if [ "$delta" -lt "$view" ]; then
+    pct=$(( (view - delta) * 100 / view ))
+    echo "NTΔ form: ~$delta tokens vs readable view ~$view tokens → about $pct% fewer tokens for the agent to write."
+  elif [ "$delta" -gt "$view" ]; then
+    pct=$(( (delta - view) * 100 / view ))
+    echo "NTΔ form: ~$delta tokens vs readable view ~$view tokens → about $pct% MORE tokens for the agent to write."
+  else
+    echo "NTΔ form: ~$delta tokens vs readable view ~$view tokens → no difference in this estimate."
+  fi
+  echo "Note: no compiler exists; neither form has been compiled or checked."
+  echo "Note: estimates come from \"nt tokens\" (about +/-15%; wider on short text like this)."
+}
+
+template() {
+  cat <<'EOF'
+# PROOF
+
+ntproof: 0
+
+This is a NextType obligation ledger. Each obligation is a level-two
+heading with an id, then "- key: value" lines. Required keys: claim,
+status, evidence. Status is "open" or "discharged". A discharged
+obligation names its evidence, such as a test file, a review, or a proof
+artifact. The optional "tokens" key records the tokens an agent spent on
+the change. Run "nt proof" to check this file. It checks the format only.
+
+O1 below is a worked example. Its tokens value is an example, not a
+measurement. Replace O1 with your own obligations.
+
+## O1
+
+- claim: The invoice total equals the sum of its lines.
+- contract: invoice.total
+- status: discharged
+- evidence: example: shipped with nt proof init — replace with your own evidence
+- tokens: 1840
+
+To add an obligation, copy this block below the code fence and change it.
+nt proof skips code fences. An open obligation fails the check until you
+record evidence and set the status to discharged.
+
+```markdown
+## O2
+
+- claim: head is never called on an empty vector.
+- contract: vector.head
+- status: open
+- evidence: none
+- tokens: 0
+```
+EOF
+}
+
+# check_ledger FILE -> prints findings; exit status 0 (pass) or 1 (fail).
+# Lines that start with "#nt " carry data for proof() and are not shown.
+check_ledger() {
+  awk -v file="$1" '
+    function trim(s) { sub(/^[ \t]+/, "", s); sub(/[ \t\r]+$/, "", s); return s }
+    function err(line, msg) { printf "%s:%d: %s\n", file, line, msg; errors++ }
+    function finish(   ev, st, tk) {
+      if (id == "") return
+      if (bad) { total++; bad = 0; for (k in f) delete f[k]; return }
+      if (!("claim" in f) || f["claim"] == "") err(start, id ": claim is missing")
+      st = f["status"]
+      if (!("status" in f) || st == "") err(start, id ": status is missing")
+      else if (st != "open" && st != "discharged")
+        err(start, id ": status \"" st "\" is not \"open\" or \"discharged\"")
+      ev = tolower(f["evidence"])
+      if (!("evidence" in f) || ev == "" || ev == "none" || ev == "-" || ev == "todo" || ev == "tbd")
+        err(start, id ": evidence is missing")
+      if ("tokens" in f) {
+        tk = f["tokens"]
+        if (tk !~ /^[0-9]+$/) err(start, id ": tokens \"" tk "\" is not a non-negative integer")
+        else if (st == "discharged") { tsum += tk; tcount++ }
+      }
+      if (st == "open") { err(start, id ": obligation is open"); open++ }
+      if (st == "discharged") { done++; if (ev ~ /^example:/) example++ }
+      total++
+      for (k in f) delete f[k]
+    }
+    BEGIN { errors = 0; total = 0; open = 0; done = 0; bad = 0; marker = 0; fence = 0; id = ""; tsum = 0; tcount = 0; example = 0 }
+    /^[ \t]*(```|~~~)/ { fence = !fence; next }
+    fence { next }
+    /^ntproof:/ {
+      v = trim(substr($0, 9))
+      if (v != "0") err(NR, "unsupported ledger format \"ntproof: " v "\" (expected \"ntproof: 0\")")
+      marker = 1; next
+    }
+    /^## / {
+      finish()
+      id = trim(substr($0, 4)); start = NR
+      if (id !~ /^[A-Za-z][A-Za-z0-9._-]*$/) { err(NR, "obligation id \"" id "\" is not valid (use letters, digits, . _ -)"); bad = 1 }
+      else if (id in seen) err(NR, id ": duplicate obligation id (first at line " seen[id] ")")
+      else seen[id] = NR
+      if (!marker) err(NR, "the \"ntproof: 0\" line must come before the first obligation")
+      next
+    }
+    /^- [a-z][a-z-]*:/ && id != "" {
+      line = substr($0, 3); k = substr(line, 1, index(line, ":") - 1)
+      v = trim(substr(line, index(line, ":") + 1))
+      if (k in f) err(NR, id ": duplicate key \"" k "\"")
+      f[k] = v; next
+    }
+    END {
+      finish()
+      if (fence) err(NR, "a code fence is not closed")
+      if (!marker && total == 0) err(1, "not a ledger: no \"ntproof: 0\" line")
+      if (total == 0) err(1, "the ledger has no obligations")
+      printf "%d obligation(s): %d discharged, %d open; %d error(s)\n", total, done, open, errors
+      if (tcount > 0) printf "#nt tokens %d %d\n", int(tsum / tcount + 0.5), tcount
+      if (example > 0) print "#nt example"
+      exit(errors > 0 ? 1 : 0)
+    }
+  ' "$1"
+}
+
+proof() {
+  if [ "${1:-}" = "init" ]; then
+    target=${2:-PROOF.md}
+    if [ -e "$target" ]; then
+      echo "nt: $target already exists; not overwriting" >&2
+      exit 2
+    fi
+    template > "$target"
+    echo "nt: wrote $target (one worked example obligation, already discharged)"
+    echo "nt: next, run \"nt proof\""
+    echo "nt: $NT_PREVIEW_NOTE"
+    return 0
+  fi
+  if [ "$#" -gt 1 ]; then
+    echo "nt: proof takes at most one FILE" >&2
+    exit 2
+  fi
+  target=${1:-PROOF.md}
+  if [ ! -f "$target" ]; then
+    echo "nt: $target not found (run \"nt proof init\" to create one)" >&2
+    exit 2
+  fi
+  echo "nt proof: $NT_PREVIEW_NOTE"
+  if out=$(check_ledger "$target"); then rc=0; else rc=1; fi
+  printf '%s\n' "$out" | grep -v '^#nt ' || true
+  if [ "$rc" = 0 ]; then
+    echo "nt proof: PASS (ledger $NT_LEDGER_FORMAT is well formed; every obligation has evidence recorded)"
+  else
+    echo "nt proof: FAIL (fix the lines above; $NT_PREVIEW_NOTE)"
+  fi
+  tk=$(printf '%s\n' "$out" | sed -n 's/^#nt tokens //p')
+  if [ -n "$tk" ]; then
+    avg=${tk% *}
+    cnt=${tk#* }
+    if [ "$cnt" = 1 ]; then word=change; else word=changes; fi
+    echo "nt proof: tokens per accepted change: ~$avg (over $cnt accepted $word; recorded in the ledger, not measured by nt)"
+  fi
+  if [ "$rc" = 0 ]; then
+    echo "nt proof: this is not a type check or a proof; review the evidence itself"
+    if printf '%s\n' "$out" | grep -q '^#nt example'; then
+      echo "Next: add your own obligation (status: open) and run nt proof again — it fails until you record evidence."
+    fi
+  else
+    exit 1
+  fi
+}
+
+quickstart() {
+  dir=$(mktemp -d "${TMPDIR:-/tmp}/nt-quickstart.XXXXXX")
+  trap 'rm -rf "$dir"' EXIT
+  case $0 in
+    /*) self=$0 ;;
+    */*) self=$PWD/$0 ;;
+    *) self=$(command -v "$0") ;;
+  esac
+  echo "\$ nt compare"
+  compare invoice
+  echo
+  echo "The ledger flow runs in a temporary directory: $dir"
+  echo "It does not touch your files."
+  echo
+  echo "\$ nt proof init"
+  (cd "$dir" && sh "$self" proof init)
+  echo
+  echo "\$ nt proof"
+  (cd "$dir" && sh "$self" proof) || true
+  echo
+  echo "\$ (add obligation O2 with status: open)"
+  printf '\n## O2\n\n- claim: head is never called on an empty vector.\n- status: open\n- evidence: none\n' >>"$dir/PROOF.md"
+  echo "\$ nt proof"
+  (cd "$dir" && sh "$self" proof) || true
+  echo
+  echo "Now try it in your project: nt proof init, then nt proof."
+}
+
+cmd=${1:-help}
+[ "$#" -gt 0 ] && shift
+case "$cmd" in
+  guide) guide ;;
+  tokens) tokens "$@" ;;
+  compare) compare "$@" ;;
+  proof) proof "$@" ;;
+  quickstart|demo) quickstart ;;
+  version|--version|-V) echo "nt $NT_VERSION (NextType M0 design preview; ledger format $NT_LEDGER_FORMAT; no compiler)" ;;
+  help|--help|-h) usage ;;
+  *) echo "nt: unknown command \"$cmd\"" >&2; usage >&2; exit 2 ;;
+esac

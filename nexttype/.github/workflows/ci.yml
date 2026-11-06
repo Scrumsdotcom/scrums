@@ -1,0 +1,69 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compiler:
+    name: compiler (${{ matrix.os }}, node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node: [20, 22, 24]
+    defaults:
+      run:
+        working-directory: packages/compiler
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install (lockfile only, no install scripts)
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Type-check
+        run: npm run lint
+      - name: Unit, property, conformance, and documentation tests
+        run: npm test
+      - name: Fuzz (short)
+        run: node dist/test/fuzz.js
+        env:
+          NT_FUZZ_RUNS: "5000"
+      - name: Check the examples with the CLI
+        working-directory: .
+        run: |
+          for ex in invoice/sum vector/head state/step; do
+            node packages/compiler/dist/src/cli.js check \
+              --manifest "examples/$(dirname "$ex")/manifest.json" "examples/$ex.ntd"
+          done
+
+  audit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/compiler
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: The package has no runtime dependencies
+        run: test "$(node -p 'Object.keys(require("./package.json").dependencies ?? {}).length')" = 0
+      - name: Audit development dependencies
+        run: npm audit --audit-level=high
+      - name: Verify registry signatures
+        run: npm ci --ignore-scripts --no-audit --no-fund && npm audit signatures

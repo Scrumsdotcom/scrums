@@ -1,0 +1,20 @@
+{
+  "format": "nt-manifest/1",
+  "constants": [
+    { "name": "InvoiceState", "type": "U0" },
+    { "name": "pending", "type": "InvoiceState" },
+    { "name": "paid", "type": "InvoiceState" },
+    { "name": "I", "type": "(pi s InvoiceState U0)" },
+    { "name": "ReceiptState", "type": "U0" },
+    { "name": "confirmed", "type": "ReceiptState" },
+    { "name": "Receipt", "type": "(pi s ReceiptState U0)" },
+    { "name": "step", "type": "(pi i (I pending) (pi r (Receipt confirmed) (I paid)))" }
+  ],
+  "context": [
+    { "name": "i", "type": "I pending" },
+    { "name": "r", "type": "Receipt confirmed" }
+  ],
+  "contracts": {
+    "c3": "(I paid)"
+  }
+}

@@ -1,0 +1,6 @@
+; manifest: examples/invoice/manifest.json
+; expect: proved o0 TY f0 @4
+c0 (sig t Z (= t (sum xs)))
+f0 (pair (sum xs) refl)
+put f0 c0 @b0
+ck f0 @a0

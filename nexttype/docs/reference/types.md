@@ -1,0 +1,188 @@
+---
+title: Types
+description: "The proposed NextType types: primitives, records, unions, vectors, generics, dependent types, and refinements."
+order: 3
+---
+
+# Types
+
+> **Status: Designed (restricted core), with Planned extensions.**
+> The first implementation proposes a closed set of built-in type constructors.
+> The public description calls this a *restricted dependent core*.
+> `ntc` 0.1 implements `U0`, `N`, `Z`, `V`, `S`, `pi`, `sig`, and `=`. The other constructors on this page are designs.
+
+## The type outline
+
+The language plan gives this semantic outline.
+It describes the model, not a finished parser grammar.
+
+```text
+Type := Bool | Unit | Int | Nat | Text
+      | Record(fields) | Sum(cases) | List(Type)
+      | Vec(Type, NatIndex) | Fin(NatIndex)
+      | Pi(binding, resultType)
+      | Sigma(binding, predicate)
+      | Eq(Type, left, right)
+```
+
+## Primitive types
+
+| Type | NTΔ | Outline name | Rule | Status |
+| --- | --- | --- | --- | --- |
+| Booleans | — | `Bool` | Two values. | Designed |
+| Unit | — | `Unit` | One value. | Designed |
+| Integers | `Z` | `Int` | Exact, arbitrary precision. No implicit numeric coercion. | Designed |
+| Naturals | `N` | `Nat` | Exact. Used for indices, such as vector lengths. | Designed |
+| Text | — | `Text` | Bytes, code points, and graphemes stay distinct. | Designed; operations Planned (C05) |
+| Bytes | — | — | A value class in C03. | Planned |
+
+Rules for numbers (Designed, section 4.3):
+
+- Core integer arithmetic uses arbitrary-precision integers. The initial JavaScript target uses `bigint`.
+- Money is integer minor units with a currency tag.
+- Floating-point values stay outside exact invariants. Decimals need an explicit scale and rounding rule.
+- A conversion to a fixed-width field checks bounds.
+- A proof over unbounded integers cannot justify an overflowing machine operation.
+- A decoder checks size limits before it decodes numeric text from an untrusted source.
+
+A dash (—) means the design has no token for this construct yet.
+The readable view uses `Int` in the examples.
+Other readable-view type names are an **open question**; the outline names are the likely candidates.
+
+## Records and unions
+
+| Construct | Rule | Status |
+| --- | --- | --- |
+| Records | Immutable. Fields are named. | Designed |
+| Finite unions (sums) | Tagged cases. Pattern matches must be exhaustive (C09). | Designed |
+| Tuples, arrays | Value classes in C03. | Planned |
+| Options, results | Library data structures. Partial operations return `Result`. | Designed |
+| Abstract types | Module sealing and smart constructors. Clients cannot forge values. | Planned (C12) |
+| Classes and inheritance | Outside v1. Use records, unions, and dictionaries. | Designed (excluded) |
+
+The NTΔ tokens for records, fields, and union cases are an **open question**.
+The readable view writes records like TypeScript object types: `{ t: Int; ok: … }`.
+
+## Indexed data
+
+| Type | NTΔ | Readable view | Meaning |
+| --- | --- | --- | --- |
+| Vector | `V A n` | `Vec<A, n>` | A list of `A` with exact length `n`. |
+| Successor | `S n` | `n + 1` | The natural after `n`. |
+| Bounded index | — | — | A natural less than `n` (`Fin(n)` in the outline). |
+| Nonempty vector | `V A (S n)` | `Vec<A, n + 1>` | A vector with at least one element. |
+
+An index rules out constructors.
+For `v : V A (S n)`, the empty constructor cannot occur.
+A match on `v` needs no empty case.
+
+Initial indices use naturals, finite states, and supported records (section 4.1).
+
+## State-indexed types
+
+A type can be indexed by a finite state.
+The State example uses an invoice type indexed by its payment state:
+
+| NTΔ | Readable view |
+| --- | --- |
+| `I pending` | `Invoice<"pending">` |
+| `Receipt confirmed` | `Receipt<"confirmed">` |
+| `I paid` | `Invoice<"paid">` |
+
+Only an approved transition primitive, such as `step`, produces `I paid`.
+A string labelled `confirmed` does not create a trusted receipt.
+A runtime decoder must establish it.
+See the [State example](../../examples/state/README.md).
+
+## Generics
+
+Type parameters are ordinary context entries of type `U0`.
+
+- NTΔ: `Γ = {A:U0, n:N, v:V A (S n)}`.
+- Readable view: `function head<A, n>(v: Vec<A, n + 1>): A`.
+
+In the readable view, `<A, n>` lists both type and index parameters.
+Parametric modules and functions are planned (C10).
+Overloaded operations use explicit dictionary passing, not type classes (C10).
+Coherence and specialization rules are **planned**.
+
+## Universes
+
+`U0` is the first universe: the type of ordinary types.
+Lean provides universe handling internally.
+User-defined universes are later research.
+Inconsistent universe constraints must reject (C07).
+
+## Dependent types
+
+A dependent type can refer to a value.
+This is how a type states a specification.
+
+| Former | NTΔ | Meaning | Status |
+| --- | --- | --- | --- |
+| Dependent function | `pi` | The result type depends on an input value. | Designed |
+| Dependent pair | `sig` | A value together with evidence of a predicate about it. | Designed |
+| Identity type | `=` | Equality is a proposition. `refl` is its proof when both sides are definitionally equal. | Designed |
+
+Example, the Invoice contract:
+
+```text
+c0 (sig t Z (= t (sum xs)))
+```
+
+Read it as: a pair of an integer `t` and evidence that `t` equals `sum xs`.
+The readable view writes the same type as:
+
+```typescript
+type Total<xs> = { t: Int; ok: t == sum(xs) };
+```
+
+Rules:
+
+- In a `sig`, the second component has the predicate type with the first component substituted.
+- There is no unchecked equality and no wildcard proof.
+- Arbitrary JavaScript expressions cannot act as proofs.
+
+## Refinements
+
+A refinement restricts a type with a predicate.
+NextType treats a refinement as part of the spec.
+
+| Rule | Status |
+| --- | --- |
+| Predicates range over the supported total expression language. | Designed |
+| An unsupported predicate produces an explicit diagnostic. | Designed |
+| Refinement implication is explicit. There are no ambient coercions or unchecked downcasts. | Planned (C11) |
+| Entailment can be `unknown`. An unknown entailment does not pass. | Designed |
+
+The concrete refinement syntax is an **open question**.
+A dependent pair (`sig`) already expresses "a value with evidence of a predicate".
+
+## Model decisions
+
+A model prediction has a closed result type (Designed, section 10):
+
+```text
+Decision<T> =
+  Predicted { value: T, distribution: Distribution<T>, model: ModelId }
+  | Abstained
+  | Unavailable
+  | InvalidResponse
+```
+
+Policy code handles every case.
+A threshold is a policy input, not proof that a prediction is correct.
+
+## Erasure
+
+Proof-only terms are erased after the checker confirms the erasure conditions (section 4.5).
+Values needed for branching, decoding, or indexing stay at runtime.
+Checks at external boundaries are never erased because a static theorem mentions the expected type.
+The syntax for marking relevance is an **open question**. Idris 2 multiplicities are the reference design.
+
+## Open questions
+
+- NTΔ tokens for `Bool`, `Unit`, `Text`, records, unions, `Fin`, and `List`.
+- Refinement syntax in both views.
+- Whether readable-view indices can be implicit. The Invoice readable view writes `Vec<Int>` with no length.
+- Syntax for erasure annotations.

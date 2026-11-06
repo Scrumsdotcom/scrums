@@ -1,0 +1,7 @@
+; A total of sum xs + 1 cannot satisfy t = sum xs.
+; manifest: examples/invoice/manifest.json
+; expect: unknown o0 EQ f0 @5
+c0 (sig t Z (= t (sum xs)))
+f0 (pair (add (sum xs) 1) refl)
+put f0 c0 @b0
+ck f0 @a0

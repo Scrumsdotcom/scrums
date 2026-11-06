@@ -1,0 +1,7 @@
+# Inactive example. Replace team names and rename to CODEOWNERS before publication.
+# The repository owner must configure actual teams and protected-branch requirements.
+/schemas/approvals/       @OWNER/requirement-owners
+/verifier/profiles/       @OWNER/assurance-maintainers
+/docs/specification/     @OWNER/language-maintainers @OWNER/assurance-maintainers
+/packages/policy/         @OWNER/assurance-maintainers
+/.github/workflows/       @OWNER/release-maintainers

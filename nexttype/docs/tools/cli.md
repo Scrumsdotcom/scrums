@@ -1,0 +1,334 @@
+---
+title: The nt preview CLI
+description: Install the nt preview command, read the guide, estimate tokens, compare the two views, and check an obligation ledger. It has no compiler.
+order: 1
+---
+
+# The nt preview CLI
+
+> **Status: design preview.**
+> `nt` has no compiler, type checker, or prover.
+> It prints the guide, estimates token counts, compares the two views of the examples, and checks the format of an obligation ledger.
+> It never verifies code.
+> Its token counts are estimates, not model tokenizer output.
+
+`nt` is a small POSIX shell script.
+It is not the type checker: for that, see [the ntc reference checker](ntc.md).
+It has no dependencies other than `sh` and `awk`.
+Version `0.0.2-preview` has the commands below.
+
+## Safety warning
+
+NextType is experimental.
+Expect breaking changes, rough edges, and security issues.
+Run it in isolated workspaces, not against production systems or sensitive data.
+
+## Install
+
+For humans, download the installer, read it, then run it:
+
+```sh
+curl -fsSLO https://nexttype.dev/install.sh
+less install.sh
+sh install.sh
+```
+
+The one-line form `curl -fsSL https://nexttype.dev/install.sh | sh` does the same, without the chance to read the script first.
+
+The installer:
+
+- downloads over HTTPS only, and refuses a redirect to anything else;
+- refuses a file whose SHA-256 differs from the value pinned in the installer, even when it matches the published checksum;
+- with `NT_VERIFY_PROVENANCE=1`, also requires a GitHub build-provenance attestation from this repository (needs `gh`);
+- never uses `sudo`.
+
+`NT_SHA256` overrides the pinned value, to install a different build on purpose.
+
+For agents:
+
+```sh
+npx skills add Scrumsdotcom/nexttype
+```
+
+The agent command installs the NextType agent skill. See [Agent skill](#agent-skill).
+
+The installer does these steps:
+
+1. It detects the operating system. Linux, macOS, and BSD are supported. On Windows, use WSL.
+2. It downloads `https://nexttype.dev/nt` and `https://nexttype.dev/nt.sha256`.
+3. It compares the SHA-256 of the download with the published value. On a mismatch, it stops and installs nothing.
+4. It copies `nt` into `${NT_INSTALL_DIR:-$HOME/.local/bin}`. It never uses `sudo`.
+5. It tells you how to add that directory to `PATH` when it is not there.
+
+Read the script before you run it.
+It is short: [cli/install.sh](https://github.com/Scrumsdotcom/nexttype/blob/main/cli/install.sh).
+
+Other ways to install:
+
+```sh
+# Install into another directory
+curl -fsSL https://nexttype.dev/install.sh | NT_INSTALL_DIR="$HOME/bin" sh
+
+# Install from a checkout of the repository (no download)
+sh cli/install.sh --local
+
+# Remove nt
+curl -fsSL https://nexttype.dev/install.sh | sh -s -- --uninstall
+```
+
+When you run `cli/install.sh` from a checkout and the download fails, the installer uses the checkout copy.
+It checks that copy against `cli/nt.sha256`.
+The uninstaller removes only a file that is the NextType preview script.
+
+## Commands
+
+| Command | What it does |
+| --- | --- |
+| `nt guide` | Prints the guide for agents and people: a 3-step quickstart, what NextType is, the two views, the tokens-per-accepted-change metric, how to write a contract, and where the docs are. |
+| `nt tokens [--quiet] [FILE\|-]` | Estimates the token count of a file, or of stdin when there is no FILE or FILE is `-`. `--quiet` prints the number only. See [Token estimate](#token-estimate). |
+| `nt compare [EXAMPLE]` | Prints the readable view and the NTΔ form of a bundled example, each with a token estimate, and the difference. EXAMPLE is `invoice` (the default), `vector`, or `state`. |
+| `nt proof [FILE]` | Checks an obligation ledger. The default file is `PROOF.md`. |
+| `nt proof init [FILE]` | Writes a starter ledger with one worked example obligation. It does not overwrite a file. |
+| `nt quickstart` | Runs `nt compare`, then the ledger flow in a temporary directory. It does not touch your files. Alias: `nt demo`. |
+| `nt version` | Prints the version, for example `nt 0.0.2-preview`. |
+| `nt help` | Prints the usage. |
+
+Exit codes:
+
+| Code | Meaning |
+| --- | --- |
+| `0` | Success. For `nt proof`: the ledger is well formed and every obligation is discharged with evidence. |
+| `1` | The ledger has format errors, missing evidence, or open obligations. |
+| `2` | A usage error. Or the file is missing, or `init` found an existing file. |
+
+## Quickstart
+
+```sh
+nt compare      # one contract in both views, with token estimates
+nt proof init   # write PROOF.md with one worked example obligation
+nt proof        # the first run passes
+```
+
+Then add your own obligation with `status: open`.
+`nt proof` fails until you record evidence and set the status to `discharged`.
+
+## Token estimate
+
+`nt tokens` estimates how many tokens a text costs.
+It does not run a model tokenizer, and it needs no download.
+It splits the text into runs of one character class and counts each run:
+
+| Run | Tokens |
+| --- | --- |
+| Letters | `ceil(length / 8)`. A common word is one token. One leading space joins the word at no cost. |
+| Digits | `ceil(length / 3)`. |
+| ASCII punctuation | `ceil(length / 2)`. |
+| Two or more spaces or tabs | 1. |
+| A line break, with the blank lines and indentation after it | 1, or 0 directly after punctuation. |
+| Other bytes (non-ASCII text) | `ceil(bytes / 2)`. |
+
+The rules were calibrated against the `cl100k_base` and `o200k_base` tokenizers on the text files of this repository: Markdown, shell, Python, and the example code.
+On files over 100 tokens, the estimate was within about ±15% (mean about +6%; it tends to count high).
+On short snippets, such as the examples, the error can reach about ±25%.
+Other tokenizers can differ more.
+Use the number to compare texts, not to budget exactly.
+
+```text
+$ printf 'The quick brown fox jumps over the lazy dog.\n' | nt tokens
+~10 tokens (estimate; nt uses a character heuristic, not a model tokenizer)
+```
+
+## Compare the two views
+
+`nt compare` prints both views of one design example, with the estimate for each.
+The examples are bundled in `nt`, so the command works offline.
+They are the same as [Invoice](../../examples/invoice/README.md), [Vector](../../examples/vector/README.md), and [State](../../examples/state/README.md).
+
+```text
+$ nt compare
+nt compare: invoice (design notation example; token counts are estimates)
+Rule: the total equals the exact sum of its lines.
+
+Readable view, for people (TypeScript lineage): ~48 tokens
+  type Total<xs> = { t: Int; ok: t == sum(xs) };
+  function total(xs: Vec<Int>): Total<xs> {
+    return { t: sum(xs), ok: refl };
+  }
+
+NTΔ agent form, for agents: ~39 tokens
+  c0 (sig t Z (= t (sum xs)))
+  f0 (pair (sum xs) refl)
+  put f0 c0 @b0
+  ck f0 @a0
+  (context Γ = {n:N, xs:V Z n} comes from the planned toolchain; not counted)
+
+NTΔ form: ~39 tokens vs readable view ~48 tokens → about 18% fewer tokens for the agent to write.
+Note: no compiler exists; neither form has been compiled or checked.
+Note: estimates come from "nt tokens" (about +/-15%; wider on short text like this).
+```
+
+For `vector` the estimate is about 13% fewer, and for `state` about 9% fewer.
+When the NTΔ form is not smaller, `nt compare` says so.
+The NTΔ form leaves out the context `Γ`, which the planned toolchain supplies.
+These are notation examples, not a benchmark.
+
+## The obligation ledger
+
+A NextType contract creates obligations.
+The planned compiler will discharge them with checked proofs and tests.
+Until it exists, a team can keep each obligation in a Markdown ledger, `PROOF.md`, next to the code.
+`nt proof` checks that ledger.
+
+### Format `ntproof/0`
+
+```markdown
+# PROOF
+
+ntproof: 0
+
+## O1
+
+- claim: The invoice total equals the exact sum of its lines.
+- contract: invoice.total
+- status: discharged
+- evidence: tests/invoice_total.test.ts (property test, 10 000 cases)
+- tokens: 1840
+
+## O2
+
+- claim: head is never called on an empty vector.
+- status: open
+- evidence: none
+```
+
+The rules:
+
+1. The line `ntproof: 0` comes before the first obligation. It names the format version.
+2. Each obligation starts with a level-two heading `## ID`.
+   An id starts with a letter and uses only letters, digits, `.`, `_`, and `-`.
+   Each id occurs once.
+3. The obligation has `- key: value` lines. Each key occurs at most once.
+4. Required keys:
+   - `claim` — the property, in one sentence.
+   - `status` — `open` or `discharged`.
+   - `evidence` — what supports the claim: a test file, a review record, or a proof artifact. The values `none`, `-`, `todo`, and `tbd` count as missing.
+5. Optional key `tokens`: the tokens an agent spent on the change, as a non-negative integer, such as `1840`. Other values fail the check. A ledger without `tokens` keys is still valid.
+6. Other keys, such as `contract` or `owner`, are allowed. `nt proof` does not check them.
+7. Other text is allowed. Code fences are skipped.
+
+### What `nt proof` checks
+
+- The file is a ledger in format `ntproof/0`.
+- There is at least one obligation.
+- Each obligation has a valid, unique id and the three required keys.
+- A `tokens` value, when present, is a non-negative integer.
+- Each obligation is `discharged` and names evidence.
+
+An `open` obligation fails the check.
+This keeps an unresolved obligation visible, like a proof hole in the planned compiler.
+
+### Tokens per accepted change
+
+When at least one discharged obligation has a `tokens` key, `nt proof` also prints:
+
+```text
+nt proof: tokens per accepted change: ~A (over K accepted changes; recorded in the ledger, not measured by nt)
+```
+
+`A` is the mean of the `tokens` values of the discharged obligations that have the key, rounded to an integer.
+`K` is the number of those obligations.
+An open obligation does not count.
+The number is only as good as the values that you record.
+
+### The first run
+
+`nt proof init` writes a ledger with one worked example, `O1`.
+It is the Invoice contract, already discharged, with example evidence and an example `tokens` value.
+A fenced block below it shows how to add an open obligation. `nt proof` skips fences.
+So the first `nt proof` passes:
+
+```text
+$ nt proof init
+$ nt proof
+nt proof: design preview: no compiler; this checks the ledger format only
+1 obligation(s): 1 discharged, 0 open; 0 error(s)
+nt proof: PASS (ledger ntproof/0 is well formed; every obligation has evidence recorded)
+nt proof: tokens per accepted change: ~1840 (over 1 accepted change; recorded in the ledger, not measured by nt)
+nt proof: this is not a type check or a proof; review the evidence itself
+Next: add your own obligation (status: open) and run nt proof again — it fails until you record evidence.
+```
+
+The `Next:` line shows while an obligation has evidence that starts with `example:`.
+Replace `O1` with your own obligations.
+
+### What `nt proof` does not check
+
+`nt proof` checks the ledger format only.
+It does not:
+
+- parse or type-check NextType or TypeScript;
+- run the tests that the evidence names;
+- check that the evidence supports the claim;
+- prove anything.
+
+Every run prints `design preview: no compiler; this checks the ledger format only`.
+A person or an independent check must still review the evidence.
+
+Example output:
+
+```text
+$ nt proof
+nt proof: design preview: no compiler; this checks the ledger format only
+PROOF.md:13: O2: evidence is missing
+PROOF.md:13: O2: obligation is open
+2 obligation(s): 1 discharged, 1 open; 2 error(s)
+nt proof: FAIL (fix the lines above; design preview: no compiler; this checks the ledger format only)
+nt proof: tokens per accepted change: ~1840 (over 1 accepted change; recorded in the ledger, not measured by nt)
+```
+
+## For agents
+
+When you use NextType:
+
+- Run `nt guide` to learn it.
+- Keep obligations in `PROOF.md`.
+- Run `nt proof` before you commit.
+- Do not change a contract or a claim to make a check pass. Ask the owner.
+- Report what is planned and what is measured. Do not claim a proof that does not exist.
+
+## Agent skill
+
+The repository contains an agent skill: [skills/nexttype/SKILL.md](https://github.com/Scrumsdotcom/nexttype/blob/main/skills/nexttype/SKILL.md).
+It follows the [Agent Skills](https://agentskills.io) format.
+The [`skills`](https://github.com/vercel-labs/skills) CLI installs it for Claude Code, Codex, Cursor, and other agents:
+
+```sh
+# Install into the current project for the agents that the CLI detects
+npx skills add Scrumsdotcom/nexttype
+
+# Install for one agent only, without prompts
+npx skills add Scrumsdotcom/nexttype -a claude-code -y
+```
+
+The skill tells the agent to:
+
+- install `nt` only when it is missing;
+- run `nt guide`, keep obligations in `PROOF.md` (start with `nt proof init`), and run `nt proof` before a commit;
+- write a contract in the readable view and in the NTΔ form;
+- report the status honestly: `nt proof` checks the ledger format only.
+
+The CLI clones the repository with git. It needs no GitHub login.
+
+## Relation to the planned toolchain
+
+The language plan describes a future machine protocol with `inspect`, `holes`, `context`, `patch`, `check`, `build`, `run`, and `evidence`.
+See [Machine protocol](../reference/protocol.md).
+None of those operations exist in `nt` today.
+The ledger is a stand-in that keeps obligations explicit until the compiler exists.
+The ledger format may change or be removed when the compiler arrives.
+
+## Source
+
+- [cli/nt](https://github.com/Scrumsdotcom/nexttype/blob/main/cli/nt)
+- [cli/install.sh](https://github.com/Scrumsdotcom/nexttype/blob/main/cli/install.sh)
+- [tests/cli.sh](https://github.com/Scrumsdotcom/nexttype/blob/main/tests/cli.sh)

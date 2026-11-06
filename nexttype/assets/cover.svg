@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+<title id="title">NextType — TypeScript that proves it</title><desc id="desc">Design preview. Fixed contracts, compact patches, independent checks. All token, time, and defect improvements are unmeasured targets.</desc>
+<defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#7fa8ff" opacity=".32"/></pattern></defs>
+<rect width="1280" height="640" fill="#06153a"/><rect width="1280" height="640" fill="url(#grid)"/>
+<rect x="64" y="62" width="54" height="54" rx="10" fill="#135bff"/><text x="76" y="101" fill="white" font-family="Arial,sans-serif" font-size="38">N</text><text x="132" y="100" fill="#dce7ff" font-family="Arial,sans-serif" font-size="28">NextType</text>
+<rect x="972" y="70" width="240" height="34" rx="5" fill="#0a2e82"/><text x="1092" y="92" text-anchor="middle" fill="#dce7ff" font-family="monospace" font-size="13">M0 / DESIGN PREVIEW</text>
+<text x="64" y="210" fill="white" font-family="Arial,sans-serif" font-size="66" font-weight="600" letter-spacing="-2">TypeScript</text><text x="64" y="285" fill="#7fa8ff" font-family="Arial,sans-serif" font-size="66" font-weight="600" letter-spacing="-2">that proves it.</text>
+<text x="66" y="335" fill="#b3ccff" font-family="Arial,sans-serif" font-size="20">Agents write the code. The compiler checks the contract.</text>
+<rect x="774" y="165" width="438" height="224" rx="12" fill="#0a2159" stroke="#4785ff" stroke-opacity=".5"/>
+<g fill="#dce7ff" font-family="monospace" font-size="18"><text x="800" y="212">c1 A</text><text x="800" y="249">f1 (case v (cons (x _) x))</text><text x="800" y="286">put f1 c1 @b0</text><text x="800" y="323" fill="#7fa8ff">ck f1 @a0</text><text x="800" y="366" font-size="12" fill="#b3ccff">PROPOSED NTΔ / MANIFEST-BOUND CONTEXT</text></g>
+<path d="M64 422H1212" stroke="#4785ff" stroke-opacity=".4"/>
+<g font-family="Arial,sans-serif"><text x="64" y="486" fill="white" font-size="38">−50%</text><text x="64" y="518" fill="#b3ccff" font-size="16">TOKEN TARGET</text><text x="455" y="486" fill="white" font-size="38">−30%</text><text x="455" y="518" fill="#b3ccff" font-size="16">ELAPSED-TIME TARGET</text><text x="865" y="486" fill="white" font-size="38">−50%</text><text x="865" y="518" fill="#b3ccff" font-size="16">ESCAPED-DEFECT-RATE TARGET</text></g>
+<text x="64" y="591" fill="#b3ccff" font-family="monospace" font-size="14">ALL FIGURES ARE GOALS. NO LANGUAGE BENCHMARK HAS RUN.</text>
+</svg>
