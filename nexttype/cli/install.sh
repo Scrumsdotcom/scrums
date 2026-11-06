@@ -25,11 +25,11 @@ set -eu
 NT_BASE_URL=${NT_BASE_URL:-https://nexttype.dev}
 NT_INSTALL_DIR=${NT_INSTALL_DIR:-$HOME/.local/bin}
 NT_VERIFY_PROVENANCE=${NT_VERIFY_PROVENANCE:-0}
-NT_REPOSITORY="Scrumsdotcom/nexttype"
+NT_REPOSITORY="Scrumsdotcom/scrums"
 # The SHA-256 of the nt script that this installer version installs.
 # CI fails if it differs from cli/nt.sha256. To install a different build on
 # purpose, set NT_SHA256 to that build's published SHA-256.
-NT_PINNED_SHA256="a2a4f79dc563bd4642bb5ba3c23bfde446ef15a751600ba8041ee5bd836fb091"
+NT_PINNED_SHA256="8be069f5b3ab76b0582d037ee323cacc7f09fb87dfbc2f642650cacf13ecaca3"
 NT_SHA256=${NT_SHA256:-$NT_PINNED_SHA256}
 MARKER="nt - NextType preview command line"
 

@@ -15,7 +15,7 @@ No benchmark has run.
 ## What exists
 
 - The [`ntc` reference checker](tools/ntc.md) (0.1.0, unreleased): the `ntd/1` codec, the NT0 core with `U0`, `N`, `Z`, vectors, `pi`, `sig`, equality, and vector `case`; an elaborator with implicit arguments; an independent kernel; a reference evaluator; bounded inputs and evaluation; and evidence digests.
-- A [conformance suite](https://github.com/Scrumsdotcom/nexttype/tree/main/conformance) of positive and negative cases, seeded property tests, and a fuzzer. Every example in the documentation runs in CI.
+- A [conformance suite](https://github.com/Scrumsdotcom/scrums/tree/main/nexttype/conformance) of positive and negative cases, seeded property tests, and a fuzzer. Every example in the documentation runs in CI.
 - A [security model](reference/security-model.md) and a [versioning policy](reference/versioning.md).
 - A compact [language reference](reference/index.md). Each rule carries an Implemented, Designed, Planned, or Open label.
 - A one-page foundational paper. See [the paper](../research/paper/README.md).

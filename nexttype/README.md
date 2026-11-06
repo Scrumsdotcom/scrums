@@ -50,10 +50,10 @@ See the [security model](docs/reference/security-model.md) for what a `proved` r
 
 ## Check a contract
 
-Build the reference checker (Node.js 20 or later, no runtime dependencies):
+Build the reference checker from a clone of [Scrumsdotcom/scrums](https://github.com/Scrumsdotcom/scrums) (Node.js 20 or later, no runtime dependencies):
 
 ```sh
-cd packages/compiler && npm ci --ignore-scripts && npm run build && cd ../..
+cd nexttype/packages/compiler && npm ci --ignore-scripts && npm run build && cd ../..
 alias ntc="node $PWD/packages/compiler/dist/src/cli.js"
 ```
 
@@ -94,7 +94,7 @@ Set `NT_VERIFY_PROVENANCE=1` to also require GitHub build provenance (needs `gh`
 For agents:
 
 ```sh
-npx skills add Scrumsdotcom/nexttype
+npx skills add https://github.com/Scrumsdotcom/scrums/tree/main/nexttype/skills/nexttype
 ```
 
 This installs the [NextType agent skill](skills/nexttype/SKILL.md) with the [`skills`](https://github.com/vercel-labs/skills) CLI.

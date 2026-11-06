@@ -24,6 +24,7 @@ Versioning follows [Versioning and stability](docs/reference/versioning.md).
 
 ### Changed
 
+- NextType moved into the [Scrumsdotcom/scrums](https://github.com/Scrumsdotcom/scrums) repository, under `nexttype/`, with its full history. Release tags are now `nexttype-vX.Y.Z`. Report issues at [Scrumsdotcom/scrums/issues](https://github.com/Scrumsdotcom/scrums/issues).
 - The installer pins the SHA-256 of the `nt` script it installs, refuses non-HTTPS sources and redirects, and can require GitHub build provenance (`NT_VERIFY_PROVENANCE=1`). A file that matches the published checksum but not the pin is rejected. Set `NT_SHA256` to install a different build on purpose.
 - The grammar, lexical, diagnostics, and modules reference pages now state the implemented rules. Open questions that `ntd/1` settles: comments (`;`), negative integer literals, frame size limits, and frames limited to one line.
 - The status page describes what `ntc` 0.1.0 checks and what it does not.

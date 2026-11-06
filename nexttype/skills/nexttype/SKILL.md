@@ -90,4 +90,4 @@ ntproof: 0
 - Docs: https://nexttype.dev/docs
 - Language reference: https://nexttype.dev/docs/reference/
 - CLI: https://nexttype.dev/docs/tools/cli/
-- Source: https://github.com/Scrumsdotcom/nexttype
+- Source: https://github.com/Scrumsdotcom/scrums/tree/main/nexttype

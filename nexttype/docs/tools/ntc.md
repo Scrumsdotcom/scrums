@@ -23,7 +23,7 @@ It also evaluates closed terms with the reference evaluator.
 It has no runtime dependencies.
 
 ```sh
-cd packages/compiler
+cd nexttype/packages/compiler
 npm ci --ignore-scripts
 npm run build
 node dist/src/cli.js version

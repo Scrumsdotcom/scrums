@@ -31,7 +31,7 @@ Scrums.com is the originating organisation and a contributor.
   title  = {NextType: Contract-Bound Autonomous Programming over a Typed Compiler Graph},
   note   = {Foundational concept note, Draft 0.1. Scrums.com},
   year   = {2026},
-  url    = {https://github.com/Scrumsdotcom/nexttype/tree/main/research/paper}
+  url    = {https://github.com/Scrumsdotcom/scrums/tree/main/nexttype/research/paper}
 }
 ```
 

@@ -47,7 +47,7 @@ The installer:
 For agents:
 
 ```sh
-npx skills add Scrumsdotcom/nexttype
+npx skills add https://github.com/Scrumsdotcom/scrums/tree/main/nexttype/skills/nexttype
 ```
 
 The agent command installs the NextType agent skill. See [Agent skill](#agent-skill).
@@ -61,7 +61,7 @@ The installer does these steps:
 5. It tells you how to add that directory to `PATH` when it is not there.
 
 Read the script before you run it.
-It is short: [cli/install.sh](https://github.com/Scrumsdotcom/nexttype/blob/main/cli/install.sh).
+It is short: [cli/install.sh](https://github.com/Scrumsdotcom/scrums/blob/main/nexttype/cli/install.sh).
 
 Other ways to install:
 
@@ -298,16 +298,16 @@ When you use NextType:
 
 ## Agent skill
 
-The repository contains an agent skill: [skills/nexttype/SKILL.md](https://github.com/Scrumsdotcom/nexttype/blob/main/skills/nexttype/SKILL.md).
+The repository contains an agent skill: [skills/nexttype/SKILL.md](https://github.com/Scrumsdotcom/scrums/blob/main/nexttype/skills/nexttype/SKILL.md).
 It follows the [Agent Skills](https://agentskills.io) format.
 The [`skills`](https://github.com/vercel-labs/skills) CLI installs it for Claude Code, Codex, Cursor, and other agents:
 
 ```sh
 # Install into the current project for the agents that the CLI detects
-npx skills add Scrumsdotcom/nexttype
+npx skills add https://github.com/Scrumsdotcom/scrums/tree/main/nexttype/skills/nexttype
 
 # Install for one agent only, without prompts
-npx skills add Scrumsdotcom/nexttype -a claude-code -y
+npx skills add https://github.com/Scrumsdotcom/scrums/tree/main/nexttype/skills/nexttype -a claude-code -y
 ```
 
 The skill tells the agent to:
@@ -329,6 +329,6 @@ The ledger format may change or be removed when the compiler arrives.
 
 ## Source
 
-- [cli/nt](https://github.com/Scrumsdotcom/nexttype/blob/main/cli/nt)
-- [cli/install.sh](https://github.com/Scrumsdotcom/nexttype/blob/main/cli/install.sh)
-- [tests/cli.sh](https://github.com/Scrumsdotcom/nexttype/blob/main/tests/cli.sh)
+- [cli/nt](https://github.com/Scrumsdotcom/scrums/blob/main/nexttype/cli/nt)
+- [cli/install.sh](https://github.com/Scrumsdotcom/scrums/blob/main/nexttype/cli/install.sh)
+- [tests/cli.sh](https://github.com/Scrumsdotcom/scrums/blob/main/nexttype/tests/cli.sh)
