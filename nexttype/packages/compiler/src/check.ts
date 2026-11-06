@@ -45,6 +45,34 @@ function show(m: Machine, ctx: Ctx, v: Val): string {
   return printTm(m.quote(ctx.env.length, v), ctx.names, (name) => m.globals.get(name)?.implicit ?? 0);
 }
 
+/** The closest candidate within edit distance 2, if exactly one is closest. */
+export function closestName(name: string, candidates: Iterable<string>): string | undefined {
+  let best: string | undefined;
+  let bestD = 3;
+  let tie = false;
+  for (const c of new Set(candidates)) {
+    if (c === name || c.startsWith("n'")) continue;
+    const d = editDistance(name, c);
+    if (d < bestD) {
+      best = c;
+      bestD = d;
+      tie = false;
+    } else if (d === bestD) tie = true;
+  }
+  return tie ? undefined : best;
+}
+
+function editDistance(a: string, b: string): number {
+  if (Math.abs(a.length - b.length) > 2) return 3;
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    prev = cur;
+  }
+  return prev[b.length];
+}
+
 function fail(code: Code, msg: string, s?: { line: number; col: number }): never {
   throw new CheckError(code, msg, s?.line, s?.col);
 }
@@ -314,7 +342,10 @@ export class Elaborator {
     const ix = this.lookup(ctx, t);
     if (ix >= 0) return { tm: { t: "var", ix: ctx.names.length - 1 - ix }, ty: ctx.types[ix] };
     const g: Global | undefined = m.globals.get(t);
-    if (!g) fail("SCOPE", `${t} is not defined in this context or the manifest`, s);
+    if (!g) {
+      const near = closestName(t, [...ctx.names, ...m.globals.keys()]);
+      fail("SCOPE", `${t} is not defined in this context or the manifest${near ? `; did you mean ${near}?` : ""}`, s);
+    }
     let tm: Tm = { t: "const", name: t };
     let ty: Val = g.type;
     for (let i = 0; i < g.implicit; i++) {
