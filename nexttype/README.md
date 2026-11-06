@@ -1,14 +1,21 @@
 <p align="center">
-  <a href="https://www.scrums.com"><img src="https://img.shields.io/badge/Scrums.com-Research-0B5FFF" alt="Scrums.com Research"></a>
+  <a href="https://www.scrums.com/platform/nexttype"><img src="https://img.shields.io/badge/Scrums.com-NextType-135BFF" alt="Scrums.com NextType"></a>
   <a href="docs/status.md"><img src="https://img.shields.io/badge/reference_checker-0.1-0B5FFF" alt="Reference checker: 0.1"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue" alt="License: Apache-2.0"></a>
 </p>
 
-<p align="center"><img src="assets/cover.svg" alt="NextType: compact compiler terms, fixed contracts, checked changes. Design preview; targets unmeasured." width="100%"></p>
+<p align="center">
+  <a href="https://www.scrums.com/platform/nexttype">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="assets/hero-light.svg">
+      <img src="assets/hero-light.svg" alt="NextType by Scrums.com: TypeScript that proves it. A checked NTΔ stream ends in proved o0 TY f0." width="100%">
+    </picture>
+  </a>
+</p>
 
 <p align="center">
   <img src="assets/badges/status.svg" alt="Status: design preview">
-  <img src="assets/badges/compiler.svg" alt="Compiler: planned">
   <img src="assets/badges/proofs.svg" alt="Proof integration: planned">
 </p>
 <p align="center">
@@ -184,4 +191,8 @@ NextType is created by [Scrums.com](https://www.scrums.com), the Enterprise AI P
 Maintainer: [Gerald Neves](https://github.com/gez-scrumsdotcom).
 Organisation: [Scrumsdotcom](https://github.com/Scrumsdotcom).
 
-Read the docs at [nexttype.dev](https://nexttype.dev/docs).
+## Links
+
+- Documentation: [nexttype.dev/docs](https://nexttype.dev/docs)
+- Current site: [nexttype.dev](https://nexttype.dev)
+- NextType on Scrums.com: [scrums.com/platform/nexttype](https://www.scrums.com/platform/nexttype)
