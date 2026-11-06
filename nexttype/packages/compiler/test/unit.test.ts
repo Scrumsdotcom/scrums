@@ -141,3 +141,11 @@ test("eval: reference evaluation", () => {
   assert.deepEqual(evaluate("(S (S 3))", m), { value: "5", type: "N" });
   assert.deepEqual(evaluate("(int 5)", m), { value: "5", type: "Z" });
 });
+
+test("check: an unbound name suggests a close match", () => {
+  const m = manifestFromContext("n:N, xs:V Z n");
+  const msg = (frag: string) => checkStream(`c0 Z\nf0 ${frag}\nput f0 c0 @b0\nck f0 @a0\n`, m).diagnostics[0].message;
+  assert.match(msg("(summ xs)"), /did you mean sum\?$/);
+  assert.match(msg("(sum xss)"), /did you mean xs\?$/);
+  assert.doesNotMatch(msg("(total xs)"), /did you mean/);
+});
