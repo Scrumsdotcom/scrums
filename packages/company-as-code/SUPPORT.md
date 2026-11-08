@@ -34,8 +34,8 @@ Changes to the conserved core additionally need a
 **A security vulnerability.** Do not open an issue. Follow
 [`SECURITY.md`](./SECURITY.md).
 
-**Commercial or partnership questions.** Scrums.com, via
-[scrums.com](https://scrums.com).
+**Other questions.** Contact the lead maintainer through GitHub,
+[@gez-scrumsdotcom](https://github.com/gez-scrumsdotcom).
 
 ## What support is and is not
 

@@ -7,7 +7,6 @@
 Run your company like software: observable, versioned, orchestrated, automatable, continuously improving.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
-[![Scrums.com | SEOP](https://img.shields.io/badge/Scrums.com-SEOP-6E4AFF.svg)](https://scrums.com)
 [![Status: Seed](https://img.shields.io/badge/status-seed-orange.svg)](#project-status)
 [![CI](https://img.shields.io/badge/CI-validate%20%2B%20drift%20gate-success.svg)](./.github/workflows/validate.yml)
 
@@ -364,9 +363,11 @@ Attributions for patterns adopted from neighbouring projects are in [`NOTICE`](.
 
 ## Author
 
-Created by **Gerald Neves**, Founder & CEO at [Scrums.com](https://scrums.com), the all-in-one **Software Engineering Orchestration Platform (SEOP)**.
+Created, owned and maintained by **Gerald Neves** ([@gez-scrumsdotcom](https://github.com/gez-scrumsdotcom)).
 
-Company-as-Code is the open-source operating-system pattern behind SEOP's view of how modern, AI-native organizations should be designed, observed, and run.
+[Scrums.com](https://scrums.com) runs an implementation of the Company-as-Code pattern.
+
+The phrase "company as code" predates this project. Daniel Rothmann's essay is credited in [`NOTICE`](./NOTICE), and other, unrelated projects use the name. This repository is one framework for the idea.
 
 ---
 

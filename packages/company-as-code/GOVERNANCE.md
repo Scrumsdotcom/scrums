@@ -24,8 +24,8 @@ No agreement to sign beyond the Apache-2.0 terms recorded in
 
 ## Stewardship
 
-Today one person decides and one company sponsors the work. What that means
-for anyone building on the project, what will not change if the sponsor's
+Today one person owns the project and decides. What that means for anyone
+building on the project, what will not change if the lead maintainer's
 priorities do, how someone becomes a maintainer, and when a foundation would
 make sense are written down in plain language in
 [`docs/governance/stewardship.md`](./docs/governance/stewardship.md).

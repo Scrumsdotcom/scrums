@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/v1alpha1/instance.schema.json",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/instance.schema.json",
   "title": "Instance",
   "description": "What this repository is, declared once at the root in cac.yaml. Upstream is the Company-as-Code project itself; a fork is a company running on it. The role decides how the framework/instance boundary is checked, and the framework pin records which upstream release a fork is on.",
   "type": "object",

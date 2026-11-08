@@ -26,7 +26,7 @@ must satisfy the same bar. Every release, however small, walks this list.
    carries rhythm.
 8. **Stewardship.** "Where things stand today" in
    [`docs/governance/stewardship.md`](./governance/stewardship.md) still
-   describes the project as it is: who decides, who sponsors, and whether a
+   describes the project as it is: who decides, who owns, and whether a
    second code owner exists. Any question in
    [`docs/governance/discussion.md`](./governance/discussion.md) settled since
    the last release is marked closed with a link to its ruling.

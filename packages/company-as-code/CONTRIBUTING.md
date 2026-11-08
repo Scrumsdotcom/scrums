@@ -148,6 +148,22 @@ This project follows the [Contributor Covenant](./CODE_OF_CONDUCT.md).
 
 ---
 
+## Developer Certificate of Origin
+
+Every commit must be signed off. A sign-off certifies that you wrote the change, or otherwise have the right to submit it under the project's license. The full text is the [Developer Certificate of Origin 1.1](https://developercertificate.org/).
+
+Add the sign-off with `git commit -s`. It appends a line with your real name and email:
+
+```
+Signed-off-by: Your Name <you@example.com>
+```
+
+A pull request with an unsigned commit is not merged until the commit is signed off. To fix the last commit, run `git commit --amend -s`. To fix several, run `git rebase --signoff main`, then push the branch.
+
+The project does not use a Contributor License Agreement. You keep the copyright in your contribution.
+
+---
+
 ## License
 
 By contributing, you agree your contributions are licensed under the Apache License 2.0 (see [`LICENSE`](./LICENSE)).

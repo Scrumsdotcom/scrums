@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/v1alpha1/integration.schema.json",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/integration.schema.json",
   "title": "Integration",
   "description": "Mapping between the coordination layer and an external system. No vendor names are canonical; integrations are pluggable.",
   "type": "object",

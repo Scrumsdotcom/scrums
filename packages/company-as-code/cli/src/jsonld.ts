@@ -18,7 +18,7 @@ export interface GeneratedFile {
 }
 
 const VOCABULARIES = {
-  cac: "https://company-as-code.dev/ns#",
+  cac: "https://gez-scrumsdotcom.github.io/Company-as-Code/ns#",
   schema: "https://schema.org/",
   org: "http://www.w3.org/ns/org#",
   prov: "http://www.w3.org/ns/prov#",

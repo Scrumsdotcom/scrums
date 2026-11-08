@@ -1,5 +1,5 @@
 {
-  "edgeCount": 170,
+  "edgeCount": 171,
   "edges": [
     {
       "from": "Agent:billing-reconciler",
@@ -758,6 +758,12 @@
       "to": "Party:person:ceo"
     },
     {
+      "from": "Proposal:PROP-0007",
+      "origin": "reference",
+      "relation": "author",
+      "to": "Party:person:ceo"
+    },
+    {
       "from": "Requirement:REQ-EU-AI-ACT-ART-14",
       "origin": "reference",
       "relation": "owner",
@@ -1024,7 +1030,7 @@
   ],
   "edgesByRelation": {
     "appliesTo[]": 5,
-    "author": 6,
+    "author": 7,
     "automation.workflow": 1,
     "consumes[].from": 21,
     "contains": 15,
@@ -1050,7 +1056,7 @@
     "steps[].automation": 4
   },
   "generatedFrom": "/company/**/*.yaml + x-cac-ref annotations in /schemas",
-  "nodeCount": 94,
+  "nodeCount": 95,
   "nodes": [
     {
       "file": "company/domains/product-operations/platform/agents/billing-reconciler.yaml",
@@ -1525,6 +1531,12 @@
       "label": "Publish a plain-language stewardship guideline and the open governance questions"
     },
     {
+      "file": "company/proposals/PROP-0007-public-provenance-and-schema-host.yaml",
+      "id": "Proposal:PROP-0007",
+      "kind": "Proposal",
+      "label": "Set the schema identifier host and record the project's provenance"
+    },
+    {
       "file": "company/requirements/REQ-EU-AI-ACT-ART-14.yaml",
       "id": "Requirement:REQ-EU-AI-ACT-ART-14",
       "kind": "Requirement",
@@ -1649,7 +1661,7 @@
     "Organization": 1,
     "Party": 11,
     "Person": 1,
-    "Proposal": 6,
+    "Proposal": 7,
     "Requirement": 7,
     "Skill": 5,
     "Task": 1,

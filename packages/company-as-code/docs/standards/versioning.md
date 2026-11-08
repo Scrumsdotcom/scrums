@@ -38,7 +38,7 @@ upgraded across a release.
 Every schema's `$id` carries the document version:
 
 ```
-https://company-as-code.dev/schemas/v1alpha1/agent.schema.json
+https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/agent.schema.json
 ```
 
 The `$id` changes when, and only when, the document version changes. Field

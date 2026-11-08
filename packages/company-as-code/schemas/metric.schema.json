@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://company-as-code.dev/schemas/v1alpha1/metric.schema.json",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/metric.schema.json",
   "title": "Metric",
   "description": "Typed observable quantity with declared ownership, lineage, freshness, formula, and thresholds.",
   "type": "object",

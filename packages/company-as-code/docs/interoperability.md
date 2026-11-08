@@ -5,11 +5,11 @@ steps. Three things make the model consumable from outside it.
 
 ## 1. Versioned schema identifiers
 
-Every schema carries a `$id` under `https://company-as-code.dev/schemas/`, and
-the path names the document version:
+Every schema carries a `$id` under
+`https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/`, and the path names the document version:
 
 ```
-https://company-as-code.dev/schemas/v1alpha1/agent.schema.json
+https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/agent.schema.json
 ```
 
 The `$id` changes when the document version changes, and at no other time. The
@@ -63,7 +63,7 @@ already exist:
 | [Dublin Core](http://purl.org/dc/terms/) | Titles, descriptions, supersession, dates |
 
 Where an established vocabulary has the concept, the mapping uses it. Where it
-does not, the term is minted under `https://company-as-code.dev/ns#` rather
+does not, the term is minted under `https://gez-scrumsdotcom.github.io/Company-as-Code/ns#` rather
 than stretching someone else's.
 
 Reference fields are typed `@id`, so a consumer follows them as links rather

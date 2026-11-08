@@ -35,7 +35,7 @@ then, it would separate the spec from the only code that tests it.
 ## 2. Who is the second code owner, and how are they chosen?
 
 [`stewardship.md`](./stewardship.md) says the second code owner should come
-from the maintainers and should not work for the sponsor. Open details:
+from the maintainers and should not work with or for the lead maintainer. Open details:
 
 - Is the lead maintainer's ruling enough to appoint them, or should existing
   maintainers have a say?
@@ -77,32 +77,32 @@ implementation produces the right verdicts. Whether anyone may use the word
 version they passed. A registry is worth adding when there is more than one
 implementation to list.
 
-## 5. Should sponsor employees count towards maintainer diversity?
+## 5. Should employees of one implementer count towards maintainer diversity?
 
 The foundation criteria in [`stewardship.md`](./stewardship.md) ask for
 maintainers from at least two organisations.
 
 - **Count everyone equally.** Simple, and fair to individual contributors.
-- **Cap the sponsor's share.** For example, no more than half of the
+- **Cap any one organisation's share.** For example, no more than half of the
   maintainers who can approve the conserved core.
 
 *Current leaning:* count everyone for maintainership, and apply a cap only to
 code owners of the conserved core. That is where a single organisation's
 interests matter most.
 
-## 6. Who should hold the name, the schema domain, and the package names?
+## 6. Who should hold the name, the schema host, and the package names?
 
-The project name, the domain the schema identifiers point at, and the
+The project name, the host the schema identifiers point at, and the
 published package names are what make the project findable and what forks
-point back to. Today they sit with the sponsor.
+point back to. Today they sit with the lead maintainer personally.
 
-- **The sponsor keeps them,** with the hand-over commitment in
+- **The lead maintainer keeps them,** with the hand-over commitment in
   [`stewardship.md`](./stewardship.md).
 - **A neutral holder now,** such as a fiscal host or a small independent
   association, before it is needed.
 - **A foundation later,** when the criteria in `stewardship.md` are met.
 
-*Current leaning:* the sponsor holds them for now, under the written
+*Current leaning:* the lead maintainer holds them for now, under the written
 hand-over commitment, and they move with the project if it joins a
 foundation. Moving them earlier costs effort and protects against a risk the
 commitment already covers. That is the weakest of these leanings and the one

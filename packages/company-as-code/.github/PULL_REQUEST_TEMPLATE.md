@@ -20,6 +20,7 @@ Two or three sentences. What changes; why now.
 - [ ] Workflows marked `hitl: true` do not have a `schedule` trigger.
 - [ ] `npm run validate` passes locally.
 - [ ] `npm run generate:check` passes locally (no drift).
+- [ ] Every commit is signed off (DCO, see `CONTRIBUTING.md`).
 - [ ] If generated files changed, they were regenerated, **never hand-merged**.
 
 ## ADR / plan link

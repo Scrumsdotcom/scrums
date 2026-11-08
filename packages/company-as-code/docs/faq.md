@@ -56,11 +56,13 @@ Because the policy is uniform. A force-push that's safe today and a force-push t
 
 Because audit trails are load-bearing. A soft-delete with a tombstone is recoverable; a hard-delete is not. The cost of carrying tombstones forever is small; the cost of losing audit history once is very high.
 
-## What is the relationship between Company-as-Code and Scrums.com?
+## Who owns Company-as-Code, and how does Scrums.com use it?
 
-Company-as-Code is the **open-source operating-system pattern** behind Scrums.com's view of how modern, AI-native organizations should be designed, observed, and run. Scrums.com's commercial **Software Engineering Orchestration Platform (SEOP)** is a managed implementation of this pattern for software engineering organizations specifically. Both projects share the framework; the platform adds the runtime, the hosted observability, and the integrations.
+Gerald Neves created Company-as-Code. He owns and maintains it personally.
 
-## Can I use this at my company without buying anything from Scrums.com?
+Scrums.com runs an implementation of the Company-as-Code pattern. It is a user of the framework, like any other fork, and gets no special treatment from the conformance suite.
+
+## Can I use this at my company without buying anything?
 
 Yes. The Apache 2.0 license includes a patent grant. Fork, adapt, deploy. Sell derivative products. The framework is permissively licensed and that is not going to change.
 

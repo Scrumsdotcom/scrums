@@ -5,7 +5,6 @@ type: software
 authors:
   - family-names: Neves
     given-names: Gerald
-    affiliation: "Scrums.com"
 repository-code: "https://github.com/gez-scrumsdotcom/Company-as-Code"
 abstract: >
   An open-source operating system for AI-native organizations. Company-as-Code

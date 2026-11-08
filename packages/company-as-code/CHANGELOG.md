@@ -27,7 +27,7 @@ should be able to take the next release with a command, not a merge.
 
 ### Changed, Honest versioning (breaking)
 
-- **Documents are now `company-as-code/v1alpha1`**, and every schema `$id` is `https://company-as-code.dev/schemas/v1alpha1/<name>.schema.json`. The old `company-as-code/v1` promised a stability the format did not have. Run `cac migrate --write` to move existing documents; `cac validate` names any document that still needs it. See [ADR-0009](./docs/adr/0009-honest-versioning.md) and [`versioning.md`](./docs/standards/versioning.md).
+- **Documents are now `company-as-code/v1alpha1`**, and every schema `$id` is `https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/<name>.schema.json`. The old `company-as-code/v1` promised a stability the format did not have. Run `cac migrate --write` to move existing documents; `cac validate` names any document that still needs it. See [ADR-0009](./docs/adr/0009-honest-versioning.md) and [`versioning.md`](./docs/standards/versioning.md).
 - The release checklist's versioning policy now matches the 0.x release line.
 
 ### Added, Conformance suite (scaffold)
@@ -40,13 +40,20 @@ should be able to take the next release with a command, not a merge.
 
 ### Added, Stewardship
 
-- **[`docs/governance/stewardship.md`](./docs/governance/stewardship.md)**: who decides today, what will not change if the sponsor's priorities do, the path to maintainer and to a second code owner, the hand-over commitment, and when a foundation would make sense.
+- **[`docs/governance/stewardship.md`](./docs/governance/stewardship.md)**: who decides today, what will not change if the lead maintainer's priorities do, the path to maintainer and to a second code owner, the hand-over commitment, and when a foundation would make sense.
 - **[`docs/governance/discussion.md`](./docs/governance/discussion.md)**: seven open governance questions, each with options and a current leaning.
 
 ### Changed, Tooling
 
 - CLI test files run sequentially (`fileParallelism: false`). Several suites write scratch documents into the shared corpus, and running them in parallel let one suite see another's scratch files.
 - The Proposal `surface` enum gains `ci` and `governance`.
+
+### Changed, Provenance and schema host
+
+- **Schema `$id` host:** `https://gez-scrumsdotcom.github.io/Company-as-Code/`, also the base of the JSON-LD `cac:` namespace. See [ADR-0009](./docs/adr/0009-honest-versioning.md) and [PROP-0007](./company/proposals/PROP-0007-public-provenance-and-schema-host.yaml).
+- **Provenance:** Gerald Neves created, owns and maintains Company-as-Code. Scrums.com runs an implementation of the pattern. `NOTICE`, `MAINTAINERS.md`, `GOVERNANCE.md`, `SUPPORT.md`, the FAQ and the stewardship pages say so.
+- **Contributions need a sign-off.** `CONTRIBUTING.md` adopts the Developer Certificate of Origin. `SECURITY.md` names GitHub private vulnerability reporting as the only channel.
+- `docs/plans/seed-build.md`, a build log from the first seed, is removed.
 
 ---
 
@@ -286,7 +293,7 @@ recorded as one release. There is no separate v0.4.0 tag.
 - Reference TypeScript CLI with manifest validation, cross-document discipline checks, vitest unit tests, and deterministic generators (agent catalogue, flow registry, dependency graph, domain model, per-agent context bundles).
 - CI workflows for schema validation, unit tests, and drift detection.
 - Architecture documentation, getting-started guide, codified standards, glossary, and ADR 0001 bootstrapping the ADR process.
-- Author attribution: Gerald Neves, Founder & CEO at Scrums.com.
+- Author attribution: Gerald Neves.
 
 [Unreleased]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.6.0...HEAD
 [0.6.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.5.0...v0.6.0

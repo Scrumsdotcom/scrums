@@ -8,8 +8,9 @@ If you believe you have found a security vulnerability in Company-as-Code, in th
 
 ### How to report
 
-- Open a **private security advisory** via GitHub: `Security` tab → `Report a vulnerability`.
-- Or email the maintainers at the address listed in the repository's `MAINTAINERS` file.
+- Open a **private security advisory** via GitHub: `Security` tab → `Report a vulnerability`, or go to [the new advisory form](https://github.com/gez-scrumsdotcom/Company-as-Code/security/advisories/new).
+
+This is the only reporting channel. The lead maintainer listed in [`MAINTAINERS.md`](./MAINTAINERS.md) receives every report.
 
 Include:
 
