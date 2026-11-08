@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { AddressInfo } from "node:net";
 import { CognitionLiveReader } from "./live-reader.js";
+import { allowedHosts, refuseRequest } from "../http-guard.js";
 
 /**
  * The Visual Cognition Graph server.
@@ -42,6 +43,12 @@ export function startCognitionServer(
 
   const server = http.createServer(async (req, res) => {
     try {
+      const hosts = allowedHosts(host, (server.address() as AddressInfo).port);
+      const refused = refuseRequest(req, hosts, { stateChanging: req.method !== "GET" });
+      if (refused) {
+        json(res, 403, { error: refused });
+        return;
+      }
       await route(req, res, graphPath, opts.dbPath);
     } catch (err) {
       json(res, 500, { error: (err as Error).message });

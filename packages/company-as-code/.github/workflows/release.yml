@@ -6,20 +6,22 @@ on:
       - "v*.*.*"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  verify-and-release:
+  # Runs the gates and builds the release notes with a read-only token. The
+  # dependency installs and tests run here, never next to a write token.
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1   # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1   # v7.1.0
         with:
           node-version: "22"
-          cache: "npm"
-          cache-dependency-path: |
-            cli/package-lock.json
-            runtime/package-lock.json
+          # No dependency cache in the release job: a cache entry written by
+          # another workflow run must not feed a release.
 
       # A tag that cannot pass the project's own gates is not a release.
       # These run again here rather than trusting that the tagged commit was
@@ -71,7 +73,22 @@ jobs:
           ' CHANGELOG.md > RELEASE_NOTES.md
           echo "--- release notes ---"
           head -40 RELEASE_NOTES.md
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9   # v7.0.2
+        with:
+          name: release-notes
+          path: RELEASE_NOTES.md
+          retention-days: 1
 
+  # Only this job holds contents: write. It runs no project code.
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333   # v8.0.2
+        with:
+          name: release-notes
       - name: Publish the GitHub release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64   # v3.0.3
         with:

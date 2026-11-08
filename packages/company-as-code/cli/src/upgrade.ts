@@ -67,6 +67,18 @@ export function compareVersions(a: string, b: string): number {
   return 0;
 }
 
+/**
+ * Lock paths that an upgrade must never act on: absolute paths, `..`
+ * segments, or backslashes. A release's lock is input from outside the fork;
+ * without this check a crafted lock could copy or delete files outside it.
+ */
+export function unsafeLockPaths(lock: FrameworkLock): string[] {
+  const all = [...Object.keys(lock.files.framework), ...Object.keys(lock.files.adapt)];
+  return all.filter(
+    (p) => p === "" || path.isAbsolute(p) || p.includes("\\") || p.split("/").some((s) => s === ".." || s === "."),
+  );
+}
+
 export async function planUpgrade(
   root: string,
   base: FrameworkLock,
@@ -178,6 +190,12 @@ export async function upgradeCommand(opts: UpgradeOptions, root: string = REPO_R
   }
   if (compareVersions(next.frameworkVersion, base.frameworkVersion) < 0) {
     console.error(`✗ upgrade: ${upstreamRoot} is ${next.frameworkVersion}, older than this fork's ${base.frameworkVersion}. Downgrades are not supported.`);
+    return false;
+  }
+
+  const unsafe = [...unsafeLockPaths(base), ...unsafeLockPaths(next)];
+  if (unsafe.length > 0) {
+    console.error(`✗ upgrade: refusing a lock with paths outside the repository: ${unsafe.join(", ")}`);
     return false;
   }
 

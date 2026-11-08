@@ -10,17 +10,18 @@ on:
 
 permissions:
   contents: read
-  security-events: write    # CodeQL writes findings into the Security tab
-  actions: read             # CodeQL inspects workflow runs for context
-  pull-requests: read       # gitleaks lists the PR's commits to scope the scan (comments stay disabled)
 
 jobs:
   secret-scan:
     name: Secret scan (gitleaks)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read   # gitleaks lists the PR's commits to scope the scan (comments stay disabled)
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1   # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
       - name: Run gitleaks
         uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e   # v3.0.0
@@ -37,6 +38,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1   # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1   # v7.1.0
         with:
           node-version: "22"
@@ -59,8 +62,14 @@ jobs:
     # every PR produces noise without value. Forks running on public
     # repos or with GHAS enabled get full CodeQL coverage automatically.
     if: github.event.repository.private == false
+    permissions:
+      contents: read
+      security-events: write   # CodeQL writes findings into the Security tab
+      actions: read            # CodeQL inspects workflow runs for context
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1   # v7.0.1
+        with:
+          persist-credentials: false
       - name: Initialize CodeQL
         uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370   # v4.39.1
         with:

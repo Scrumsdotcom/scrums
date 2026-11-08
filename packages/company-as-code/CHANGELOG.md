@@ -48,6 +48,13 @@ should be able to take the next release with a command, not a merge.
 - CLI test files run sequentially (`fileParallelism: false`). Several suites write scratch documents into the shared corpus, and running them in parallel let one suite see another's scratch files.
 - The Proposal `surface` enum gains `ci` and `governance`.
 
+### Security
+
+- **Local dashboards refuse cross-site and DNS-rebinding requests.** The HITL inbox and the cognition graph check the `Host` header against the loopback address they are bound to. `POST /api/resolve` requires `content-type: application/json` and, when an `Origin` is sent, the dashboard's own origin.
+- **`cac-host execute` refuses `--live` with `--auto-approve`.** Live external writes keep their human gate.
+- **`cac upgrade` refuses a lock with paths outside the repository** (absolute paths, `..` or `.` segments, backslashes).
+- **Workflows:** every checkout sets `persist-credentials: false`. `security.yml` grants write scopes per job. `release.yml` runs the gates with a read-only token and no dependency cache; only the publish job, which runs no project code, holds `contents: write`.
+
 ### Changed, Provenance and schema host
 
 - **Schema `$id` host:** `https://gez-scrumsdotcom.github.io/Company-as-Code/`, also the base of the JSON-LD `cac:` namespace. See [ADR-0009](./docs/adr/0009-honest-versioning.md) and [PROP-0007](./company/proposals/PROP-0007-public-provenance-and-schema-host.yaml).

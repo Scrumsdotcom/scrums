@@ -1,6 +1,7 @@
 import http from "node:http";
 import type { AddressInfo } from "node:net";
 import { SqliteHitlInbox } from "./inbox.js";
+import { allowedHosts, refuseRequest } from "../http-guard.js";
 
 /**
  * The HITL dashboard: a specialised "Inbox" surface for human operators.
@@ -34,6 +35,12 @@ export function startInboxServer(opts: InboxServerOptions): Promise<RunningInbox
 
   const server = http.createServer(async (req, res) => {
     try {
+      const hosts = allowedHosts(host, (server.address() as AddressInfo).port);
+      const refused = refuseRequest(req, hosts, { stateChanging: req.method !== "GET" });
+      if (refused) {
+        json(res, 403, { error: refused });
+        return;
+      }
       await route(req, res, inbox);
     } catch (err) {
       json(res, 500, { error: (err as Error).message });

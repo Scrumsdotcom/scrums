@@ -1,4 +1,5 @@
 import { describe, expect, it, afterEach } from "vitest";
+import http from "node:http";
 import { SqliteHitlInbox } from "../src/hitl/inbox.js";
 import { QueuedApprovalProvider } from "../src/hitl/queued-approval.js";
 import { startInboxServer } from "../src/hitl/server.js";
@@ -184,7 +185,63 @@ describe("HITL dashboard server", () => {
       await running.close();
     }
   });
+
+  it("refuses cross-site and rebinding requests", async () => {
+    inbox = new SqliteHitlInbox(":memory:");
+    const item = inbox.enqueue(ENQUEUE);
+    const running = await startInboxServer({ inbox, port: 0 });
+    const port = new URL(running.url).port;
+    const body = JSON.stringify({ id: item.id, approved: true, approver: "people:attacker" });
+    try {
+      // A "simple" cross-site POST needs no preflight; it must not resolve anything.
+      const simple = await rawRequest(port, "POST", "/api/resolve", { "content-type": "text/plain" }, body);
+      expect(simple).toBe(403);
+
+      // JSON from a foreign origin.
+      const foreign = await rawRequest(
+        port, "POST", "/api/resolve",
+        { "content-type": "application/json", origin: "https://attacker.example" }, body,
+      );
+      expect(foreign).toBe(403);
+
+      // DNS rebinding: the Host header names the attacker's domain.
+      const rebound = await rawRequest(port, "GET", "/api/items", { host: `attacker.example:${port}` });
+      expect(rebound).toBe(403);
+
+      expect(inbox.get(item.id)?.status).toBe("pending");
+
+      // The dashboard's own origin still works.
+      const own = await rawRequest(
+        port, "POST", "/api/resolve",
+        { "content-type": "application/json", origin: `http://127.0.0.1:${port}` }, body,
+      );
+      expect(own).toBe(200);
+    } finally {
+      await running.close();
+    }
+  });
 });
+
+function rawRequest(
+  port: string,
+  method: string,
+  pathName: string,
+  headers: Record<string, string>,
+  body?: string,
+): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const req = http.request(
+      { host: "127.0.0.1", port: Number(port), method, path: pathName, headers },
+      (res) => {
+        res.resume();
+        res.on("end", () => resolve(res.statusCode ?? 0));
+      },
+    );
+    req.on("error", reject);
+    if (body) req.write(body);
+    req.end();
+  });
+}
 
 async function pollUntil(cond: () => boolean, timeoutMs: number): Promise<void> {
   const start = Date.now();

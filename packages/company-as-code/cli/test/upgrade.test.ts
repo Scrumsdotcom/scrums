@@ -12,7 +12,7 @@ import {
   serializeLock,
   type InstanceConfig,
 } from "../src/boundary.js";
-import { compareVersions, planUpgrade, upgradeCommand } from "../src/upgrade.js";
+import { compareVersions, planUpgrade, unsafeLockPaths, upgradeCommand } from "../src/upgrade.js";
 import { apiVersionOf, chain, planMigration } from "../src/migrate.js";
 import type { Migration } from "../src/migrations/index.js";
 import { API_VERSION } from "../src/version.js";
@@ -140,6 +140,20 @@ describe("cac upgrade", () => {
     expect(await upgradeCommand({ from: fork, write: false, allowConflicts: false }, up)).toBe(false);
     await publish(up, "0.9.0");
     expect(await upgradeCommand({ from: up, write: false, allowConflicts: false }, fork)).toBe(false);
+  });
+
+  it("flags lock paths that would reach outside the repository", () => {
+    const lock = {
+      apiVersion: API_VERSION,
+      kind: "FrameworkLock",
+      frameworkVersion: "9.9.9",
+      boundary: { derived: [], instance: [], framework: [], adapt: [] },
+      files: {
+        framework: { "schemas/agent.schema.json": "a", "../outside.txt": "b", "/etc/passwd": "c", "cli/./x.ts": "d" },
+        adapt: { "README.md": "e", "docs\\win.md": "f" },
+      },
+    } as unknown as Parameters<typeof unsafeLockPaths>[0];
+    expect(unsafeLockPaths(lock).sort()).toEqual(["../outside.txt", "/etc/passwd", "cli/./x.ts", "docs\\win.md"].sort());
   });
 
   it("compares versions numerically, not as strings", () => {

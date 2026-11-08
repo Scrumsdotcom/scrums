@@ -106,7 +106,7 @@ Options for 'execute':
   --input <name>=<value>    Add a workflow input. May repeat.
   --trigger-actor <id>      Canonical Person ID. Defaults to system:operator.
   --live                    Allow live-writes. Default is dry-run-only.
-  --auto-approve            Bypass interactive approval (tests / CI).
+  --auto-approve            Bypass interactive approval (tests / CI). Not allowed with --live.
   --queue-approvals         Route human-approval steps through the HITL inbox
                             instead of the interactive stdin prompt.
 
@@ -163,6 +163,13 @@ async function main(): Promise<void> {
       const live = args.flags.get("live") === true;
       const autoApprove = args.flags.get("auto-approve") === true;
       const queueApprovals = args.flags.get("queue-approvals") === true;
+      if (live && autoApprove) {
+        // Auto-approval exists for dry-run tests and CI. With --live it would
+        // let any caller, an agent included, skip the human gate on external
+        // writes (CTRL-HITL-EXTERNAL-WRITES).
+        console.error("execute: --auto-approve cannot be combined with --live. Use the interactive prompt or --queue-approvals.");
+        process.exit(1);
+      }
       const triggerActor = String(args.flags.get("trigger-actor") ?? "system:operator");
       const moduleFlag = args.flags.get("module");
       const inputs: Record<string, unknown> = {};
