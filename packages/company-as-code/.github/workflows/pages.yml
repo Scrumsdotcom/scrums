@@ -1,0 +1,50 @@
+name: pages
+
+# Publishes the schema identifiers and the JSON-LD namespace to GitHub Pages.
+# Each schema is served at the path its own $id names, so a resolver that
+# follows an $id gets the schema. The build fails if any $id does not match.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "schemas/**"
+      - "generated/context.jsonld"
+      - ".github/scripts/build-pages.mjs"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0   # v7.0.0
+      - name: Build site
+        env:
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+        run: node .github/scripts/build-pages.mjs "https://${OWNER}.github.io/${REPO}/" _site
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9   # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346   # v5.0.1

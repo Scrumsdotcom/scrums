@@ -64,6 +64,9 @@ change runs `cac migrate --write` once.
 `https://gez-scrumsdotcom.github.io/Company-as-Code/`, the GitHub Pages site of
 the upstream repository, which the lead maintainer controls. Moving to another
 host is a new document version with a migration, under the rules above.
+The `pages` workflow (`.github/workflows/pages.yml`) publishes each schema at
+the URL its `$id` names, and the namespace page and JSON-LD context at
+`https://gez-scrumsdotcom.github.io/Company-as-Code/ns/`.
 
 ## Alternatives considered
 
