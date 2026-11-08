@@ -22,13 +22,13 @@
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "fast-glob": "^3.3.2",
-    "yaml": "^2.5.0"
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "@types/node": "^26.1.0",
-    "tsx": "^4.23.0",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
   },
   "engines": {
     "node": ">=22"
