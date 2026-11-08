@@ -1,0 +1,40 @@
+name: company-as-code-audit
+
+# Mirrors the dependency-audit job of the upstream security workflow.
+# Production dependencies only; high or critical findings fail the job.
+
+on:
+  pull_request:
+    paths:
+      - "packages/company-as-code/**"
+      - ".github/workflows/company-as-code-audit.yml"
+  push:
+    branches: [main]
+    paths:
+      - "packages/company-as-code/**"
+      - ".github/workflows/company-as-code-audit.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: company-as-code-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-audit:
+    name: npm audit (cli + runtime)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+      - name: Audit CLI dependencies
+        working-directory: packages/company-as-code/cli
+        run: npm audit --omit=dev --audit-level=high
+      - name: Audit runtime dependencies
+        working-directory: packages/company-as-code/runtime
+        run: npm audit --omit=dev --audit-level=high
