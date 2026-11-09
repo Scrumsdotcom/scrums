@@ -23,7 +23,7 @@ Read [`docs/AGENTS.md`](docs/AGENTS.md) before you change a page.
 [Company-as-Code](https://github.com/gez-scrumsdotcom/Company-as-Code) is created and maintained by Gerald Neves in its own repository.
 `packages/company-as-code/` is a copy of one upstream release, with the upstream history.
 
-- Pinned release: not imported yet.
+- Pinned release: `v0.7.0` (upstream commit `b30cf552e993c996aa8a3f83375ddf7f8b93eef3`).
 - Make changes upstream first. Do not edit files in `packages/company-as-code/` in this repository. Open the issue or pull request in the [upstream repository](https://github.com/gez-scrumsdotcom/Company-as-Code). The change arrives here with the next sync.
 - Report bugs and questions as [upstream issues](https://github.com/gez-scrumsdotcom/Company-as-Code/issues). Report a vulnerability privately, as the [upstream security policy](https://github.com/gez-scrumsdotcom/Company-as-Code/blob/main/SECURITY.md) describes.
 - Dependencies are updated upstream. Dependabot in this repository does not watch `packages/company-as-code/`.
