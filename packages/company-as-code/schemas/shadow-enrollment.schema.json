@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/shadow-enrollment.schema.json",
+  "title": "Shadow Enrollment",
+  "description": "An agent's enrollment in Shadow Mode plus the Reliability Evidence accumulated against it. A shadow agent runs in perpetual dry-run alongside human operators; every invocation is a row of evidence. When the evidence clears the AutonomyPolicy's promotion bar, an ADR proposal promotes the agent to autonomous.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "agent", "enrolledAt", "status", "evidence"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "ShadowEnrollment" },
+    "agent": { "type": "string", "description": "Canonical agent name enrolled in shadow mode." },
+    "enrolledAt": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["shadow", "promoted", "withdrawn"],
+      "description": "shadow = actively shadowing; promoted = an accepted ADR moved it to autonomous; withdrawn = removed from shadow mode."
+    },
+    "statusChangedAt": { "type": "string", "format": "date-time" },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shadowDays", "totalRuns", "observedRuns", "matchedRuns", "agreementRate", "distinctTraces"],
+      "description": "Aggregated Reliability Evidence over the shadow ledger.",
+      "properties": {
+        "shadowDays": { "type": "integer", "minimum": 0, "description": "Whole days since enrollment." },
+        "totalRuns": { "type": "integer", "minimum": 0, "description": "Shadow invocations recorded." },
+        "observedRuns": { "type": "integer", "minimum": 0, "description": "Runs that have a human-comparison observation." },
+        "matchedRuns": { "type": "integer", "minimum": 0, "description": "Observed runs where the projection matched the human action." },
+        "agreementRate": { "type": "number", "minimum": 0, "maximum": 1, "description": "matchedRuns / observedRuns, or 0 when nothing has been observed." },
+        "distinctTraces": { "type": "integer", "minimum": 0, "description": "Distinct W3C trace IDs the shadow runs span." }
+      }
+    },
+    "promotionGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Evaluation of the AutonomyPolicy promotion requirements against the evidence.",
+      "properties": {
+        "autoMet": { "type": "boolean", "description": "Every automatically-checkable requirement is met." },
+        "unmetAuto": { "type": "array", "items": { "type": "string" } },
+        "manualGates": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

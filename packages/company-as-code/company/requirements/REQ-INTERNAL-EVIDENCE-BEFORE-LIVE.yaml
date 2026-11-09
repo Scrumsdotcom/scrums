@@ -1,0 +1,23 @@
+apiVersion: company-as-code/v1alpha1
+kind: Requirement
+
+id: REQ-INTERNAL-EVIDENCE-BEFORE-LIVE
+framework: internal
+clause: CAC-2
+title: Every write path is exercised in dry-run before it runs live
+statement: >
+  The first live invocation of any write path must be preceded by a dry-run of
+  the same path, under the same correlation, whose projected payload was
+  recorded. An operator must be able to read what a path intended to do before
+  it did it.
+
+owner:
+  kind: person
+  id: cto
+
+status: in-scope
+severity: high
+
+references:
+  - company/skills/sync-verification.yaml
+  - docs/standards/write-discipline.md

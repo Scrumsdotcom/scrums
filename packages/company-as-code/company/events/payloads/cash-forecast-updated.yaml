@@ -1,0 +1,54 @@
+# cac:ignore: JSON-Schema payload document, not a CaC primitive.
+# Payload schema for events of type `finance.cash_forecast_updated`.
+# JSON Schema-flavoured shape; the Event row itself validates against
+# /schemas/event.schema.json, and `payload` against this file.
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: company-as-code/events/finance.cash_forecast_updated/v1
+title: finance.cash_forecast_updated
+description: Emitted by the cash-forecaster when the rolling 13-week forecast changes by ≥1%.
+type: object
+additionalProperties: false
+required:
+  - week
+  - cashPosition
+  - previousCashPosition
+  - currency
+  - thirteenWeekLow
+  - runwayWeeks
+properties:
+  week:
+    type: string
+    pattern: "^[0-9]{4}-W[0-9]{2}$"
+    description: ISO week label.
+  cashPosition:
+    type: number
+    description: Current cash position at the emission time.
+  previousCashPosition:
+    type: number
+    description: Cash position at the previous emission.
+  currency:
+    type: string
+    description: ISO-4217 currency code.
+  thirteenWeekLow:
+    type: number
+    description: Lowest projected cash point within the 13-week window.
+  thirteenWeekLowDate:
+    type: string
+    format: date
+  runwayWeeks:
+    type: number
+    minimum: 0
+  topOutflows:
+    type: array
+    maxItems: 5
+    items:
+      type: object
+      additionalProperties: false
+      required: [name, amount]
+      properties:
+        name: { type: string }
+        amount: { type: number }
+  sourceCorrelationId:
+    type: string
+    description: Correlation ID linking this event back to the upstream audit narrative.

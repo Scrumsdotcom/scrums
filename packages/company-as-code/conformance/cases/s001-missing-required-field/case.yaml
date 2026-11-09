@@ -1,0 +1,10 @@
+id: s001-missing-required-field
+level: validate
+description: >
+  A goal with no target is not a goal. Required fields are enforced by the
+  schema.
+expect:
+  valid: false
+  failures:
+    - rule: schema
+      file: company/goals/GOAL-LEDGER-0001.yaml

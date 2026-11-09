@@ -1,0 +1,46 @@
+apiVersion: company-as-code/v1alpha1
+kind: Initiative
+
+id: INIT-GROWTH-0001
+title: Reduce CAC payback to 12 months
+summary: >
+  Drive blended CAC payback from ~18 months down to 12 months over two quarters
+  by reallocating spend toward channels with the strongest activation cohorts
+  and pruning channels failing the stop-loss threshold.
+
+status: active
+owner:
+  kind: team
+  id: team:growth
+
+domain: sales-marketing
+
+startDate: 2026-04-01
+targetDate: 2026-09-30
+
+goals:
+  - GOAL-GROWTH-0001
+metrics:
+  - METRIC-GROWTH-CAC-PAYBACK
+tasks: []
+modules:
+  - company/domains/sales-marketing/growth
+
+risks:
+  - description: Pruning underperforming channels too aggressively starves the top of the funnel.
+    severity: high
+    mitigation: Stop-loss thresholds per channel; never prune more than 25% of spend in a single week.
+  - description: Activation cohorts measured on too short a window mislead the model.
+    severity: medium
+    mitigation: Allocation model uses a rolling 90-day cohort window minimum.
+
+milestones:
+  - name: Channel-mix model validated against last 4 quarters
+    date: 2026-05-31
+    achieved: false
+  - name: First allocation shift through the customer-acquisition workflow
+    date: 2026-06-15
+    achieved: false
+  - name: Blended CAC payback ≤ 14 months
+    date: 2026-09-30
+    achieved: false

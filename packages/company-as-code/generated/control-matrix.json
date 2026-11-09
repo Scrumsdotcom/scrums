@@ -1,0 +1,274 @@
+{
+  "byFramework": {
+    "eu-ai-act": {
+      "covered": 0,
+      "inScope": 0,
+      "total": 1
+    },
+    "gdpr": {
+      "covered": 1,
+      "inScope": 1,
+      "total": 1
+    },
+    "internal": {
+      "covered": 2,
+      "inScope": 2,
+      "total": 2
+    },
+    "iso27001": {
+      "covered": 1,
+      "inScope": 1,
+      "total": 1
+    },
+    "soc2": {
+      "covered": 2,
+      "inScope": 2,
+      "total": 2
+    }
+  },
+  "controlCount": 6,
+  "gaps": [],
+  "generatedFrom": "/company/requirements/*.yaml + /company/controls/*.yaml",
+  "note": "Coverage is declared one way: Controls name the Requirements they implement. This view is the inversion, so the two can never disagree.",
+  "orphanControls": [],
+  "requirementCount": 7,
+  "requirements": [
+    {
+      "automated": true,
+      "clause": "Art. 14",
+      "controls": [
+        {
+          "check": "cli/src/validate.ts#crossDocumentChecks",
+          "evidenceSources": [
+            "audit-log",
+            "ci-run"
+          ],
+          "frequency": "on-change",
+          "id": "CTRL-HITL-EXTERNAL-WRITES",
+          "lastVerified": "2026-08-16",
+          "method": "automated",
+          "status": "operating",
+          "surface": "ci",
+          "title": "Human-in-the-loop declarations are enforced, not documented"
+        }
+      ],
+      "covered": true,
+      "framework": "eu-ai-act",
+      "id": "REQ-EU-AI-ACT-ART-14",
+      "owner": {
+        "id": "ceo",
+        "kind": "person"
+      },
+      "severity": "high",
+      "status": "planned",
+      "title": "Autonomous units operate under effective human oversight"
+    },
+    {
+      "automated": true,
+      "clause": "Art. 32(1)",
+      "controls": [
+        {
+          "check": "runtime/src/executor/runner.ts",
+          "evidenceSources": [
+            "audit-log",
+            "document",
+            "event-ledger"
+          ],
+          "frequency": "continuous",
+          "id": "CTRL-RUNTIME-ACTIVITY-LEDGER",
+          "lastVerified": "2026-08-16",
+          "method": "hybrid",
+          "status": "operating",
+          "surface": "runtime-host",
+          "title": "Every runtime action writes an audit row and every state change a typed event"
+        },
+        {
+          "check": ".github/workflows/security.yml",
+          "evidenceSources": [
+            "ci-run"
+          ],
+          "frequency": "on-change",
+          "id": "CTRL-SECRET-AND-DEPENDENCY-SCAN",
+          "lastVerified": "2026-08-16",
+          "method": "automated",
+          "status": "operating",
+          "surface": "ci",
+          "title": "Credentials and vulnerable dependencies are blocked at the merge boundary"
+        }
+      ],
+      "covered": true,
+      "framework": "gdpr",
+      "id": "REQ-GDPR-ART-32",
+      "owner": {
+        "id": "cfo",
+        "kind": "person"
+      },
+      "severity": "high",
+      "status": "in-scope",
+      "title": "Technical measures appropriate to the risk of processing"
+    },
+    {
+      "automated": true,
+      "clause": "CAC-2",
+      "controls": [
+        {
+          "check": "runtime/src/executor/runner.ts",
+          "evidenceSources": [
+            "audit-log"
+          ],
+          "frequency": "continuous",
+          "id": "CTRL-DRY-RUN-BEFORE-LIVE",
+          "lastVerified": "2026-08-16",
+          "method": "automated",
+          "status": "operating",
+          "surface": "runtime-host",
+          "title": "A live write requires a prior dry-run under the same correlation"
+        }
+      ],
+      "covered": true,
+      "framework": "internal",
+      "id": "REQ-INTERNAL-EVIDENCE-BEFORE-LIVE",
+      "owner": {
+        "id": "cto",
+        "kind": "person"
+      },
+      "severity": "high",
+      "status": "in-scope",
+      "title": "Every write path is exercised in dry-run before it runs live"
+    },
+    {
+      "automated": true,
+      "clause": "CAC-1",
+      "controls": [
+        {
+          "check": "cli/src/validate.ts#crossDocumentChecks",
+          "evidenceSources": [
+            "audit-log",
+            "ci-run"
+          ],
+          "frequency": "on-change",
+          "id": "CTRL-HITL-EXTERNAL-WRITES",
+          "lastVerified": "2026-08-16",
+          "method": "automated",
+          "status": "operating",
+          "surface": "ci",
+          "title": "Human-in-the-loop declarations are enforced, not documented"
+        }
+      ],
+      "covered": true,
+      "framework": "internal",
+      "id": "REQ-INTERNAL-IRREVERSIBLE-WRITES",
+      "owner": {
+        "id": "cto",
+        "kind": "person"
+      },
+      "severity": "critical",
+      "status": "in-scope",
+      "title": "A human is accountable for every irreversible external write"
+    },
+    {
+      "automated": false,
+      "clause": "A.8.15",
+      "controls": [
+        {
+          "check": "runtime/src/executor/runner.ts",
+          "evidenceSources": [
+            "audit-log",
+            "document",
+            "event-ledger"
+          ],
+          "frequency": "continuous",
+          "id": "CTRL-RUNTIME-ACTIVITY-LEDGER",
+          "lastVerified": "2026-08-16",
+          "method": "hybrid",
+          "status": "operating",
+          "surface": "runtime-host",
+          "title": "Every runtime action writes an audit row and every state change a typed event"
+        }
+      ],
+      "covered": true,
+      "framework": "iso27001",
+      "id": "REQ-ISO27001-A-8-15",
+      "owner": {
+        "id": "cfo",
+        "kind": "person"
+      },
+      "severity": "high",
+      "status": "in-scope",
+      "title": "Activity in the operating runtime is logged and retained"
+    },
+    {
+      "automated": true,
+      "clause": "CC6.1",
+      "controls": [
+        {
+          "check": "company/domains/product-operations/platform/agents/identity-drift-detector.yaml",
+          "evidenceSources": [
+            "dashboard",
+            "event-ledger"
+          ],
+          "frequency": "continuous",
+          "id": "CTRL-IDENTITY-DRIFT-DETECTION",
+          "lastVerified": "2026-08-16",
+          "method": "automated",
+          "status": "operating",
+          "surface": "scheduled-job",
+          "title": "Divergence between canonical and external identity state is detected hourly"
+        }
+      ],
+      "covered": true,
+      "framework": "soc2",
+      "id": "REQ-SOC2-CC6-1",
+      "owner": {
+        "id": "cto",
+        "kind": "person"
+      },
+      "severity": "critical",
+      "status": "in-scope",
+      "title": "Logical access to systems is restricted and reviewed"
+    },
+    {
+      "automated": true,
+      "clause": "CC8.1",
+      "controls": [
+        {
+          "check": "runtime/src/executor/runner.ts",
+          "evidenceSources": [
+            "audit-log"
+          ],
+          "frequency": "continuous",
+          "id": "CTRL-DRY-RUN-BEFORE-LIVE",
+          "lastVerified": "2026-08-16",
+          "method": "automated",
+          "status": "operating",
+          "surface": "runtime-host",
+          "title": "A live write requires a prior dry-run under the same correlation"
+        },
+        {
+          "check": "company/domains/product-operations/platform/workflows/production-deploy.yaml",
+          "evidenceSources": [
+            "audit-log",
+            "dashboard"
+          ],
+          "frequency": "on-change",
+          "id": "CTRL-PRODUCTION-CHANGE-GATE",
+          "lastVerified": "2026-08-16",
+          "method": "automated",
+          "status": "operating",
+          "surface": "runtime-host",
+          "title": "Production changes pass preflight, a dry-run, and a named approver"
+        }
+      ],
+      "covered": true,
+      "framework": "soc2",
+      "id": "REQ-SOC2-CC8-1",
+      "owner": {
+        "id": "cto",
+        "kind": "person"
+      },
+      "severity": "high",
+      "status": "in-scope",
+      "title": "Changes to production are authorised, tested, and traceable"
+    }
+  ]
+}

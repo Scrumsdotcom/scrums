@@ -1,0 +1,65 @@
+# Give forks their own places before the first fork exists.
+
+apiVersion: company-as-code/v1alpha1
+kind: Proposal
+
+id: PROP-0004
+title: Namespace everything a fork creates next to upstream
+
+status: applied
+opened: 2026-10-12
+appliedOn: 2026-11-08
+
+author:
+  kind: person
+  id: ceo
+
+targets:
+  - path: docs/standards/fork-namespacing.md
+    surface: standard
+    change: New standard. A fork's decisions live in company/decisions/; a fork's hub modules carry its namespace.
+  - path: docs/spec/company-as-code-spec.md
+    surface: spec
+    change: company/decisions appears in the canonical repository structure.
+
+reason: >
+  The fork guide tells forks to number their own ADRs from 0010. Upstream is
+  at 0008 with this change and will pass 0010 within a few releases, after
+  which every upgrade carries an ADR numbering collision. Hub modules authored
+  by a fork share a directory with upstream's, under names upstream may later
+  choose. Fixing either after forks exist means renaming identifiers that
+  other documents reference.
+
+evidence:
+  - docs/forking.md said "Add your own ADRs as 0010-..., 0011-...", while docs/adr/ already held 0001 to 0007.
+  - hub/modules/ holds upstream's modules and is the only place 'cac hub' reads from, so a fork's modules have to sit beside them.
+
+benefit: >
+  No identity a fork creates can collide with one upstream creates. Where a
+  collision was possible, the boundary check now fails the fork at authoring
+  time, instead of the upgrade failing it later.
+
+validation: >
+  The boundary test suite shows a fork failed for adding an ADR to
+  docs/adr/, failed for an unprefixed hub module, and passed for a module
+  named with its namespace. Proposals and event types are deliberately not
+  namespaced; the standard explains why, so the decision can be revisited
+  on evidence if a collision is ever seen.
+
+rollback: >
+  Delete the standard and company/decisions/, and remove the two hints and
+  the hub prefix rule from cli/src/boundary.ts. Forks would go back to
+  choosing ADR numbers and hub names by convention.
+
+adr: docs/adr/0008-framework-instance-boundary.md
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-11-08
+  verbatim: >
+    Accepted by Gerald Neves
+
+tags: [forking, namespacing]

@@ -1,0 +1,65 @@
+# Agent template.
+# Place at <module>/agents/<name>.yaml or /company/agents/<name>.yaml.
+# Schema: /schemas/agent.schema.json
+apiVersion: company-as-code/v1alpha1
+kind: Agent
+
+name: example-agent
+module: company/domains/finance-ops/finance
+
+purpose: >
+  One sentence describing what this agent does and why it exists.
+
+# Abstract runtime label: no vendor names.
+# e.g. llm | scheduled-job | event-handler | rule-engine
+runtime: llm
+
+# cron expression or "on-demand"
+schedule: "0 8 * * *"
+
+# realtime | minutely | hourly | daily | weekly | monthly | on-demand | event-driven
+cadence: daily
+
+# autonomous | human-gated | escalated
+autonomy: human-gated
+
+# Required if autonomy is "escalated".
+# escalation:
+#   threshold: "3 failures in 1 hour"
+#   to: people:on-call-platform
+
+inputs: []
+  # - name: monthly-bookings
+  #   type: bookings-summary
+  #   from: company/domains/sales-marketing/sales:pipeline-state
+
+outputs: []
+  # - name: cash-forecast
+  #   type: cash-forecast
+  #   emitsEvent: finance.cash_forecast_updated
+
+tools: []
+
+# Tier-3 skills (by name) this agent may invoke. Defined under /company/skills.
+skills: []
+  # - sync-verification
+  # - resolve-drift
+
+memoryScope: company/memory/example-agent
+
+observability:
+  dashboards: []
+  alerts: []
+  auditTopic: example-agent
+
+invariants: []
+  # - Writes audit records for every invocation.
+  # - Never writes to external systems autonomously.
+
+# Role or team names (strings).
+primaryUsers:
+  - TBD
+
+contacts:
+  - role: accountable
+    person: TBD

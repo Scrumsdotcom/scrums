@@ -1,0 +1,34 @@
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+name: sales
+domain: sales-marketing
+parent: domains/sales-marketing
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Canonical pipeline state: deals, their journey stage, and their forecast
+  weight. Finance forecasts cash from it and growth measures conversion
+  against it, so the interface is declared before the automation exists.
+
+owns:
+  tables:
+    - canonical_deals
+  schemas:
+    - deal
+
+consumes: []
+
+exposes:
+  - interface: pipeline-state
+    stability: experimental
+    description: >
+      Deal-level pipeline with L2 journey stage (lead, qualified, proposal,
+      won, lost), expected close date, and weighted value.
+
+invariants:
+  - Deal state originates here and flows downward to the CRM projection; the CRM never writes back.
+  - Every deal carries a canonical ID; the CRM's own ID lives under externalIds.
+
+contacts:
+  - role: accountable
+    person: cro

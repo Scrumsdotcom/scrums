@@ -1,0 +1,42 @@
+Company-as-Code
+Copyright 2026 Gerald Neves
+
+Company-as-Code was created by Gerald Neves, who owns and maintains it.
+
+Licensed under the Apache License, Version 2.0. See the LICENSE file in this
+repository for the full terms.
+
+--------------------------------------------------------------------------
+Attributions
+
+Several patterns in this repository were folded in from neighbouring
+open-source projects. Folding proven ideas in from elsewhere, with
+attribution, is itself a practice worth keeping.
+
+- The typed reference annotation (`x-cac-ref`) generalises the typed PathRef
+  idea from CorpoSpec (https://github.com/CorpoSpec/corpospec.com), MIT
+  licensed. No CorpoSpec code or schema text is included here.
+
+- The write discipline in docs/standards/write-discipline.md and the
+  concurrency conventions in docs/standards/concurrency.md are adapted from
+  Organizational Seed (https://github.com/codeyogi911/organizational-seed),
+  Apache-2.0 licensed, which distilled them from live operation.
+
+- The repository self-inspection framing behind `cac doctor` comes from the
+  same project's `tools/doctor`.
+
+- The separation between operator-owned strategy and agent-invoked patterns,
+  and the governance-latency argument for keeping layers apart, are informed
+  by CompanyOS (https://github.com/tomevault-io/companyos), MIT licensed.
+
+- The capability fallback-chain pattern generalises the capability ownership
+  and fallback model in Company Wizard
+  (https://github.com/Yesterday-AI/paperclip-plugin-company-wizard), MIT
+  licensed.
+
+- The framing of Company-as-Code as a queryable, versionable, integrated,
+  testable, accessible system comes from Daniel Rothmann's "Company as Code"
+  (https://blog.42futures.com/p/company-as-code).
+
+Each of these is an idea adopted and reimplemented, not code copied. Where a
+document adapts specific wording, it says so and links to the source.

@@ -1,0 +1,86 @@
+{
+  "agent": {
+    "autonomy": "human-gated",
+    "cadence": "weekly",
+    "module": "company/executive/ceo",
+    "name": "ceo-strategist",
+    "purpose": "Generate the weekly executive brief from the three domain roll-ups (finance, product-operations, sales-marketing). Flag drift against approved OKRs. Human-gated; the brief is reviewed before it lands in the leadership team's surface.\n",
+    "runtime": "llm",
+    "schedule": "0 6 * * MON"
+  },
+  "apiVersion": "company-as-code/v1alpha1",
+  "canonicalEvents": [],
+  "generatedFrom": "company/executive/ceo/agents/ceo-strategist.yaml",
+  "invariants": [
+    "The brief never writes to external systems.",
+    "Every recommendation cites the underlying roll-up source by name.",
+    "Brief generation runs only on the declared Monday cadence; no on-demand fires."
+  ],
+  "kind": "ContextBundle",
+  "memoryScope": "company/memory/ceo-strategist",
+  "observability": {
+    "alerts": [
+      "executive-brief-stale"
+    ],
+    "auditTopic": "ceo-strategist",
+    "dashboards": [
+      "executive-overview"
+    ]
+  },
+  "readAccess": {
+    "inputs": [
+      {
+        "from": "company/executive/finance-ops:finance-rollup",
+        "name": "finance-rollup",
+        "type": "finance-rollup"
+      },
+      {
+        "from": "company/executive/product-operations:product-rollup",
+        "name": "product-rollup",
+        "type": "product-rollup"
+      },
+      {
+        "from": "company/executive/sales-marketing:gtm-rollup",
+        "name": "gtm-rollup",
+        "type": "gtm-rollup"
+      }
+    ],
+    "moduleConsumes": [
+      {
+        "from": "company/executive/finance-ops",
+        "interface": "finance-rollup",
+        "usage": "P&L summary, runway, capital allocation"
+      },
+      {
+        "from": "company/executive/product-operations",
+        "interface": "product-rollup",
+        "usage": "delivery throughput, reliability posture, security posture"
+      },
+      {
+        "from": "company/executive/sales-marketing",
+        "interface": "gtm-rollup",
+        "usage": "pipeline, retention, growth velocity"
+      }
+    ]
+  },
+  "tools": [
+    "okr-reader",
+    "rollup-reader"
+  ],
+  "writeAccess": {
+    "hitlConstraints": [],
+    "moduleExposes": [
+      {
+        "description": "Daily/weekly executive briefing payload for the leadership team",
+        "interface": "executive-brief",
+        "stability": "experimental"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "executive-brief",
+        "type": "executive-brief"
+      }
+    ]
+  }
+}

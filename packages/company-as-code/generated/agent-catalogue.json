@@ -1,0 +1,96 @@
+{
+  "agents": [
+    {
+      "autonomy": "autonomous",
+      "cadence": "daily",
+      "declaredIn": "company/domains/finance-ops/finance/agents/cash-forecaster.yaml",
+      "module": "company/domains/finance-ops/finance",
+      "name": "cash-forecaster",
+      "purpose": "Produce a rolling 13-week cash forecast from canonical ledger entries plus forward-looking pipeline state. Read-only, never writes to the ledger or to external accounting systems.\n",
+      "runtime": "scheduled-job",
+      "schedule": "0 7 * * *"
+    },
+    {
+      "autonomy": "human-gated",
+      "cadence": "daily",
+      "declaredIn": "company/domains/product-operations/platform/agents/billing-reconciler.yaml",
+      "module": "company/domains/product-operations/platform",
+      "name": "billing-reconciler",
+      "purpose": "Reconcile canonical subscription state against the external billing system nightly. Produces a reconciliation proposal for human review. Never writes back to the external billing system.\n",
+      "runtime": "scheduled-job",
+      "schedule": "0 4 * * *"
+    },
+    {
+      "autonomy": "escalated",
+      "cadence": "event-driven",
+      "declaredIn": "company/domains/product-operations/platform/agents/deploy-watchdog.yaml",
+      "module": "company/domains/product-operations/platform",
+      "name": "deploy-watchdog",
+      "purpose": "Detect production deploy failures within 90 seconds and notify the deployment sub-cognition. Escalates to the platform-lead after three consecutive failures.\n",
+      "runtime": "event-handler",
+      "schedule": "on-demand"
+    },
+    {
+      "autonomy": "autonomous",
+      "cadence": "hourly",
+      "declaredIn": "company/domains/product-operations/platform/agents/identity-drift-detector.yaml",
+      "module": "company/domains/product-operations/platform",
+      "name": "identity-drift-detector",
+      "purpose": "Compare canonical identity state against the external IdP every hour and emit a typed drift event when divergence is detected.\n",
+      "runtime": "scheduled-job",
+      "schedule": "0 * * * *"
+    },
+    {
+      "autonomy": "human-gated",
+      "cadence": "daily",
+      "declaredIn": "company/domains/sales-marketing/growth/agents/growth-experiment-runner.yaml",
+      "module": "company/domains/sales-marketing/growth",
+      "name": "growth-experiment-runner",
+      "purpose": "Score active acquisition experiments daily on the channel-mix model and recommend allocation shifts. Recommendations are human-gated, the agent never moves spend on its own.\n",
+      "runtime": "scheduled-job",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "autonomy": "human-gated",
+      "cadence": "weekly",
+      "declaredIn": "company/executive/ceo/agents/ceo-strategist.yaml",
+      "module": "company/executive/ceo",
+      "name": "ceo-strategist",
+      "purpose": "Generate the weekly executive brief from the three domain roll-ups (finance, product-operations, sales-marketing). Flag drift against approved OKRs. Human-gated; the brief is reviewed before it lands in the leadership team's surface.\n",
+      "runtime": "llm",
+      "schedule": "0 6 * * MON"
+    },
+    {
+      "autonomy": "autonomous",
+      "cadence": "weekly",
+      "declaredIn": "company/executive/finance-ops/agents/finance-ops-roll-up.yaml",
+      "module": "company/executive/finance-ops",
+      "name": "finance-ops-roll-up",
+      "purpose": "Aggregate the finance-ops domain's state (ledger summary, workforce state, compliance state) into the finance-rollup payload consumed by the CEO cognition node.\n",
+      "runtime": "llm",
+      "schedule": "0 5 * * MON"
+    },
+    {
+      "autonomy": "autonomous",
+      "cadence": "weekly",
+      "declaredIn": "company/executive/product-operations/agents/product-ops-roll-up.yaml",
+      "module": "company/executive/product-operations",
+      "name": "product-ops-roll-up",
+      "purpose": "Aggregate product-operations domain state (delivery throughput, platform state, security posture) into the product-rollup payload consumed by the CEO cognition node.\n",
+      "runtime": "llm",
+      "schedule": "0 5 * * MON"
+    },
+    {
+      "autonomy": "autonomous",
+      "cadence": "weekly",
+      "declaredIn": "company/executive/sales-marketing/agents/gtm-roll-up.yaml",
+      "module": "company/executive/sales-marketing",
+      "name": "gtm-roll-up",
+      "purpose": "Aggregate sales-marketing domain state (pipeline state, customer health, growth state) into the gtm-rollup payload consumed by the CEO cognition node.\n",
+      "runtime": "llm",
+      "schedule": "0 5 * * MON"
+    }
+  ],
+  "count": 9,
+  "generatedFrom": "/company/**/manifest.yaml + /company/**/agents/*.yaml"
+}

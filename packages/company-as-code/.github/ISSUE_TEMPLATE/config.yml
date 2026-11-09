@@ -1,0 +1,15 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question about modelling your company
+    url: https://github.com/gez-scrumsdotcom/Company-as-Code/discussions
+    about: >
+      Modelling questions belong in Discussions. The answer is usually
+      interesting to more than one person and often becomes documentation.
+  - name: Security vulnerability
+    url: https://github.com/gez-scrumsdotcom/Company-as-Code/security/advisories/new
+    about: >
+      Report privately through a GitHub security advisory. Do not open a
+      public issue for a vulnerability.
+  - name: Read the docs first
+    url: https://github.com/gez-scrumsdotcom/Company-as-Code/blob/main/SUPPORT.md
+    about: Adoption path, FAQ, roadmap, and where each kind of question goes.

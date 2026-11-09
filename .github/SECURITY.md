@@ -34,6 +34,8 @@ This policy covers:
 
 For the Scrums.com platform, use the same channels.
 
+Company-as-Code in [`packages/company-as-code/`](../packages/company-as-code) has its own security policy. Report a vulnerability in it privately to the [upstream repository](https://github.com/gez-scrumsdotcom/Company-as-Code/security/advisories/new).
+
 ## Supported versions
 
 We fix security issues in the latest release of each package. Packages at `0.x` can change between minor versions.

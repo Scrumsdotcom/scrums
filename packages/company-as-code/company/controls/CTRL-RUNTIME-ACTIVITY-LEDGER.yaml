@@ -1,0 +1,42 @@
+apiVersion: company-as-code/v1alpha1
+kind: Control
+
+id: CTRL-RUNTIME-ACTIVITY-LEDGER
+title: Every runtime action writes an audit row and every state change a typed event
+description: >
+  The runtime host writes one audit row per orchestration action, including
+  dry-runs and refusals, and one typed event per canonical state transition.
+  The two surfaces are append-only and share a correlation ID and a W3C trace
+  ID, so an action and its state consequences read back as one timeline.
+
+implements:
+  - REQ-ISO27001-A-8-15
+  - REQ-GDPR-ART-32
+
+owner:
+  kind: module
+  id: company/runtime
+
+verification:
+  method: hybrid
+  surface: runtime-host
+  check: runtime/src/executor/runner.ts
+  frequency: continuous
+  failureMode: >
+    An action that cannot write its audit row does not proceed. Retention is
+    confirmed by quarterly review against the data-retention policy.
+
+evidence:
+  - source: audit-log
+    reference: the append-only audit table
+    retention: P7Y
+  - source: event-ledger
+    reference: the append-only typed event table
+    retention: P7Y
+  - source: document
+    reference: company/policies/data-retention.md
+    retention: P7Y
+
+severity: high
+status: operating
+lastVerified: 2026-08-16

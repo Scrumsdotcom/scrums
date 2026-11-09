@@ -18,6 +18,28 @@ The author remains responsible for the correctness of the submission and its sta
 
 Read [`docs/AGENTS.md`](docs/AGENTS.md) before you change a page.
 
+## Company-as-Code (`packages/company-as-code/`)
+
+[Company-as-Code](https://github.com/gez-scrumsdotcom/Company-as-Code) is created and maintained by Gerald Neves in its own repository.
+`packages/company-as-code/` is a copy of one upstream release, with the upstream history.
+
+- Pinned release: `v0.7.0` (upstream commit `b30cf552e993c996aa8a3f83375ddf7f8b93eef3`).
+- Make changes upstream first. Do not edit files in `packages/company-as-code/` in this repository. Open the issue or pull request in the [upstream repository](https://github.com/gez-scrumsdotcom/Company-as-Code). The change arrives here with the next sync.
+- Report bugs and questions as [upstream issues](https://github.com/gez-scrumsdotcom/Company-as-Code/issues). Report a vulnerability privately, as the [upstream security policy](https://github.com/gez-scrumsdotcom/Company-as-Code/blob/main/SECURITY.md) describes.
+- Dependencies are updated upstream. Dependabot in this repository does not watch `packages/company-as-code/`.
+- The `company-as-code-*` workflows run the upstream checks (validate, boundary, tests, drift gate and dependency audit) on changes under `packages/company-as-code/`. The workflows in `packages/company-as-code/.github/` belong to upstream and do not run here.
+
+### Sync a new release
+
+```sh
+git switch -c sync/cac-vX.Y.Z origin/main
+.github/scripts/company-as-code-sync.sh vX.Y.Z
+```
+
+The script fetches the upstream tag, rewrites the upstream history under `packages/company-as-code/`, merges it, and checks that the folder is identical to the upstream tree at the tag.
+Then update the pinned release above, commit, and open a pull request.
+Merge the sync pull request with a merge commit, not a squash merge. A squash merge drops the upstream history.
+
 ## NextType (`nexttype/`)
 
 NextType has a reference checker, `ntc`, in `nexttype/packages/compiler/`.

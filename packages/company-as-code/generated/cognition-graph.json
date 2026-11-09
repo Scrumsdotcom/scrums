@@ -1,0 +1,505 @@
+{
+  "apiVersion": "company-as-code/v1alpha1",
+  "domains": [
+    {
+      "moduleCount": 4,
+      "modules": [
+        {
+          "agents": [
+            {
+              "autonomy": "human-gated",
+              "cadence": "weekly",
+              "name": "ceo-strategist",
+              "runtime": "llm"
+            }
+          ],
+          "consumes": 3,
+          "domain": "executive",
+          "exposes": [
+            "executive-brief"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "ceo",
+          "path": "company/executive/ceo",
+          "purpose": "Company-wide strategic cognition. Aggregates roll-ups from the three canonical domains and surfaces executive dashboards, OKR review cadences, and cross-domain escalations.",
+          "workflows": []
+        },
+        {
+          "agents": [
+            {
+              "autonomy": "autonomous",
+              "cadence": "weekly",
+              "name": "finance-ops-roll-up",
+              "runtime": "llm"
+            }
+          ],
+          "consumes": 3,
+          "domain": "executive",
+          "exposes": [
+            "finance-rollup"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "finance-ops-executive",
+          "path": "company/executive/finance-ops",
+          "purpose": "Domain executive for Finance & Ops. Rolls up state from finance, legal, people, suppliers, governance, operations, infra, reporting modules and exposes a finance-rollup interface to the CEO layer.",
+          "workflows": []
+        },
+        {
+          "agents": [
+            {
+              "autonomy": "autonomous",
+              "cadence": "weekly",
+              "name": "product-ops-roll-up",
+              "runtime": "llm"
+            }
+          ],
+          "consumes": 3,
+          "domain": "executive",
+          "exposes": [
+            "product-rollup"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "product-operations-executive",
+          "path": "company/executive/product-operations",
+          "purpose": "Domain executive for Product & Operations. Aggregates delivery, platform, reliability, security, and product state into a product-rollup interface.",
+          "workflows": []
+        },
+        {
+          "agents": [
+            {
+              "autonomy": "autonomous",
+              "cadence": "weekly",
+              "name": "gtm-roll-up",
+              "runtime": "llm"
+            }
+          ],
+          "consumes": 3,
+          "domain": "executive",
+          "exposes": [
+            "gtm-rollup"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "sales-marketing-executive",
+          "path": "company/executive/sales-marketing",
+          "purpose": "Domain executive for Sales & Marketing. Aggregates pipeline, retention, brand, growth, and revenue operations state into a gtm-rollup interface.",
+          "workflows": []
+        }
+      ],
+      "name": "executive"
+    },
+    {
+      "moduleCount": 3,
+      "modules": [
+        {
+          "agents": [
+            {
+              "autonomy": "autonomous",
+              "cadence": "daily",
+              "name": "cash-forecaster",
+              "runtime": "scheduled-job"
+            }
+          ],
+          "consumes": 2,
+          "domain": "finance-ops",
+          "exposes": [
+            "invoice-stream",
+            "ledger-summary"
+          ],
+          "lifecycle": "hardening",
+          "metrics": [
+            {
+              "id": "METRIC-FIN-CLOSE-ON-TIME",
+              "name": "Monthly close on-time rate",
+              "type": "percentage"
+            }
+          ],
+          "name": "finance",
+          "path": "company/domains/finance-ops/finance",
+          "purpose": "Owns the ledger, cash position, runway forecasting, month-end close, and the reconciliation between booked revenue and recognized revenue.",
+          "workflows": [
+            {
+              "hitl": true,
+              "name": "month-end-close",
+              "steps": 5,
+              "trigger": "human"
+            }
+          ]
+        },
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "finance-ops",
+          "exposes": [
+            "compliance-state"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "governance",
+          "path": "company/domains/finance-ops/governance",
+          "purpose": "Requirements, controls, and the evidence that proves the controls run. Owns the compliance posture the finance-ops executive rolls up and the auditor reads.",
+          "workflows": []
+        },
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "finance-ops",
+          "exposes": [
+            "workforce-state"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "people",
+          "path": "company/domains/finance-ops/people",
+          "purpose": "Canonical workforce state: who is engaged, under what arrangement, at what cost, and with what access. Three modules read from here, so the module exists to hold that contract even before it holds automation.",
+          "workflows": []
+        }
+      ],
+      "name": "finance-ops"
+    },
+    {
+      "moduleCount": 6,
+      "modules": [
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "product-operations",
+          "exposes": [
+            "delivery-throughput"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "delivery",
+          "path": "company/domains/product-operations/delivery",
+          "purpose": "Delivery throughput and flow: lead time, deployment frequency, and where work is queueing. The product-operations executive rolls this up, so the interface is a contract rather than a report.",
+          "workflows": []
+        },
+        {
+          "agents": [
+            {
+              "autonomy": "human-gated",
+              "cadence": "daily",
+              "name": "billing-reconciler",
+              "runtime": "scheduled-job"
+            },
+            {
+              "autonomy": "escalated",
+              "cadence": "event-driven",
+              "name": "deploy-watchdog",
+              "runtime": "event-handler"
+            },
+            {
+              "autonomy": "autonomous",
+              "cadence": "hourly",
+              "name": "identity-drift-detector",
+              "runtime": "scheduled-job"
+            }
+          ],
+          "consumes": 2,
+          "domain": "product-operations",
+          "exposes": [
+            "platform-state",
+            "subscription-stream"
+          ],
+          "lifecycle": "hardening",
+          "metrics": [
+            {
+              "id": "METRIC-PLATFORM-DEPLOY-MTTR",
+              "name": "Deploy mean time to recovery",
+              "type": "duration"
+            }
+          ],
+          "name": "platform",
+          "path": "company/domains/product-operations/platform",
+          "purpose": "Shared platform: identity, billing, deployment, and observability. Hosts three sub-cognition modules and the agents that operate them. Every agent declares an explicit autonomy classification.",
+          "workflows": [
+            {
+              "hitl": true,
+              "name": "production-deploy",
+              "steps": 5,
+              "trigger": "human"
+            }
+          ]
+        },
+        {
+          "agents": [],
+          "consumes": 1,
+          "domain": "product-operations",
+          "exposes": [
+            "subscription-state"
+          ],
+          "lifecycle": "hardening",
+          "metrics": [],
+          "name": "billing",
+          "path": "company/domains/product-operations/platform/sub-cognition/billing",
+          "purpose": "Canonical subscription state and the reconciliation surface against the external billing system. Proposes corrections; never writes them back autonomously.",
+          "workflows": []
+        },
+        {
+          "agents": [],
+          "consumes": 1,
+          "domain": "product-operations",
+          "exposes": [
+            "deploy-state"
+          ],
+          "lifecycle": "hardening",
+          "metrics": [],
+          "name": "deployment",
+          "path": "company/domains/product-operations/platform/sub-cognition/deployment",
+          "purpose": "Production deploy surface. Owns the production-deploy workflow and the deploy-watchdog agent. Every production deploy is HITL.",
+          "workflows": []
+        },
+        {
+          "agents": [],
+          "consumes": 1,
+          "domain": "product-operations",
+          "exposes": [
+            "identity-state"
+          ],
+          "lifecycle": "hardening",
+          "metrics": [],
+          "name": "identity",
+          "path": "company/domains/product-operations/platform/sub-cognition/identity",
+          "purpose": "Canonical identity sub-cognition. Owns the canonical-identity table and the drift detection agent inherited from the platform module.",
+          "workflows": []
+        },
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "product-operations",
+          "exposes": [
+            "security-posture"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "security",
+          "path": "company/domains/product-operations/security",
+          "purpose": "Security posture: open findings, their severity and age, and the technical controls that back the governance module's attestations.",
+          "workflows": []
+        }
+      ],
+      "name": "product-operations"
+    },
+    {
+      "moduleCount": 3,
+      "modules": [
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "sales-marketing",
+          "exposes": [
+            "customer-health"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "customer",
+          "path": "company/domains/sales-marketing/customer",
+          "purpose": "Post-sale customer state: health, retention risk, and support posture. Read by platform (to surface churn signal on identity dashboards) and by growth (to separate high-quality from low-quality acquired cohorts).",
+          "workflows": []
+        },
+        {
+          "agents": [
+            {
+              "autonomy": "human-gated",
+              "cadence": "daily",
+              "name": "growth-experiment-runner",
+              "runtime": "scheduled-job"
+            }
+          ],
+          "consumes": 2,
+          "domain": "sales-marketing",
+          "exposes": [
+            "growth-state"
+          ],
+          "lifecycle": "hardening",
+          "metrics": [
+            {
+              "id": "METRIC-GROWTH-CAC-PAYBACK",
+              "name": "Blended CAC payback (months)",
+              "type": "duration"
+            }
+          ],
+          "name": "growth",
+          "path": "company/domains/sales-marketing/growth",
+          "purpose": "Acquisition experimentation, activation, monetization loops. Owns the growth-experiment-runner and customer-acquisition workflow. Initiative, goal, and metric are wired through end-to-end.",
+          "workflows": [
+            {
+              "hitl": true,
+              "name": "customer-acquisition",
+              "steps": 5,
+              "trigger": "human"
+            }
+          ]
+        },
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "sales-marketing",
+          "exposes": [
+            "pipeline-state"
+          ],
+          "lifecycle": "planning",
+          "metrics": [],
+          "name": "sales",
+          "path": "company/domains/sales-marketing/sales",
+          "purpose": "Canonical pipeline state: deals, their journey stage, and their forecast weight. Finance forecasts cash from it and growth measures conversion against it, so the interface is declared before the automation exists.",
+          "workflows": []
+        }
+      ],
+      "name": "sales-marketing"
+    },
+    {
+      "moduleCount": 1,
+      "modules": [
+        {
+          "agents": [],
+          "consumes": 0,
+          "domain": "framework",
+          "exposes": [
+            "runtime-posture"
+          ],
+          "lifecycle": "hardening",
+          "metrics": [
+            {
+              "id": "METRIC-RUNTIME-MTTR",
+              "name": "Incident mean time to resolution",
+              "type": "duration"
+            }
+          ],
+          "name": "runtime",
+          "path": "company/runtime",
+          "purpose": "The execution surface itself: autonomy classification, escalation routing, and the cross-domain workflows that belong to no single domain. Owning them here is what lets an incident cross module boundaries without any module claiming the incident.",
+          "workflows": [
+            {
+              "hitl": true,
+              "name": "incident-response",
+              "steps": 10,
+              "trigger": "event"
+            }
+          ]
+        }
+      ],
+      "name": "framework"
+    }
+  ],
+  "edges": [
+    {
+      "from": "company/domains/finance-ops/finance",
+      "interface": "workforce-state",
+      "to": "company/domains/finance-ops/people"
+    },
+    {
+      "from": "company/domains/finance-ops/finance",
+      "interface": "pipeline-state",
+      "to": "company/domains/sales-marketing/sales"
+    },
+    {
+      "from": "company/domains/product-operations/platform",
+      "interface": "workforce-state",
+      "to": "company/domains/finance-ops/people"
+    },
+    {
+      "from": "company/domains/product-operations/platform",
+      "interface": "customer-health",
+      "to": "company/domains/sales-marketing/customer"
+    },
+    {
+      "from": "company/domains/product-operations/platform/sub-cognition/billing",
+      "interface": "platform-state",
+      "to": "company/domains/product-operations/platform"
+    },
+    {
+      "from": "company/domains/product-operations/platform/sub-cognition/deployment",
+      "interface": "platform-state",
+      "to": "company/domains/product-operations/platform"
+    },
+    {
+      "from": "company/domains/product-operations/platform/sub-cognition/identity",
+      "interface": "platform-state",
+      "to": "company/domains/product-operations/platform"
+    },
+    {
+      "from": "company/domains/sales-marketing/growth",
+      "interface": "customer-health",
+      "to": "company/domains/sales-marketing/customer"
+    },
+    {
+      "from": "company/domains/sales-marketing/growth",
+      "interface": "pipeline-state",
+      "to": "company/domains/sales-marketing/sales"
+    },
+    {
+      "from": "company/executive/ceo",
+      "interface": "finance-rollup",
+      "to": "company/executive/finance-ops"
+    },
+    {
+      "from": "company/executive/ceo",
+      "interface": "product-rollup",
+      "to": "company/executive/product-operations"
+    },
+    {
+      "from": "company/executive/ceo",
+      "interface": "gtm-rollup",
+      "to": "company/executive/sales-marketing"
+    },
+    {
+      "from": "company/executive/finance-ops",
+      "interface": "ledger-summary",
+      "to": "company/domains/finance-ops/finance"
+    },
+    {
+      "from": "company/executive/finance-ops",
+      "interface": "compliance-state",
+      "to": "company/domains/finance-ops/governance"
+    },
+    {
+      "from": "company/executive/finance-ops",
+      "interface": "workforce-state",
+      "to": "company/domains/finance-ops/people"
+    },
+    {
+      "from": "company/executive/product-operations",
+      "interface": "delivery-throughput",
+      "to": "company/domains/product-operations/delivery"
+    },
+    {
+      "from": "company/executive/product-operations",
+      "interface": "platform-state",
+      "to": "company/domains/product-operations/platform"
+    },
+    {
+      "from": "company/executive/product-operations",
+      "interface": "security-posture",
+      "to": "company/domains/product-operations/security"
+    },
+    {
+      "from": "company/executive/sales-marketing",
+      "interface": "customer-health",
+      "to": "company/domains/sales-marketing/customer"
+    },
+    {
+      "from": "company/executive/sales-marketing",
+      "interface": "growth-state",
+      "to": "company/domains/sales-marketing/growth"
+    },
+    {
+      "from": "company/executive/sales-marketing",
+      "interface": "pipeline-state",
+      "to": "company/domains/sales-marketing/sales"
+    }
+  ],
+  "generatedFrom": "/company/**/manifest.yaml + agents + workflows + metrics",
+  "kind": "CognitionGraph",
+  "stats": {
+    "agentCount": 9,
+    "domainCount": 5,
+    "edgeCount": 21,
+    "metricCount": 4,
+    "moduleCount": 17,
+    "workflowCount": 4
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/agent.schema.json",
+  "title": "Agent",
+  "description": "Autonomous execution unit. Declared in a module manifest and elaborated in /agents/<name>.yaml.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "module", "purpose", "autonomy", "cadence"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "Agent" },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "module": {
+      "type": "string",
+      "description": "Owning module path (must match the agent's declaration in that module's manifest).",
+      "x-cac-ref": ["Manifest"]
+    },
+    "purpose": { "type": "string", "minLength": 8 },
+    "runtime": {
+      "type": "string",
+      "description": "Abstract runtime label (e.g. 'llm', 'scheduled-job', 'event-handler'). No vendor names."
+    },
+    "schedule": {
+      "type": "string",
+      "description": "cron expression or the literal string 'on-demand'."
+    },
+    "cadence": {
+      "type": "string",
+      "enum": ["realtime", "minutely", "hourly", "daily", "weekly", "monthly", "on-demand", "event-driven"]
+    },
+    "autonomy": {
+      "type": "string",
+      "enum": ["autonomous", "human-gated", "escalated"]
+    },
+    "escalation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Required when autonomy is 'escalated'.",
+      "properties": {
+        "threshold": { "type": "string" },
+        "to": { "type": "string" }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "from": { "type": "string", "description": "Source interface or canonical entity." }
+        }
+      },
+      "default": []
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "emitsEvent": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "tools": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Named tools / capabilities scoped to this agent.",
+      "default": []
+    },
+    "skills": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "x-cac-ref": ["Skill"] },
+      "description": "Tier-3 skills (by name) this agent is authorized to invoke. See /company/skills.",
+      "default": []
+    },
+    "memoryScope": {
+      "type": "string",
+      "description": "Pointer into /company/memory namespace this agent reads/writes."
+    },
+    "observability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dashboards": { "type": "array", "items": { "type": "string", "x-cac-ref": ["Dashboard"] } },
+        "alerts": { "type": "array", "items": { "type": "string" } },
+        "auditTopic": { "type": "string" }
+      }
+    },
+    "invariants": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 8 },
+      "default": []
+    },
+    "primaryUsers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "contacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role"],
+        "properties": {
+          "role": { "type": "string" },
+          "person": { "type": "string" }
+        }
+      },
+      "default": []
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "autonomy": { "const": "escalated" } }, "required": ["autonomy"] },
+      "then": { "required": ["escalation"] }
+    }
+  ]
+}

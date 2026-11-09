@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/organization.schema.json",
+  "title": "Organization",
+  "description": "Canonical organizational unit, company, business unit, team, pod, department. Forms the executable org graph.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "canonicalId", "name", "type", "status"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "Organization" },
+    "canonicalId": {
+      "type": "string",
+      "pattern": "^ORG-[A-Z0-9-]+$",
+      "description": "Permanent internal ID. Never changes for the lifetime of the entity."
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "type": {
+      "type": "string",
+      "enum": ["company", "business-unit", "department", "team", "pod", "guild", "circle"]
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["executive", "finance-ops", "product-operations", "sales-marketing", "cross-domain"]
+    },
+    "parent": {
+      "type": "string",
+      "description": "Canonical ID of parent organization.",
+      "x-cac-ref": ["Organization"]
+    },
+    "module": {
+      "type": "string",
+      "description": "Path to the module manifest representing this org unit in the cognition tree.",
+      "x-cac-ref": ["Manifest"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "active", "frozen", "dissolved", "merged"]
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "createdAt": { "type": "string", "format": "date" },
+        "dissolvedAt": { "type": "string", "format": "date" },
+        "mergedInto": { "type": "string" }
+      }
+    },
+    "members": {
+      "type": "array",
+      "items": { "type": "string", "description": "Canonical person IDs." },
+      "default": []
+    },
+    "leads": {
+      "type": "array",
+      "items": { "type": "string", "description": "Canonical person IDs." },
+      "default": []
+    },
+    "mission": { "type": "string" },
+    "externalIds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["system", "id"],
+        "properties": {
+          "system": { "type": "string", "description": "Canonical name of the external system." },
+          "id": { "type": "string" },
+          "addedAt": { "type": "string", "format": "date" },
+          "rotatedAt": { "type": "string", "format": "date" }
+        }
+      },
+      "default": []
+    }
+  }
+}

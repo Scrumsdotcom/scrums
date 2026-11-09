@@ -1,0 +1,62 @@
+# Module manifest template.
+# Copy to <module>/manifest.yaml, fill in placeholders, run `cd cli && npm run validate`.
+# Schema: /schemas/manifest.schema.json
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+
+# Kebab-case identifier, unique within parent domain.
+name: my-module
+
+# One of: executive | finance-ops | product-operations | sales-marketing | framework
+domain: finance-ops
+
+# Optional parent path.
+# parent: domains/finance-ops
+
+version: 0.1.0
+
+# One of: planning | hardening | stable | agent-ready | deprecated
+lifecycle: planning
+
+purpose: >
+  One sentence describing why this module exists and what it is responsible for.
+
+owns:
+  tables: []
+  agents: []
+  apps: []
+  workflows: []
+  dashboards: []
+  schemas: []
+  policies: []
+  playbooks: []
+
+consumes: []
+  # - interface: ledger-summary
+  #   from: company/domains/finance-ops/finance
+  #   usage: P&L roll-up
+
+exposes: []
+  # - interface: my-module-state
+  #   stability: experimental   # experimental | stable | deprecated
+  #   description: Short description of what this exposes
+
+agents: []
+  # - name: example-agent
+  #   purpose: One-sentence purpose.
+  #   runtime: llm
+  #   schedule: "0 8 * * *"        # cron, or "on-demand"
+  #   cadence: daily              # realtime | minutely | hourly | daily | weekly | monthly | on-demand | event-driven
+  #   autonomy: human-gated       # autonomous | human-gated | escalated
+  #   primaryUsers: []
+  #   outputs: []
+
+invariants: []
+  # - No autonomous writeback to external systems.
+  # - All metrics this module owns publish daily by 06:00 UTC.
+
+contacts:
+  - role: accountable
+    person: TBD
+
+links: {}

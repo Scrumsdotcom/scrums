@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/automation.schema.json",
+  "title": "Automation",
+  "description": "Deterministic execution unit between the agent layer and the integration layer. Every automation supports dryRun, declares its mutation surface, and lists known failure modes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "owner", "purpose", "cadence", "inputs", "invariants"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "Automation" },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module"],
+      "properties": {
+        "module": { "type": "string" },
+        "person": { "type": "string" }
+      }
+    },
+    "purpose": { "type": "string", "minLength": 8 },
+    "runtime": {
+      "type": "string",
+      "description": "Abstract runtime label (scheduled-job, event-handler, webhook). No vendor names."
+    },
+    "schedule": {
+      "type": "string",
+      "description": "cron expression or 'on-demand'."
+    },
+    "cadence": {
+      "type": "string",
+      "enum": ["realtime", "minutely", "hourly", "daily", "weekly", "monthly", "on-demand", "event-driven"]
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Typed inputs. A `dryRun: boolean` input is required by convention; the cross-document validator enforces.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "required": { "type": "boolean", "default": true },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "mutates": {
+      "type": "array",
+      "description": "Canonical tables or integrations this automation writes to. Empty array means read-only.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "minProperties": 1,
+        "maxProperties": 1,
+        "patternProperties": {
+          "^[a-zA-Z0-9_/-]+$": {
+            "type": "string",
+            "description": "Description of the write semantics (e.g. append-only, upsert, write)."
+          }
+        }
+      },
+      "default": []
+    },
+    "invariants": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 8 }
+    },
+    "failureModes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["description", "behavior"],
+        "properties": {
+          "description": { "type": "string", "minLength": 4 },
+          "behavior": { "type": "string", "minLength": 4 }
+        }
+      },
+      "default": []
+    },
+    "observability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["auditTopic"],
+      "properties": {
+        "auditTopic": { "type": "string" },
+        "dashboards": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "alerts": { "type": "array", "items": { "type": "string" }, "default": [] }
+      }
+    }
+  }
+}

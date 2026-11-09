@@ -1,0 +1,68 @@
+# Set the schema host and the project's provenance.
+
+apiVersion: company-as-code/v1alpha1
+kind: Proposal
+
+id: PROP-0007
+title: Set the schema identifier host and record the project's provenance
+
+status: applied
+opened: 2026-11-08
+appliedOn: 2026-11-08
+
+author:
+  kind: person
+  id: ceo
+
+targets:
+  - path: schemas/
+    surface: schema
+    change: Every $id uses the host https://gez-scrumsdotcom.github.io/Company-as-Code/.
+  - path: docs/adr/0009-honest-versioning.md
+    surface: adr
+    change: Names https://gez-scrumsdotcom.github.io/Company-as-Code/ as the $id host.
+  - path: docs/standards/versioning.md
+    surface: standard
+    change: The example $id uses the schema host.
+  - path: docs/governance/stewardship.md
+    surface: governance
+    change: Gerald Neves created and owns the project and is its lead maintainer. Scrums.com is an implementer. The step-back commitment applies to the lead maintainer.
+  - path: docs/governance/discussion.md
+    surface: governance
+    change: Questions 2, 5 and 6 refer to the lead maintainer and to implementers.
+  - path: GOVERNANCE.md
+    surface: governance
+    change: The stewardship summary states who owns the project and decides.
+
+reason: >
+  The schema identifiers and the provenance statement become a public
+  contract when the repository is published. Both must name what the project
+  controls and who owns it.
+
+evidence:
+  - The GitHub Pages site of the upstream repository is controlled by the lead maintainer.
+  - Gerald Neves created Company-as-Code and owns it personally.
+
+benefit: >
+  Every identifier resolves under a host the lead maintainer controls. Adopters
+  can read who owns the project, and that implementers, Scrums.com included,
+  have no special standing.
+
+validation: >
+  npm run validate, npm run generate:check, npm run boundary and both test
+  suites pass. Every schema $id starts with
+  https://gez-scrumsdotcom.github.io/Company-as-Code/.
+
+rollback: >
+  Revert the change before a release carries it.
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-11-08
+  verbatim: >
+    Accepted by Gerald Neves
+
+tags: [governance, schemas, versioning]

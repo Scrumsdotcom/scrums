@@ -1,0 +1,63 @@
+# Let the format outlive its first implementation.
+
+apiVersion: company-as-code/v1alpha1
+kind: Proposal
+
+id: PROP-0005
+title: Define correct behaviour as a conformance suite that any implementation can run
+
+status: applied
+opened: 2026-10-12
+appliedOn: 2026-11-08
+
+author:
+  kind: person
+  id: ceo
+
+targets:
+  - path: docs/spec/company-as-code-spec.md
+    surface: spec
+    change: The canonical structure lists /conformance as framework; conformance is named as the definition of a correct implementation.
+  - path: docs/adr/0010-conformance-suite.md
+    surface: adr
+    change: New ADR recording the suite, the verdict protocol, and the four rules.
+
+reason: >
+  The documentation invites ports of the tooling to other languages, but the
+  rules that make a company valid, beyond the shape of a single document,
+  exist only as TypeScript in cli/src/validate.ts. A second implementation
+  would have to reverse-engineer them, and would disagree in ways nobody
+  notices until documents pass one tool and fail another.
+
+evidence:
+  - docs/getting-started.md says "The CLI is one reference implementation, feel free to port the generators to Go, Python, or Rust."
+  - No artefact in the repository says what a port must do to be correct, other than the reference source itself.
+
+benefit: >
+  An implementation in any language can measure itself against the same cases
+  the reference CLI is held to, and publish the result. Disagreements about a
+  rule become changes to a case, reviewed like any other change.
+
+validation: >
+  Mechanical today: the reference implementation passes all cases in-process
+  and through the external command protocol, and CI runs the suite. The real
+  test is whether the first non-TypeScript implementation can reach a full
+  pass using only /conformance/README.md and the schemas.
+
+rollback: >
+  Delete /conformance, cli/src/conformance.ts and its test, and the CLI entry.
+  The loader change is backwards compatible and can stay. What is lost is any
+  definition of correct other than the reference source.
+
+adr: docs/adr/0010-conformance-suite.md
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-11-08
+  verbatim: >
+    Accepted by Gerald Neves
+
+tags: [conformance, interoperability]

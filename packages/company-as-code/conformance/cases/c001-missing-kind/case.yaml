@@ -1,0 +1,10 @@
+id: c001-missing-kind
+level: validate
+description: >
+  A YAML document with no kind field cannot be routed to a schema. It must
+  fail rather than be silently dropped from the corpus.
+expect:
+  valid: false
+  failures:
+    - rule: classification
+      file: company/tasks/no-kind.yaml

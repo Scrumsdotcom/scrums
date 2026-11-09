@@ -1,0 +1,39 @@
+# Initiative template.
+# Place at /company/initiatives/<id>.yaml.
+# Schema: /schemas/initiative.schema.json
+apiVersion: company-as-code/v1alpha1
+kind: Initiative
+
+id: INIT-EXAMPLE-0001
+title: One-line initiative title.
+summary: >
+  Two or three sentences explaining the change this initiative drives and the
+  outcome it is responsible for.
+
+# proposed | approved | active | paused | complete | abandoned
+status: proposed
+
+owner:
+  kind: team
+  id: TBD
+
+# executive | finance-ops | product-operations | sales-marketing | cross-domain
+domain: finance-ops
+
+startDate: 2026-05-12
+# targetDate: 2026-09-30
+
+goals: []
+metrics: []
+tasks: []
+modules: []
+
+risks: []
+  # - description: Vendor lock-in if we adopt their proprietary API.
+  #   severity: medium
+  #   mitigation: Wrap in a thin adapter behind a declared interface.
+
+milestones: []
+  # - name: Dry-run on production sample
+  #   date: 2026-06-15
+  #   achieved: false

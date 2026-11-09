@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/dashboard.schema.json",
+  "title": "Dashboard",
+  "description": "Read-only observability surface. Declares the metrics, audience, refresh cadence, and panel layout. Dashboards never trigger writes; control surfaces are workflows.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "owner", "purpose", "audience", "refresh", "panels"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "Dashboard" },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Kebab-case identifier, globally unique."
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module"],
+      "properties": {
+        "module": { "type": "string", "x-cac-ref": ["Manifest"] },
+        "person": { "type": "string" }
+      }
+    },
+    "purpose": { "type": "string", "minLength": 8 },
+    "audience": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Role or canonical Person IDs that consume this dashboard."
+    },
+    "refresh": {
+      "type": "string",
+      "enum": ["realtime", "minutely", "hourly", "daily", "on-demand"]
+    },
+    "panels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "type"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "title": { "type": "string", "minLength": 1 },
+          "type": {
+            "type": "string",
+            "enum": ["stat", "line", "bar", "percentage", "counter", "histogram", "list", "markdown", "composite"]
+          },
+          "metric": { "type": "string", "description": "Metric ID or interface-relative metric reference." },
+          "source": { "type": "string", "description": "Alternative to metric: an event-stream path or interface reference." },
+          "horizon": { "type": "string", "description": "ISO 8601 duration when the panel shows a windowed view." },
+          "annotation": { "type": "string" },
+          "thresholds": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "warning": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["comparator", "value"],
+                "properties": {
+                  "comparator": { "type": "string", "enum": ["gt", "gte", "lt", "lte", "eq", "neq"] },
+                  "value": { "type": ["number", "string"] }
+                }
+              },
+              "critical": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["comparator", "value"],
+                "properties": {
+                  "comparator": { "type": "string", "enum": ["gt", "gte", "lt", "lte", "eq", "neq"] },
+                  "value": { "type": ["number", "string"] }
+                }
+              }
+            }
+          },
+          "elements": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "For composite panels: sub-panel IDs."
+          }
+        }
+      }
+    },
+    "alerts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description", "severity", "routing"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "description": { "type": "string", "minLength": 4 },
+          "severity": { "type": "string", "enum": ["sev-1", "sev-2", "sev-3", "sev-4"] },
+          "routing": { "type": "string", "description": "Role identifier resolved against escalation-policy.yaml." }
+        }
+      },
+      "default": []
+    },
+    "invariants": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 8 },
+      "default": []
+    }
+  }
+}

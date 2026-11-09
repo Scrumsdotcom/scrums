@@ -1,0 +1,10 @@
+id: r002-module-reference-is-a-path
+level: validate
+description: >
+  Module identity is the module path, not its name. A metric owned by "ledger"
+  instead of "company/domains/finance-ops/ledger" points at nothing.
+expect:
+  valid: false
+  failures:
+    - rule: reference
+      file: company/metrics/METRIC-LEDGER-CLOSE-DAYS.yaml

@@ -1,0 +1,54 @@
+{
+  "count": 4,
+  "generatedFrom": "/company/**/workflows/*.yaml",
+  "workflows": [
+    {
+      "declaredIn": "company/domains/finance-ops/finance/workflows/month-end-close.yaml",
+      "hitl": true,
+      "module": "company/domains/finance-ops/finance",
+      "name": "month-end-close",
+      "purpose": "Run the monthly close: baseline the ledger, dry-run the period-close journal, confirm counts, capture an explicit human approval, write live, re-verify.\n",
+      "steps": 5,
+      "trigger": {
+        "actor": "people:finance-lead",
+        "kind": "human"
+      }
+    },
+    {
+      "declaredIn": "company/domains/product-operations/platform/workflows/production-deploy.yaml",
+      "hitl": true,
+      "module": "company/domains/product-operations/platform",
+      "name": "production-deploy",
+      "purpose": "Promote a build candidate to production. Always gated by a human approval; the workflow refuses to schedule.\n",
+      "steps": 5,
+      "trigger": {
+        "actor": "people:platform-lead",
+        "kind": "human"
+      }
+    },
+    {
+      "declaredIn": "company/domains/sales-marketing/growth/workflows/customer-acquisition.yaml",
+      "hitl": true,
+      "module": "company/domains/sales-marketing/growth",
+      "name": "customer-acquisition",
+      "purpose": "Weekly customer-acquisition allocation review: read the agent's recommendation, apply approved shifts, monitor the change against the CAC payback metric.\n",
+      "steps": 5,
+      "trigger": {
+        "actor": "people:head-of-growth",
+        "kind": "human"
+      }
+    },
+    {
+      "declaredIn": "company/workflows/incident-response.yaml",
+      "hitl": true,
+      "module": "company/runtime",
+      "name": "incident-response",
+      "purpose": "Orchestrate a declared incident from declaration through retrospective. Cross-cutting workflow that lives at the runtime layer because it spans every module. Always human-led. The commander is a person, not an agent.\n",
+      "steps": 10,
+      "trigger": {
+        "event": "runtime.incident_declared",
+        "kind": "event"
+      }
+    }
+  ]
+}

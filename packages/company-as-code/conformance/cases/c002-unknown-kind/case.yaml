@@ -1,0 +1,10 @@
+id: c002-unknown-kind
+level: validate
+description: >
+  A one-character typo in kind must fail. Treating it as an unknown primitive
+  and skipping it would remove the document from every check.
+expect:
+  valid: false
+  failures:
+    - rule: classification
+      file: company/goals/GOAL-LEDGER-0001.yaml

@@ -1,0 +1,8 @@
+id: v002-ignore-pragma
+level: validate
+description: >
+  A YAML file that is deliberately not a primitive opts out with a "#
+  cac:ignore" comment in its first lines. It must be skipped, not reported.
+expect:
+  valid: true
+  failures: []

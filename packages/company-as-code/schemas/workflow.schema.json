@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/workflow.schema.json",
+  "title": "Workflow",
+  "description": "Multi-step orchestration definition. May be triggered by event, schedule, or human action.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "module", "purpose", "steps", "trigger"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "Workflow" },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "module": { "type": "string", "x-cac-ref": ["Manifest"] },
+    "purpose": { "type": "string", "minLength": 8 },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["event", "schedule", "human", "webhook", "manual"] },
+        "event": { "type": "string" },
+        "schedule": { "type": "string" },
+        "actor": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "schedule" } }, "required": ["kind"] },
+          "then": { "required": ["schedule"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "event" } }, "required": ["kind"] },
+          "then": { "required": ["event"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "human" } }, "required": ["kind"] },
+          "then": { "required": ["actor"] }
+        }
+      ]
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "required": { "type": "boolean", "default": true }
+        }
+      },
+      "default": []
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "kind": {
+            "type": "string",
+            "enum": ["agent", "automation", "human-approval", "wait", "branch", "emit-event", "external-call", "dry-run", "live-write"]
+          },
+          "agent": { "type": "string", "x-cac-ref": ["Agent"] },
+          "automation": { "type": "string", "x-cac-ref": ["Automation"] },
+          "approver": { "type": "string" },
+          "dryRunRequired": { "type": "boolean", "description": "When the step writes to an external surface, require a dry-run predecessor." },
+          "hitl": { "type": "boolean", "description": "Step requires a human-in-the-loop confirmation." },
+          "emitsEvent": { "type": "string" },
+          "onFailure": { "type": "string", "enum": ["retry", "escalate", "abort"] },
+          "retries": { "type": "integer", "minimum": 0, "default": 0 },
+          "timeout": { "type": "string", "description": "ISO 8601 duration." },
+          "branches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["when", "next"],
+              "properties": {
+                "when": { "type": "string" },
+                "next": { "type": "string" }
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "kind": { "const": "agent" } }, "required": ["kind"] },
+            "then": { "required": ["agent"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "automation" } }, "required": ["kind"] },
+            "then": { "required": ["automation"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "dry-run" } }, "required": ["kind"] },
+            "then": { "required": ["automation"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "live-write" } }, "required": ["kind"] },
+            "then": { "required": ["automation"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "human-approval" } }, "required": ["kind"] },
+            "then": { "required": ["approver"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "emit-event" } }, "required": ["kind"] },
+            "then": { "required": ["emitsEvent"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "branch" } }, "required": ["kind"] },
+            "then": { "required": ["branches"] }
+          }
+        ]
+      }
+    },
+    "invariants": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 8 },
+      "default": []
+    },
+    "hitl": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, the workflow as a whole is human-gated. Scheduled triggers fail validation when hitl is true."
+    },
+    "observability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dashboards": { "type": "array", "items": { "type": "string", "x-cac-ref": ["Dashboard"] } },
+        "metrics": { "type": "array", "items": { "type": "string", "x-cac-ref": ["Metric"] } }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "hitl": { "const": true }
+        },
+        "required": ["hitl"]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "type": "object",
+            "properties": {
+              "kind": { "type": "string", "not": { "const": "schedule" } }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

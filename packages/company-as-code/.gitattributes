@@ -1,0 +1,15 @@
+# Normalise line endings so a Windows checkout does not produce a diff on
+# every file the first time someone saves.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# Generated outputs are committed and drift-gated, but they are not what a
+# reviewer should read line by line.
+/generated/** linguist-generated=true
+*.lock -diff
+package-lock.json -diff linguist-generated=true
