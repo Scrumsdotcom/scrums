@@ -1,7 +1,7 @@
 {
   "apiVersion": "company-as-code/v1alpha1",
   "kind": "FrameworkLock",
-  "frameworkVersion": "0.7.0",
+  "frameworkVersion": "0.7.1",
   "boundary": {
     "derived": [
       "generated/**",
@@ -47,8 +47,8 @@
       ".gitattributes": "a16cbae2b06f93d29cdd813faac4ff23b81ee39c9f72d143bd2b0ba8200a620e",
       "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
       "cli/README.md": "6337ca0f800e2aaec77b2bbfeee06d6e7e9dd79d38d8693718b598061850d977",
-      "cli/package-lock.json": "b22fd55475ecd17b0a7e5ecbe6763ce6f43802d385cf05b8680537091dfd24a0",
-      "cli/package.json": "43ccc604ba4f98676043014541c3f2656630fbb3c47c8ce0c4c6b6d3bec868d1",
+      "cli/package-lock.json": "13b3b9dbfab0d89f8ece4a885bfb9233abd7bd245a74a1d4e3df63dd0c42453e",
+      "cli/package.json": "519a121d8db342d06db3db4352df59e0855e62f48631e38a4f01d560b5d714ae",
       "cli/src/boundary.ts": "5a39eba0d531a70a01d4e1ec11f4d70fd0f927561f04ae3e40ecece1e9008271",
       "cli/src/cli-args.ts": "fa3f626ccabb0370d70beff18c365fb11920ba9a9f715423395b76df4f1c0f51",
       "cli/src/cognition.ts": "532cbb59c54eb114b7f08feec6c8bfbed7f6fa1b89f831802fcc328119e0beb1",
@@ -165,7 +165,7 @@
       "docs/interoperability.md": "abb117f327097a092971bc80d873609995ea616228c36dc2f228b1cef858ef9c",
       "docs/nl2m.md": "42d307eeef8b012b56381665da1638876e1fdb3d211214985477165cfd8b08cc",
       "docs/release-checklist.md": "7b4a70977375917596ab04b0a246c634890c2a712adf44273cd46accda34f4e0",
-      "docs/roadmap.md": "526bd6d4501873b34ca831662c288940fa337f08fc20d3b8a27cd4210c5938e6",
+      "docs/roadmap.md": "08a11549a68b011aef3be92dcabef74b4f2e943235832473704047a4595fcf1a",
       "docs/scenarios/README.md": "25c4ff5bfea860274481fcba5159c2f0f6c582559baba1c87def8f60a8af81df",
       "docs/scenarios/launching-a-growth-experiment.md": "07fa6c3a5992fb8d9e226e5cfc4f57d53eca0ee104896a839e40983619ec6bb4",
       "docs/scenarios/monthly-close.md": "f47ede0aed7afae117372daa331c6a5b464128d45645d1bfead78f019fb8bdc3",
@@ -197,10 +197,10 @@
       "hub/modules/subscription-billing/payload/README.md": "5af55151ec08682cb99f617165db9053cecc285df2226c36c8d72de324127b09",
       "hub/modules/subscription-billing/payload/integrations/billing-provider.yaml": "b508f21ca4714570de7a1db5d80907853c8e55bde86357afda37d196f6f6bb31",
       "hub/modules/subscription-billing/payload/manifest.yaml": "a37a07098aa6b85db0838cabed13ad00e9af425654cfd0e15d32b260f107196f",
-      "package.json": "d7b0cd0e1176f268fcc518f2104a332b36f961e1e0d20a5a8cae599ceaa63ac7",
+      "package.json": "be379dc49849e4828cd65b5851cd0df3b1c5b31d9f2a332ac852230c9b75ceb3",
       "runtime/README.md": "eb45dcd13935e499aa5e47ba1a86d8139ec7028ae3a7fd4962c61e44a43b402e",
-      "runtime/package-lock.json": "07156790f37953533ed422efbc91cb9b752b7dc5e38b511774002e98125b3e02",
-      "runtime/package.json": "c033a21b6f65b7b20cb0c5ca8a2decbec39f832f617b6bfcac6ea4a0bb15abc5",
+      "runtime/package-lock.json": "fb08999763f8fd115c91a673395f18e9c1e91107be05136ab797ae99d1ee6b04",
+      "runtime/package.json": "75734f4b23aa07cab5687e4083dd827578d61f524d9b84642a95543bb7a5ce1b",
       "runtime/src/cognition/live-reader.ts": "5ef15d10dcdb9b7d258fa82d9eb61efe0f7125f4505d6b943872cf8cfe3d7f17",
       "runtime/src/cognition/server.ts": "124afc39dd0823a1e44ec04869a235daaebc5c7682eebd2a31eae3214adfb1c6",
       "runtime/src/executor/reference-invokers.ts": "deb425e14fff80a0d8ef7e58afb51564b2138131811f6407492ba6bc252e70a7",
@@ -292,7 +292,7 @@
       ".github/workflows/validate.yml": "b42b64f9528e3dfe25801b1c7ee2f0d61c282790d411aba3bb2e21ca14765339",
       ".gitignore": "27fbe73fb6a9a58c1058e85b8c0357fbb3203a4f782fb9e18dafa40ff13bce81",
       "AGENTS.md": "43372b980627b76175583c3eea543a81f7d23bdc36eb7dfc6ea8911b4bcfebf6",
-      "README.md": "2d4e852aab8c737156c872a92a02e85f59845fb797f91c658636616854c29320"
+      "README.md": "2aeeb187fda808f695f25c864c740ff71ac22808d912295b53d10131cd9cae82"
     }
   }
 }
