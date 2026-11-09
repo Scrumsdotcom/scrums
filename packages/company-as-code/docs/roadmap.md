@@ -4,7 +4,7 @@ What's in the framework today, what's coming, and what's intentionally NOT in sc
 
 This file is updated through PRs like any other artefact. Disagreements about scope go through an ADR.
 
-> **Snapshot date:** 2026-11-08 (post v0.7.0)
+> **Snapshot date:** 2026-11-09 (post v0.7.1)
 
 ---
 
