@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/proposal.schema.json",
+  "title": "Proposal",
+  "description": "The mutation queue for the conserved core. Changing the spec, a standard, an authority grant, a schema, or an autonomy policy is not an ordinary edit: it goes through a Proposal that states the reason, the evidence, the expected benefit, how the change will be validated, and how it is rolled back. A Proposal reaching a terminal status carries a Ruling with the decider's canonical ID and their words verbatim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "id", "title", "status", "author", "targets", "reason", "benefit", "validation", "rollback"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "Proposal" },
+    "id": {
+      "type": "string",
+      "pattern": "^PROP-[0-9]{4,}$",
+      "description": "Canonical, permanent proposal ID. Numbers are never reused, including for withdrawn proposals."
+    },
+    "title": { "type": "string", "minLength": 4 },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "open", "accepted", "rejected", "applied", "withdrawn", "superseded"],
+      "description": "'accepted' means ruled on but not yet landed. 'applied' means the conserved files now reflect it."
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "description": "Who wrote the proposal. Agents may author freely; authorship carries no authority.",
+      "properties": {
+        "kind": { "type": "string", "enum": ["person", "team", "agent"] },
+        "id": { "type": "string" }
+      }
+    },
+    "opened": { "type": "string", "format": "date" },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The conserved surfaces this proposal mutates. Anything not listed here is out of scope for the ruling.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "surface"],
+        "properties": {
+          "path": { "type": "string", "description": "Repo-relative path of the conserved file." },
+          "surface": {
+            "type": "string",
+            "enum": ["spec", "standard", "schema", "policy", "autonomy-policy", "escalation-policy", "adr", "manifest", "control", "requirement", "ci", "governance"]
+          },
+          "change": { "type": "string", "description": "One line on what changes in this file." }
+        }
+      }
+    },
+    "reason": { "type": "string", "minLength": 16, "description": "The friction that forced this proposal. Not the solution." },
+    "evidence": {
+      "type": "array",
+      "description": "What makes the reason a fact rather than an opinion: incident IDs, audit references, failing runs, dated observations.",
+      "items": { "type": "string" }
+    },
+    "benefit": { "type": "string", "minLength": 8 },
+    "validation": {
+      "type": "string",
+      "minLength": 8,
+      "description": "How anyone will know afterwards whether the change worked. A proposal with no falsifiable validation is a preference."
+    },
+    "rollback": {
+      "type": "string",
+      "minLength": 8,
+      "description": "How the change is undone, and what is lost by undoing it."
+    },
+    "ruling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "actor", "date", "verbatim"],
+      "description": "The recorded exercise of authority. Required for every terminal status. A ruling claimed anywhere other than here is not a ruling.",
+      "properties": {
+        "decision": { "type": "string", "enum": ["accepted", "rejected"] },
+        "actor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id"],
+          "description": "Rulings are made by humans. An agent may draft the wording; it may not be the actor.",
+          "properties": {
+            "kind": { "type": "string", "enum": ["person"] },
+            "id": { "type": "string" }
+          }
+        },
+        "date": { "type": "string", "format": "date" },
+        "verbatim": { "type": "string", "minLength": 2, "description": "The decider's own words, quoted, not paraphrased." },
+        "conditions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "adr": { "type": "string", "description": "Repo-relative path of the ADR recording the change, when the change is architectural." },
+    "supersedes": {
+      "type": "array",
+      "description": "Earlier proposals this one replaces.",
+      "items": { "type": "string", "x-cac-ref": ["Proposal"] }
+    },
+    "supersededBy": {
+      "type": "string",
+      "description": "The proposal that replaced this one. Required when status is 'superseded'.",
+      "x-cac-ref": ["Proposal"]
+    },
+    "appliedOn": { "type": "string", "format": "date" },
+    "tags": { "type": "array", "items": { "type": "string" } }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "enum": ["accepted", "rejected", "applied"] } }, "required": ["status"] },
+      "then": { "required": ["ruling"] }
+    },
+    {
+      "if": { "properties": { "status": { "const": "applied" } }, "required": ["status"] },
+      "then": { "required": ["appliedOn"] }
+    },
+    {
+      "if": { "properties": { "status": { "const": "superseded" } }, "required": ["status"] },
+      "then": { "required": ["supersededBy"] }
+    }
+  ]
+}

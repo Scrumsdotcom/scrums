@@ -1,0 +1,11 @@
+apiVersion: company-as-code/v1alpha1
+kind: Metric
+id: METRIC-LEDGER-CLOSE-DAYS
+name: Days to close the books
+owner:
+  module: ledger
+type: duration
+unit: days
+freshness:
+  expectedLag: P1D
+  maxLag: P7D

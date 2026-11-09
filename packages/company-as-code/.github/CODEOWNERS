@@ -1,0 +1,42 @@
+# The conserved core.
+#
+# These paths change only through a Proposal with a recorded ruling. Requiring
+# code-owner review on them is what makes the conserved/free boundary physical
+# rather than a convention people are asked to remember: a confused, crashed,
+# or hostile contributor cannot land a change here without the owner.
+#
+# Everything not listed is free. That is deliberate, a repository where every
+# path needs the same review has no conserved core, it just has a bottleneck.
+#
+# Forks: replace @gez-scrumsdotcom with your own handle or team, and enable
+# branch protection with "require review from code owners" on the default
+# branch. Without branch protection this file is documentation, not a gate.
+
+# The specification is the source of authority.
+/docs/spec/                 @gez-scrumsdotcom
+
+# Codified, enforceable rules.
+/docs/standards/            @gez-scrumsdotcom
+
+# Architecture decisions, including superseded ones.
+/docs/adr/                  @gez-scrumsdotcom
+
+# The contract every implementation is checked against.
+/schemas/                   @gez-scrumsdotcom
+
+# Invariants, HITL declarations, retention, security posture.
+/company/policies/          @gez-scrumsdotcom
+
+# Autonomy classification and escalation routing.
+/company/runtime/           @gez-scrumsdotcom
+
+# Obligations and the mechanisms that keep them true.
+/company/requirements/      @gez-scrumsdotcom
+/company/controls/          @gez-scrumsdotcom
+
+# The mutation queue itself, and the gate that protects it.
+/company/proposals/         @gez-scrumsdotcom
+/.github/CODEOWNERS         @gez-scrumsdotcom
+
+# Supply chain and CI enforcement.
+/.github/workflows/         @gez-scrumsdotcom

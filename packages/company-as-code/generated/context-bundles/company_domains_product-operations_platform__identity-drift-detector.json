@@ -1,0 +1,81 @@
+{
+  "agent": {
+    "autonomy": "autonomous",
+    "cadence": "hourly",
+    "module": "company/domains/product-operations/platform",
+    "name": "identity-drift-detector",
+    "purpose": "Compare canonical identity state against the external IdP every hour and emit a typed drift event when divergence is detected.\n",
+    "runtime": "scheduled-job",
+    "schedule": "0 * * * *"
+  },
+  "apiVersion": "company-as-code/v1alpha1",
+  "canonicalEvents": [
+    "platform.identity_drift_detected"
+  ],
+  "generatedFrom": "company/domains/product-operations/platform/agents/identity-drift-detector.yaml",
+  "invariants": [
+    "Read-only against the external IdP.",
+    "Emits one event per detected drift; duplicates are deduped within a 24h window."
+  ],
+  "kind": "ContextBundle",
+  "memoryScope": "company/memory/identity-drift-detector",
+  "observability": {
+    "alerts": [
+      "identity-drift-spike"
+    ],
+    "auditTopic": "identity-drift-detector",
+    "dashboards": [
+      "platform-overview"
+    ]
+  },
+  "readAccess": {
+    "inputs": [
+      {
+        "from": "company/domains/product-operations/platform:platform-state",
+        "name": "canonical-identities",
+        "type": "canonical-identity"
+      }
+    ],
+    "moduleConsumes": [
+      {
+        "from": "company/domains/sales-marketing/customer",
+        "interface": "customer-health",
+        "usage": "surface churn signals on identity dashboards"
+      },
+      {
+        "from": "company/domains/finance-ops/people",
+        "interface": "workforce-state",
+        "usage": "derive identity revocation triggers on offboarding"
+      }
+    ]
+  },
+  "tools": [
+    "canonical-identity-reader",
+    "idp-reader"
+  ],
+  "writeAccess": {
+    "hitlConstraints": [
+      "All deploys to production go through a human approval. No schedule-only deploy path.",
+      "Sub-cognition modules (identity, billing, deployment) inherit the platform module's HITL invariants."
+    ],
+    "moduleExposes": [
+      {
+        "description": "Capacity, incident posture, deploy frequency, identity drift summary",
+        "interface": "platform-state",
+        "stability": "experimental"
+      },
+      {
+        "description": "Canonical subscription state transitions",
+        "interface": "subscription-stream",
+        "stability": "experimental"
+      }
+    ],
+    "outputs": [
+      {
+        "emitsEvent": "platform.identity_drift_detected",
+        "name": "identity-drift-event",
+        "type": "identity-drift"
+      }
+    ]
+  }
+}

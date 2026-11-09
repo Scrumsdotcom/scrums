@@ -1,0 +1,53 @@
+{
+  "count": 2,
+  "generatedFrom": "/hub/modules/*/hub-module.yaml",
+  "modules": [
+    {
+      "category": "domain",
+      "declaredIn": "hub/modules/standard-hr/hub-module.yaml",
+      "maturity": "experimental",
+      "name": "standard-hr",
+      "payloadFiles": [
+        "README.md",
+        "manifest.yaml",
+        "policies/onboarding.md"
+      ],
+      "relatedModules": [
+        "subscription-billing"
+      ],
+      "scaffoldCount": 3,
+      "summary": "A standard people-operations module, onboarding policy, workforce-state interface, and the manifest scaffold to grow it.",
+      "tags": [
+        "hr",
+        "onboarding",
+        "people-ops"
+      ],
+      "targetDomain": "finance-ops",
+      "version": "0.1.0"
+    },
+    {
+      "category": "integration",
+      "declaredIn": "hub/modules/subscription-billing/hub-module.yaml",
+      "maturity": "experimental",
+      "name": "subscription-billing",
+      "payloadFiles": [
+        "README.md",
+        "integrations/billing-provider.yaml",
+        "manifest.yaml"
+      ],
+      "relatedModules": [
+        "standard-hr"
+      ],
+      "scaffoldCount": 3,
+      "summary": "A subscription-billing integration module, vendor-neutral billing system mapping with writeback-only HITL gates.",
+      "tags": [
+        "billing",
+        "integration",
+        "revenue",
+        "subscriptions"
+      ],
+      "targetDomain": "finance-ops",
+      "version": "0.1.0"
+    }
+  ]
+}

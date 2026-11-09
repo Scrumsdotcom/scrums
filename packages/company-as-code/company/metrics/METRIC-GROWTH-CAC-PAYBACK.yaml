@@ -1,0 +1,48 @@
+apiVersion: company-as-code/v1alpha1
+kind: Metric
+
+id: METRIC-GROWTH-CAC-PAYBACK
+name: Blended CAC payback (months)
+description: >
+  Months required to recover blended customer acquisition cost from gross
+  margin per acquired customer, weighted by cohort size.
+
+owner:
+  module: company/domains/sales-marketing/growth
+  person: head-of-growth
+
+type: duration
+unit: "months"
+
+formula: >
+  blended_cac / monthly_gross_margin_per_customer
+  where blended_cac is rolling 90-day weighted average across all paid channels.
+
+lineage:
+  - source: company/domains/sales-marketing/sales
+    field: paid_acquisition_spend
+    transformation: rolling 90-day sum, weighted by channel
+  - source: company/domains/sales-marketing/customer
+    field: monthly_gross_margin
+    transformation: average per acquired customer
+
+freshness:
+  expectedLag: P1D
+  maxLag: P3D
+
+thresholds:
+  - level: warning
+    comparator: gt
+    value: 14
+  - level: critical
+    comparator: gt
+    value: 18
+
+dashboards:
+  - growth-overview
+alerts:
+  - cac-payback-degradation
+
+history:
+  retention: P2Y
+  grain: week

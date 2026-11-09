@@ -1,0 +1,12 @@
+apiVersion: company-as-code/v1alpha1
+kind: Goal
+id: GOAL-LEDGER-0001
+title: Close the books within two days
+type: sla
+owner:
+  kind: team
+  id: team:finance
+metric: METRIC-LEDGER-DOES-NOT-EXIST
+target:
+  value: 2
+  comparator: lte

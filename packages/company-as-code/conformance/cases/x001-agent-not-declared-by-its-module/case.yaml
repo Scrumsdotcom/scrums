@@ -1,0 +1,11 @@
+id: x001-agent-not-declared-by-its-module
+level: validate
+description: >
+  An agent names its module, but the module's manifest does not list the
+  agent. Each document is valid on its own; only the cross-document discipline
+  can see that the two disagree.
+expect:
+  valid: false
+  failures:
+    - rule: cross-document
+      file: company/agents/close-reminder.yaml

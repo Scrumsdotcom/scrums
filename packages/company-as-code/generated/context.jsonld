@@ -1,0 +1,245 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "cac": "https://gez-scrumsdotcom.github.io/Company-as-Code/ns#",
+    "schema": "https://schema.org/",
+    "org": "http://www.w3.org/ns/org#",
+    "prov": "http://www.w3.org/ns/prov#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "oscal": "https://pages.nist.gov/OSCAL/concepts/layer/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "time": "http://www.w3.org/2006/time#",
+    "id": "@id",
+    "kind": "@type",
+    "apiVersion": "cac:apiVersion",
+    "name": "schema:name",
+    "title": "dcterms:title",
+    "description": "dcterms:description",
+    "purpose": "cac:purpose",
+    "owner": {
+      "@id": "cac:owner",
+      "@type": "@id"
+    },
+    "module": {
+      "@id": "org:unitOf",
+      "@type": "@id"
+    },
+    "parent": {
+      "@id": "org:subOrganizationOf",
+      "@type": "@id"
+    },
+    "contacts": {
+      "@id": "org:hasMember",
+      "@type": "@id"
+    },
+    "consumes": {
+      "@id": "cac:consumes",
+      "@type": "@id"
+    },
+    "exposes": {
+      "@id": "cac:exposes",
+      "@type": "@id"
+    },
+    "agents": {
+      "@id": "cac:hasAgent",
+      "@type": "@id"
+    },
+    "skills": {
+      "@id": "cac:hasSkill",
+      "@type": "@id"
+    },
+    "goals": {
+      "@id": "cac:advancesGoal",
+      "@type": "@id"
+    },
+    "metrics": {
+      "@id": "cac:measuredBy",
+      "@type": "@id"
+    },
+    "metric": {
+      "@id": "cac:measuredBy",
+      "@type": "@id"
+    },
+    "measuredBy": {
+      "@id": "cac:measuredBy",
+      "@type": "@id"
+    },
+    "implements": {
+      "@id": "oscal:implementsRequirement",
+      "@type": "@id"
+    },
+    "evidence": {
+      "@id": "oscal:evidence",
+      "@type": "@id"
+    },
+    "primaryOwner": {
+      "@id": "cac:primaryOwner",
+      "@type": "@id"
+    },
+    "fallback": {
+      "@id": "cac:fallbackTo",
+      "@type": "@id"
+    },
+    "finalFallback": {
+      "@id": "cac:finalFallback",
+      "@type": "@id"
+    },
+    "requires": {
+      "@id": "cac:requiresCapability",
+      "@type": "@id"
+    },
+    "supersedes": {
+      "@id": "dcterms:replaces",
+      "@type": "@id"
+    },
+    "supersededBy": {
+      "@id": "dcterms:isReplacedBy",
+      "@type": "@id"
+    },
+    "autonomy": "cac:autonomyClass",
+    "cadence": "cac:cadence",
+    "schedule": "cac:schedule",
+    "severity": "cac:severity",
+    "criticality": "cac:criticality",
+    "status": "cac:lifecycleStatus",
+    "state": {
+      "@id": "cac:canonicalState",
+      "@type": "@id"
+    },
+    "lifecycleBucket": {
+      "@id": "cac:lifecycleBucket",
+      "@type": "@id"
+    },
+    "framework": "cac:complianceFramework",
+    "clause": "cac:complianceClause",
+    "actor": {
+      "@id": "prov:wasAssociatedWith",
+      "@type": "@id"
+    },
+    "emitsEvent": {
+      "@id": "cac:emitsEvent",
+      "@type": "@id"
+    },
+    "traceId": "cac:traceId",
+    "correlationId": "cac:correlationId",
+    "dryRun": "cac:dryRun",
+    "createdAt": {
+      "@id": "dcterms:created",
+      "@type": "schema:DateTime"
+    },
+    "updatedAt": {
+      "@id": "dcterms:modified",
+      "@type": "schema:DateTime"
+    },
+    "date": {
+      "@id": "dcterms:date",
+      "@type": "schema:Date"
+    },
+    "externalIds": {
+      "@id": "cac:externalIdentifier",
+      "@type": "@id"
+    },
+    "Organization": {
+      "@id": "org:Organization"
+    },
+    "Person": {
+      "@id": "schema:Person"
+    },
+    "Manifest": {
+      "@id": "org:OrganizationalUnit"
+    },
+    "Agent": {
+      "@id": "prov:SoftwareAgent"
+    },
+    "Workflow": {
+      "@id": "cac:Workflow"
+    },
+    "Automation": {
+      "@id": "cac:Automation"
+    },
+    "Task": {
+      "@id": "cac:Task"
+    },
+    "Initiative": {
+      "@id": "cac:Initiative"
+    },
+    "Goal": {
+      "@id": "cac:Goal"
+    },
+    "Metric": {
+      "@id": "cac:Metric"
+    },
+    "Event": {
+      "@id": "prov:Activity"
+    },
+    "AuditRecord": {
+      "@id": "prov:Activity"
+    },
+    "Interface": {
+      "@id": "cac:Interface"
+    },
+    "Integration": {
+      "@id": "cac:Integration"
+    },
+    "Skill": {
+      "@id": "cac:Skill"
+    },
+    "Dashboard": {
+      "@id": "cac:Dashboard"
+    },
+    "Requirement": {
+      "@id": "oscal:Requirement"
+    },
+    "Control": {
+      "@id": "oscal:Control"
+    },
+    "Capability": {
+      "@id": "cac:Capability"
+    },
+    "Proposal": {
+      "@id": "cac:Proposal"
+    },
+    "StateSnapshot": {
+      "@id": "cac:StateSnapshot"
+    },
+    "EventTypeRegistry": {
+      "@id": "cac:EventTypeRegistry"
+    },
+    "AutonomyPolicy": {
+      "@id": "cac:AutonomyPolicy"
+    },
+    "EscalationPolicy": {
+      "@id": "cac:EscalationPolicy"
+    },
+    "ShadowEnrollment": {
+      "@id": "cac:ShadowEnrollment"
+    }
+  },
+  "cac:lifecycleScheme": {
+    "@type": "skos:ConceptScheme",
+    "dcterms:title": "Company-as-Code L1 lifecycle buckets",
+    "dcterms:description": "The universal lifecycle bucket every canonical entity projects onto. Fixed by the framework; L2 journey stages and L3 substates are module-owned and are not published here.",
+    "skos:hasTopConcept": [
+      {
+        "@id": "cac:pending",
+        "@type": "skos:Concept",
+        "skos:prefLabel": "pending"
+      },
+      {
+        "@id": "cac:active",
+        "@type": "skos:Concept",
+        "skos:prefLabel": "active"
+      },
+      {
+        "@id": "cac:resolved",
+        "@type": "skos:Concept",
+        "skos:prefLabel": "resolved"
+      },
+      {
+        "@id": "cac:terminated",
+        "@type": "skos:Concept",
+        "skos:prefLabel": "terminated"
+      }
+    ]
+  }
+}

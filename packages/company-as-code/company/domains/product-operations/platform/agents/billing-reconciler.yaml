@@ -1,0 +1,47 @@
+apiVersion: company-as-code/v1alpha1
+kind: Agent
+
+name: billing-reconciler
+module: company/domains/product-operations/platform
+
+purpose: >
+  Reconcile canonical subscription state against the external billing system
+  nightly. Produces a reconciliation proposal for human review. Never writes
+  back to the external billing system.
+
+runtime: scheduled-job
+schedule: "0 4 * * *"
+cadence: daily
+autonomy: human-gated
+
+inputs:
+  - name: subscriptions
+    type: canonical-subscription
+    from: company/domains/product-operations/platform:subscription-stream
+
+outputs:
+  - name: reconciliation-proposal
+    type: reconciliation-proposal
+    emitsEvent: platform.billing_reconciliation_proposed
+
+tools:
+  - canonical-subscription-reader
+  - billing-system-reader
+
+memoryScope: company/memory/billing-reconciler
+
+observability:
+  dashboards:
+    - platform-overview
+  alerts:
+    - billing-reconciliation-stale
+  auditTopic: billing-reconciler
+
+invariants:
+  - Read-only against the external billing system.
+  - All proposals require human approval before any corrective action ships.
+  - First live correction in any new reconciliation type requires two dry-runs.
+
+contacts:
+  - role: accountable
+    person: platform-lead

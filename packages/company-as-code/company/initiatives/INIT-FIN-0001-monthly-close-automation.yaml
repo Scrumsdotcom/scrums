@@ -1,0 +1,46 @@
+apiVersion: company-as-code/v1alpha1
+kind: Initiative
+
+id: INIT-FIN-0001
+title: Automate monthly close to two business days
+summary: >
+  Bring the canonical ledger close from a 5-day, human-coordinated process to a
+  2-day, dry-run-gated workflow. Preserves HITL approval at the final step;
+  removes the manual coordination toil on the first 3 days.
+
+status: active
+owner:
+  kind: team
+  id: team:finance
+
+domain: finance-ops
+
+startDate: 2026-04-01
+targetDate: 2026-09-30
+
+goals:
+  - GOAL-FIN-0001
+metrics:
+  - METRIC-FIN-CLOSE-ON-TIME
+tasks: []
+modules:
+  - company/domains/finance-ops/finance
+
+risks:
+  - description: Vendor-specific journal-posting APIs change beneath us.
+    severity: medium
+    mitigation: Adapter behind a declared interface; integration manifests pinned.
+  - description: First live close after the workflow ships may differ from the projection.
+    severity: high
+    mitigation: First three closes go through two dry-runs each, not one.
+
+milestones:
+  - name: Dry-run validated against last 3 historical periods
+    date: 2026-05-15
+    achieved: false
+  - name: First live close through the workflow
+    date: 2026-07-05
+    achieved: false
+  - name: Three consecutive closes under SLA
+    date: 2026-09-30
+    achieved: false

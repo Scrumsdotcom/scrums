@@ -1,0 +1,79 @@
+# Make the version numbers tell the truth before anyone depends on them.
+
+apiVersion: company-as-code/v1alpha1
+kind: Proposal
+
+id: PROP-0003
+title: Rename the document version to v1alpha1, version every schema $id, and ship format changes with migrations
+
+status: applied
+opened: 2026-10-12
+appliedOn: 2026-11-08
+
+author:
+  kind: person
+  id: ceo
+
+targets:
+  - path: schemas/
+    surface: schema
+    change: Every schema's $id gains the document version (/schemas/v1alpha1/...), and every apiVersion const becomes company-as-code/v1alpha1. No field changes.
+  - path: docs/standards/versioning.md
+    surface: standard
+    change: New standard. Framework release versus document version, the alpha/beta/stable ladder, and the rule that every format change ships with a migration.
+  - path: docs/standards/schema-migrations.md
+    surface: standard
+    change: Replaces the impossible "bump the $id minor version" step with the migration requirement.
+  - path: docs/standards/policy-to-control-matrix.md
+    surface: standard
+    change: Rule 1 names the new document version.
+  - path: docs/adr/0009-honest-versioning.md
+    surface: adr
+    change: New ADR recording the rename and the ladder.
+  - path: company/
+    surface: manifest
+    change: Every canonical document's apiVersion line moves to v1alpha1, applied by 'cac migrate --write' using migration 0001.
+
+reason: >
+  Every document declared company-as-code/v1, which most readers take to mean
+  a stable format, while the framework is a 0.x seed whose schemas changed in
+  breaking ways as recently as v0.6.0. The standards also
+  contradicted the files: schema-migrations.md said to bump a version in the
+  schema $id, and no $id carried a version. Once the repository is public,
+  both the apiVersion string and the $id URLs are a contract with strangers,
+  and changing them means migrating every fork.
+
+evidence:
+  - All 26 schemas pinned apiVersion to the const company-as-code/v1.
+  - No schema $id contained a version, so the instruction in schema-migrations.md step 5 could not be followed.
+  - The v0.6.0 release added typed reference edges that turned previously valid documents into validation errors (24 dangling references, per ADR 0007), a breaking change shipped under an unchanged v1.
+
+benefit: >
+  The version string tells evaluators what kind of promise they are getting.
+  Consumers get a $id they can pin. Breaking changes get a mechanism, 'cac
+  migrate', which has already been run end to end on this repository.
+
+validation: >
+  Mechanical. validate, generate --check, and both test suites pass with every
+  document on v1alpha1. 'cac migrate' reports nothing left to migrate. A test
+  shows migration 0001 rewrites apiVersion and frameworkVersion lines and
+  nothing else, and is idempotent. A document left on v1 is named by
+  'cac validate' with a pointer to 'cac migrate'.
+
+rollback: >
+  Add a migration 0002 from v1alpha1 back to v1, run it, and revert the
+  schema consts and $id paths. Released migrations are never deleted, so the
+  history shows both moves. What is lost is the honest stability signal.
+
+adr: docs/adr/0009-honest-versioning.md
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-11-08
+  verbatim: >
+    Accepted by Gerald Neves
+
+tags: [schemas, versioning]

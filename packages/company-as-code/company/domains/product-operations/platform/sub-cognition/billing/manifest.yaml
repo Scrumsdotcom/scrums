@@ -1,0 +1,33 @@
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+name: billing
+domain: product-operations
+parent: domains/product-operations/platform
+version: 0.1.0
+lifecycle: hardening
+purpose: >
+  Canonical subscription state and the reconciliation surface against the
+  external billing system. Proposes corrections; never writes them back
+  autonomously.
+
+owns:
+  tables:
+    - canonical_subscriptions
+  schemas:
+    - canonical-subscription
+
+consumes:
+  - interface: platform-state
+    from: company/domains/product-operations/platform
+
+exposes:
+  - interface: subscription-state
+    stability: experimental
+
+invariants:
+  - All reconciliation actions against the external billing system require human approval.
+  - Subscription canonical IDs are permanent; merges produce tombstones.
+
+contacts:
+  - role: accountable
+    person: platform-lead

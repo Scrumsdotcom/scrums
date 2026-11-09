@@ -1,0 +1,22 @@
+apiVersion: company-as-code/v1alpha1
+kind: Requirement
+
+id: REQ-ISO27001-A-8-15
+framework: iso27001
+clause: A.8.15
+title: Activity in the operating runtime is logged and retained
+statement: >
+  Actions taken in the operating runtime, by humans and by autonomous units
+  alike, are recorded with actor, time, input, and outcome, and retained long
+  enough to answer what happened after the fact.
+
+owner:
+  kind: person
+  id: cfo
+
+status: in-scope
+severity: high
+
+references:
+  - docs/standards/observability.md
+  - company/policies/data-retention.md

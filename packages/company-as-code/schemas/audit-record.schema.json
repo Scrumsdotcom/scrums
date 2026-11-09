@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/audit-record.schema.json",
+  "title": "Audit Record",
+  "description": "One row per orchestration action. Loose schema for what happened in the runtime, debugging, post-hoc reasoning, compliance.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "id", "actor", "action", "startedAt", "status"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "AuditRecord" },
+    "id": { "type": "string" },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["person", "agent", "automation", "system"] },
+        "id": { "type": "string" }
+      }
+    },
+    "action": { "type": "string", "description": "Free-text action label. By convention, lowercase + dotted segments." },
+    "module": { "type": "string" },
+    "workflow": { "type": "string" },
+    "agent": { "type": "string" },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": "string", "format": "date-time" },
+    "durationMs": { "type": "integer", "minimum": 0 },
+    "status": { "type": "string", "enum": ["success", "failure", "partial", "dry-run", "skipped"] },
+    "dryRun": { "type": "boolean", "default": false },
+    "input": { "description": "Input payload, redacted as required by policy." },
+    "output": { "description": "Output payload or summary." },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "stack": { "type": "string" }
+      }
+    },
+    "correlationId": { "type": "string" },
+    "causationId": { "type": "string" },
+    "targetSystem": { "type": "string", "description": "External system the action targeted, by canonical name." },
+    "traceId": { "type": "string", "description": "W3C trace ID (32 hex chars) joining this audit row to the typed-event ledger." },
+    "spanId": { "type": "string", "description": "W3C span ID (16 hex chars) of the step span that produced this row." }
+  }
+}

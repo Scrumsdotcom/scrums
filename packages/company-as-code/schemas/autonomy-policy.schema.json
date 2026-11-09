@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/autonomy-policy.schema.json",
+  "title": "Autonomy Policy",
+  "description": "Operational expression of the three autonomy classes. Singleton runtime configuration document. The CLI validates that an agent's declared autonomy is consistent with this policy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "version", "classes"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "AutonomyPolicy" },
+    "version": { "type": "integer", "minimum": 1 },
+    "classes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["autonomous", "human-gated", "escalated"],
+      "properties": {
+        "autonomous": { "$ref": "#/$defs/class" },
+        "human-gated": { "$ref": "#/$defs/class" },
+        "escalated": { "$ref": "#/$defs/class" }
+      }
+    },
+    "promotion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fromHumanGatedToAutonomous": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "requires": {
+              "type": "object",
+              "additionalProperties": { "type": ["string", "boolean", "number"] }
+            }
+          }
+        },
+        "fromAutonomousToHumanGated": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "requires": {
+              "type": "object",
+              "additionalProperties": { "type": ["string", "boolean", "number"] }
+            },
+            "notes": { "type": "string" }
+          }
+        }
+      }
+    },
+    "preflight": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check", "onFailure"],
+        "properties": {
+          "check": { "type": "string", "minLength": 4 },
+          "onFailure": { "type": "string", "enum": ["refuse", "warn", "audit-only"] }
+        }
+      },
+      "default": []
+    }
+  },
+  "$defs": {
+    "class": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "schedulingAllowed", "requiresHumanApproval"],
+      "properties": {
+        "description": { "type": "string", "minLength": 8 },
+        "schedulingAllowed": { "type": "boolean" },
+        "requiresHumanApproval": { "type": "boolean" },
+        "requiresEscalationBlock": { "type": "boolean" },
+        "permittedActions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "forbiddenActions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

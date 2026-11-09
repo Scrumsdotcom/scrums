@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/person.schema.json",
+  "title": "Person",
+  "description": "Canonical actor identity. Employee, contractor, supplier, AI operator, or agent identity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "canonicalId", "displayName", "type", "status"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "Person" },
+    "canonicalId": {
+      "type": "string",
+      "pattern": "^PERSON-[A-Z0-9-]+$",
+      "description": "Permanent internal ID."
+    },
+    "displayName": { "type": "string", "minLength": 1 },
+    "type": {
+      "type": "string",
+      "enum": ["employee", "contractor", "supplier", "ai-operator", "agent-identity", "service-account"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "active", "leave", "offboarded", "terminated", "soft-deleted"]
+    },
+    "primaryEmail": { "type": "string", "format": "email" },
+    "organizations": {
+      "type": "array",
+      "items": { "type": "string", "description": "Canonical organization IDs.", "x-cac-ref": ["Organization"] },
+      "default": []
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title"],
+        "properties": {
+          "title": { "type": "string" },
+          "organization": { "type": "string" },
+          "since": { "type": "string", "format": "date" },
+          "until": { "type": "string", "format": "date" }
+        }
+      },
+      "default": []
+    },
+    "agentBindings": {
+      "type": "array",
+      "description": "Agents this identity operates on behalf of (for ai-operator and agent-identity types).",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "externalIds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["system", "id"],
+        "properties": {
+          "system": { "type": "string" },
+          "id": { "type": "string" },
+          "addedAt": { "type": "string", "format": "date" }
+        }
+      },
+      "default": []
+    },
+    "tombstone": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Set when status transitions to soft-deleted.",
+      "properties": {
+        "deletedAt": { "type": "string", "format": "date-time" },
+        "reason": { "type": "string" },
+        "mergedInto": { "type": "string" }
+      }
+    }
+  }
+}

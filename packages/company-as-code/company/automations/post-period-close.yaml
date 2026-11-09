@@ -1,0 +1,57 @@
+# Automation: post-period-close
+#
+# Referenced from:
+# - company/domains/finance-ops/finance/workflows/month-end-close.yaml
+#   (steps dry-run-close and live-close call this automation)
+
+apiVersion: company-as-code/v1alpha1
+kind: Automation
+name: post-period-close
+
+owner:
+  module: company/domains/finance-ops/finance
+
+purpose: >
+  Post the period-close journal entry to the canonical ledger. Supports
+  dry-run via the `dryRun=true` argument; produces an identical projected
+  payload that is written to the audit log but never to the ledger.
+
+runtime: scheduled-job   # invoked by the month-end-close workflow, not by its own schedule
+schedule: on-demand
+cadence: on-demand
+
+inputs:
+  - name: period
+    type: month
+    required: true
+  - name: dryRun
+    type: boolean
+    required: true
+    description: When true, all validation runs but no ledger mutation occurs.
+
+outputs:
+  - name: journalEntryProjection
+    type: ledger-journal-entry
+    description: The exact journal entry that was (or would be) posted.
+
+mutates:
+  - canonical_ledger_entries: append-only
+
+invariants:
+  - "Refuses to post if dryRun=false is invoked without a prior dryRun=true audit record under the same correlation ID."
+  - "Idempotent on (period, dryRun=false), re-running for the same period after a successful close is a no-op with a typed warning."
+  - "Emits finance.period_closed only on dryRun=false success."
+  - "Writes an audit record on every invocation, including dry-runs and refusals."
+
+failureModes:
+  - description: Period already closed.
+    behavior: No-op; emit `finance.period_close_skipped` with reason `already-closed`.
+  - description: Ledger source upstream is incomplete.
+    behavior: Refuse to advance past validation; escalate to finance-lead.
+  - description: Dry-run prerequisite missing.
+    behavior: Refuse to post; audit the refusal with reason `no-prior-dry-run`.
+
+observability:
+  auditTopic: post-period-close
+  dashboards:
+    - finance-overview

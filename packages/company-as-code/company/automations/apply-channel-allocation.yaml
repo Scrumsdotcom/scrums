@@ -1,0 +1,59 @@
+# Automation: apply-channel-allocation
+#
+# Referenced from:
+# - company/domains/sales-marketing/growth/workflows/customer-acquisition.yaml
+#   (dry-run-allocation and apply call this automation)
+
+apiVersion: company-as-code/v1alpha1
+kind: Automation
+name: apply-channel-allocation
+
+owner:
+  module: company/domains/sales-marketing/growth
+
+purpose: >
+  Apply a human-approved channel-allocation shift across the active growth
+  experiments. Supports dry-run; never writes when dry-run is true.
+
+runtime: scheduled-job
+schedule: on-demand
+cadence: on-demand
+
+inputs:
+  - name: week
+    type: iso-week
+    required: true
+  - name: allocations
+    type: array
+    required: true
+    description: List of `{channel, prevBudget, nextBudget}` tuples derived from the agent's recommendation and confirmed by the head-of-growth.
+  - name: dryRun
+    type: boolean
+    required: true
+
+outputs:
+  - name: allocationReceipt
+    type: allocation-receipt
+    description: Per-channel applied amounts and the resulting cumulative spend ceiling for the week.
+
+mutates:
+  - integrations/ad-channels: write   # vendor-neutral; the integration resolves to the actual channel APIs
+
+invariants:
+  - "Refuses to apply more than a 25% week-over-week shift on any single channel without an explicit override."
+  - "Refuses to apply if any active experiment is currently breaching its stop-loss threshold."
+  - "Always preceded by a 'human-approval' step in the calling workflow. The runtime enforces."
+  - "Writes an audit record on every invocation; emits growth.allocation_applied only on dryRun=false success."
+
+failureModes:
+  - description: Channel API rate-limited.
+    behavior: Bounded retry per the integration's `rateLimits`; emit `growth.allocation_apply_throttled` on each retry; escalate after 3 failures.
+  - description: Stop-loss breach detected at apply time.
+    behavior: Refuse to apply; emit `growth.experiment_stop_loss_breached`; halt the workflow.
+  - description: Total weekly spend would exceed the budget ceiling.
+    behavior: Refuse to apply; emit a typed validation failure event; the head-of-growth must re-approve at a lower amount.
+
+observability:
+  auditTopic: apply-channel-allocation
+  dashboards:
+    - growth-overview

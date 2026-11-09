@@ -1,0 +1,91 @@
+{
+  "agent": {
+    "autonomy": "autonomous",
+    "cadence": "daily",
+    "module": "company/domains/finance-ops/finance",
+    "name": "cash-forecaster",
+    "purpose": "Produce a rolling 13-week cash forecast from canonical ledger entries plus forward-looking pipeline state. Read-only, never writes to the ledger or to external accounting systems.\n",
+    "runtime": "scheduled-job",
+    "schedule": "0 7 * * *"
+  },
+  "apiVersion": "company-as-code/v1alpha1",
+  "canonicalEvents": [
+    "finance.cash_forecast_updated"
+  ],
+  "generatedFrom": "company/domains/finance-ops/finance/agents/cash-forecaster.yaml",
+  "invariants": [
+    "Read-only. Never writes to ledger.",
+    "Writes an audit record on every run, including no-op runs.",
+    "Emits finance.cash_forecast_updated only when the forecast value changes by more than 1%."
+  ],
+  "kind": "ContextBundle",
+  "memoryScope": "company/memory/cash-forecaster",
+  "observability": {
+    "alerts": [
+      "cash-forecast-stale"
+    ],
+    "auditTopic": "cash-forecaster",
+    "dashboards": [
+      "finance-overview"
+    ]
+  },
+  "readAccess": {
+    "inputs": [
+      {
+        "from": "company/domains/finance-ops/finance:ledger-summary",
+        "name": "ledger-entries",
+        "type": "ledger-entry"
+      },
+      {
+        "from": "company/domains/sales-marketing/sales:pipeline-state",
+        "name": "pipeline",
+        "type": "pipeline-state"
+      },
+      {
+        "from": "company/domains/finance-ops/people:workforce-state",
+        "name": "workforce",
+        "type": "workforce-state"
+      }
+    ],
+    "moduleConsumes": [
+      {
+        "from": "company/domains/sales-marketing/sales",
+        "interface": "pipeline-state",
+        "usage": "forward-looking bookings used by the cash-forecaster"
+      },
+      {
+        "from": "company/domains/finance-ops/people",
+        "interface": "workforce-state",
+        "usage": "payroll commitments factor into the cash forecast"
+      }
+    ]
+  },
+  "tools": [
+    "canonical-ledger-reader",
+    "pipeline-reader"
+  ],
+  "writeAccess": {
+    "hitlConstraints": [
+      "Month-end close is gated by an explicit human approval; no schedule-only path."
+    ],
+    "moduleExposes": [
+      {
+        "description": "P&L, cash, runway summary consumed by the finance-ops executive",
+        "interface": "ledger-summary",
+        "stability": "experimental"
+      },
+      {
+        "description": "Stream of canonical invoice state transitions",
+        "interface": "invoice-stream",
+        "stability": "experimental"
+      }
+    ],
+    "outputs": [
+      {
+        "emitsEvent": "finance.cash_forecast_updated",
+        "name": "cash-forecast",
+        "type": "cash-forecast"
+      }
+    ]
+  }
+}

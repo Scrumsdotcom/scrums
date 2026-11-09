@@ -1,0 +1,44 @@
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+name: people-ops
+domain: finance-ops
+parent: domains/finance-ops
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Owns the canonical workforce record, headcount, employment lifecycle, and
+  onboarding/offboarding state, and exposes it for payroll and cash forecasting.
+
+owns:
+  tables:
+    - canonical_workers
+    - canonical_employment_events
+  agents: []
+  workflows: []
+  dashboards: []
+  schemas:
+    - worker
+  policies:
+    - hr-onboarding
+
+consumes: []
+
+exposes:
+  - interface: workforce-state
+    stability: experimental
+    description: Canonical headcount and employment-lifecycle state, consumed by finance for payroll-aware forecasting.
+
+agents: []
+
+invariants:
+  - Access grants to external systems are HITL-gated; no autonomous provisioning.
+  - Worker onboarding runs a dry-run projection before any live account creation.
+  - Canonical worker IDs are permanent; rehires reuse the existing canonical ID.
+
+contacts:
+  - role: accountable
+    person: TBD
+  - role: operations
+    person: TBD
+
+links: {}

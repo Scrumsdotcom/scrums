@@ -1,0 +1,197 @@
+{
+  "capabilities": [
+    {
+      "chain": [
+        {
+          "delivers": "full",
+          "id": "cash-forecaster",
+          "kind": "agent",
+          "position": 0
+        },
+        {
+          "delivers": "manual",
+          "id": "finance-lead",
+          "kind": "role",
+          "note": "Same forecast, produced by hand from the canonical ledger and pipeline state. Slower and weekly rather than daily; the outcome still happens.\n",
+          "position": 1
+        },
+        {
+          "delivers": "reduced",
+          "id": "cfo",
+          "kind": "person",
+          "note": "Position and runway without the weekly decomposition.",
+          "position": 2
+        }
+      ],
+      "chainDepth": 3,
+      "criticality": "high",
+      "depthToFull": 0,
+      "domain": "finance-ops",
+      "id": "CAP-CASH-FORECAST",
+      "measuredBy": [
+        "METRIC-FIN-CLOSE-ON-TIME"
+      ],
+      "name": "cash-forecast",
+      "neverFull": false,
+      "requires": [],
+      "sla": "A current forecast is never older than seven days."
+    },
+    {
+      "chain": [
+        {
+          "delivers": "full",
+          "id": "company/domains/finance-ops/governance",
+          "kind": "module",
+          "position": 0
+        },
+        {
+          "delivers": "reduced",
+          "id": "finance-lead",
+          "kind": "role",
+          "note": "Can produce the generated control matrix; escalates any scope question.",
+          "position": 1
+        },
+        {
+          "delivers": "full",
+          "id": "cfo",
+          "kind": "person",
+          "position": 2
+        }
+      ],
+      "chainDepth": 3,
+      "criticality": "medium",
+      "depthToFull": 0,
+      "domain": "finance-ops",
+      "id": "CAP-COMPLIANCE-ATTESTATION",
+      "measuredBy": [],
+      "name": "compliance-attestation",
+      "neverFull": false,
+      "requires": []
+    },
+    {
+      "chain": [
+        {
+          "delivers": "triage-only",
+          "id": "growth-experiment-runner",
+          "kind": "agent",
+          "note": "Scores channels and recommends shifts, and halts experiments at their stop-loss. It does not move budget; no autonomous spend.\n",
+          "position": 0
+        },
+        {
+          "delivers": "full",
+          "id": "head-of-growth",
+          "kind": "role",
+          "note": "The approval that turns a recommendation into an allocation.",
+          "position": 1
+        },
+        {
+          "delivers": "full",
+          "id": "cro",
+          "kind": "person",
+          "position": 2
+        }
+      ],
+      "chainDepth": 3,
+      "criticality": "medium",
+      "depthToFull": 1,
+      "domain": "sales-marketing",
+      "id": "CAP-EXPERIMENT-ALLOCATION",
+      "measuredBy": [
+        "METRIC-GROWTH-CAC-PAYBACK"
+      ],
+      "name": "experiment-allocation",
+      "neverFull": false,
+      "requires": []
+    },
+    {
+      "chain": [
+        {
+          "delivers": "full",
+          "id": "on-call-platform",
+          "kind": "role",
+          "position": 0
+        },
+        {
+          "delivers": "full",
+          "id": "platform-lead",
+          "kind": "role",
+          "note": "Named in the escalation policy as the first fallback for on-call-platform.",
+          "position": 1
+        },
+        {
+          "delivers": "reduced",
+          "id": "finance-lead",
+          "kind": "role",
+          "note": "Can command a finance-domain incident end to end and can hold the line on a platform incident, but will not authorise a production rollback.\n",
+          "position": 2
+        },
+        {
+          "delivers": "full",
+          "id": "cto",
+          "kind": "person",
+          "position": 3
+        }
+      ],
+      "chainDepth": 4,
+      "criticality": "critical",
+      "depthToFull": 0,
+      "domain": "cross-domain",
+      "id": "CAP-INCIDENT-COMMAND",
+      "measuredBy": [
+        "METRIC-RUNTIME-MTTR"
+      ],
+      "name": "incident-command",
+      "neverFull": false,
+      "requires": [
+        "CAP-PRODUCTION-DEPLOY"
+      ],
+      "sla": "Incident commander assigned within the severity's declared window."
+    },
+    {
+      "chain": [
+        {
+          "delivers": "full",
+          "id": "company/domains/product-operations/platform",
+          "kind": "module",
+          "position": 0
+        },
+        {
+          "delivers": "full",
+          "id": "platform-lead",
+          "kind": "role",
+          "position": 1
+        },
+        {
+          "delivers": "reduced",
+          "id": "on-call-platform",
+          "kind": "role",
+          "note": "Can roll back and can promote a hotfix; will not run a scheduled release train.",
+          "position": 2
+        },
+        {
+          "delivers": "full",
+          "id": "cto",
+          "kind": "person",
+          "position": 3
+        }
+      ],
+      "chainDepth": 4,
+      "criticality": "critical",
+      "depthToFull": 0,
+      "domain": "product-operations",
+      "id": "CAP-PRODUCTION-DEPLOY",
+      "measuredBy": [
+        "METRIC-PLATFORM-DEPLOY-MTTR"
+      ],
+      "name": "production-deploy",
+      "neverFull": false,
+      "requires": []
+    }
+  ],
+  "capabilityCount": 5,
+  "concentration": [],
+  "criticalWithoutFullPrimary": [],
+  "generatedFrom": "/company/capabilities/*.yaml",
+  "note": "Every chain terminates in a holder that cannot itself be absent. The map exists to make degradation visible before it is discovered.",
+  "permanentlyDegraded": []
+}

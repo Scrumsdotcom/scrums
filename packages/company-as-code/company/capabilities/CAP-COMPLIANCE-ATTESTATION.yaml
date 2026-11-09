@@ -1,0 +1,27 @@
+apiVersion: company-as-code/v1alpha1
+kind: Capability
+
+id: CAP-COMPLIANCE-ATTESTATION
+name: compliance-attestation
+description: >
+  The company can answer an auditor's question with evidence rather than a
+  meeting: which requirement, which control, which run, which date.
+
+domain: finance-ops
+criticality: medium
+
+primaryOwner:
+  kind: module
+  id: company/domains/finance-ops/governance
+  delivers: full
+
+fallback:
+  - kind: role
+    id: finance-lead
+    delivers: reduced
+    note: Can produce the generated control matrix; escalates any scope question.
+
+finalFallback:
+  kind: person
+  id: cfo
+  delivers: full

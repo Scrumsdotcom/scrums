@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/metric.schema.json",
+  "title": "Metric",
+  "description": "Typed observable quantity with declared ownership, lineage, freshness, formula, and thresholds.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "id", "name", "owner", "type", "unit", "freshness"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "Metric" },
+    "id": { "type": "string", "pattern": "^METRIC-[A-Z0-9]+-[A-Z0-9-]+$" },
+    "name": { "type": "string", "minLength": 3 },
+    "description": { "type": "string" },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module"],
+      "properties": {
+        "module": { "type": "string", "x-cac-ref": ["Manifest"] },
+        "person": { "type": "string" }
+      }
+    },
+    "type": {
+      "type": "string",
+      "enum": ["counter", "gauge", "histogram", "ratio", "percentage", "currency", "duration", "boolean"]
+    },
+    "unit": { "type": "string", "description": "Human-readable unit, e.g. 'USD', 'requests/sec', 'days'." },
+    "formula": {
+      "type": "string",
+      "description": "Plain-language or expression describing how the metric is computed."
+    },
+    "lineage": {
+      "type": "array",
+      "description": "Upstream sources the metric is derived from.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source"],
+        "properties": {
+          "source": { "type": "string" },
+          "field": { "type": "string" },
+          "transformation": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expectedLag"],
+      "properties": {
+        "expectedLag": { "type": "string", "description": "ISO 8601 duration." },
+        "maxLag": { "type": "string", "description": "ISO 8601 duration. Past this, alert." },
+        "lastObservedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "thresholds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["level", "comparator", "value"],
+        "properties": {
+          "level": { "type": "string", "enum": ["info", "warning", "critical"] },
+          "comparator": { "type": "string", "enum": ["gte", "lte", "gt", "lt", "eq", "neq"] },
+          "value": { "type": ["number", "string"] }
+        }
+      },
+      "default": []
+    },
+    "dashboards": {
+      "type": "array",
+      "items": { "type": "string", "x-cac-ref": ["Dashboard"] },
+      "default": []
+    },
+    "alerts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "history": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "retention": { "type": "string", "description": "ISO 8601 duration." },
+        "grain": { "type": "string", "enum": ["minute", "hour", "day", "week", "month"] }
+      }
+    }
+  }
+}

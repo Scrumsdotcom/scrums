@@ -1,0 +1,8 @@
+id: v001-minimal-company
+level: validate
+description: >
+  A module, a metric it owns, and a goal measured by that metric. Every
+  reference resolves. An implementation must accept it.
+expect:
+  valid: true
+  failures: []
