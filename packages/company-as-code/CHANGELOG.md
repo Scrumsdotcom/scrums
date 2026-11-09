@@ -12,6 +12,20 @@ Release numbers follow [`docs/standards/versioning.md`](./docs/standards/version
 
 ---
 
+## [0.7.1], 2026-11-09
+
+A patch release. It fixes advisories in development dependencies only. Nothing that the CLI or the runtime ships or runs in production changes.
+
+### Security
+
+- **Vitest and `@vitest/mocker` advisories fixed in both test toolchains.** `cli/` moves to Vitest 5.0.3. `runtime/` moves to Vitest 4.1.12 and `@vitest/*` 4.1.12.
+  - [GHSA-qxg6-89mg-rqv8](https://github.com/advisories/GHSA-qxg6-89mg-rqv8): code injection through unauthenticated manual mock registration (`cli/`, `runtime/`).
+  - [GHSA-xp26-3454-mjgp](https://github.com/advisories/GHSA-xp26-3454-mjgp): Windows backslash traversal past the mocker redirect allowlist (`cli/`, `runtime/`).
+  - [GHSA-82fw-gwwq-j7x9](https://github.com/advisories/GHSA-82fw-gwwq-j7x9): path traversal and arbitrary file read through a redirect mock (`runtime/`).
+- `npm audit` (all dependencies, development included) reports 0 vulnerabilities in `cli/` and `runtime/`.
+
+---
+
 ## [0.7.0], 2026-11-08
 
 Making a fork a long-term asset rather than a snapshot. The theme: a fork
@@ -324,7 +338,8 @@ recorded as one release. There is no separate v0.4.0 tag.
 - Architecture documentation, getting-started guide, codified standards, glossary, and ADR 0001 bootstrapping the ADR process.
 - Author attribution: Gerald Neves.
 
-[Unreleased]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.3.0...v0.5.0

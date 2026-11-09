@@ -1,6 +1,6 @@
 {
   "name": "@company-as-code/runtime",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
   "description": "Reference runtime host for Company-as-Code. Loads the manifest graph, executes workflows, persists audit + event records.",
   "license": "Apache-2.0",
@@ -31,7 +31,7 @@
     "@types/pg": "^8.23.1",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.12"
   },
   "engines": {
     "node": ">=22"

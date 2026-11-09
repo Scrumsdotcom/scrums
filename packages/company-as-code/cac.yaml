@@ -12,5 +12,5 @@ name: Company-as-Code
 role: upstream
 namespace: cac
 framework:
-  version: 0.7.0
+  version: 0.7.1
   upstream: https://github.com/gez-scrumsdotcom/Company-as-Code

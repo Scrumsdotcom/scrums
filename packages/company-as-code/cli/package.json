@@ -1,6 +1,6 @@
 {
   "name": "@company-as-code/cli",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
   "description": "Reference CLI for Company-as-Code: validation, deterministic generators, drift gate.",
   "license": "Apache-2.0",
@@ -28,7 +28,7 @@
     "@types/node": "^26.6.4",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.3"
   },
   "engines": {
     "node": ">=22"
