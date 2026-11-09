@@ -308,7 +308,7 @@ See [`docs/interoperability.md`](./docs/interoperability.md).
 
 ## Project status
 
-**Current release:** `v0.6.0` (see [CHANGELOG](./CHANGELOG.md) for the full release history and [roadmap](./docs/roadmap.md) for what's next).
+**Current release:** `v0.7.0` (see [CHANGELOG](./CHANGELOG.md) for the full release history and [roadmap](./docs/roadmap.md) for what's next).
 
 This is a **seed repository**. It ships:
 

@@ -1,6 +1,6 @@
 # ADR 0009: The document format is v1alpha1 until it earns more
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-10-12
 - **Deciders:** Lead maintainer
 - **Tags:** schemas, versioning, interoperability

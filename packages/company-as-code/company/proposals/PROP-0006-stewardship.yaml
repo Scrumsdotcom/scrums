@@ -6,8 +6,9 @@ kind: Proposal
 id: PROP-0006
 title: Publish a plain-language stewardship guideline and the open governance questions
 
-status: open
+status: applied
 opened: 2026-10-12
+appliedOn: 2026-11-08
 
 author:
   kind: person
@@ -60,5 +61,14 @@ rollback: >
   Revert GOVERNANCE.md, delete docs/governance/, and remove the instance
   carve-out from cli/src/boundary.ts. Withdrawing a published commitment
   should itself be a Proposal whose title says so, per the stewardship page.
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-11-08
+  verbatim: >
+    Accepted by Gerald Neves
 
 tags: [governance, stewardship]

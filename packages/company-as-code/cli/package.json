@@ -1,6 +1,6 @@
 {
   "name": "@company-as-code/cli",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "description": "Reference CLI for Company-as-Code: validation, deterministic generators, drift gate.",
   "license": "Apache-2.0",

@@ -6,8 +6,9 @@ kind: Proposal
 id: PROP-0005
 title: Define correct behaviour as a conformance suite that any implementation can run
 
-status: open
+status: applied
 opened: 2026-10-12
+appliedOn: 2026-11-08
 
 author:
   kind: person
@@ -49,5 +50,14 @@ rollback: >
   definition of correct other than the reference source.
 
 adr: docs/adr/0010-conformance-suite.md
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-11-08
+  verbatim: >
+    Accepted by Gerald Neves
 
 tags: [conformance, interoperability]

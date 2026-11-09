@@ -1,6 +1,6 @@
 # ADR 0008: A declared boundary between the framework and the instance
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-10-12
 - **Deciders:** Lead maintainer
 - **Tags:** forking, upgrades, boundary, namespacing

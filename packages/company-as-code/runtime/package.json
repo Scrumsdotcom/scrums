@@ -1,6 +1,6 @@
 {
   "name": "@company-as-code/runtime",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "description": "Reference runtime host for Company-as-Code. Loads the manifest graph, executes workflows, persists audit + event records.",
   "license": "Apache-2.0",
@@ -16,7 +16,7 @@
     "@opentelemetry/api": "^1.9.1",
     "@opentelemetry/resources": "^2.12.0",
     "@opentelemetry/sdk-trace-node": "^2.12.0",
-    "@opentelemetry/semantic-conventions": "^1.43.0",
+    "@opentelemetry/semantic-conventions": "^1.44.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "better-sqlite3": "^12.11.1",

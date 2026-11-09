@@ -9,8 +9,9 @@ kind: Proposal
 id: PROP-0002
 title: Declare and enforce the framework/instance boundary, and make upgrades a supported operation
 
-status: open
+status: applied
 opened: 2026-10-12
+appliedOn: 2026-11-08
 
 author:
   kind: person
@@ -71,5 +72,14 @@ rollback: >
   path other than a manual merge.
 
 adr: docs/adr/0008-framework-instance-boundary.md
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-11-08
+  verbatim: >
+    Accepted by Gerald Neves
 
 tags: [forking, upgrades, boundary]

@@ -1,6 +1,6 @@
 # ADR 0010: A conformance suite defines correct, not the reference CLI
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-10-12
 - **Deciders:** Lead maintainer
 - **Tags:** conformance, interoperability, schemas

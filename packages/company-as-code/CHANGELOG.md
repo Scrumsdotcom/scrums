@@ -10,8 +10,30 @@ Release numbers follow [`docs/standards/versioning.md`](./docs/standards/version
 
 ## [Unreleased]
 
+---
+
+## [0.7.0], 2026-11-08
+
 Making a fork a long-term asset rather than a snapshot. The theme: a fork
-should be able to take the next release with a command, not a merge.
+should be able to take the next release with a command, not a merge. This is
+also the first public release.
+
+Pull requests: #70, #73, #74, #75 (supersedes Dependabot #63, #68, #69, #71, #72), #76, and this release (supersedes Dependabot #77 in part, #78, #79).
+
+### Governance
+
+- **PROP-0002 to PROP-0006 are accepted and applied** (2026-11-08): the framework/instance boundary, honest versioning, fork namespacing, the conformance suite, and stewardship. [ADR-0008](./docs/adr/0008-framework-instance-boundary.md), [ADR-0009](./docs/adr/0009-honest-versioning.md) and [ADR-0010](./docs/adr/0010-conformance-suite.md) are Accepted. PROP-0007 (schema host and provenance) is accepted and applied.
+- ADR: N/A. This release adds no scope beyond the accepted ADRs.
+
+### Added, Schema hosting
+
+- **The `pages` workflow publishes every schema at the URL its `$id` names**, and the namespace page and JSON-LD context at `https://gez-scrumsdotcom.github.io/Company-as-Code/ns/`. The build fails if a `$id` does not match its path.
+
+### Changed, Dependencies
+
+- CLI: yaml 2.9.1, @types/node 26.6.4, tsx 4.23.15, TypeScript 7.0.2, Vitest 5.0.0. fast-uri 3.1.9 (host-confusion and SSRF advisories).
+- Runtime: @opentelemetry/resources and sdk-trace-node 2.12.0, semantic-conventions 1.44.0, pg 8.23.1, @types/pg 8.23.1, vite 8.3.6 and source-map-js 1.2.2 (dev; security fixes). @opentelemetry/api stays at 1.9.1: the 2.x OpenTelemetry packages accept `<1.10.0`.
+- Actions: checkout 7.0.1, setup-node 7.1.0, action-gh-release 3.0.3, scorecard-action 2.5.0, codeql-action 4.39.1, upload-artifact 7.0.2, download-artifact 8.0.2. Every `uses:` is pinned to a commit SHA.
 
 ### Added, The framework/instance boundary
 
@@ -302,7 +324,8 @@ recorded as one release. There is no separate v0.4.0 tag.
 - Architecture documentation, getting-started guide, codified standards, glossary, and ADR 0001 bootstrapping the ADR process.
 - Author attribution: Gerald Neves.
 
-[Unreleased]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.3.0...v0.5.0
 [0.3.0]: https://github.com/gez-scrumsdotcom/Company-as-Code/compare/v0.2.0...v0.3.0

@@ -4,18 +4,19 @@ What's in the framework today, what's coming, and what's intentionally NOT in sc
 
 This file is updated through PRs like any other artefact. Disagreements about scope go through an ADR.
 
-> **Snapshot date:** 2026-10-12 (post v0.6.0)
+> **Snapshot date:** 2026-11-08 (post v0.7.0)
 
 ---
 
 ## Shipped (in main)
 
-### Unreleased: forkable as a long-term asset
+### v0.7.0 cycle, forkable as a long-term asset
 
 - **The framework/instance boundary.** Every path is framework, adapt, instance, or derived. `cac.yaml` says whether a tree is upstream or a fork; `framework.lock.json` records a hash of every framework file; `cac boundary check` runs in CI. See [ADR-0008](./adr/0008-framework-instance-boundary.md).
 - **Fork namespacing.** A fork's decisions live in `company/decisions/`, and its hub modules carry its namespace, so nothing a fork creates can collide with what upstream creates later. See [`fork-namespacing.md`](./standards/fork-namespacing.md).
 - **Honest versioning.** Documents are `company-as-code/v1alpha1`, every schema `$id` carries the version, and format changes ship with a migration. See [ADR-0009](./adr/0009-honest-versioning.md).
 - **Stewardship, written down.** Who decides, what is promised, and the open questions. See [`docs/governance/`](./governance).
+- **Hosted schema identifiers.** Every schema is served at the URL its `$id` names, and the JSON-LD namespace at `/ns/`, from GitHub Pages.
 
 ### v0.6.0 cycle, typed edges, compliance, governance
 

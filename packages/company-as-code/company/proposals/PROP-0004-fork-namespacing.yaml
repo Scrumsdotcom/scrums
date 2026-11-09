@@ -6,8 +6,9 @@ kind: Proposal
 id: PROP-0004
 title: Namespace everything a fork creates next to upstream
 
-status: open
+status: applied
 opened: 2026-10-12
+appliedOn: 2026-11-08
 
 author:
   kind: person
@@ -51,5 +52,14 @@ rollback: >
   choosing ADR numbers and hub names by convention.
 
 adr: docs/adr/0008-framework-instance-boundary.md
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-11-08
+  verbatim: >
+    Accepted by Gerald Neves
 
 tags: [forking, namespacing]

@@ -1,7 +1,7 @@
 {
   "apiVersion": "company-as-code/v1alpha1",
   "kind": "FrameworkLock",
-  "frameworkVersion": "0.6.0",
+  "frameworkVersion": "0.7.0",
   "boundary": {
     "derived": [
       "generated/**",
@@ -47,8 +47,8 @@
       ".gitattributes": "a16cbae2b06f93d29cdd813faac4ff23b81ee39c9f72d143bd2b0ba8200a620e",
       "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
       "cli/README.md": "6337ca0f800e2aaec77b2bbfeee06d6e7e9dd79d38d8693718b598061850d977",
-      "cli/package-lock.json": "a92bc68024ed2566ce5d200fbc5bdec3952734bef348469d69dc83b180e0b2e2",
-      "cli/package.json": "f29323ba386ddf7fc4a04f8d0d12c97d122a1d197f325aa751c1dbf3f174dfe0",
+      "cli/package-lock.json": "b22fd55475ecd17b0a7e5ecbe6763ce6f43802d385cf05b8680537091dfd24a0",
+      "cli/package.json": "43ccc604ba4f98676043014541c3f2656630fbb3c47c8ce0c4c6b6d3bec868d1",
       "cli/src/boundary.ts": "5a39eba0d531a70a01d4e1ec11f4d70fd0f927561f04ae3e40ecece1e9008271",
       "cli/src/cli-args.ts": "fa3f626ccabb0370d70beff18c365fb11920ba9a9f715423395b76df4f1c0f51",
       "cli/src/cognition.ts": "532cbb59c54eb114b7f08feec6c8bfbed7f6fa1b89f831802fcc328119e0beb1",
@@ -142,10 +142,10 @@
       "docs/adr/0005-cac-hub-in-repo-registry.md": "8558148788d8afdf2f6cc30524866a8deb4fc4a74e82fc68eda0f0a91238d214",
       "docs/adr/0006-compliance-and-capability-layer.md": "a378918db729127d83c61e735ac6fd8f7424ba9a44a2c64b170bee275ee777cb",
       "docs/adr/0007-typed-reference-edges.md": "c64b71fbd19ea5df9832ffcf34f087aaefd28c400a03d68f35174f2cb7159fd5",
-      "docs/adr/0008-framework-instance-boundary.md": "72df6c6209a3d8b57215dddf283e8e6b93e3ad6573ea3c86fa98b1b9a41750cb",
-      "docs/adr/0009-honest-versioning.md": "6d000a51277ee565d6f0fe175ad7fd0933350a7f1527845f61e30c5d848b595f",
-      "docs/adr/0010-conformance-suite.md": "736f51ca7ceff77cbbf065143be41f1f8ea67f2f5ee163d17c8d50ef58186669",
-      "docs/adr/README.md": "b11e242244b9ed3f8c038665b7fcdd784092c5dc1cccb6156637175dec34f88a",
+      "docs/adr/0008-framework-instance-boundary.md": "dca5cd5a231c012a71274a94bc2f877e9bfd29362872d356054e75aa0e76c9bc",
+      "docs/adr/0009-honest-versioning.md": "9b8b058abc5f7c2de1ccce8b95dbda1a4ef23dd536a5d1c314eacd9166549e1d",
+      "docs/adr/0010-conformance-suite.md": "c1fd04cbf31132f690aa330a8674528b690954dd43492789ff40e8b54fbc4eb3",
+      "docs/adr/README.md": "233918d1c3774533e7a5c7355a9d1c426b40cbac889a8ce252108746c1a1ab78",
       "docs/anatomy/README.md": "dc27d1e3c96ce83e9a53e95a43c8ce59394d9287d91b1505ea1c5edf4bd043f3",
       "docs/anatomy/agent.md": "efbcaa170b40a25ec72710fe61328f8e481d59fa62e4b7b5f610f92de9747a54",
       "docs/anatomy/manifest.md": "f56397170cf0581276de327b49f9d7d71e4ae696677c8cb03bc980d7c25e4db2",
@@ -165,7 +165,7 @@
       "docs/interoperability.md": "abb117f327097a092971bc80d873609995ea616228c36dc2f228b1cef858ef9c",
       "docs/nl2m.md": "42d307eeef8b012b56381665da1638876e1fdb3d211214985477165cfd8b08cc",
       "docs/release-checklist.md": "7b4a70977375917596ab04b0a246c634890c2a712adf44273cd46accda34f4e0",
-      "docs/roadmap.md": "e8b7b534b5d4e0acd6b2c7cb74dd8bbedfb50689b80cd58472a5fbf281754261",
+      "docs/roadmap.md": "526bd6d4501873b34ca831662c288940fa337f08fc20d3b8a27cd4210c5938e6",
       "docs/scenarios/README.md": "25c4ff5bfea860274481fcba5159c2f0f6c582559baba1c87def8f60a8af81df",
       "docs/scenarios/launching-a-growth-experiment.md": "07fa6c3a5992fb8d9e226e5cfc4f57d53eca0ee104896a839e40983619ec6bb4",
       "docs/scenarios/monthly-close.md": "f47ede0aed7afae117372daa331c6a5b464128d45645d1bfead78f019fb8bdc3",
@@ -197,10 +197,10 @@
       "hub/modules/subscription-billing/payload/README.md": "5af55151ec08682cb99f617165db9053cecc285df2226c36c8d72de324127b09",
       "hub/modules/subscription-billing/payload/integrations/billing-provider.yaml": "b508f21ca4714570de7a1db5d80907853c8e55bde86357afda37d196f6f6bb31",
       "hub/modules/subscription-billing/payload/manifest.yaml": "a37a07098aa6b85db0838cabed13ad00e9af425654cfd0e15d32b260f107196f",
-      "package.json": "0f34e88fe21a46d7bedbd20f4bd4814377efc93ddeeaf43cba299931b4be0624",
+      "package.json": "d7b0cd0e1176f268fcc518f2104a332b36f961e1e0d20a5a8cae599ceaa63ac7",
       "runtime/README.md": "eb45dcd13935e499aa5e47ba1a86d8139ec7028ae3a7fd4962c61e44a43b402e",
-      "runtime/package-lock.json": "39959e7381f6f654412d27aca2b602d2d165df665283c2cea07cb5f2f3bbea04",
-      "runtime/package.json": "95a9e5ad4a397d170494685dfcb94205a5a81cf95fad254b67aec3dc07bbff3c",
+      "runtime/package-lock.json": "07156790f37953533ed422efbc91cb9b752b7dc5e38b511774002e98125b3e02",
+      "runtime/package.json": "c033a21b6f65b7b20cb0c5ca8a2decbec39f832f617b6bfcac6ea4a0bb15abc5",
       "runtime/src/cognition/live-reader.ts": "5ef15d10dcdb9b7d258fa82d9eb61efe0f7125f4505d6b943872cf8cfe3d7f17",
       "runtime/src/cognition/server.ts": "124afc39dd0823a1e44ec04869a235daaebc5c7682eebd2a31eae3214adfb1c6",
       "runtime/src/executor/reference-invokers.ts": "deb425e14fff80a0d8ef7e58afb51564b2138131811f6407492ba6bc252e70a7",
@@ -292,7 +292,7 @@
       ".github/workflows/validate.yml": "b42b64f9528e3dfe25801b1c7ee2f0d61c282790d411aba3bb2e21ca14765339",
       ".gitignore": "27fbe73fb6a9a58c1058e85b8c0357fbb3203a4f782fb9e18dafa40ff13bce81",
       "AGENTS.md": "43372b980627b76175583c3eea543a81f7d23bdc36eb7dfc6ea8911b4bcfebf6",
-      "README.md": "e92cadf72376387c2a9728c1e1005dcf7698fc40c960ff337b825538e4b7fe8f"
+      "README.md": "2d4e852aab8c737156c872a92a02e85f59845fb797f91c658636616854c29320"
     }
   }
 }

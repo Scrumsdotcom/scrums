@@ -6,8 +6,9 @@ kind: Proposal
 id: PROP-0003
 title: Rename the document version to v1alpha1, version every schema $id, and ship format changes with migrations
 
-status: open
+status: applied
 opened: 2026-10-12
+appliedOn: 2026-11-08
 
 author:
   kind: person
@@ -65,5 +66,14 @@ rollback: >
   history shows both moves. What is lost is the honest stability signal.
 
 adr: docs/adr/0009-honest-versioning.md
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-11-08
+  verbatim: >
+    Accepted by Gerald Neves
 
 tags: [schemas, versioning]
