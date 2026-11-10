@@ -16,12 +16,12 @@ import { PRELUDE } from "./prelude.js";
 const USAGE = `ntc ${VERSION} - NextType reference checker (NT0 core, NTΔ ${"ntd/1"})
 
 Usage:
-  ntc check [--manifest FILE | --context CTX] [--json] [FILE|-]
+  ntc check [--manifest FILE | --context CTX] [--json] [--] [FILE|-]
                      Check an NTΔ stream. Prints an NTΔ response stream,
                      or ${RESULT_FORMAT} JSON with --json.
-  ntc eval [--manifest FILE | --context CTX] TERM
+  ntc eval [--manifest FILE | --context CTX] [--json] [--] TERM
                      Elaborate TERM, re-check it, and print its normal form.
-  ntc fmt [FILE|-]   Decode a stream and print it in canonical form.
+  ntc fmt [--] [FILE|-]   Decode a stream and print it in canonical form.
   ntc prelude        List the built-in constants and their types.
   ntc limits         Print the input and resource limits.
   ntc version        Print the version.
@@ -74,16 +74,28 @@ interface Opts {
   rest: string[];
 }
 
-function parseOpts(args: string[]): Opts {
+function parseOpts(cmd: string, args: string[]): Opts {
   const o: Opts = { json: false, rest: [] };
+  const seen = new Set<string>();
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
-    if (a === "--json") o.json = true;
-    else if (a === "--manifest" || a === "--context") {
-      const v = args[++i];
-      if (v === undefined) throw new UsageError(`${a} needs a value`);
-      if (a === "--manifest") o.manifest = v;
-      else o.context = v;
+    if (a === "--") {
+      o.rest.push(...args.slice(i + 1));
+      break;
+    }
+    if (a === "--json" || a === "--manifest" || a === "--context") {
+      if (cmd === "fmt") throw new UsageError(`${cmd} does not support ${a}`);
+      if (seen.has(a)) throw new UsageError(`duplicate option ${a}`);
+      seen.add(a);
+      if (a === "--json") o.json = true;
+      else {
+        const v = args[++i];
+        if (v === undefined || v.startsWith("--") || (a === "--manifest" && v === "")) {
+          throw new UsageError(`${a} needs a value`);
+        }
+        if (a === "--manifest") o.manifest = v;
+        else o.context = v;
+      }
     } else if (a.startsWith("--")) throw new UsageError(`unknown option ${a}`);
     else o.rest.push(a);
   }
@@ -107,9 +119,12 @@ function manifestOf(o: Opts): Manifest {
 
 function main(argv: string[]): number {
   const [cmd, ...args] = argv;
+  if (cmd !== undefined && ["prelude", "limits", "version", "--version", "help", "--help", "-h"].includes(cmd) && args.length) {
+    throw new UsageError(`${cmd} takes no arguments`);
+  }
   switch (cmd) {
     case "check": {
-      const o = parseOpts(args);
+      const o = parseOpts(cmd, args);
       if (o.rest.length > 1) throw new UsageError("check takes at most one FILE");
       const manifest = manifestOf(o);
       const result = checkStream(readInput(o.rest[0]), manifest);
@@ -117,14 +132,14 @@ function main(argv: string[]): number {
       return result.ok ? 0 : 1;
     }
     case "eval": {
-      const o = parseOpts(args);
+      const o = parseOpts(cmd, args);
       if (o.rest.length !== 1) throw new UsageError("eval takes exactly one TERM");
       const r = evaluate(o.rest[0], manifestOf(o));
       process.stdout.write(o.json ? JSON.stringify(r) + "\n" : `${r.value} : ${r.type}\n`);
       return 0;
     }
     case "fmt": {
-      const o = parseOpts(args);
+      const o = parseOpts(cmd, args);
       if (o.rest.length > 1) throw new UsageError("fmt takes at most one FILE");
       const frames = decodeStream(readInput(o.rest[0]), DEFAULT_LIMITS);
       process.stdout.write(frames.map(printFrame).join("\n") + (frames.length ? "\n" : ""));

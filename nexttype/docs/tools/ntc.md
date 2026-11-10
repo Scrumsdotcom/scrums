@@ -82,6 +82,39 @@ $ ntc eval '(sum (cons 6000 (cons 6000 nil)))'
 
 `eval` infers the type, so terms that need an expected type (`lam`, `pair`, `case`) must appear inside a contract check instead.
 
+`eval --json` prints an object with `value` and `type` strings:
+
+```console
+$ ntc eval --json '(add 2 3)'
+{"value":"5","type":"Z"}
+```
+
+## Command arguments
+
+`check` and `eval` accept `--json` and either `--manifest FILE` or `--context CTX`.
+Each option can appear only once.
+`fmt` accepts only a stream filename or `-`; it rejects manifest, context, and JSON options.
+The help, version, prelude, and limits commands accept no arguments.
+Invalid arguments return exit code `2` before reading input, with a diagnostic on stderr and no stdout.
+
+For `check` and `fmt`, an omitted filename or `-` reads the stream from stdin.
+`--manifest -` reads the manifest from stdin; supply the stream in a file when using `check`.
+An empty context (`--context ''`) is valid.
+A manifest filename cannot be empty.
+
+Use `--` to end option parsing for `check`, `eval`, or `fmt`.
+All following arguments are positional, including names that match options.
+Options can appear before or after positional arguments, until `--`.
+Negative integer terms remain valid without a separator.
+
+```console
+$ ntc eval -- -2
+-2 : Z
+```
+
+For example, `ntc check -- --json` reads a file named `--json` and prints text results.
+Option values cannot start with `--`; use `--manifest ./--approval.json` for such a filename.
+
 ## Other commands
 
 | Command | Prints |
