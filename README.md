@@ -39,6 +39,7 @@ SEOP is the architecture of the Scrums.com platform: one control plane for AI ag
 | [`packages/sorted-ui/`](packages/sorted-ui) | Source of [`@scrums/sorted-ui`](https://www.npmjs.com/package/@scrums/sorted-ui), the Sorted UI React components and design tokens. |
 | [`nexttype/`](nexttype) | [NextType](nexttype), the experimental execution language for agents: the `ntc` reference checker, the specification, examples, the `nt` preview CLI and research. |
 | [`packages/company-as-code/`](packages/company-as-code) | [Company-as-Code](https://github.com/gez-scrumsdotcom/Company-as-Code), an open-source operating system for AI-native organizations: schemas, the reference CLI and the reference runtime host. Created and maintained by Gerald Neves. A pinned copy of the upstream release. |
+| [`ai-data-safety/`](ai-data-safety) | Guides for making data safe to send to AI models, starting with five open-source data sanitization tools for zero-data-retention LLMs. |
 
 ## Documentation
 
