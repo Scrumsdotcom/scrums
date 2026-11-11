@@ -20,11 +20,7 @@
   "redirects": [
     {
       "source": "/platform/on-demand-solutions",
-      "destination": "/ai-development/outcome-driven-sprints"
-    },
-    {
-      "source": "/platform/comparing-delivery-models",
-      "destination": "/ai-development/choose-delivery-model"
+      "destination": "/ai-development"
     },
     {
       "source": "/platform/staff-augmentation",
@@ -40,11 +36,11 @@
     },
     {
       "source": "/platform/managed-delivery",
-      "destination": "/ai-development/managed-delivery"
+      "destination": "/ai-development"
     },
     {
       "source": "/platform/outcome-driven-sprints",
-      "destination": "/ai-development/outcome-driven-sprints"
+      "destination": "/ai-development"
     },
     {
       "source": "/platform/ai-agents",
@@ -90,7 +86,7 @@
     },
     {
       "source": "/products/overview",
-      "destination": "/ai-development/choose-delivery-model",
+      "destination": "/platform/comparing-delivery-models",
       "permanent": true
     },
     {
@@ -115,17 +111,17 @@
     },
     {
       "source": "/products/delivery/overview",
-      "destination": "/ai-development/overview",
+      "destination": "/ai-development",
       "permanent": true
     },
     {
       "source": "/products/delivery/managed-delivery",
-      "destination": "/ai-development/managed-delivery",
+      "destination": "/ai-development",
       "permanent": true
     },
     {
       "source": "/products/delivery/outcome-driven-sprints",
-      "destination": "/ai-development/outcome-driven-sprints",
+      "destination": "/ai-development",
       "permanent": true
     },
     {
@@ -176,6 +172,86 @@
     {
       "source": "/company/entity",
       "destination": "/company/entity-graph",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/product-development",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/overview",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/choose-delivery-model",
+      "destination": "/platform/comparing-delivery-models",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/ai-agent-development",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/application-modernization",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/custom-software-development",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/data-engineering-analytics",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/devops-engineering",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/generative-ai-development",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/managed-delivery",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/mobile-app-development",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/outcome-driven-sprints",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/software-maintenance-and-support",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/software-testing-qa",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/ui-ux-design",
+      "destination": "/ai-development",
+      "permanent": true
+    },
+    {
+      "source": "/ai-development/web-development",
+      "destination": "/ai-development",
       "permanent": true
     }
   ],
@@ -228,7 +304,8 @@
               "platform/how-it-works",
               "platform/core-concepts",
               "platform/plans",
-              "platform/human-ai-collaboration"
+              "platform/human-ai-collaboration",
+              "platform/comparing-delivery-models"
             ]
           },
           {
@@ -288,30 +365,14 @@
         "tab": "Platform Services",
         "groups": [
           {
-            "group": "AI Development",
+            "group": "Delivery Plans",
             "pages": [
-              "ai-development/overview",
-              "ai-development/choose-delivery-model",
-              "ai-development/scopes",
-              "ai-development/managed-delivery",
-              "ai-development/outcome-driven-sprints"
-            ]
-          },
-          {
-            "group": "AI Development services",
-            "pages": [
-              "ai-development/ai-agent-development",
-              "ai-development/generative-ai-development",
-              "ai-development/custom-software-development",
-              "ai-development/product-development",
-              "ai-development/web-development",
-              "ai-development/mobile-app-development",
-              "ai-development/ui-ux-design",
-              "ai-development/application-modernization",
-              "ai-development/data-engineering-analytics",
-              "ai-development/devops-engineering",
-              "ai-development/software-testing-qa",
-              "ai-development/software-maintenance-and-support"
+              "ai-development/index",
+              "ai-development/whats-included",
+              "ai-development/starting-your-plan",
+              "ai-development/requests",
+              "ai-development/tracking-delivery",
+              "ai-development/scopes"
             ]
           },
           {
@@ -337,7 +398,8 @@
             "pages": [
               "integrations/integrations",
               "integrations/supported-integrations",
-              "integrations/integration-setup"
+              "integrations/integration-setup",
+              "integrations/scrums-mcp"
             ]
           },
           {
@@ -689,7 +751,7 @@
     "instructions": [
       "Scrums.com is the enterprise AI platform for software engineering. SEOP, the Enterprise AI Software Engineering Orchestration Platform, is the architecture of the platform: one control plane for AI agents, models, engineers and infrastructure.",
       "Write the entity name as Scrums.com. Never write the bare word Scrums.",
-      "Platform capabilities are documented under /platform. AI Development services and Hire Engineers are documented under Platform Services. The AI Catalog is documented under /catalog. Each docs page links to its page on https://www.scrums.com."
+      "Platform capabilities are documented under /platform. Delivery Plans (under /ai-development) and Hire Engineers are documented under Platform Services. The AI Catalog is documented under /catalog. Each docs page links to its page on https://www.scrums.com."
     ]
   },
   "appearance": {

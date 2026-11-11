@@ -1,0 +1,108 @@
+---
+title: "Scrums.com MCP"
+sidebarTitle: "Connect your AI agent"
+description: "Connect Claude, Cursor, Copilot or Codex to Scrums.com."
+---
+
+<Note>
+This page is about connecting your own AI agent to Scrums.com. To govern the tools that your team's agents use, see [MCP Gateway](/platform/mcp-gateway).
+</Note>
+
+**Let your agent do the talking**
+
+Connect Claude, Cursor, Copilot or Codex to Scrums.com. Sign in when the agent asks. Your agent can then find talent, hire, file delivery work for your company, or set your company up as code.
+
+## Connect
+
+Give your agent this address:
+
+```text
+https://platform.scrums.com/api/mcp
+```
+
+The same address is on [platform.scrums.com/mcp](https://platform.scrums.com/mcp) and in **Profile**, under **Settings**.
+
+Sign in with your normal Scrums.com login. There is no API key.
+
+No Scrums.com account? You can sign up when the agent asks you to sign in.
+
+After you sign in, the agent shows an **Allow** page for that client. Allow grants access. A signed-in session alone does not.
+
+What the agent can do depends on your company and your role. If you belong to more than one company, the agent asks which one you mean.
+
+## Example prompts
+
+Copy a prompt into your agent. Change the details to fit your company.
+
+**Find talent**
+
+```text wrap
+How many engineers in the Scrums.com network have React and Python skills?
+```
+
+**File a bug**
+
+```text wrap
+File a bug on our delivery plan. Title: Login page shows a blank screen after sign-in. What happened: after I enter my email and password and click Sign in, the page goes blank. Steps: go to the login page, enter a valid email and password, click Sign in. Expected result: I land on my dashboard. Priority: high.
+```
+
+**Open a role**
+
+```text wrap
+Open a new role called Senior JavaScript/TypeScript Engineer. Seniority: senior. Skills: JavaScript, TypeScript. Summary: We need an engineer with at least 5 years of experience to build and maintain our web app and APIs, review code and mentor other engineers.
+```
+
+## Find talent
+
+Ask how many people in the Scrums.com network match a role.
+
+Give a discipline, one to three skills and, if you want, a minimum number of years. The disciplines are analysis, design, engineering, quality assurance and product management.
+
+The answer is a number. The agent does not receive names, profiles or contact details.
+
+If a skill name is not in our catalog, the agent gets a few close names and no count. It can then ask again with a name we recognise.
+
+Anyone who signs in can use this. In an active customer, only organisation admins can use it.
+
+## Hire
+
+Ask the agent to open a role for your company.
+
+Give the role a title and a short summary. You can add seniority and the skills you need.
+
+Organisation admins of an active customer can open a role.
+
+## File delivery work
+
+Ask the agent to file work on a [delivery plan](/ai-development) that you can open.
+
+* A feature needs a title and a description.
+* A bug needs a title, what happened, the steps, and the result you expected.
+* You can set a priority.
+
+If a very similar request is already on that plan, the agent tells you. It waits for a yes before it adds another. If you can file on more than one plan, the agent asks which plan.
+
+All people in an active customer can file work.
+
+## Set up company as code
+
+Ask the agent to set your company up as code.
+
+The agent reads the public [Company as Code package](https://github.com/Scrumsdotcom/scrums/tree/main/packages/company-as-code) and the docs in that repository. It then does the setup in your company's own copy. It does not write to the Scrums.com repository.
+
+Anyone who signs in can use this.
+
+## Who can do what
+
+An active customer is a company with an active subscription with Scrums.com.
+
+|  | Find talent | Hire | File delivery work | Company as code |
+| --- | --- | --- | --- | --- |
+| Signed in, company not an active customer | Yes | — | — | Yes |
+| Member of an active customer | — | — | Yes | Yes |
+| Space admin of an active customer | — | — | Yes | Yes |
+| Organisation admin of an active customer | Yes | Yes | Yes | Yes |
+
+## Disconnect
+
+To sign an agent out, disconnect it in **Profile**.

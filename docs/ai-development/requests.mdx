@@ -1,0 +1,78 @@
+---
+title: "Making requests"
+description: "How to raise a request on your Delivery Plan, what the team needs in a description, and how priority, epics and handoff work."
+---
+
+A request is the unit of work on a Delivery Plan. Everything the team builds starts as one — a feature, a change, or a bug.
+
+## Raising a request
+
+Select **New request** on the delivery board.
+
+| Field | Notes |
+| --- | --- |
+| **Type** | **Feature or change** for something new or an improvement. **Bug** for something that isn't working. Type drives how the request is triaged. |
+| **Title** | A short summary, written as the outcome. "Let clients view proposals in the SEOP", not "Proposals". |
+| **Description** | What you need, who it is for, and what done looks like. See below. |
+| **Priority** | Low, Normal, High or Urgent. |
+| **Epic** | Optional. Groups the request with related work. |
+| **Attachments** | Screenshots, designs, logs, specs. |
+
+A new request goes into your **backlog**. You can keep editing it until it moves to **To do** — after that, changes go through the comments on the request.
+
+## Writing a description the team can scope
+
+The fastest requests to scope are the ones that state the user, the outcome and the problem. The pattern your delivery team uses is:
+
+**User story** — As a *[who]*, I want *[what]*, so that *[why]*.
+
+**Problem** — What is happening today and why it is costing something. Be specific about the current behaviour.
+
+**Goals** — What has to be true for this to be done.
+
+A request that gives all three usually moves from Scope to Build without a round trip. A one-line request almost always comes back with questions, which costs you a cycle.
+
+For bugs, include steps to reproduce, the environment, and what you expected instead.
+
+## Priority
+
+Priority ranks your queue; it does not add capacity. A plan runs a fixed number of active workstreams, so raising everything to Urgent only flattens the signal your delivery owner uses to sequence work.
+
+| Priority | Use for |
+| --- | --- |
+| **Urgent** | Production is broken or blocked, or a hard external deadline applies. |
+| **High** | Needed in the current delivery window. |
+| **Normal** | The default. Sequenced against everything else in the backlog. |
+| **Low** | Worth doing, no date attached. |
+
+## Epics
+
+An epic groups related requests so progress can be read at a theme level rather than a ticket level. Assigning an epic is optional at creation and can be added later.
+
+Epics are how the **Epics** view reports: each one shows its item count and how far its items have moved across Scope, Build, Verify and Deploy. See [Tracking delivery](/ai-development/tracking-delivery).
+
+## Handoff and locking
+
+A request passes through three states of ownership:
+
+| State | Who holds it | What you can do |
+| --- | --- | --- |
+| **Backlog** | You | Edit freely — title, description, priority, epic, attachments. |
+| **To do / handed off** | Your delivery team | The original entry locks. Changes and clarifications go through comments. |
+| **Work started** | Your delivery team | Locked. Material changes are raised as a new request. |
+
+The request drawer shows where it sits: **handed off**, **team reviews scope**, **build starts**. Locked requests are marked **locked · handed off** above the description, and the original entry is preserved so the scope the team committed to stays visible.
+
+If a request needs to change after handoff, say so in the comments. Your delivery owner will either absorb it or split it out — scope creep inside a locked request is what makes dates slip invisibly.
+
+## Needs your input
+
+When a request is blocked on you — a decision, a scope clarification, an approval, or access — the team flags it **needs your input**. Flagged requests:
+
+* Show a **NEEDS INPUT** badge on the board
+* Are counted in the **needs your input** indicator above the board
+* Trigger an email naming the request and how long it has been waiting
+
+The flag clears when the team confirms the blocker is resolved, not when you reply. Items stay listed until then.
+
+Manage email notifications from **Settings → Account**.
