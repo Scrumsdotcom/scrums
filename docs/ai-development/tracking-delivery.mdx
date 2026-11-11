@@ -1,0 +1,81 @@
+---
+title: "Tracking delivery"
+description: "The delivery board: stages, filters, epics, decisions, risks, and the deployed log of everything your plan has shipped."
+---
+
+The delivery board is the record of your plan. Open **Delivery Plans** in your workspace sidebar.
+
+## The board
+
+Work sits in four columns, left to right:
+
+| | Stage | Meaning |
+| --- | --- | --- |
+| **01** | **Scope** | Being defined and estimated. Includes your backlog. |
+| **02** | **Build** | Engineering underway. |
+| **03** | **Verify** | QA and review, including AI code review. |
+| **04** | **Deploy** | Releasing to your environments. |
+
+Shipped work leaves the board and moves to **Deployed**.
+
+Above the columns, the header carries the live state of the plan: the space you are viewing, a count per stage, how many items are deployed and how many shipped this month, and how many requests are waiting on you.
+
+Each card shows its title, tags, priority, story points where estimated, and a segmented progress meter for items part-way through a stage.
+
+## Finding work
+
+Four controls narrow the board:
+
+* **Search** — free text across the space
+* **Epic** — one epic, no epic, or all
+* **Tags** — the labels applied by your delivery team
+* **Priority** — Urgent, High, Normal, Low
+
+Filters apply across all four columns at once, so a filtered board reads as a slice of the whole pipeline rather than a single stage. When a filtered search has matches in shipped work, the board offers them as a **found in Deployed** link.
+
+## The request drawer
+
+Selecting any card opens it. The drawer carries:
+
+* **Stage rail** — Scope, Build, Verify, Deploy, Deployed, with completed stages ticked
+* **Handoff rail** — what has happened and what happens next: handed off, team reviews scope, build starts
+* **Epic and created date**
+* **Description** — the original entry, marked **locked** once work has started
+* **Activity** — the comment thread between you and the delivery team, newest first
+* **Attachments** — drop files directly onto the thread
+
+Comments are the working channel for a request after handoff. See [Making requests](/ai-development/requests).
+
+## Deployed
+
+The deployed view is the history of everything your plan has shipped, grouped by week with a running total and a count for the current month.
+
+A deployed request keeps its full record. Its drawer shows the release state — **released**, **in production**, **in the live log** — with dates, so you can trace any live change back to the request that produced it and the conversation around it.
+
+If something shipped is not behaving, reply on the request. Your delivery team will raise it as a bug and link the two.
+
+## Epics
+
+The **Epics** view reports progress by theme rather than by ticket. Each epic lists its item count, how many are deployed, and a bar showing distribution across Scope, Build, Verify and Deploy.
+
+This is the view to use for a status conversation. The board answers "what is happening now"; epics answer "how far through are we".
+
+## Decisions and risks
+
+Decisions and risks behave like any other item on your plan. Each one is raised into the backlog, opens in the same drawer, carries the same comment thread, can be assigned to an epic, and is closed when it is settled or retired.
+
+The difference is what they record.
+
+**Decisions** capture the choices that constrain later work — an architectural call, a change of approach, a trade-off accepted under time pressure. Recording a decision as an item means the reasoning survives past the thread it was argued in, and later requests can be linked back to it.
+
+**Risks** capture what could move a date or change an outcome: a dependency outside the plan, an unknown in an unfamiliar system, an approval bottleneck on your side. An open risk stays visible on the board until it is closed, either because it was mitigated or because it stopped applying.
+
+Both views show their open count in the tab strip, so you can see at a glance whether anything is outstanding without leaving the workstream.
+
+Raising a decision or a risk is not reserved for your delivery team. If you have made a product call the team should build against, record it as a decision rather than leaving it in a comment on one request.
+
+## Reporting
+
+The board is live, so there is no waiting on a status report to know where things stand. Your monthly delivery report summarises the same data: what shipped, what moved, what is open, and performance against the plan.
+
+For delivery metrics across your whole engagement — DORA, cycle time, throughput — see [Team Observability](/platform/team-observability).
