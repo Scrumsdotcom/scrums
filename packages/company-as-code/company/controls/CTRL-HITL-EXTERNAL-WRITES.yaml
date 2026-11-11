@@ -1,0 +1,37 @@
+apiVersion: company-as-code/v1alpha1
+kind: Control
+
+id: CTRL-HITL-EXTERNAL-WRITES
+title: Human-in-the-loop declarations are enforced, not documented
+description: >
+  Workflows that write to an irreversible external surface declare hitl: true.
+  A declared HITL workflow cannot carry a scheduled trigger: validation
+  refuses it at authoring time and the runtime host refuses it at load time.
+  The declaration is therefore the mechanism, not a description of one.
+
+implements:
+  - REQ-INTERNAL-IRREVERSIBLE-WRITES
+  - REQ-EU-AI-ACT-ART-14
+
+owner:
+  kind: module
+  id: company/domains/finance-ops/governance
+
+verification:
+  method: automated
+  surface: ci
+  check: cli/src/validate.ts#crossDocumentChecks
+  frequency: on-change
+  failureMode: Blocks the merge. The workflow cannot land carrying both a HITL declaration and a schedule.
+
+evidence:
+  - source: ci-run
+    reference: .github/workflows/validate.yml
+    retention: P1Y
+  - source: audit-log
+    reference: audit.action = workflow.load_refused
+    retention: P7Y
+
+severity: critical
+status: operating
+lastVerified: 2026-08-16

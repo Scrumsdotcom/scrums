@@ -1,0 +1,95 @@
+{
+  "count": 5,
+  "generatedFrom": "/company/skills/*.yaml",
+  "skills": [
+    {
+      "autonomy": "human-gated",
+      "declaredIn": "company/skills/add-agent.yaml",
+      "description": "Add an autonomous unit to an existing module with the correct autonomy classification, escalation block if needed, and observability surface.",
+      "name": "add-agent",
+      "owner": {
+        "module": "framework"
+      },
+      "relatedSkills": [
+        "add-module",
+        "resolve-drift",
+        "sync-verification"
+      ],
+      "tags": [
+        "agent",
+        "autonomy"
+      ]
+    },
+    {
+      "autonomy": "human-gated",
+      "declaredIn": "company/skills/add-integration.yaml",
+      "description": "Wire a new external system into the coordination layer through canonical IDs, no vendor names in domain logic, HITL surfaces declared explicitly.",
+      "name": "add-integration",
+      "owner": {
+        "module": "framework"
+      },
+      "relatedSkills": [
+        "add-module",
+        "sync-verification"
+      ],
+      "tags": [
+        "canonical-ids",
+        "integration",
+        "vendor-neutral"
+      ]
+    },
+    {
+      "autonomy": "human-gated",
+      "declaredIn": "company/skills/add-module.yaml",
+      "description": "Bootstrap a new Company-as-Code module from scratch: copy the manifest template, fill it in, validate, regenerate, commit.",
+      "name": "add-module",
+      "owner": {
+        "module": "framework"
+      },
+      "relatedSkills": [
+        "add-agent",
+        "resolve-drift"
+      ],
+      "tags": [
+        "bootstrap",
+        "module"
+      ]
+    },
+    {
+      "autonomy": "human-gated",
+      "declaredIn": "company/skills/resolve-drift.yaml",
+      "description": "Recover when `npm run generate:check` fails on a PR. Regenerate, never hand-merge generated files.",
+      "name": "resolve-drift",
+      "owner": {
+        "module": "framework"
+      },
+      "relatedSkills": [
+        "add-agent",
+        "add-module"
+      ],
+      "tags": [
+        "ci",
+        "drift",
+        "generators"
+      ]
+    },
+    {
+      "autonomy": "human-gated",
+      "declaredIn": "company/skills/sync-verification.yaml",
+      "description": "Apply the canonical 5-step protocol to any state-mutating sync: baseline → dry-run → confirm counts → live → re-verify.",
+      "name": "sync-verification",
+      "owner": {
+        "module": "framework"
+      },
+      "relatedSkills": [
+        "add-agent",
+        "add-integration"
+      ],
+      "tags": [
+        "dry-run",
+        "safety",
+        "sync"
+      ]
+    }
+  ]
+}

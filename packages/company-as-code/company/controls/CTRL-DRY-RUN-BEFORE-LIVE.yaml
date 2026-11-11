@@ -1,0 +1,34 @@
+apiVersion: company-as-code/v1alpha1
+kind: Control
+
+id: CTRL-DRY-RUN-BEFORE-LIVE
+title: A live write requires a prior dry-run under the same correlation
+description: >
+  Before executing a live-write step, the runtime host queries the audit log
+  for a dry-run record of the same path under the same correlation ID. Absent
+  that record it refuses the write and audits the refusal. The projected
+  payload an operator reviewed is the payload that runs.
+
+implements:
+  - REQ-INTERNAL-EVIDENCE-BEFORE-LIVE
+  - REQ-SOC2-CC8-1
+
+owner:
+  kind: module
+  id: company/domains/finance-ops/governance
+
+verification:
+  method: automated
+  surface: runtime-host
+  check: runtime/src/executor/runner.ts
+  frequency: continuous
+  failureMode: Refuses the write and audits the refusal with reason no-prior-dry-run.
+
+evidence:
+  - source: audit-log
+    reference: audit.dryRun on every write-path invocation
+    retention: P7Y
+
+severity: high
+status: operating
+lastVerified: 2026-08-16

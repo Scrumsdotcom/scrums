@@ -1,0 +1,97 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+
+jobs:
+  # Runs the gates and builds the release notes with a read-only token. The
+  # dependency installs and tests run here, never next to a write token.
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1   # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1   # v7.1.0
+        with:
+          node-version: "22"
+          # No dependency cache in the release job: a cache entry written by
+          # another workflow run must not feed a release.
+
+      # A tag that cannot pass the project's own gates is not a release.
+      # These run again here rather than trusting that the tagged commit was
+      # green on its pull request: tags can point anywhere.
+      - name: Install CLI
+        working-directory: cli
+        run: npm ci
+      - name: Validate
+        working-directory: cli
+        run: npm run validate
+      - name: Drift gate
+        working-directory: cli
+        run: npm run generate:check
+      - name: Health inspection
+        working-directory: cli
+        run: npm run doctor
+      - name: Tests (CLI)
+        working-directory: cli
+        run: npm test
+      - name: Install runtime host
+        working-directory: runtime
+        run: npm ci
+      - name: Tests (runtime host)
+        working-directory: runtime
+        run: npm test
+
+      - name: Confirm the tag matches the declared version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          for pkg in package.json cli/package.json runtime/package.json; do
+            declared=$(node -p "require('./$pkg').version")
+            if [ "$declared" != "$tag" ]; then
+              echo "::error::$pkg declares $declared but the tag is $tag"
+              exit 1
+            fi
+          done
+          if ! grep -q "^## \[$tag\]" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no entry for $tag"
+            exit 1
+          fi
+
+      - name: Extract the changelog entry for this version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          awk -v v="$tag" '
+            $0 ~ "^## \\["v"\\]" { found=1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > RELEASE_NOTES.md
+          echo "--- release notes ---"
+          head -40 RELEASE_NOTES.md
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9   # v7.0.2
+        with:
+          name: release-notes
+          path: RELEASE_NOTES.md
+          retention-days: 1
+
+  # Only this job holds contents: write. It runs no project code.
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333   # v8.0.2
+        with:
+          name: release-notes
+      - name: Publish the GitHub release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64   # v3.0.3
+        with:
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}

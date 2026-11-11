@@ -1,0 +1,69 @@
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+name: finance
+domain: finance-ops
+parent: domains/finance-ops
+version: 0.1.0
+lifecycle: hardening
+purpose: >
+  Owns the ledger, cash position, runway forecasting, month-end close, and the
+  reconciliation between booked revenue and recognized revenue.
+
+owns:
+  tables:
+    - canonical_ledger_entries
+    - canonical_invoices
+    - canonical_payments
+  agents:
+    - cash-forecaster
+  workflows:
+    - month-end-close
+  dashboards:
+    - finance-overview
+  schemas:
+    - ledger-entry
+    - invoice
+  playbooks:
+    - month-end-close
+
+consumes:
+  - interface: pipeline-state
+    from: company/domains/sales-marketing/sales
+    usage: forward-looking bookings used by the cash-forecaster
+  - interface: workforce-state
+    from: company/domains/finance-ops/people
+    usage: payroll commitments factor into the cash forecast
+
+exposes:
+  - interface: ledger-summary
+    stability: experimental
+    description: P&L, cash, runway summary consumed by the finance-ops executive
+  - interface: invoice-stream
+    stability: experimental
+    description: Stream of canonical invoice state transitions
+
+agents:
+  - name: cash-forecaster
+    purpose: Produce a rolling 13-week cash forecast from canonical ledger and pipeline state.
+    runtime: scheduled-job
+    schedule: "0 7 * * *"
+    cadence: daily
+    autonomy: autonomous
+    outputs:
+      - cash-forecast
+
+invariants:
+  - All ledger writes pass through a dry-run before live mutation.
+  - Month-end close is gated by an explicit human approval; no schedule-only path.
+  - No autonomous writeback to external accounting systems.
+  - Canonical IDs for invoices and payments are permanent; merges produce tombstones.
+
+contacts:
+  - role: accountable
+    person: cfo
+  - role: operations
+    person: finance-lead
+
+links:
+  dashboard: ../../../dashboards/finance-overview.yaml
+  playbook: ./playbooks/month-end-close.md

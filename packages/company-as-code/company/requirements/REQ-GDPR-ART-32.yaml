@@ -1,0 +1,23 @@
+apiVersion: company-as-code/v1alpha1
+kind: Requirement
+
+id: REQ-GDPR-ART-32
+framework: gdpr
+clause: Art. 32(1)
+title: Technical measures appropriate to the risk of processing
+statement: >
+  The company maintains technical measures proportionate to the risk its
+  processing creates, including protection of credentials, timely handling of
+  known vulnerabilities in dependencies, and a record of processing activity
+  that survives the systems that produced it.
+
+owner:
+  kind: person
+  id: cfo
+
+status: in-scope
+severity: high
+
+references:
+  - docs/standards/security.md
+  - company/policies/data-retention.md

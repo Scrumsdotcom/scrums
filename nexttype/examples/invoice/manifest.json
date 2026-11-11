@@ -1,0 +1,10 @@
+{
+  "format": "nt-manifest/1",
+  "context": [
+    { "name": "n", "type": "N" },
+    { "name": "xs", "type": "V Z n" }
+  ],
+  "contracts": {
+    "c0": "(sig t Z (= t (sum xs)))"
+  }
+}

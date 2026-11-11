@@ -1,0 +1,23 @@
+name: "NextType: Compiler or runtime defect"
+description: Report a reproducible mismatch against a fixed contract.
+labels: [nexttype]
+body:
+  - type: textarea
+    id: contract
+    attributes:
+      label: Contract and expected behavior
+      description: Include the requirement, capability ID, and verification profile.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal synthetic reproducer
+      description: Include versions, artifact identities, actual behavior, and reproduction steps. Do not include secrets.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and affected boundary
+      description: Separate core proof, generated code, runtime adapters, and acceptance policy.

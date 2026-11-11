@@ -1,0 +1,65 @@
+# Dashboard: executive-overview
+#
+# Referenced from:
+# - company/executive/ceo/manifest.yaml (owns.dashboards)
+
+apiVersion: company-as-code/v1alpha1
+kind: Dashboard
+name: executive-overview
+
+owner:
+  module: company/executive/ceo
+
+purpose: >
+  Roll-up of the three domain executives' state. Single view for the CEO
+  and leadership team. Read-only. No autonomous external writes feed it.
+
+audience:
+  - ceo
+  - cfo
+  - cto
+  - cro
+
+refresh: hourly
+
+panels:
+  - id: finance-rollup
+    title: Finance & Ops
+    type: composite
+    source: interfaces/company/executive/finance-ops:finance-rollup
+    elements:
+      - cash-position
+      - runway
+      - close-on-time
+
+  - id: product-rollup
+    title: Product & Operations
+    type: composite
+    source: interfaces/company/executive/product-operations:product-rollup
+    elements:
+      - deploy-frequency
+      - deploy-failure-rate
+      - open-sev-1-incidents
+
+  - id: gtm-rollup
+    title: Sales & Marketing
+    type: composite
+    source: interfaces/company/executive/sales-marketing:gtm-rollup
+    elements:
+      - pipeline-coverage
+      - cac-payback
+      - retention
+
+  - id: okr-status
+    title: OKR status
+    type: list
+    source: goals/by-status
+
+  - id: weekly-brief
+    title: Weekly executive brief
+    type: markdown
+    source: agents/ceo-strategist/latest
+
+invariants:
+  - This dashboard never triggers an external write. It is read-only.
+  - All panels resolve through declared executive-level interfaces; no panel reads directly from a domain module's internal tables.

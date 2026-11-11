@@ -1,0 +1,39 @@
+apiVersion: company-as-code/v1alpha1
+kind: Control
+
+id: CTRL-PRODUCTION-CHANGE-GATE
+title: Production changes pass preflight, a dry-run, and a named approver
+description: >
+  The production-deploy workflow runs pre-flight-checks, then a dry-run of
+  deploy-to-prod, then a human approval recorded against a canonical Person
+  ID, before any live promotion. The promoted revision is read back and
+  compared to intent.
+
+implements:
+  - REQ-SOC2-CC8-1
+
+owner:
+  kind: module
+  id: company/domains/product-operations/platform
+
+appliesTo:
+  - company/domains/product-operations/platform
+
+verification:
+  method: automated
+  surface: runtime-host
+  check: company/domains/product-operations/platform/workflows/production-deploy.yaml
+  frequency: on-change
+  failureMode: Halts the deploy and emits platform.deploy_blocked with the blocking reason.
+
+evidence:
+  - source: audit-log
+    reference: audit.action = deploy-to-prod
+    retention: P7Y
+  - source: dashboard
+    reference: deploy-frequency
+    retention: P90D
+
+severity: high
+status: operating
+lastVerified: 2026-08-16

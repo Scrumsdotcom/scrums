@@ -1,0 +1,35 @@
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+name: people
+domain: finance-ops
+parent: domains/finance-ops
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Canonical workforce state: who is engaged, under what arrangement, at what
+  cost, and with what access. Three modules read from here, so the module
+  exists to hold that contract even before it holds automation.
+
+owns:
+  tables:
+    - canonical_engagements
+  schemas:
+    - engagement
+
+consumes: []
+
+exposes:
+  - interface: workforce-state
+    stability: experimental
+    description: >
+      Headcount, engagement type, start and end dates, and payroll commitment
+      by period. Consumed by finance (cash forecasting), platform (identity
+      revocation on offboarding), and the finance-ops executive roll-up.
+
+invariants:
+  - Engagement records are never hard-deleted; offboarding sets an end date and a tombstone.
+  - Compensation figures are read on demand from the payroll system of record, never mirrored into the coordination layer.
+
+contacts:
+  - role: accountable
+    person: cfo

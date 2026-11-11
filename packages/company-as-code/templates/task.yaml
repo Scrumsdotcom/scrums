@@ -1,0 +1,46 @@
+# Task template.
+# Place at <module>/tasks/<id>.yaml or /company/tasks/<id>.yaml.
+# Schema: /schemas/task.schema.json
+apiVersion: company-as-code/v1alpha1
+kind: Task
+
+# Canonical ID: TASK-<MODULE>-<seq>
+id: TASK-EXAMPLE-0001
+title: Short, imperative task title.
+description: >
+  Body of the task. Inputs, outputs, definition of done.
+
+module: company/domains/finance-ops/finance
+
+# backlog | planned | active | blocked | review | completed | archived | failed
+state: backlog
+
+owner:
+  kind: person     # person | agent | team
+  id: TBD
+
+priority: p2       # p0 | p1 | p2 | p3
+# dueAt: 2026-06-01T00:00:00Z
+
+# sla:
+#   respondWithin: PT4H
+#   resolveWithin: P3D
+
+dependencies: []
+subtasks: []
+
+# escalation:
+#   after: PT24H
+#   to: people:on-call
+
+# automation:
+#   workflow: example-workflow
+#   agent: example-agent
+#   trigger: human
+
+approvals: []
+labels: []
+
+createdAt: 2026-05-12T00:00:00Z
+updatedAt: 2026-05-12T00:00:00Z
+history: []

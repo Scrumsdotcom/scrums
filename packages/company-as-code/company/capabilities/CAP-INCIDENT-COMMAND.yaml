@@ -1,0 +1,42 @@
+apiVersion: company-as-code/v1alpha1
+kind: Capability
+
+id: CAP-INCIDENT-COMMAND
+name: incident-command
+description: >
+  Someone can take command of an incident: declare severity, hold the timeline,
+  decide what gets rolled back, and say when it is over. This is the capability
+  a company most often discovers it lacks at the worst possible moment.
+
+domain: cross-domain
+criticality: critical
+
+primaryOwner:
+  kind: role
+  id: on-call-platform
+  delivers: full
+
+fallback:
+  - kind: role
+    id: platform-lead
+    delivers: full
+    note: Named in the escalation policy as the first fallback for on-call-platform.
+  - kind: role
+    id: finance-lead
+    delivers: reduced
+    note: >
+      Can command a finance-domain incident end to end and can hold the line on
+      a platform incident, but will not authorise a production rollback.
+
+finalFallback:
+  kind: person
+  id: cto
+  delivers: full
+
+sla: Incident commander assigned within the severity's declared window.
+
+requires:
+  - CAP-PRODUCTION-DEPLOY
+
+measuredBy:
+  - METRIC-RUNTIME-MTTR

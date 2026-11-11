@@ -1,0 +1,138 @@
+---
+title: "Functions and effects"
+description: "Total functions, explicit effect rows, handlers, capabilities, and the foreign function boundary in the NextType design."
+---
+
+> **Status: Designed (pure core and effect model), Planned (effect vocabulary and syntax).**
+> The language plan fixes a pure core with explicit effects (sections 4 and 7).
+> The concrete effect vocabulary and handler syntax are not fixed.
+> No evaluator exists.
+
+## Functions
+
+| Rule | Status |
+| --- | --- |
+| Functions are named and total, with explicit input and result types. | Designed |
+| A result type can depend on an input value (`pi`). | Designed |
+| General recursion needs termination evidence before it enters the accepted core. | Designed |
+| Recursion starts with structural folds and trusted recursors. | Designed |
+| Evaluation order, closures, partial application, and arity are defined by the formal model. | Planned (C06) |
+| Partial operations return `Result` or require evidence that rules out failure. | Designed |
+
+NTΔ forms:
+
+| Form | Meaning |
+| --- | --- |
+| `(pi x A B)` | The type of functions from `x : A` to `B`, where `B` may mention `x`. |
+| `(lam x b)` | A function with parameter `x` and body `b`. |
+| `(app f a)` | Apply `f` to `a`. |
+| `(f a b)` | Application written by juxtaposition, as in `(sum xs)` and `(step i r)`. |
+
+The examples use juxtaposition, such as `(zip xs ys)`.
+The exact argument order of `pi` and `lam`, and when `app` is required, are **open questions**.
+
+Readable view:
+
+```typescript
+function head<A, n>(v: Vec<A, n + 1>): A { … }
+```
+
+The signature is a dependent function type.
+The generic parameters `<A, n>` bind earlier arguments that later types mention.
+
+## Pattern matching
+
+`case` performs indexed pattern elimination.
+
+```text
+f1 (case v (cons (x _) x))
+```
+
+```typescript
+switch (v) {
+  case cons(x, _): return x;
+}
+```
+
+Rules:
+
+- Matches are exhaustive. Cases that the index rules out are omitted, not written. (Designed, C09.)
+- The checker reconstructs the elimination motive. (Designed.)
+- `_` binds an unused field. It is never a proof hole. (Designed.)
+- Nested dependent patterns preserve types. (Planned, C09.)
+
+## Pure core and effects
+
+Pure functions compute values and effect *requests*.
+Handlers outside the pure evaluator perform the effects.
+
+```text
+EffectRequest := operationId + checkedArguments + capabilityReference
+```
+
+| Rule | Status |
+| --- | --- |
+| Handlers perform network, file, database, model, and scheduler operations. | Designed |
+| An effect result returns as an explicit success or failure value. | Designed |
+| The next pure transition consumes that result. | Designed |
+| Recorded inputs and effect results allow deterministic replay. Replay does not repeat real external actions. | Designed |
+| No undeclared effect enters a pure term or an accepted execution. | Planned (C19) |
+| A handler does not establish arbitrary postconditions. | Designed |
+| The initial effect vocabulary is closed. Rows compose. | Planned (C19) |
+
+## Effect rows
+
+The draft manifest projection declares an operation with an effect row:
+
+```text
+op0 createDraft   !{store.write}
+op1 invoiceById   !{store.read}
+op2 requestPay    !{store.write,pay.sim}
+```
+
+- `!{…}` lists the effects the operation may perform.
+- `store.read`, `store.write`, and `pay.sim` are example effect names from the invoice design. `pay.sim` is a simulated payment.
+- A contract change may not add effects. The rule is `E' subseteq E`. See [Contracts and obligations](/nexttype/reference/contracts).
+
+The complete effect-name vocabulary is **planned**.
+The readable-view syntax for effects is an **open question**.
+
+## Capabilities
+
+A capability describes an operation, a resource scope, and a permitted limit (Designed, section 7.2).
+
+- The runtime creates the authoritative capability.
+- An agent receives a reference. It cannot mint broader permissions.
+- The handler checks the capability again when the effect executes.
+- A type-level limit alone cannot stop many small actions from exceeding an aggregate budget. The handler enforces aggregate limits atomically.
+
+For payments, the plan lists separate limits: amount per action, aggregate amount per period, currency, tenant and account, expiry and revocation, and permitted invoice states.
+
+## Provenance and validation
+
+- Provenance, such as `user-input`, `model-output`, and `external-service`, is tracked separately from structural validity.
+- A decoder can establish a record shape. It does not establish permission to use the contents.
+- There is no universal `sanitize()`. Validation is specific to a sink or a domain predicate.
+- Queries take checked parameters, not concatenated text. Shell adapters take explicit executable and argument fields.
+
+## Foreign functions
+
+Every host function has a signature, an effect set, a decoder, and a trust annotation (Designed, section 7.4).
+
+- A TypeScript wrapper cannot create proof evidence by casting a value.
+- External data re-enters through validated constructors.
+- An adapter may provide an assumption only when the acceptance profile permits it.
+- The registry records the host implementation digest. A changed adapter invalidates its execution evidence.
+
+## Errors, time, and concurrency
+
+| Area | Design | Status |
+| --- | --- | --- |
+| Errors | Typed result values. Programmer fault, cancellation, unsupported feature, and resource exhaustion stay distinct. | Planned (C22) |
+| Time | Injected clocks. Wall time and monotonic time are separate. | Planned (C24) |
+| Randomness | Injected generators with a seed and entropy policy. | Planned (C24) |
+| Concurrency | Structured tasks, explicit cancellation, bounded queues, and ordering rules. | Planned (C23) |
+| Mutation | Scoped mutable regions behind effects. No shared mutable pointers in v1. | Planned (C21) |
+| Resources | Explicit handles with an affine protocol and deterministic close. | Planned (C20) |
+
+The optimizer never treats I/O, clock reads, randomness, allocation failure, or model calls as pure.

@@ -1,0 +1,16 @@
+# What this repository is, for the tools that need to know.
+#
+# role: upstream is the Company-as-Code project itself. role: fork is a
+# company running on it. See docs/standards/framework-boundary.md.
+#
+# In a fork, run `cac init --name "<Company>" --namespace <prefix> --write`
+# instead of editing this by hand.
+
+apiVersion: company-as-code/v1alpha1
+kind: Instance
+name: Company-as-Code
+role: upstream
+namespace: cac
+framework:
+  version: 0.7.1
+  upstream: https://github.com/gez-scrumsdotcom/Company-as-Code

@@ -1,0 +1,88 @@
+# Runtime autonomy policy.
+#
+# The runtime enforces the autonomy classifications declared on agents and
+# workflows. This file is the operational expression of that enforcement,
+# how the runtime resolves an autonomy decision at invocation time.
+
+apiVersion: company-as-code/v1alpha1
+kind: AutonomyPolicy
+version: 1
+
+classes:
+  autonomous:
+    description: Fires without human intervention. Read-only syncs, validation, registry generation, drift detection, reporting roll-ups.
+    schedulingAllowed: true
+    requiresHumanApproval: false
+    permittedActions:
+      - read
+      - emit-event
+      - write-audit
+      - regenerate
+    forbiddenActions:
+      - write-external
+
+  human-gated:
+    description: Requires explicit human action to fire. Writes to external systems, financial actions, communications, irreversible changes.
+    schedulingAllowed: false   # the schema-level invariant, schedules fail validation
+    requiresHumanApproval: true
+    permittedActions:
+      - read
+      - emit-event
+      - write-audit
+      - propose
+      - dry-run
+      - live-write
+    forbiddenActions: []
+    notes: |
+      The runtime refuses to advance past a human-approval step until an
+      operator with a canonical Person ID records an approval audit row.
+      The approval is captured under the same correlation ID as the dry-run
+      it follows, making the sequence queryable.
+
+  escalated:
+    description: Fires autonomously up to a threshold, then escalates. Retries within an error budget, event-driven incident detectors, dunning sequences.
+    schedulingAllowed: true
+    requiresHumanApproval: false
+    requiresEscalationBlock: true   # cross-document validator enforces this
+    permittedActions:
+      - read
+      - emit-event
+      - write-audit
+      - bounded-retry
+      - escalate
+    forbiddenActions:
+      - unbounded-retry
+      - write-external-after-threshold-breach
+
+# Promotion path.
+# When an agent has accumulated reliability evidence on a `human-gated` path,
+# it may be promoted to `autonomous` via an ADR per
+# /company/policies/hitl-external-writes.md.
+#
+# Shadow Mode reads this `requires` block as its promotion bar. Comparison-
+# expression values (">= N") are auto-checked against the agent's accumulated
+# reliability evidence; `required` values are manual gates the promotion ADR
+# clears. See /docs/shadow-mode.md.
+promotion:
+  fromHumanGatedToAutonomous:
+    requires:
+      successfulSyncVerificationInvocations: ">= 3"
+      shadowModeDays: ">= 14"
+      shadowAgreementRate: ">= 0.95"
+      acceptedADR: required
+      manifestUpdate: required
+  fromAutonomousToHumanGated:
+    requires:
+      manifestUpdate: required
+    notes: Demoting is free; promoting is gated.
+
+# Sanity checks the runtime applies before any invocation.
+preflight:
+  - check: declared-autonomy-matches-runtime-classification
+    onFailure: refuse
+  - check: escalated-agents-carry-escalation-block
+    onFailure: refuse
+  - check: human-gated-workflows-have-no-scheduled-trigger
+    onFailure: refuse
+  - check: live-write-step-is-preceded-by-dry-run-step
+    onFailure: warn   # not all live-writes need dry-run preceded directly; see workflow spec

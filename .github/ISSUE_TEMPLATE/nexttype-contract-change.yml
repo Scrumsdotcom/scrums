@@ -1,0 +1,25 @@
+name: "NextType: Contract change requiring owner review"
+description: Request a changed guarantee, authority, assumption, or acceptance rule.
+labels: [nexttype]
+body:
+  - type: textarea
+    id: roots
+    attributes:
+      label: Old and proposed contract roots
+      description: Identify exact artifacts and the requirement owner. This issue does not grant approval.
+    validations:
+      required: true
+  - type: textarea
+    id: difference
+    attributes:
+      label: Semantic difference
+      description: Show changed input domains, guarantees, effects, assumptions, budgets, and dependent contracts.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Examples, counterexamples, and compatibility
+      description: Preserve the old baseline and explain why the changed requirement is necessary.
+    validations:
+      required: true

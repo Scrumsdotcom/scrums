@@ -1,0 +1,36 @@
+{
+  "name": "@company-as-code/cli",
+  "version": "0.7.1",
+  "private": true,
+  "description": "Reference CLI for Company-as-Code: validation, deterministic generators, drift gate.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "validate": "tsx src/index.ts validate",
+    "generate": "tsx src/index.ts generate",
+    "generate:check": "tsx src/index.ts generate --check",
+    "doctor": "tsx src/index.ts doctor",
+    "hub": "tsx src/index.ts hub",
+    "boundary": "tsx src/index.ts boundary check",
+    "nl2m": "tsx src/index.ts nl2m",
+    "test": "vitest run",
+    "test:e2e": "tsx src/index.ts validate && tsx src/index.ts generate --check"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "fast-glob": "^3.3.2",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

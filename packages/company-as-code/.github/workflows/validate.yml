@@ -1,0 +1,65 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # better-sqlite3 is a native addon, exercise every supported major.
+        # Node 20 left maintenance in April 2026; the floor is 22.
+        node-version: ["22", "24"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1   # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1   # v7.1.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: |
+            cli/package-lock.json
+            runtime/package-lock.json
+      - name: Install CLI
+        working-directory: cli
+        run: npm ci
+      - name: Typecheck (CLI)
+        working-directory: cli
+        run: npm run typecheck
+      - name: Validate manifests, agents, workflows, primitives
+        working-directory: cli
+        run: npm run validate
+      - name: Framework/instance boundary
+        working-directory: cli
+        # Upstream: every path is classified and framework.lock.json is current.
+        # Fork: no framework file was changed without being declared in cac.yaml.
+        run: npm run boundary
+      - name: Unit tests (CLI)
+        working-directory: cli
+        run: npm test
+      - name: Standing health inspection
+        working-directory: cli
+        # Findings fail the job; warnings report and pass. Forks wanting the
+        # tighter gate add --strict here.
+        run: npm run doctor
+
+      - name: Install runtime host
+        working-directory: runtime
+        run: npm ci
+      - name: Typecheck (runtime host)
+        working-directory: runtime
+        run: npm run typecheck
+      - name: Unit tests (runtime host)
+        working-directory: runtime
+        run: npm test
+      - name: Runtime host smoke, load the manifest graph
+        working-directory: runtime
+        run: npx tsx src/index.ts load --repo ..

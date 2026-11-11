@@ -1,0 +1,45 @@
+apiVersion: company-as-code/v1alpha1
+kind: Metric
+
+id: METRIC-FIN-CLOSE-ON-TIME
+name: Monthly close on-time rate
+description: >
+  Percent of monthly closes completed within 2 business days of period end,
+  measured over a rolling 90-day window.
+
+owner:
+  module: company/domains/finance-ops/finance
+  person: finance-lead
+
+type: percentage
+unit: "%"
+
+formula: >
+  (closes completed within 2 business days of period end / total closes)
+  over the last 90 days.
+
+lineage:
+  - source: company/domains/finance-ops/finance
+    field: period_closed_at
+    transformation: count where (period_closed_at - period_end_business_days) <= 2
+
+freshness:
+  expectedLag: P1D
+  maxLag: P7D
+
+thresholds:
+  - level: warning
+    comparator: lt
+    value: 95
+  - level: critical
+    comparator: lt
+    value: 80
+
+dashboards:
+  - finance-overview
+alerts:
+  - finance-close-sla-breach
+
+history:
+  retention: P2Y
+  grain: month

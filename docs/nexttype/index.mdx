@@ -1,0 +1,51 @@
+---
+title: "NextType"
+description: "TypeScript that proves it. An experimental language where dependent types are the spec and agents write the code."
+---
+
+**TypeScript that proves it.**
+Agents write the code.
+The compiler checks the contract.
+Humans review the spec.
+
+> **Status: M0 design preview.**
+> The compiler is planned.
+> Nothing is measured.
+> See [Status](/nexttype/status) for what exists today.
+
+## What NextType is
+
+NextType is an experimental execution language for agents.
+It has three core ideas:
+
+- **TypeScript lineage.** People review a readable, TypeScript-style view of each contract. Agents write a compact form of the same contract. See [One contract, two views](/nexttype/language/two-views).
+- **Dependent types are the spec.** A type can refer to a value. So a type can state "the total equals the sum of the lines". The compiler checks that the code satisfies it. See [Contracts](/nexttype/language/contracts).
+- **Tokens per accepted change.** The main metric is the total model tokens across all attempts, divided by the changes that pass acceptance. Failed attempts count. See [Benchmark design](/nexttype/benchmarks).
+
+Programs are typed compiler graphs.
+Agents send compact patches and receive explicit obligations.
+People approve intent and assumptions.
+An independent checker checks each implementation against the fixed contract.
+
+## Safety warning
+
+NextType is experimental.
+Expect breaking changes, rough edges, and security issues.
+Run it in isolated workspaces, not against production systems or sensitive data.
+
+## Where to go next
+
+| Page | Read it to |
+| --- | --- |
+| [Status](/nexttype/status) | See what exists, what is planned, and what is unmeasured. |
+| [Language overview](/nexttype/language/overview) | Learn the compiler path from NTΔ to runtime targets. |
+| [Contracts](/nexttype/language/contracts) | See how a dependent type states a requirement. |
+| [One contract, two views](/nexttype/language/two-views) | Compare the readable view with the NTΔ agent form. |
+| [Language reference](/nexttype/reference) | Look up the precise rules: types, contracts, effects, NTΔ frames, diagnostics, the protocol, and the grammar. |
+| [Glossary](/nexttype/reference/glossary) | Look up NTΔ, NT0, Γ, obligation, and other terms. |
+| [The nt preview CLI](/nexttype/tools/cli) | Install `nt`, read the guide, and check an obligation ledger. It has no compiler. |
+| [Examples](/nexttype/examples) | Read the invoice, vector, and state examples. |
+| [Why NextType](/nexttype/research/why-nexttype) | Understand the design position. |
+| [Benchmark design](/nexttype/benchmarks) | See how the project plans to measure tokens, time, and defects. |
+| [Foundational paper](https://www.scrums.com/files/nexttype/nexttype-foundation.pdf) | Read the one-page concept note ([PDF](https://www.scrums.com/files/nexttype/nexttype-foundation.pdf), [HTML](https://www.scrums.com/files/nexttype/nexttype-foundation.html)). |
+| [Contributing](https://github.com/Scrumsdotcom/scrums/blob/main/CONTRIBUTING.md#nexttype-nexttype) | Find how to help. |

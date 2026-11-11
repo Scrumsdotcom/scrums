@@ -37,6 +37,9 @@ SEOP is the architecture of the Scrums.com platform: one control plane for AI ag
 |---|---|
 | [`docs/`](docs) | Source of the Scrums.com documentation at [scrums.com/docs](https://www.scrums.com/docs), built with [Mintlify](https://mintlify.com). |
 | [`packages/sorted-ui/`](packages/sorted-ui) | Source of [`@scrums/sorted-ui`](https://www.npmjs.com/package/@scrums/sorted-ui), the Sorted UI React components and design tokens. |
+| [`nexttype/`](nexttype) | [NextType](nexttype), the experimental execution language for agents: the `ntc` reference checker, the specification, examples, the `nt` preview CLI and research. |
+| [`packages/company-as-code/`](packages/company-as-code) | [Company-as-Code](https://github.com/gez-scrumsdotcom/Company-as-Code), an open-source operating system for AI-native organizations: schemas, the reference CLI and the reference runtime host. Created and maintained by Gerald Neves. A pinned copy of the upstream release. |
+| [`ai-data-safety/`](ai-data-safety) | Guides for making data safe to send to AI models, starting with five open-source data sanitization tools for zero-data-retention LLMs. |
 
 ## Documentation
 
@@ -59,7 +62,7 @@ For changes to the platform, see the [changelog](https://www.scrums.com/docs/cha
 
 ## Contributing
 
-Read [`docs/AGENTS.md`](docs/AGENTS.md) before you change a page. It applies to people and to coding agents. To suggest a change, open an [issue](https://github.com/Scrumsdotcom/scrums/issues) or a pull request.
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md). Before you change a documentation page, also read [`docs/AGENTS.md`](docs/AGENTS.md). Both apply to people and to coding agents. To suggest a change, open an [issue](https://github.com/Scrumsdotcom/scrums/issues) or a pull request.
 
 ## Security
 

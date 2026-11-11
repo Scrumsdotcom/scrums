@@ -1,0 +1,128 @@
+# Dependabot version updates.
+#
+# The volume problem this configuration solves: an ungrouped ecosystem opens
+# one pull request per dependency, and three ecosystems on a weekly schedule
+# produced more than six pull requests a week. Roughly half were closed
+# without a merge, which means half the review attention was spent on noise.
+#
+# Three rules keep the volume low:
+#
+#   1. Group everything. Each ecosystem opens at most two pull requests: one
+#      for minor and patch updates, one for major updates. A major update
+#      needs real attention, so it never travels with routine bumps.
+#   2. Match the cadence to how fast the ecosystem actually moves. GitHub
+#      Actions are pinned by commit SHA and move slowly, so they update
+#      monthly.
+#   3. Wait before opening. A new release must sit on its registry for a few
+#      days first, so a version that is withdrawn or immediately patched never
+#      becomes a pull request. Security updates ignore the cooldown and open
+#      at once.
+#
+# Security updates are not affected by any of this. They are not grouped, they
+# do not wait, and they do not count against the open-pull-request limit.
+
+version: 2
+
+updates:
+  # ---------------------------------------------------------------------
+  # Reference TypeScript CLI
+  # ---------------------------------------------------------------------
+  - package-ecosystem: "npm"
+    directory: "/cli"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 2
+    labels:
+      - "dependencies"
+      - "cli"
+    commit-message:
+      prefix: "deps(cli)"
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+    groups:
+      cli-minor-and-patch:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      cli-major:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+
+  # ---------------------------------------------------------------------
+  # Reference runtime host
+  # ---------------------------------------------------------------------
+  - package-ecosystem: "npm"
+    directory: "/runtime"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 2
+    labels:
+      - "dependencies"
+      - "runtime"
+    commit-message:
+      prefix: "deps(runtime)"
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+    groups:
+      runtime-minor-and-patch:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      runtime-major:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+
+  # ---------------------------------------------------------------------
+  # GitHub Actions, the supply chain of the pipeline itself
+  #
+  # Every action reference is pinned by commit SHA, so an unreviewed tag can
+  # never change what runs. Monthly is the right cadence for that: the pin
+  # holds until someone reads the diff.
+  #
+  # The semver-specific cooldown keys do not apply to this ecosystem, so this
+  # entry sets a single default instead.
+  # ---------------------------------------------------------------------
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 2
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "deps(actions)"
+    cooldown:
+      default-days: 7
+    groups:
+      actions-minor-and-patch:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      actions-major:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "major"

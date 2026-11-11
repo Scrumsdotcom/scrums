@@ -1,0 +1,45 @@
+apiVersion: company-as-code/v1alpha1
+kind: Agent
+
+name: identity-drift-detector
+module: company/domains/product-operations/platform
+
+purpose: >
+  Compare canonical identity state against the external IdP every hour and
+  emit a typed drift event when divergence is detected.
+
+runtime: scheduled-job
+schedule: "0 * * * *"
+cadence: hourly
+autonomy: autonomous
+
+inputs:
+  - name: canonical-identities
+    type: canonical-identity
+    from: company/domains/product-operations/platform:platform-state
+
+outputs:
+  - name: identity-drift-event
+    type: identity-drift
+    emitsEvent: platform.identity_drift_detected
+
+tools:
+  - canonical-identity-reader
+  - idp-reader
+
+memoryScope: company/memory/identity-drift-detector
+
+observability:
+  dashboards:
+    - platform-overview
+  alerts:
+    - identity-drift-spike
+  auditTopic: identity-drift-detector
+
+invariants:
+  - Read-only against the external IdP.
+  - Emits one event per detected drift; duplicates are deduped within a 24h window.
+
+contacts:
+  - role: accountable
+    person: platform-lead

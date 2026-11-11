@@ -1,0 +1,60 @@
+apiVersion: company-as-code/v1alpha1
+kind: Workflow
+
+name: month-end-close
+module: company/domains/finance-ops/finance
+
+purpose: >
+  Run the monthly close: baseline the ledger, dry-run the period-close journal,
+  confirm counts, capture an explicit human approval, write live, re-verify.
+
+trigger:
+  kind: human
+  actor: people:finance-lead
+
+hitl: true
+
+inputs:
+  - name: period
+    type: month
+    required: true
+
+outputs:
+  - name: close-summary
+    type: close-summary
+
+steps:
+  - id: baseline
+    kind: agent
+    agent: cash-forecaster
+
+  - id: dry-run-close
+    kind: dry-run
+    automation: post-period-close
+    dryRunRequired: true
+
+  - id: confirm-counts
+    kind: human-approval
+    approver: people:finance-lead
+    hitl: true
+
+  - id: live-close
+    kind: live-write
+    automation: post-period-close
+    onFailure: escalate
+    retries: 0
+    emitsEvent: finance.period_closed
+
+  - id: re-verify
+    kind: agent
+    agent: cash-forecaster
+
+invariants:
+  - Live-close fires only after a human-approval step. Schedules are not permitted.
+  - First live-close in any new period requires two dry-runs.
+
+observability:
+  dashboards:
+    - finance-overview
+  metrics:
+    - METRIC-FIN-CLOSE-ON-TIME

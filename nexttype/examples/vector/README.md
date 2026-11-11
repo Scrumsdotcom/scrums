@@ -1,0 +1,57 @@
+---
+title: Vector
+description: A head function whose type rules out an empty vector.
+order: 3
+---
+
+# Vector
+
+> **Checked.** The NTΔ form below is [`head.ntd`](head.ntd), checked in CI by `ntc` against [`manifest.json`](manifest.json).
+> The readable view is illustrative: the readable view has no parser yet.
+
+**Rule:** the vector contains at least one element.
+
+## Readable view
+
+`head.nt` — what a human reviews:
+
+```typescript
+function head<A, n>(v: Vec<A, n + 1>): A {
+  switch (v) {
+    case cons(x, _): return x;
+  }
+}
+```
+
+## NTΔ form
+
+`head.ntd` — what an agent writes, under the context `Γ = {A:U0, n:N, v:V A (S n)}`:
+
+```text
+c1 A
+f1 (case v (cons (x _) x))
+put f1 c1 @b0
+ck f1 @a0
+```
+
+## Check it
+
+```sh
+ntc check --manifest examples/vector/manifest.json examples/vector/head.ntd
+```
+
+## What the contract guarantees
+
+- The index `S n` (in the readable view, `n + 1`) rules out the empty constructor.
+- The match needs no empty case. The checker reconstructs the elimination motive and confirms that the branch returns `A`.
+- The `_` token is an unused field. It is never a proof hole.
+
+## What it does not guarantee
+
+- An empty vector from outside must fail at the runtime decoder, before it reaches this function.
+
+## Fixture check
+
+The website playground checks one sample length.
+A length of `3` passes and `0` fails.
+This is a browser fixture, not a proof for all inputs.

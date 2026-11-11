@@ -1,0 +1,33 @@
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+name: deployment
+domain: product-operations
+parent: domains/product-operations/platform
+version: 0.1.0
+lifecycle: hardening
+purpose: >
+  Production deploy surface. Owns the production-deploy workflow and the
+  deploy-watchdog agent. Every production deploy is HITL.
+
+owns:
+  workflows:
+    - production-deploy
+  agents:
+    - deploy-watchdog
+
+consumes:
+  - interface: platform-state
+    from: company/domains/product-operations/platform
+
+exposes:
+  - interface: deploy-state
+    stability: experimental
+    description: Deploy frequency and recent deploy receipts
+
+invariants:
+  - No scheduled trigger for production deploys.
+  - Every deploy emits an audit record, even dry-runs.
+
+contacts:
+  - role: accountable
+    person: platform-lead

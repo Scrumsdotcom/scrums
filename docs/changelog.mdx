@@ -1,19 +1,65 @@
 ---
 title: "Changelog"
-description: "Review shipped changes to the Scrums.com platform, APIs, integrations, and documentation."
+description: "Shipped changes to the Scrums.com platform, APIs, integrations and documentation."
+rss: true
 ---
 
-## Release history
+<Tip>
+Have a feature request? Email your product manager at [support@scrums.com](mailto:support@scrums.com).
+</Tip>
 
-The changelog is the documentation source for shipped changes. Planned or in-development work is labeled explicitly and is not a commitment.
+This page records shipped changes. For incidents and availability,
+see [Scrums.com Status](https://status.scrums.com).
 
-<CardGroup cols={2}>
-  <Card title="Summer 2026" icon="sun" href="/changelog/2026-summer">
-    Review the Summer 2026 release record.
-  </Card>
-  <Card title="Winter 2025" icon="snowflake" href="/changelog/2025-winter">
-    Review the Winter 2025 release record.
-  </Card>
-</CardGroup>
+<Update label="2026-10 · MCP Gateway (beta)" description="Released October 2026" tags={["Feature", "Beta"]}>
+  The MCP Gateway is available in beta. It is one Model Context Protocol control plane that governs how people and AI agents discover and call tools. See [MCP Gateway](/platform/mcp-gateway).
+</Update>
 
-For operational availability and incidents, use [Scrums.com Status](https://status.scrums.com).
+<Update label="2026-10 · Software Factory" description="Released October 2026" tags={["Feature"]}>
+  Scrums.com launched The Software Factory: AI-native development services from senior engineers and AI agents. See [AI Development](/ai-development/overview) for how Scrums.com delivers defined engineering outcomes.
+</Update>
+
+<Update label="2026-10 · SEOP notification system" description="Released October 2026" tags={["Feature"]}>
+  SEOP now has a notification system. Scrums.com sends in-app and email notifications for key delivery events, including sprint completions, blockers raised, AI agent actions and billing updates. You manage your preferences in **Settings > Notifications**. See [Notifications](/getting-started/workspace-ui#notifications).
+</Update>
+
+<Update label="2026-10 · Anthropic-certified and Databricks-certified engineers" description="Released October 2026" tags={["Talent"]}>
+  The talent graph now includes engineers with Anthropic and Databricks certifications. See [Engineers](/hire/engineers).
+</Update>
+
+<Update label="2026-10 · Public Scrums.com repository" description="Released October 2026" tags={["Integration"]}>
+  The public Scrums.com repository is available at [github.com/Scrumsdotcom/scrums](https://github.com/Scrumsdotcom/scrums).
+</Update>
+
+<Update label="2026-10 · Blitz skills repository for customers" description="Released October 2026" tags={["Integration"]}>
+  Customers get access to the Blitz skills repository. It is a private repository, available to customers only.
+</Update>
+
+<Update label="2026-10 · Mission Control on the status page" description="Released October 2026" tags={["Improvement"]}>
+  [Scrums.com Status](https://status.scrums.com) now reports Mission Control availability.
+</Update>
+
+<Update label="2026-10 · New Scrums.com website" description="Released October 2026" tags={["Website"]}>
+  The new [Scrums.com website](https://www.scrums.com) is live.
+</Update>
+
+## Earlier changes
+
+<Update label="Multi-workspace support" description="Released 2026" tags={["Feature"]}>
+  An organization can run multiple workspaces for business units, product areas or engineering tribes. Each workspace has its own team, Service Lines, integrations and budget visibility. Billing rolls up to the organization. See [Workspaces](/api-reference/core/workspaces#multiple-workspaces-per-organization).
+</Update>
+
+<Update label="2025-12 · Team observability dashboard" description="Released December 2025" tags={["Improvement"]}>
+  Team Observability uses DORA, workflow, quality and capacity signals. Cycle time is split into coding, review and deployment stages. Blocked work shows work that stays idle beyond your configured threshold. See [Team Observability](/platform/team-observability).
+</Update>
+
+<Update label="2025-12 · Governance policy controls" description="Released December 2025" tags={["Feature"]}>
+  Workspace Admins configure delivery governance controls in **Administration → Governance**:
+
+  - Minimum Definition of Done criteria per project type
+  - Required reviewer roles before ticket status advancement
+  - Automated escalation rules for blocked tickets that exceed a configurable threshold
+  - Full audit log of policy changes and enforcement events (Enterprise)
+
+  See [Delivery Governance](/governance/governance).
+</Update>

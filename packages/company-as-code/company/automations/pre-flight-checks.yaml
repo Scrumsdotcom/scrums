@@ -1,0 +1,51 @@
+# Automation: pre-flight-checks
+#
+# Referenced from:
+# - company/domains/product-operations/platform/workflows/production-deploy.yaml
+#   (step pre-flight)
+
+apiVersion: company-as-code/v1alpha1
+kind: Automation
+name: pre-flight-checks
+
+owner:
+  module: company/domains/product-operations/platform
+
+purpose: >
+  Gate a build candidate before anyone is asked to approve it: confirm the
+  build exists, its tests passed, its migrations are reversible, and the
+  target environment is not already mid-deploy. Read-only by construction.
+
+runtime: scheduled-job   # invoked by the production-deploy workflow, not by its own schedule
+schedule: on-demand
+cadence: on-demand
+
+inputs:
+  - name: buildId
+    type: build-reference
+    required: true
+
+outputs:
+  - name: preflightReport
+    type: preflight-report
+    description: Per-check verdict with the evidence each verdict was drawn from.
+
+mutates: []
+
+invariants:
+  - "Read-only. The automation has no write path, so it needs no dryRun input."
+  - "A check that cannot reach its source reports unknown, never pass. An unreachable source is not evidence of health."
+  - "Every verdict names the source it was read from, so a failed deploy can be traced back to what preflight actually saw."
+
+failureModes:
+  - description: Build reference does not resolve.
+    behavior: Fail the step; emit `platform.deploy_blocked` with reason `unknown-build`.
+  - description: Target environment already has a deploy in flight.
+    behavior: Fail the step; emit `platform.deploy_blocked` with reason `concurrent-deploy`.
+  - description: A migration in the candidate has no declared reversal.
+    behavior: Fail the step; emit `platform.deploy_blocked` with reason `irreversible-migration`.
+
+observability:
+  auditTopic: pre-flight-checks
+  dashboards:
+    - deploy-frequency

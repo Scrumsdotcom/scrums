@@ -1,0 +1,60 @@
+apiVersion: company-as-code/v1alpha1
+kind: Workflow
+
+name: production-deploy
+module: company/domains/product-operations/platform
+
+purpose: >
+  Promote a build candidate to production. Always gated by a human approval;
+  the workflow refuses to schedule.
+
+trigger:
+  kind: human
+  actor: people:platform-lead
+
+hitl: true
+
+inputs:
+  - name: build-id
+    type: build-reference
+    required: true
+
+outputs:
+  - name: deploy-receipt
+    type: deploy-receipt
+
+steps:
+  - id: pre-flight
+    kind: automation
+    automation: pre-flight-checks
+
+  - id: dry-run-deploy
+    kind: dry-run
+    automation: deploy-to-prod
+    dryRunRequired: true
+
+  - id: approve
+    kind: human-approval
+    approver: people:platform-lead
+    hitl: true
+
+  - id: deploy
+    kind: live-write
+    automation: deploy-to-prod
+    onFailure: escalate
+    retries: 0
+    emitsEvent: platform.deploy_succeeded
+
+  - id: watch
+    kind: agent
+    agent: deploy-watchdog
+
+invariants:
+  - No scheduled trigger. Production deploys are always operator-initiated.
+  - dry-run-deploy must succeed before approve can fire.
+
+observability:
+  dashboards:
+    - deploy-frequency
+  metrics:
+    - METRIC-PLATFORM-DEPLOY-MTTR

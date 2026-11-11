@@ -1,0 +1,2 @@
+# cac:ignore, a payload shape, not a primitive
+type: object

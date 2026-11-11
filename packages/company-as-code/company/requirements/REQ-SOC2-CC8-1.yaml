@@ -1,0 +1,21 @@
+apiVersion: company-as-code/v1alpha1
+kind: Requirement
+
+id: REQ-SOC2-CC8-1
+framework: soc2
+clause: CC8.1
+title: Changes to production are authorised, tested, and traceable
+statement: >
+  A change reaching production carries a recorded authorisation, evidence that
+  it was checked before promotion, and a trail linking the running revision
+  back to the change that produced it.
+
+owner:
+  kind: person
+  id: cto
+
+appliesTo:
+  - company/domains/product-operations/platform
+
+status: in-scope
+severity: high

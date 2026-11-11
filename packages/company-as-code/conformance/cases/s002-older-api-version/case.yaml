@@ -1,0 +1,10 @@
+id: s002-older-api-version
+level: validate
+description: >
+  A document on an older document version than the implementation supports
+  must fail validation. Migrating it is a separate, explicit step.
+expect:
+  valid: false
+  failures:
+    - rule: schema
+      file: company/metrics/METRIC-LEDGER-CLOSE-DAYS.yaml

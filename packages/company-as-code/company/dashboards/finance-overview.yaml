@@ -1,0 +1,73 @@
+# Dashboard: finance-overview
+#
+# Referenced from:
+# - company/domains/finance-ops/finance/manifest.yaml (owns.dashboards)
+# - company/metrics/METRIC-FIN-CLOSE-ON-TIME.yaml (dashboards)
+# - company/domains/finance-ops/finance/agents/cash-forecaster.yaml (observability.dashboards)
+# - company/domains/finance-ops/finance/playbooks/month-end-close.md
+#
+# Schema status: illustrative. A `Dashboard` schema is on the roadmap.
+
+apiVersion: company-as-code/v1alpha1
+kind: Dashboard
+name: finance-overview
+
+owner:
+  module: company/domains/finance-ops/finance
+
+purpose: >
+  Single pane of glass for finance operations: cash position, runway,
+  monthly close status, and the cash-forecaster's most recent brief.
+
+audience:
+  - cfo
+  - finance-lead
+  - ceo
+
+refresh: realtime
+
+panels:
+  - id: cash-position
+    title: Cash position
+    type: stat
+    metric: external/balance_sheet/cash
+    annotation: |
+      Sourced from canonical_ledger_entries; refreshed daily after the cash-forecaster run.
+
+  - id: runway
+    title: Runway (weeks)
+    type: stat
+    metric: derived/runway_weeks
+    thresholds:
+      warning: { comparator: lt, value: 18 }
+      critical: { comparator: lt, value: 9 }
+
+  - id: thirteen-week-forecast
+    title: 13-week cash forecast
+    type: line
+    metric: forecast/cash_position_by_week
+    horizon: P13W
+
+  - id: close-on-time
+    title: Monthly close on-time rate
+    type: percentage
+    metric: METRIC-FIN-CLOSE-ON-TIME
+    thresholds:
+      warning: { comparator: lt, value: 95 }
+      critical: { comparator: lt, value: 80 }
+
+  - id: latest-brief
+    title: Latest cash brief
+    type: markdown
+    source: events/finance.cash_forecast_updated/latest
+
+alerts:
+  - id: cash-forecast-stale
+    description: Forecast hasn't refreshed in > 6h.
+    severity: sev-3
+    routing: on-call-finance
+
+  - id: finance-close-sla-breach
+    description: Monthly close on-time rate dropped below 95% on the rolling window.
+    severity: sev-3
+    routing: finance-lead

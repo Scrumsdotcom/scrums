@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/event-type-registry.schema.json",
+  "title": "Event Type Registry",
+  "description": "The enum-controlled registry of typed event names. One document for the company. Adding a new type requires a schema migration and an ADR.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "version", "events"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "EventTypeRegistry" },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Registry schema version. Bumped only via ADR + migration."
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "description", "emittingModule", "status"],
+        "properties": {
+          "type": {
+            "$ref": "#/$defs/eventType",
+            "description": "Dotted, lowercase + snake_case. Leading segment is the emitting domain or module."
+          },
+          "description": { "type": "string", "minLength": 8 },
+          "emittingModule": { "type": "string" },
+          "payloadSchema": {
+            "type": "string",
+            "description": "Optional repo-relative path to the JSON-Schema-flavoured payload definition."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["experimental", "stable", "deprecated"]
+          },
+          "deprecatedAt": { "type": "string", "format": "date" },
+          "removeAfter": { "type": "string", "format": "date" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "eventType": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(\\.[a-z][a-z0-9_]*)+$",
+      "description": "Dotted, lowercase + snake_case event type. Leading segment is the emitting domain or module. Kept byte-identical with event.schema.json#/$defs/eventType (enforced by test)."
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "company-as-code",
+  "version": "0.7.1",
+  "private": true,
+  "description": "Company-as-Code seed repository. Run the reference CLI from /cli; the reference runtime host from /runtime.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "install:cli": "npm --prefix cli install",
+    "install:runtime": "npm --prefix runtime install",
+    "validate": "npm --prefix cli run --silent validate",
+    "generate": "npm --prefix cli run --silent generate",
+    "generate:check": "npm --prefix cli run --silent generate:check",
+    "doctor": "npm --prefix cli run --silent doctor",
+    "boundary": "npm --prefix cli run --silent boundary",
+    "test": "npm --prefix cli test && npm --prefix runtime test",
+    "host": "npm --prefix runtime run --silent start --"
+  }
+}

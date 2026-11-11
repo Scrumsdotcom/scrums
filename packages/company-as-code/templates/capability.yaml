@@ -1,0 +1,43 @@
+# Capability template. Schema: /schemas/capability.schema.json
+#
+# A Capability is something the company must be able to do, plus who does it
+# when the usual holder cannot. The chain must terminate in a holder that
+# cannot itself be absent, which is why the last link is never an agent.
+#
+# Copy to /company/capabilities/<ID>.yaml and edit.
+
+apiVersion: company-as-code/v1alpha1
+kind: Capability
+
+id: CAP-EXAMPLE-0001
+name: example-capability
+
+description: >
+  What the company must be able to do. Write the outcome, not the tooling:
+  "can close the month" rather than "runs the close script".
+
+domain: finance-ops
+
+# high and critical capabilities require at least one intermediate fallback.
+criticality: medium
+
+primaryOwner:
+  kind: agent
+  id: replace-me
+  delivers: full
+
+fallback:
+  - kind: role
+    id: replace-me
+    delivers: manual
+    note: What survives when the primary is unavailable, honestly stated.
+
+finalFallback:
+  kind: person
+  id: replace-me
+  delivers: reduced
+
+sla: The response commitment for the capability as a whole.
+
+requires: []
+measuredBy: []

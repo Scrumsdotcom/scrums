@@ -1,0 +1,7 @@
+apiVersion: company-as-code/v1alpha1
+kind: Agent
+name: close-reminder
+module: company/domains/finance-ops/ledger
+purpose: Reminds the finance lead when the close is running late.
+autonomy: human-gated
+cadence: daily

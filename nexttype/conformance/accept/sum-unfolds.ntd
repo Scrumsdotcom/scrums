@@ -1,0 +1,7 @@
+; sum unfolds structurally on a known head: sum (cons 1 xs) = add 1 (sum xs).
+; context: n:N, xs:V Z n
+; expect: proved o0 TY f0 @5
+c0 (= (sum (cons 1 xs)) (add 1 (sum xs)))
+f0 refl
+put f0 c0 @b0
+ck f0 @a0

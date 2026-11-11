@@ -1,0 +1,58 @@
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+name: ceo
+domain: executive
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Company-wide strategic cognition. Aggregates roll-ups from the three canonical
+  domains and surfaces executive dashboards, OKR review cadences, and
+  cross-domain escalations.
+
+owns:
+  agents:
+    - ceo-strategist
+  dashboards:
+    - executive-overview
+    - okr-rollup
+  workflows:
+    - quarterly-okr-review
+
+consumes:
+  - interface: finance-rollup
+    from: company/executive/finance-ops
+    usage: P&L summary, runway, capital allocation
+  - interface: product-rollup
+    from: company/executive/product-operations
+    usage: delivery throughput, reliability posture, security posture
+  - interface: gtm-rollup
+    from: company/executive/sales-marketing
+    usage: pipeline, retention, growth velocity
+
+exposes:
+  - interface: executive-brief
+    stability: experimental
+    description: Daily/weekly executive briefing payload for the leadership team
+
+agents:
+  - name: ceo-strategist
+    purpose: Generate weekly executive brief from domain roll-ups; flag drift against approved OKRs.
+    runtime: llm
+    schedule: "0 6 * * MON"
+    cadence: weekly
+    autonomy: human-gated
+    primaryUsers:
+      - ceo
+    outputs:
+      - executive-brief
+
+invariants:
+  - The ceo-strategist never writes to external systems autonomously.
+  - All recommendations cite the underlying roll-up sources by name.
+
+contacts:
+  - role: accountable
+    person: ceo
+
+links:
+  okr-rollup: ../../dashboards/okr-rollup.yaml

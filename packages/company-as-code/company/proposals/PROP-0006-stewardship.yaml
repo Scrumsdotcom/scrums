@@ -1,0 +1,74 @@
+# Write down who stewards the project before anyone has to ask.
+
+apiVersion: company-as-code/v1alpha1
+kind: Proposal
+
+id: PROP-0006
+title: Publish a plain-language stewardship guideline and the open governance questions
+
+status: applied
+opened: 2026-10-12
+appliedOn: 2026-11-08
+
+author:
+  kind: person
+  id: ceo
+
+targets:
+  - path: GOVERNANCE.md
+    surface: governance
+    change: Gains a Stewardship section pointing at docs/governance/, and its Forking section names the framework/instance boundary.
+  - path: docs/governance/stewardship.md
+    surface: governance
+    change: New guideline. States who decides today, what will not change if the sponsor's priorities do, the path to maintainer and to a second code owner, the hand-over commitment, and the criteria for considering a foundation.
+  - path: docs/governance/discussion.md
+    surface: governance
+    change: New discussion starter. Seven open governance questions, each with options and a current leaning, and a place to record them as closed.
+  - path: docs/standards/framework-boundary.md
+    surface: standard
+    change: docs/governance/ is classified as instance, because it describes who stewards this tree rather than anything a fork inherits.
+
+reason: >
+  The project is about to become public with one decision-maker, one sponsor,
+  and one code owner. Anyone deciding whether to build on it will ask what
+  happens if that person or that company changes course. GOVERNANCE.md says
+  how decisions are recorded, but not who makes them over time, what is
+  promised, or how the single point of failure is meant to go away. An answer
+  given after the question is asked reads as a reaction; one written before
+  reads as intent.
+
+evidence:
+  - .github/CODEOWNERS names a single owner for every conserved path.
+  - MAINTAINERS.md lists one maintainer and said external maintainers are added "through demonstrated contribution + an ADR", without describing the path.
+  - Nothing in the repository said what would happen to the project, its name, or its schema domain if sponsorship ended.
+
+benefit: >
+  An adopter can read, in one page and without legal language, what is
+  guaranteed, what is intended, and what is still open. The commitments are
+  specific enough to be held to: Apache-2.0 for future framework releases, no
+  framework capability held back to sell, 90 days' public notice and a
+  hand-over rather than an archive. The open questions are on the record with
+  a leaning, so the discussion starts from something concrete.
+
+validation: >
+  The documents are prose, so validation is review. The boundary test shows
+  docs/governance/ classified as instance. The commitments are checked against
+  practice at each release: the release checklist reviewer confirms the
+  stewardship page still describes the current state under "Where things
+  stand today".
+
+rollback: >
+  Revert GOVERNANCE.md, delete docs/governance/, and remove the instance
+  carve-out from cli/src/boundary.ts. Withdrawing a published commitment
+  should itself be a Proposal whose title says so, per the stewardship page.
+
+ruling:
+  decision: accepted
+  actor:
+    kind: person
+    id: ceo
+  date: 2026-11-08
+  verbatim: >
+    Accepted by Gerald Neves
+
+tags: [governance, stewardship]

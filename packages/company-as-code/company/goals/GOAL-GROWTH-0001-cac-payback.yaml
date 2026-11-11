@@ -1,0 +1,29 @@
+apiVersion: company-as-code/v1alpha1
+kind: Goal
+
+id: GOAL-GROWTH-0001
+title: Blended CAC payback ≤ 12 months
+description: >
+  Blended customer acquisition cost payback (across all paid channels) should
+  reach 12 months or less by end of Q3.
+
+type: kpi
+owner:
+  kind: team
+  id: team:growth
+
+metric: METRIC-GROWTH-CAC-PAYBACK
+
+target:
+  value: 12
+  unit: "months"
+  comparator: lte
+
+horizon:
+  period: quarterly
+  start: 2026-07-01
+  end: 2026-09-30
+
+initiatives:
+  - INIT-GROWTH-0001
+status: active

@@ -1,0 +1,89 @@
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+name: platform
+domain: product-operations
+parent: domains/product-operations
+version: 0.1.0
+lifecycle: hardening
+purpose: >
+  Shared platform: identity, billing, deployment, and observability. Hosts
+  three sub-cognition modules and the agents that operate them. Every agent
+  declares an explicit autonomy classification.
+
+owns:
+  agents:
+    - deploy-watchdog
+    - identity-drift-detector
+    - billing-reconciler
+  workflows:
+    - production-deploy
+    - billing-reconciliation
+  dashboards:
+    - platform-overview
+    - deploy-frequency
+  schemas:
+    - canonical-identity
+    - canonical-subscription
+  playbooks: []
+
+consumes:
+  - interface: customer-health
+    from: company/domains/sales-marketing/customer
+    usage: surface churn signals on identity dashboards
+  - interface: workforce-state
+    from: company/domains/finance-ops/people
+    usage: derive identity revocation triggers on offboarding
+
+exposes:
+  - interface: platform-state
+    stability: experimental
+    description: Capacity, incident posture, deploy frequency, identity drift summary
+  - interface: subscription-stream
+    stability: experimental
+    description: Canonical subscription state transitions
+
+agents:
+  - name: deploy-watchdog
+    purpose: Detect deploy failures within 90s and notify the deployment sub-cognition; escalate after 3 consecutive failures.
+    runtime: event-handler
+    schedule: on-demand
+    cadence: event-driven
+    autonomy: escalated
+    outputs:
+      - deploy-incident
+    # escalation policy elaborated in agents/deploy-watchdog.yaml
+
+  - name: identity-drift-detector
+    purpose: Compare canonical identity state against external IdP every hour; emit drift events.
+    runtime: scheduled-job
+    schedule: "0 * * * *"
+    cadence: hourly
+    autonomy: autonomous
+    outputs:
+      - identity-drift-event
+
+  - name: billing-reconciler
+    purpose: Reconcile canonical subscription state against external billing system; proposes adjustments, never writes them.
+    runtime: scheduled-job
+    schedule: "0 4 * * *"
+    cadence: daily
+    autonomy: human-gated
+    outputs:
+      - reconciliation-proposal
+
+invariants:
+  - All deploys to production go through a human approval. No schedule-only deploy path.
+  - Identity-drift-detector is read-only against the external IdP.
+  - Billing-reconciler never writes to the external billing system; proposals are routed through an explicit operator surface.
+  - Sub-cognition modules (identity, billing, deployment) inherit the platform module's HITL invariants.
+
+contacts:
+  - role: accountable
+    person: cto
+  - role: platform-lead
+    person: platform-lead
+
+links:
+  identity: ./sub-cognition/identity/
+  billing: ./sub-cognition/billing/
+  deployment: ./sub-cognition/deployment/

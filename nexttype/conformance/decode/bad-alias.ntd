@@ -1,0 +1,4 @@
+; expect: invalid - ALIAS - @4
+c0 Z
+f0 1
+put f0 c0 @B0

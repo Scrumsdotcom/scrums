@@ -1,0 +1,5 @@
+; expect: invalid o0 SCOPE f0 @3
+c0 Z
+f0 (total xs)
+put f0 c0 @b0
+ck f0 @a0

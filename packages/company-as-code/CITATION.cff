@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: "Company-as-Code"
+message: "If you reference this framework in academic or professional work, please cite it as below."
+type: software
+authors:
+  - family-names: Neves
+    given-names: Gerald
+repository-code: "https://github.com/gez-scrumsdotcom/Company-as-Code"
+abstract: >
+  An open-source operating system for AI-native organizations. Company-as-Code
+  externalizes organizational state, workflows, agents, obligations, and
+  capabilities into a version-controlled repository with typed schemas,
+  deterministic generators, referential-integrity enforcement, and a
+  compliance coverage gate that fails the build rather than the audit.
+keywords:
+  - company-as-code
+  - organizational-design
+  - gitops
+  - ai-agents
+  - compliance-as-code
+  - infrastructure-as-code
+  - multi-agent-systems
+license: Apache-2.0
+version: 0.7.1
+date-released: "2026-11-09"

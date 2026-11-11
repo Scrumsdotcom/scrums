@@ -1,0 +1,95 @@
+{
+  "generatedFrom": "/company/**/manifest.yaml (owns.tables + owns.schemas)",
+  "moduleCount": 10,
+  "ownership": [
+    {
+      "module": "company/domains/finance-ops/finance",
+      "schemas": [
+        "invoice",
+        "ledger-entry"
+      ],
+      "tables": [
+        "canonical_invoices",
+        "canonical_ledger_entries",
+        "canonical_payments"
+      ]
+    },
+    {
+      "module": "company/domains/finance-ops/governance",
+      "schemas": [
+        "control",
+        "requirement"
+      ],
+      "tables": []
+    },
+    {
+      "module": "company/domains/finance-ops/people",
+      "schemas": [
+        "engagement"
+      ],
+      "tables": [
+        "canonical_engagements"
+      ]
+    },
+    {
+      "module": "company/domains/product-operations/delivery",
+      "schemas": [
+        "work-item"
+      ],
+      "tables": [
+        "canonical_work_items"
+      ]
+    },
+    {
+      "module": "company/domains/product-operations/platform",
+      "schemas": [
+        "canonical-identity",
+        "canonical-subscription"
+      ],
+      "tables": []
+    },
+    {
+      "module": "company/domains/product-operations/platform/sub-cognition/billing",
+      "schemas": [
+        "canonical-subscription"
+      ],
+      "tables": [
+        "canonical_subscriptions"
+      ]
+    },
+    {
+      "module": "company/domains/product-operations/platform/sub-cognition/identity",
+      "schemas": [
+        "canonical-identity"
+      ],
+      "tables": [
+        "canonical_identities"
+      ]
+    },
+    {
+      "module": "company/domains/product-operations/security",
+      "schemas": [
+        "finding"
+      ],
+      "tables": []
+    },
+    {
+      "module": "company/domains/sales-marketing/customer",
+      "schemas": [
+        "account"
+      ],
+      "tables": [
+        "canonical_accounts"
+      ]
+    },
+    {
+      "module": "company/domains/sales-marketing/sales",
+      "schemas": [
+        "deal"
+      ],
+      "tables": [
+        "canonical_deals"
+      ]
+    }
+  ]
+}

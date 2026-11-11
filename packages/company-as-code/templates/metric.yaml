@@ -1,0 +1,45 @@
+# Metric template.
+# Place at /company/metrics/<id>.yaml.
+# Schema: /schemas/metric.schema.json
+apiVersion: company-as-code/v1alpha1
+kind: Metric
+
+id: METRIC-EXAMPLE-EXAMPLE
+name: Example metric
+description: >
+  One or two sentences describing what this metric measures.
+
+owner:
+  module: company/domains/finance-ops/finance
+  # person: people:finance-lead
+
+# counter | gauge | histogram | ratio | percentage | currency | duration | boolean
+type: percentage
+unit: "%"
+
+formula: >
+  (closed_on_time / total_closes) over the last 90 days.
+
+lineage: []
+  # - source: company/domains/finance-ops/finance
+  #   field: month_end_status
+  #   transformation: count where status='closed-on-time'
+
+freshness:
+  expectedLag: PT1H
+  maxLag: PT6H
+
+thresholds:
+  - level: warning
+    comparator: lt
+    value: 95
+  - level: critical
+    comparator: lt
+    value: 90
+
+dashboards: []
+alerts: []
+
+history:
+  retention: P2Y
+  grain: day

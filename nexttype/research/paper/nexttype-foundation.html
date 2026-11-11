@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="author" content="Gerald Neves">
+<title>NextType: Contract-Bound Autonomous Programming over a Typed Compiler Graph</title>
+<style>
+@page { size: A4; margin: 12mm 15mm; }
+* { box-sizing: border-box; }
+body { margin: 0; color: #101828; background: white; font: 10pt/1.29 Georgia, "Times New Roman", serif; }
+.paper { width: 180mm; margin: 18px auto; }
+header { border-top: 3px solid #135bff; padding-top: 8px; text-align: center; }
+h1 { font-size: 21pt; line-height: 1.08; font-weight: 600; letter-spacing: -.55pt; margin: 0 0 5px; }
+.author { font-size: 11pt; margin: 0 0 1px; text-align: center; }
+.affil { font: 8pt/1.35 Arial,sans-serif; color: #344054; margin: 0 0 4px; text-align: center; }
+.affil sup, .author sup { font-size: 6.5pt; }
+.meta { font: 8pt/1.4 Arial,sans-serif; color: #475467; margin: 0 0 9px; text-align: center; }
+.abstract { font-size: 9.2pt; line-height: 1.32; margin: 0 4mm 9px; text-align: justify; }
+.columns { column-count: 2; column-gap: 7mm; }
+h2 { font-size: 10.5pt; margin: 9px 0 4px; line-height: 1.2; break-after: avoid; }
+p { margin: 0 0 6px; text-align: justify; }
+a { color: #0933b7; text-decoration: none; }
+code, pre { font-family: "DejaVu Sans Mono", "Liberation Mono", monospace; }
+pre { font-size: 8pt; line-height: 1.36; padding: 7px 8px; margin: 6px 0; border: 1px solid #dce7ff; background: #f5f8ff; break-inside: avoid; white-space: pre-wrap; }
+.formula { font-family: "DejaVu Sans", Arial,sans-serif; font-size: 8.5pt; line-height: 1.4; margin: 6px 0; padding-left: 7px; border-left: 2px solid #135bff; break-inside: avoid; }
+.refs { font-size: 7.6pt; line-height: 1.28; margin: 3px 0 0; padding: 0; list-style: none; }
+.refs li { margin-bottom: 4px; break-inside: avoid; }
+.note { margin-top: 8px; padding-top: 6px; border-top: 1px solid #d0d5dd; font: 7.5pt/1.35 Arial,sans-serif; color: #475467; }
+@media print { .paper { margin: 0; } }
+@media screen and (max-width: 740px) { .paper { width: auto; margin: 20px; } .columns { column-count: 1; } h1 { font-size: 25px; } }
+</style>
+</head>
+<body><article class="paper">
+<header><h1>NextType: Contract-Bound Autonomous Programming<br>over a Typed Compiler Graph</h1>
+<p class="author">Gerald Neves<sup>1</sup></p>
+<p class="affil"><sup>1</sup>Founder and CEO, Scrums.com · <a href="https://www.scrums.com">https://www.scrums.com</a></p>
+<p class="meta">Foundational concept note · 25 September 2026 · Draft 0.1 · No empirical results</p></header>
+<p class="abstract"><strong>Abstract.</strong> NextType proposes an execution language whose primary consumer is a software agent. Its program representation is a typed compiler graph. Agents exchange compact patches against independently approved contracts. A checker validates proof obligations, while runtime tests cover declared execution boundaries. The objective is more accepted semantic work per total model token. The design combines dependent types, explicit effects, incremental evidence, and generated application bindings. It introduces no new foundational type theory. Its efficiency and defect-reduction targets remain unmeasured.</p>
+<div class="columns">
+<section><h2>1. Model and representation</h2>
+<p>Dependent type theory permits values to index types and propositions <a href="#r1">[1]</a>. Idris and F* connect such reasoning with executable programs, erasure, and effects <a href="#r2">[2]</a>, <a href="#r3">[3]</a>. NextType proposes <em>NT0</em>, a canonical typed term graph, and <em>NTΔ</em>, a compact model-facing edit stream. Compiler operations and contracts define meaning. Framework code is a generated target.</p>
+<p>NT0 records explicit binders, types, effects, universes, and dependency identities. NTΔ reuses a pinned dictionary of constructor and artifact aliases. The checker reconstructs complete terms before acceptance. Local names and formatting have no authority. All dictionary and retrieval costs count toward token usage.</p>
+<p>For Γ = {A:U₀, n:ℕ, v:Vec A (S n)}, the following proposed fragment returns the first element:</p>
+<pre>c1 A
+f1 (case v (cons (x _) x))
+put f1 c1 @b0
+ck f1 @a0</pre>
+<p>The index excludes an empty constructor. The manifest binds base program <code>@b0</code> and approval envelope <code>@a0</code>. Pattern elimination checks the result type; <code>_</code> is an unused binder. These lines illustrate a planned codec, not an implemented compiler.</p></section>
+<section><h2>2. Fixed contracts and autonomous repair</h2>
+<p>Let approval A bind contract C, permitted effects, assumptions, evaluator, toolchain, edit scope, and budgets. An agent proposes program p and proof π. An independent service checks the exact approved statement, following the distinction between theorem validity and intended meaning <a href="#r4">[4]</a>.</p>
+<div class="formula">Accept<sub>A</sub>(p, π, r) ⇔<br>Root(C) = A.contract ∧ K(π : Sat(p,C))<br>∧ Tests<sub>A</sub>(r) = pass ∧ Bind(r,p,A).</div>
+<p>Here K checks proof evidence; r records target tests. Bind links all results to exact program, dependency, and toolchain identities. Failed obligations enter a bounded repair loop. Changes to guarantees, assumptions, effects, or acceptance rules require separate owner approval. The agent cannot weaken its task to obtain acceptance.</p></section>
+<section><h2>3. Execution and limits</h2>
+<p>Checked terms lower through erasure and typed execution IR into an effect ABI. HTTP, storage, UI, terminal, and job adapters reference the same operations. Multi-level compiler IR provides a useful structural precedent <a href="#r5">[5]</a>; Ur/Web provides a precedent for typed integration across web tiers <a href="#r6">[6]</a>.</p>
+<p>The first proposed implementation uses TypeScript tooling and Lean checking. Its proof scope ends at the core model. Compiler preservation, foreign calls, transactions, browsers, and external services remain explicit trust boundaries. Tests add evidence without proving all runtime behavior. People retain responsibility for intent and assumptions.</p></section>
+<section><h2>4. Falsifiable goals</h2>
+<p>Compare equivalent tasks against a strong TypeScript workflow with bounded retrieval and identical acceptance requirements. Count context, generation, proof attempts, repairs, and failures:</p>
+<div class="formula">T = Σ tokens across all attempts / accepted changes.<br>Targets: T<sub>NT</sub>/T<sub>B</sub> ≤ 0.50; L<sub>NT</sub>/L<sub>B</sub> ≤ 0.70;<br>D<sub>NT</sub>/D<sub>B</sub> ≤ 0.50.</div>
+<p>L measures end-to-end elapsed cost. D measures the fraction of accepted changes with independently detected escaped defects. Zero baselines make relative ratios undefined. Report completion, compute cost, uncertainty, and cold/warm behavior. CI rejection counts are not a safety measure. Proof-search cost or incorrect abstractions could erase the expected gains.</p></section>
+<section><h2>References</h2><ol class="refs">
+<li id="r1">[1] P. Martin-Löf. <a href="https://archive-pml.github.io/martin-lof/pdfs/An-Intuitionistic-Theory-of-Types-1972.pdf">An Intuitionistic Theory of Types</a>. 1972 manuscript.</li>
+<li id="r2">[2] E. Brady. <a href="https://arxiv.org/abs/2104.00480">Idris 2: Quantitative Type Theory in Practice</a>. ECOOP, 2021.</li>
+<li id="r3">[3] N. Swamy et al. <a href="https://fstar-lang.org/papers/mumon/paper.pdf">Dependent Types and Multi-monadic Effects in F*</a>. POPL, 2016.</li>
+<li id="r4">[4] Lean project. <a href="https://lean-lang.org/doc/reference/latest/ValidatingProofs/">Validating a Lean Proof</a>. Reference manual; accessed 2026-09-25.</li>
+<li id="r5">[5] LLVM project. <a href="https://mlir.llvm.org/docs/LangRef/">MLIR Language Reference</a>. Accessed 2026-09-25.</li>
+<li id="r6">[6] A. Chlipala. <a href="https://adam.chlipala.net/papers/UrWebPOPL15/UrWebPOPL15.pdf">Ur/Web: A Simple Model for Programming the Web</a>. POPL, 2015.</li>
+</ol></section>
+</div>
+<p class="note"><strong>Source.</strong> This work originates at Scrums.com, the Enterprise AI Platform for software engineering orchestration; Scrums.com is its originating organisation and contributor. Concept proposal, not a peer-reviewed paper or an arXiv submission. Compiler and proof integration remain planned. All percentages are targets. The companion animation contains scripted scenario values, not benchmark observations.</p>
+</article></body></html>

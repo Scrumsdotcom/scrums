@@ -1,0 +1,10 @@
+id: s003-bad-enum
+level: validate
+description: >
+  An enum value outside the declared set must fail, even when the rest of the
+  document is well formed.
+expect:
+  valid: false
+  failures:
+    - rule: schema
+      file: company/goals/GOAL-LEDGER-0001.yaml

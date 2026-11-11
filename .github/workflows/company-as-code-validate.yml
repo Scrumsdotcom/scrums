@@ -1,0 +1,73 @@
+name: company-as-code-validate
+
+# Mirrors the upstream validate workflow for the pinned copy in
+# packages/company-as-code/. Install scripts stay off; only the better-sqlite3
+# native addon is built, because the runtime host needs it.
+
+on:
+  pull_request:
+    paths:
+      - "packages/company-as-code/**"
+      - ".github/workflows/company-as-code-validate.yml"
+  push:
+    branches: [main]
+    paths:
+      - "packages/company-as-code/**"
+      - ".github/workflows/company-as-code-validate.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: company-as-code-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: validate (node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["22", "24"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install CLI (lockfile only, no install scripts)
+        working-directory: packages/company-as-code/cli
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Typecheck (CLI)
+        working-directory: packages/company-as-code/cli
+        run: npm run typecheck
+      - name: Validate manifests, agents, workflows, primitives
+        working-directory: packages/company-as-code/cli
+        run: npm run validate
+      - name: Framework/instance boundary
+        working-directory: packages/company-as-code/cli
+        run: npm run boundary
+      - name: Unit tests (CLI)
+        working-directory: packages/company-as-code/cli
+        run: npm test
+      - name: Standing health inspection
+        working-directory: packages/company-as-code/cli
+        run: npm run doctor
+
+      - name: Install runtime host (lockfile only, no install scripts)
+        working-directory: packages/company-as-code/runtime
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Build the better-sqlite3 native addon
+        working-directory: packages/company-as-code/runtime
+        run: npm rebuild better-sqlite3
+      - name: Typecheck (runtime host)
+        working-directory: packages/company-as-code/runtime
+        run: npm run typecheck
+      - name: Unit tests (runtime host)
+        working-directory: packages/company-as-code/runtime
+        run: npm test
+      - name: Runtime host smoke, load the manifest graph
+        working-directory: packages/company-as-code/runtime
+        run: npx tsx src/index.ts load --repo ..

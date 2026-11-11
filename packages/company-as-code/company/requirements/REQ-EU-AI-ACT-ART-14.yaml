@@ -1,0 +1,24 @@
+apiVersion: company-as-code/v1alpha1
+kind: Requirement
+
+id: REQ-EU-AI-ACT-ART-14
+framework: eu-ai-act
+clause: Art. 14
+title: Autonomous units operate under effective human oversight
+statement: >
+  Where an autonomous unit acts on the company's behalf, a human can
+  understand what it is doing, can intervene before it takes a consequential
+  action, and can stop it. Oversight is a property of the system, not a
+  promise about how the system will be used.
+
+owner:
+  kind: person
+  id: ceo
+
+status: planned
+scopeRationale: >
+  Scoped in as planned rather than in-scope: the oversight mechanism exists
+  (autonomy classification, HITL gates, shadow mode) but the company has not
+  yet placed a unit in a use class where this obligation binds. Reclassify to
+  in-scope on the first such deployment.
+severity: high

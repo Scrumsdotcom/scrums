@@ -1,0 +1,31 @@
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+name: security
+domain: product-operations
+parent: domains/product-operations
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Security posture: open findings, their severity and age, and the technical
+  controls that back the governance module's attestations.
+
+owns:
+  schemas:
+    - finding
+
+consumes: []
+
+exposes:
+  - interface: security-posture
+    stability: experimental
+    description: >
+      Open findings by severity and age, control attestation status, and the
+      date of the last dependency and static-analysis sweep.
+
+invariants:
+  - Findings are never closed without a recorded resolution and actor.
+  - Severity is set from the declared rubric, not per-finding judgement.
+
+contacts:
+  - role: accountable
+    person: cto

@@ -1,0 +1,34 @@
+apiVersion: company-as-code/v1alpha1
+kind: Manifest
+name: customer
+domain: sales-marketing
+parent: domains/sales-marketing
+version: 0.1.0
+lifecycle: planning
+purpose: >
+  Post-sale customer state: health, retention risk, and support posture. Read
+  by platform (to surface churn signal on identity dashboards) and by growth
+  (to separate high-quality from low-quality acquired cohorts).
+
+owns:
+  tables:
+    - canonical_accounts
+  schemas:
+    - account
+
+consumes: []
+
+exposes:
+  - interface: customer-health
+    stability: experimental
+    description: >
+      Account-level health score, renewal date, open escalations, and the
+      churn-risk band derived from them.
+
+invariants:
+  - Health scores are derived on read from their inputs, never stored as an independent field.
+  - Account merges record a canonical merged-into pointer; neither record is deleted.
+
+contacts:
+  - role: accountable
+    person: cro

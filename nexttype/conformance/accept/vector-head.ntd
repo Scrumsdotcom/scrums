@@ -1,0 +1,6 @@
+; manifest: examples/vector/manifest.json
+; expect: proved o0 TY f1 @4
+c1 A
+f1 (case v (cons (x _) x))
+put f1 c1 @b0
+ck f1 @a0

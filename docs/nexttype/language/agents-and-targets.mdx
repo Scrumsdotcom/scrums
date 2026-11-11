@@ -1,0 +1,53 @@
+---
+title: "Agents and application targets"
+description: "How an agent works inside a fixed contract, what feedback it gets, and what the compiler would generate for each application target."
+---
+
+> **Status: Planned.** The autonomous loop, the compiler and the target adapters do not exist yet.
+> This page describes the design.
+
+## The planned autonomous loop
+
+Agents implement, prove, test, and repair inside an approved contract.
+Changed guarantees require independent owner approval.
+
+```text
+get o0 256
+put f0 c0 @b0
+ck f0 @a0
+unknown o0 EQ f0
+get o0 256
+```
+
+The controller repeats within fixed token, time, and attempt budgets.
+Acceptance requires the exact theorem, required runtime tests, and matching artifact identities.
+The approval envelope sits outside the patch: an approval flag that an agent generates has no authority.
+See [Contracts](/nexttype/language/contracts) for the approval rules and [Evidence and approval](/nexttype/reference/evidence) for the repair state machine.
+
+## Feedback that an agent can use
+
+- **Explicit obligation.** Identify the precise condition that remains unresolved.
+- **Relevant context.** Return local types and dependency references with a bounded payload.
+- **Honest results.** Distinguish a validated counterexample from an unsuccessful proof attempt.
+
+The operations that carry this feedback are in the [machine protocol](/nexttype/reference/protocol).
+
+## Generated boundaries, explicit responsibilities
+
+The compiler would build upward from the core. Application frameworks receive checked operations through explicit adapters.
+
+| Target | Generated artifact | Remaining boundary |
+| --- | --- | --- |
+| Web | React view and typed command bindings | Browser behavior and accessibility |
+| API | Next.js route handlers and codecs | Authentication and authorization |
+| Data | Transactional local-store adapter | Concurrency and storage failures |
+| Live updates | Authorized event subscription | Ordering and reconnect behavior |
+| Terminal | Node command entry points | Input validation and process limits |
+| Jobs | Shared operation entry points | Retries, leases, and clock behavior |
+
+## The network still exists
+
+One source language can reduce repeated integration code.
+It does not remove network failures or transaction boundaries.
+Adapters validate external data and enforce capabilities at runtime.
+The [state example](/nexttype/examples/state) shows how an ambiguous payment stays pending.

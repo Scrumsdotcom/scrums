@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gez-scrumsdotcom.github.io/Company-as-Code/schemas/v1alpha1/instance.schema.json",
+  "title": "Instance",
+  "description": "What this repository is, declared once at the root in cac.yaml. Upstream is the Company-as-Code project itself; a fork is a company running on it. The role decides how the framework/instance boundary is checked, and the framework pin records which upstream release a fork is on.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "role", "namespace", "framework"],
+  "properties": {
+    "apiVersion": { "type": "string", "const": "company-as-code/v1alpha1" },
+    "kind": { "type": "string", "const": "Instance" },
+    "name": { "type": "string", "minLength": 2, "description": "Human-readable name of the project or company." },
+    "role": {
+      "type": "string",
+      "enum": ["upstream", "fork"],
+      "description": "'upstream' publishes framework.lock.json from its own tree. 'fork' checks its tree against the lock it received."
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]{1,15}$",
+      "description": "Short prefix this instance puts on anything that could collide with upstream, such as hub module names. Upstream uses 'cac'."
+    },
+    "framework": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+          "description": "The framework release this tree is on. In a fork, it is updated only by 'cac upgrade'."
+        },
+        "upstream": { "type": "string", "description": "Where the framework comes from. Informational." }
+      }
+    },
+    "deviations": {
+      "type": "array",
+      "description": "Framework files this fork has deliberately changed. A declared deviation is reported but does not fail 'cac boundary check'; an undeclared one does. Upgrades stop at every deviation for a human to resolve.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "reason"],
+        "properties": {
+          "path": { "type": "string", "description": "Repo-relative path of the framework file." },
+          "reason": { "type": "string", "minLength": 8, "description": "Why the fork carries this change instead of upstreaming it." },
+          "decision": { "type": "string", "description": "Repo-relative path of the fork's decision record, usually under company/decisions/." }
+        }
+      }
+    }
+  }
+}
