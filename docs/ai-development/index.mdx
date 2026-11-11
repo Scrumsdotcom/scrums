@@ -34,7 +34,7 @@ One plan covers every discipline. Web, mobile, backend, AI, data, QA, DevOps and
 | **Core** | One active workstream. Your highest-priority request is delivered to live, then the next one starts. |
 | **Factory** | Multiple workstreams running concurrently against the same backlog, under one delivery owner. Several pieces of work ship at the same time instead of queueing behind each other — user management and OAuth sign-in delivered in parallel rather than one after the other. |
 
-See [What's included](/ai-development/whats-included) for coverage, guarantees and commercial terms.
+See [What's included](#whats-included) for coverage, guarantees and commercial terms.
 
 ## From request to live
 
@@ -48,7 +48,7 @@ Every item moves through five states on the delivery board:
 | **Deploy** | Release to your environments. |
 | **Deployed** | Live in production and recorded in the deployed log. |
 
-[Tracking delivery](/ai-development/tracking-delivery) covers the board, epics, decisions and risks.
+[Tracking delivery](#tracking-delivery) covers the board, epics, decisions and risks.
 
 ## Scopes
 
@@ -60,7 +60,302 @@ Scopes are a starting point, not a limit. Work that does not match one is scoped
 
 ## Next
 
-* [What's included](/ai-development/whats-included) — coverage, guarantees, commercials
-* [Starting your plan](/ai-development/starting-your-plan) — day 0 to first deliverable
-* [Making requests](/ai-development/requests) — how to write a request the team can scope
-* [Tracking delivery](/ai-development/tracking-delivery) — the board, epics, decisions and risks
+* [What's included](#whats-included) — coverage, guarantees, commercials
+* [Starting your plan](#starting-your-plan) — day 0 to first deliverable
+* [Making requests](#requests) — how to write a request the team can scope
+* [Tracking delivery](#tracking-delivery) — the board, epics, decisions and risks
+
+## What's included
+
+### Coverage
+
+Every Delivery Plan covers the full lifecycle of the work in your backlog:
+
+* Discovery, planning and scoping
+* UX/UI design and architecture
+* Backend, API and frontend engineering
+* Integrations
+* QA, including AI code review
+* DevOps and release engineering, including zero-downtime deployment where your pipeline and architecture support it
+* Security and compliance work
+* Maintenance after launch
+
+One accountable **delivery owner** runs the engineers, designers and testers on your plan. You do not contract, onboard or manage individuals.
+
+Delivery runs inside your existing architecture, pipeline and release process. Where those constrain what is achievable — a deployment model that cannot release without downtime, an environment that cannot be reproduced, a release gate outside your control — your delivery owner will say so during scoping and, if you want it changed, raise the work to change it. Improving the pipeline is itself deliverable work on the plan.
+
+### Scopes
+
+Every scope in the [scope library](https://www.scrums.com/ai-development/scopes) is included in your plan.
+
+Adding a scope does not change your monthly price. It is delivered from your prioritised backlog by the same team, within the same workstream capacity. What determines cost is how many months of delivery your backlog needs, not which scopes are in it.
+
+Work that does not match a published scope is scoped from scratch on the same terms.
+
+### Tiers
+
+|  | **Core** | **Factory** |
+| --- | --- | --- |
+| Active workstreams | One | Multiple |
+| Backlog | Unlimited | Unlimited |
+| Delivery owner | One | One |
+| Coverage | All disciplines | All disciplines |
+| Scopes | All | All |
+| Price | Published monthly rate | Scales with the number of workstreams |
+
+You buy monthly delivery capacity, not a fixed project price. Billed monthly, excluding VAT or sales tax. Current rates are on the [Delivery Plans page](https://www.scrums.com/ai-development#pricing); additional parallel workstreams require additional capacity, so the Factory tier is priced per engagement.
+
+### Guarantees
+
+| Commitment | Terms |
+| --- | --- |
+| **First code in 48 hours** | Your team is connected to your repositories and writing code within 48 hours of access being granted. |
+| **First deliverable in 14 days** | Your first agreed deliverable ships within 14 days of scope and access being confirmed, or your first month is free. |
+
+Both clocks start when scope is confirmed and access to repositories, cloud accounts and CI is granted — not at checkout. The first deliverable is agreed in writing before the clock starts, and the guarantee applies to the first deliverable on a new plan. See [Starting your plan](#starting-your-plan) and the [full terms](https://www.scrums.com/legal/terms-and-conditions).
+
+### Included every month
+
+* **$500 in AI infrastructure catalog credits** in your first month.
+* Live delivery tracking in the platform: board, epics, decisions, risks and the deployed log.
+* Monthly delivery reporting against your backlog.
+
+### Annual plans
+
+Annual commitments include **$10,000 in specialist services**:
+
+* A technical assessment of your existing systems
+* A delivery roadmap
+* CI/CD pipeline setup
+
+### What is not in the plan
+
+Delivery work is covered. These sit outside it:
+
+* **Infrastructure usage** — your cloud estate, and AI infrastructure or agent runtime deployed from the [AI Catalog](/catalog/overview) beyond your included credits. This is consumption, not delivery work.
+* **Third-party services** — licences, subscriptions and vendor fees for the tools your product depends on.
+* **Engineers you manage directly** — see [Hire](/hire/overview).
+
+You own all code and IP produced on the plan. See [IP Ownership](/security/ip-ownership).
+
+## Starting your plan
+
+Onboarding begins at checkout. The delivery clocks begin when scope is confirmed and access is granted — usually the same day, but they are separate events, and the second is the one that counts.
+
+### The sequence
+
+| | Stage | What happens |
+| --- | --- | --- |
+| **01** | Checkout | You pick a Delivery Plan. Your workspace is set up and Delivery Plans appears in the sidebar. |
+| **02** | Scope confirmed | You and your delivery owner agree what the plan is working on first and what the first deliverable is. |
+| **03** | Access granted | You connect repositories, cloud accounts and CI. **Day 0 — both clocks start here.** |
+| **04** | First code | Within 48 hours, your team is connected and writing code against your repositories. |
+| **05** | First deliverable | Within 14 days, your first agreed deliverable is in production. |
+| **06** | Steady state | You queue requests; the team works the highest-priority one until it is live, then starts the next. |
+
+### What Scrums.com needs from you
+
+Delivery cannot start until these are in place. Preparing them before checkout is the single biggest lever on time-to-first-deliverable.
+
+**Access**
+
+* Source control — repository access with review and write permissions
+* CI/CD — pipeline access and the ability to run a release
+* Cloud accounts or hosting environments in scope
+* Any app store, registry or third-party consoles the work touches
+
+**Context**
+
+* What the plan is working on first, and what "done" looks like for it
+* Current architecture and known constraints
+* Existing backlog, if you have one, to seed the board
+* Who on your side makes product decisions and who reviews releases
+
+**People**
+
+* A named decision-maker. Requests flagged **needs your input** sit idle until someone on your side clears them.
+
+See [Authentication & Access Control](/security/authentication) for how credentials are handled, and [Integrations](/integrations/integrations) for connecting your tools.
+
+### Setting up your space
+
+Delivery Plans are scoped to a **space**. A space is one plan's board — its backlog, its epics, its decisions and risks, and its deployed history. The space selector sits at the top of the board, alongside live counts for each stage.
+
+A space holds your whole plan, not one stream of it. On **Factory**, the concurrent workstreams run inside the same space and against the same backlog, so priority is set once across all of them rather than negotiated between separate boards.
+
+Invite your team from **Settings → Account**. Anyone with workspace access can raise requests, comment, and clear needs-input flags.
+
+### Seeding the backlog
+
+Before kickoff, add the work you already know about. Requests are free to raise and your backlog is unlimited — the constraint is the active workstream, not the queue.
+
+Everything in the backlog stays editable until the team picks it up, so an imperfect first pass is useful. See [Making requests](#requests).
+
+### Kickoff
+
+Your delivery owner runs kickoff once scope and access are confirmed. Kickoff sets:
+
+* The first deliverable, named and recorded on the board
+* Priority order for the opening backlog
+* Release cadence and environments
+* Review and approval expectations on your side
+* Reporting cadence
+
+From here, the board is the record. See [Tracking delivery](#tracking-delivery).
+
+<div id="requests" />
+
+## Making requests
+
+A request is the unit of work on a Delivery Plan. Everything the team builds starts as one — a feature, a change, or a bug.
+
+### Raising a request
+
+Select **New request** on the delivery board.
+
+| Field | Notes |
+| --- | --- |
+| **Type** | **Feature or change** for something new or an improvement. **Bug** for something that isn't working. Type drives how the request is triaged. |
+| **Title** | A short summary, written as the outcome. "Let clients view proposals in the SEOP", not "Proposals". |
+| **Description** | What you need, who it is for, and what done looks like. See below. |
+| **Priority** | Low, Normal, High or Urgent. |
+| **Epic** | Optional. Groups the request with related work. |
+| **Attachments** | Screenshots, designs, logs, specs. |
+
+A new request goes into your **backlog**. You can keep editing it until it moves to **To do** — after that, changes go through the comments on the request.
+
+### Writing a description the team can scope
+
+The fastest requests to scope are the ones that state the user, the outcome and the problem. The pattern your delivery team uses is:
+
+**User story** — As a *[who]*, I want *[what]*, so that *[why]*.
+
+**Problem** — What is happening today and why it is costing something. Be specific about the current behaviour.
+
+**Goals** — What has to be true for this to be done.
+
+A request that gives all three usually moves from Scope to Build without a round trip. A one-line request almost always comes back with questions, which costs you a cycle.
+
+For bugs, include steps to reproduce, the environment, and what you expected instead.
+
+### Priority
+
+Priority ranks your queue; it does not add capacity. A plan runs a fixed number of active workstreams, so raising everything to Urgent only flattens the signal your delivery owner uses to sequence work.
+
+| Priority | Use for |
+| --- | --- |
+| **Urgent** | Production is broken or blocked, or a hard external deadline applies. |
+| **High** | Needed in the current delivery window. |
+| **Normal** | The default. Sequenced against everything else in the backlog. |
+| **Low** | Worth doing, no date attached. |
+
+### Epics
+
+An epic groups related requests so progress can be read at a theme level rather than a ticket level. Assigning an epic is optional at creation and can be added later.
+
+Epics are how the **Epics** view reports: each one shows its item count and how far its items have moved across Scope, Build, Verify and Deploy. See [Tracking delivery](#tracking-delivery).
+
+### Handoff and locking
+
+A request passes through three states of ownership:
+
+| State | Who holds it | What you can do |
+| --- | --- | --- |
+| **Backlog** | You | Edit freely — title, description, priority, epic, attachments. |
+| **To do / handed off** | Your delivery team | The original entry locks. Changes and clarifications go through comments. |
+| **Work started** | Your delivery team | Locked. Material changes are raised as a new request. |
+
+The request drawer shows where it sits: **handed off**, **team reviews scope**, **build starts**. Locked requests are marked **locked · handed off** above the description, and the original entry is preserved so the scope the team committed to stays visible.
+
+If a request needs to change after handoff, say so in the comments. Your delivery owner will either absorb it or split it out — scope creep inside a locked request is what makes dates slip invisibly.
+
+### Needs your input
+
+When a request is blocked on you — a decision, a scope clarification, an approval, or access — the team flags it **needs your input**. Flagged requests:
+
+* Show a **NEEDS INPUT** badge on the board
+* Are counted in the **needs your input** indicator above the board
+* Trigger an email naming the request and how long it has been waiting
+
+The flag clears when the team confirms the blocker is resolved, not when you reply. Items stay listed until then.
+
+Manage email notifications from **Settings → Account**.
+
+## Tracking delivery
+
+The delivery board is the record of your plan. Open **Delivery Plans** in your workspace sidebar.
+
+### The board
+
+Work sits in four columns, left to right:
+
+| | Stage | Meaning |
+| --- | --- | --- |
+| **01** | **Scope** | Being defined and estimated. Includes your backlog. |
+| **02** | **Build** | Engineering underway. |
+| **03** | **Verify** | QA and review, including AI code review. |
+| **04** | **Deploy** | Releasing to your environments. |
+
+Shipped work leaves the board and moves to **Deployed**.
+
+Above the columns, the header carries the live state of the plan: the space you are viewing, a count per stage, how many items are deployed and how many shipped this month, and how many requests are waiting on you.
+
+Each card shows its title, tags, priority, story points where estimated, and a segmented progress meter for items part-way through a stage.
+
+### Finding work
+
+Four controls narrow the board:
+
+* **Search** — free text across the space
+* **Epic** — one epic, no epic, or all
+* **Tags** — the labels applied by your delivery team
+* **Priority** — Urgent, High, Normal, Low
+
+Filters apply across all four columns at once, so a filtered board reads as a slice of the whole pipeline rather than a single stage. When a filtered search has matches in shipped work, the board offers them as a **found in Deployed** link.
+
+### The request drawer
+
+Selecting any card opens it. The drawer carries:
+
+* **Stage rail** — Scope, Build, Verify, Deploy, Deployed, with completed stages ticked
+* **Handoff rail** — what has happened and what happens next: handed off, team reviews scope, build starts
+* **Epic and created date**
+* **Description** — the original entry, marked **locked** once work has started
+* **Activity** — the comment thread between you and the delivery team, newest first
+* **Attachments** — drop files directly onto the thread
+
+Comments are the working channel for a request after handoff. See [Making requests](#requests).
+
+### Deployed
+
+The deployed view is the history of everything your plan has shipped, grouped by week with a running total and a count for the current month.
+
+A deployed request keeps its full record. Its drawer shows the release state — **released**, **in production**, **in the live log** — with dates, so you can trace any live change back to the request that produced it and the conversation around it.
+
+If something shipped is not behaving, reply on the request. Your delivery team will raise it as a bug and link the two.
+
+### Epics
+
+The **Epics** view reports progress by theme rather than by ticket. Each epic lists its item count, how many are deployed, and a bar showing distribution across Scope, Build, Verify and Deploy.
+
+This is the view to use for a status conversation. The board answers "what is happening now"; epics answer "how far through are we".
+
+### Decisions and risks
+
+Decisions and risks behave like any other item on your plan. Each one is raised into the backlog, opens in the same drawer, carries the same comment thread, can be assigned to an epic, and is closed when it is settled or retired.
+
+The difference is what they record.
+
+**Decisions** capture the choices that constrain later work — an architectural call, a change of approach, a trade-off accepted under time pressure. Recording a decision as an item means the reasoning survives past the thread it was argued in, and later requests can be linked back to it.
+
+**Risks** capture what could move a date or change an outcome: a dependency outside the plan, an unknown in an unfamiliar system, an approval bottleneck on your side. An open risk stays visible on the board until it is closed, either because it was mitigated or because it stopped applying.
+
+Both views show their open count in the tab strip, so you can see at a glance whether anything is outstanding without leaving the workstream.
+
+Raising a decision or a risk is not reserved for your delivery team. If you have made a product call the team should build against, record it as a decision rather than leaving it in a comment on one request.
+
+### Reporting
+
+The board is live, so there is no waiting on a status report to know where things stand. Your monthly delivery report summarises the same data: what shipped, what moved, what is open, and performance against the plan.
+
+For delivery metrics across your whole engagement — DORA, cycle time, throughput — see [Team Observability](/platform/team-observability).
