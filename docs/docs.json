@@ -641,7 +641,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://www.scrums.com/sign-up"
+      "href": "https://www.scrums.com/signup"
     }
   },
   "contextual": {
