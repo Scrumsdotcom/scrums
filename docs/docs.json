@@ -728,6 +728,11 @@
     ]
   },
   "description": "Documentation for the Scrums.com Enterprise AI Software Engineering Orchestration Platform (SEOP). Scrums.com is the enterprise AI platform for software engineering: deploy AI agents, models, AI engineers and infrastructure from one catalog, then govern and measure all of it on one platform. Software Engineering. Sorted.",
+  "integrations": {
+    "gtm": {
+      "tagId": "GTM-TMGKR55"
+    }
+  },
   "seo": {
     "indexing": "navigable",
     "metatags": {
