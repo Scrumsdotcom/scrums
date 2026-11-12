@@ -548,6 +548,64 @@
             "pages": [
               "cli/introduction"
             ]
+          },
+          {
+            "group": "NextType",
+            "pages": [
+              "nexttype/index",
+              "nexttype/status",
+              {
+                "group": "Language",
+                "pages": [
+                  "nexttype/language/overview",
+                  "nexttype/language/contracts",
+                  "nexttype/language/two-views",
+                  "nexttype/language/agents-and-targets"
+                ]
+              },
+              {
+                "group": "Examples",
+                "pages": [
+                  "nexttype/examples/index",
+                  "nexttype/examples/invoice",
+                  "nexttype/examples/vector",
+                  "nexttype/examples/state"
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": [
+                  "nexttype/reference/index",
+                  "nexttype/reference/lexical",
+                  "nexttype/reference/types",
+                  "nexttype/reference/contracts",
+                  "nexttype/reference/functions-effects",
+                  "nexttype/reference/modules",
+                  "nexttype/reference/views",
+                  "nexttype/reference/edit-frames",
+                  "nexttype/reference/diagnostics",
+                  "nexttype/reference/protocol",
+                  "nexttype/reference/evidence",
+                  "nexttype/reference/grammar",
+                  "nexttype/reference/glossary"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "nexttype/tools/cli"
+                ]
+              },
+              {
+                "group": "Research",
+                "pages": [
+                  "nexttype/research/index",
+                  "nexttype/research/why-nexttype",
+                  "nexttype/research/sources",
+                  "nexttype/benchmarks"
+                ]
+              }
+            ]
           }
         ]
       },
