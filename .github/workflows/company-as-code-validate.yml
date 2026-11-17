@@ -70,4 +70,4 @@ jobs:
         run: npm test
       - name: Runtime host smoke, load the manifest graph
         working-directory: packages/company-as-code/runtime
-        run: npx tsx src/index.ts load --repo ..
+        run: npx --no-install tsx src/index.ts load --repo ..

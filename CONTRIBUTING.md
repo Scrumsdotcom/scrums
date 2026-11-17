@@ -11,6 +11,8 @@ Thank you for helping. This file applies to the whole repository. Each area belo
 - Follow the [code of conduct](CODE_OF_CONDUCT.md).
 - Contributions are accepted under the [Apache License 2.0](LICENSE), except in [`packages/sorted-ui/`](packages/sorted-ui), which is [MIT](packages/sorted-ui/LICENSE).
 
+- Do not add dependencies, GitHub Actions or install scripts without a reason in the pull request. The `supply-chain` check describes the rules; run it with `node .github/scripts/supply-chain-check.mjs`.
+
 The same rules apply to human and agent contributors.
 The author remains responsible for the correctness of the submission and its stated evidence.
 
