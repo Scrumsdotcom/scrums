@@ -127,6 +127,14 @@ test("check: get returns bounded context and reports what it omits", () => {
   assert.match(formatResult(r), /; o0 omitted \d+ bytes \(budget 30\)/);
 });
 
+test("check: get cuts a goal longer than the budget instead of dropping it", () => {
+  const m = manifestFromContext("n:N, xs:V Z n");
+  const r = checkStream("c0 (sig t Z (= t (sum xs)))\nf0 (pair (sum xs) refl)\nput f0 c0 @b0\nck f0 @a0\nget o0 10\n", m);
+  assert.equal(r.contexts[0].text, "goal (sig ");
+  assert.equal(r.contexts[0].omittedBytes, 48 - 10);
+  assert.match(formatResult(r), /; o0 goal \(sig \n; o0 omitted 38 bytes \(budget 10\)/);
+});
+
 test("check: step budget exhaustion is unknown RES, not a crash", () => {
   const m = loadManifest({ format: "nt-manifest/1" }, { maxSteps: 50 });
   const r = checkStream("c0 (= (sum (cons 1 (cons 2 (cons 3 (cons 4 (cons 5 nil)))))) 15)\nf0 refl\nput f0 c0 @b0\nck f0 @a0\n", m);

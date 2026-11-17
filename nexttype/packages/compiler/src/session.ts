@@ -372,6 +372,8 @@ export function checkStream(text: string, manifest: Manifest): StreamResult {
           if (Buffer.byteLength(next, "utf8") > f.budget) break;
           out = next;
         }
+        // A goal longer than the budget is cut, not dropped. Printed terms are ASCII (see NAME), so the cut cannot split a character.
+        if (!out) out = lines[0].slice(0, f.budget);
         contexts.push({ obligation: f.obligation, budget: f.budget, text: out, omittedBytes: Buffer.byteLength(full, "utf8") - Buffer.byteLength(out, "utf8") });
         break;
       }

@@ -32,6 +32,10 @@ Versioning follows [Versioning and stability](docs/reference/versioning.md).
 - The grammar, lexical, diagnostics, and modules reference pages now state the implemented rules. Open questions that `ntd/1` settles: comments (`;`), negative integer literals, frame size limits, and frames limited to one line.
 - The status page describes what `ntc` 0.1.0 checks and what it does not.
 
+### Fixed
+
+- `get` no longer returns an empty context when the goal line is longer than the budget. It returns the start of the goal, cut to the budget, and the `omitted` note counts the rest.
+
 ### Breaking changes
 
 - None for `nt` or the ledger format.
