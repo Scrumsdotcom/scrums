@@ -75,7 +75,8 @@ A library caller may lower any bound with `resolveLimits`, but cannot raise it a
 `ntc` and the library:
 
 - read only the files named on the command line, or standard input;
-- refuse non-regular files and files over the input limit before reading them;
+- refuse non-regular files and files over the input limit before reading them, and do not block on a FIFO or a device while they check;
+- escape control and bidirectional characters from file names and arguments before they print a diagnostic, so that input cannot drive the terminal;
 - never open a network connection, start a process, load code, or read environment variables;
 - write only to standard output and standard error.
 

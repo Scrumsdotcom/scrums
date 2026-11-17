@@ -19,7 +19,7 @@ It also evaluates closed terms with the reference evaluator.
 
 ## Build
 
-`ntc` needs Node.js 20 or later.
+`ntc` needs Node.js 22.12 or later.
 It has no runtime dependencies.
 
 ```sh
