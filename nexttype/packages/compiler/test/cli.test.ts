@@ -124,3 +124,44 @@ test("CLI fmt stdin and zero-argument commands retain their output", () => {
   }
   assert.match(run(["help"]).stdout, /ntc eval .*\[--json\].*\[--\] TERM/);
 });
+
+test("CLI rejects a FIFO without blocking on it", { skip: process.platform === "win32" }, () => {
+  const dir = mkdtempSync(join(tmpdir(), "ntc-cli-"));
+  try {
+    const fifo = join(dir, "pipe.ntd");
+    const mk = spawnSync("mkfifo", [fifo]);
+    if (mk.status !== 0) return;
+    for (const args of [["check", fifo], ["fmt", fifo], ["check", "--manifest", fifo, "-"]]) {
+      const p = run(args, stream);
+      assert.equal(p.status, 2, p.stderr);
+      assert.equal(p.stdout, "");
+      assert.match(p.stderr, /is not a regular file/);
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("CLI rejects devices and directories as input files", { skip: process.platform === "win32" }, () => {
+  for (const file of ["/dev/null", "/dev/zero", "."]) {
+    const p = run(["check", file], stream);
+    assert.equal(p.status, 2, p.stderr);
+    assert.equal(p.stdout, "");
+  }
+});
+
+test("CLI escapes control and bidirectional characters from arguments in diagnostics", () => {
+  const cases: [string[], RegExp][] = [
+    [["check", "no-such-\u001b[2J\u001b]0;owned\u0007.ntd"], /no-such-\\u\{1b\}\[2J\\u\{1b\}\]0;owned\\u\{7\}\.ntd/],
+    [["check", "--bogus‮⁦x"], /unknown option --bogus\\u\{202e\}\\u\{2066\}x/],
+    [["fmt", "a\nproved o0 TY f0"], /a\\u\{a\}proved o0 TY f0/],
+    [["eval", "\u009b31m"], /\\u\{9b\}31m|U\+009B/],
+  ];
+  for (const [args, shown] of cases) {
+    const p = run(args, "");
+    assert.notEqual(p.status, 0);
+    assert.match(p.stderr, shown, p.stderr);
+    const firstLine = p.stderr.split("\n")[0];
+    assert.doesNotMatch(firstLine, /[\u0000-\u0008\u000b-\u001f\u007f-\u009f‪-‮⁦-⁩]/, JSON.stringify(firstLine));
+  }
+});

@@ -50,7 +50,7 @@ See the [security model](docs/reference/security-model.md) for what a `proved` r
 
 ## Check a contract
 
-Build the reference checker from a clone of [Scrumsdotcom/scrums](https://github.com/Scrumsdotcom/scrums) (Node.js 20 or later, no runtime dependencies):
+Build the reference checker from a clone of [Scrumsdotcom/scrums](https://github.com/Scrumsdotcom/scrums) (Node.js 22.12 or later, no runtime dependencies):
 
 ```sh
 cd nexttype/packages/compiler && npm ci --ignore-scripts && npm run build && cd ../..
