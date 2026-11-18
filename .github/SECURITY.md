@@ -40,6 +40,25 @@ Company-as-Code in [`packages/company-as-code/`](../packages/company-as-code) ha
 
 We fix security issues in the latest release of each package. Packages at `0.x` can change between minor versions.
 
+## How we protect the supply chain
+
+Recent attacks on open-source projects stole CI credentials and publish tokens, then shipped malicious versions with valid provenance.
+Examples are the Shai-Hulud npm worms, the TanStack release compromise, and moved tags on popular GitHub Actions.
+This repository uses these controls:
+
+- Every GitHub Action is pinned to a full commit SHA. Dependabot updates the pins after a 7-day cooldown.
+- Every workflow declares least-privilege `permissions`. Only release and code-scanning jobs get a write scope, and only the one they need.
+- No workflow uses `pull_request_target`, `workflow_run`, or a dependency cache. Checkouts do not keep the token.
+- CI installs dependencies with `npm ci --ignore-scripts` from committed lockfiles only.
+- The `supply-chain` workflow fails if a lockfile resolves outside the npm registry, has no sha512 integrity hash, runs an install script that is not on the allowlist, or pins a known-malicious version.
+  The denylist is [`supply-chain/compromised-npm.txt`](supply-chain/compromised-npm.txt).
+- The `supply-chain` workflow also refuses editor and agent configuration that runs commands on its own, such as `.vscode/tasks.json` and `.claude/settings.json`.
+- zizmor, OpenSSF Scorecard, CodeQL and dependency review check every change.
+- Release workflows build from a tag on `main`, verify npm registry signatures, and attest build provenance.
+- [`CODEOWNERS`](CODEOWNERS) routes changes to workflows, manifests, lockfiles, installers, docs scripts and agent instructions to a maintainer.
+
+If you find a gap in these controls, report it as a vulnerability.
+
 ## NextType
 
 NextType is an execution language for agents.

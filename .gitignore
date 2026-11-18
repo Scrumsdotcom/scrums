@@ -1,0 +1,21 @@
+# Dependencies and build output
+node_modules/
+dist/
+dist-release/
+
+# Credentials. Never commit these; this repository is public.
+.env
+.env.*
+!.env.example
+.npmrc.local
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+.netrc
+
+# Local editor and agent state
+.DS_Store
+.claude/settings.local.json

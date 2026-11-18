@@ -2,7 +2,8 @@ name: nexttype-release
 
 # Runs when a maintainer pushes a NextType version tag such as nexttype-v0.1.0.
 # The nexttype- prefix keeps these tags apart from the monthly vYYYY.MM tags.
-# Builds from the tagged commit, runs the full test suite, writes SHA256SUMS,
+# The tagged commit must be on main. Builds from it, verifies the registry
+# signatures of the installed dependencies, runs the full test suite, writes SHA256SUMS,
 # attests build provenance with Sigstore, and creates a draft GitHub release.
 # A maintainer reviews the draft before publishing it.
 
@@ -28,7 +29,13 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
+      - name: Check that the tagged commit is on main
+        # A tag pushed from an unreviewed branch must not produce a release.
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main \
+            || { echo "the tagged commit $GITHUB_SHA is not on main" >&2; exit 1; }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
@@ -43,13 +50,14 @@ jobs:
         working-directory: nexttype/packages/compiler
         run: |
           npm ci --ignore-scripts --no-audit --no-fund
+          npm audit signatures
           npm test
       - name: Package
         env:
           SOURCE_DATE_EPOCH: "315532800"
         run: |
           mkdir -p dist-release
-          (cd packages/compiler && npm pack --pack-destination ../../dist-release)
+          (cd packages/compiler && npm pack --ignore-scripts --pack-destination ../../dist-release)
           cp cli/nt cli/install.sh dist-release/
           cd dist-release
           sha256sum -- * > SHA256SUMS

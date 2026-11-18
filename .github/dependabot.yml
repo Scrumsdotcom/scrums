@@ -4,6 +4,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Wait before proposing a new release. Most malicious versions are found
+    # and removed within days. Security updates are not delayed.
+    cooldown:
+      default-days: 7
     groups:
       actions:
         patterns: ["*"]
@@ -11,6 +15,9 @@ updates:
     directory: /nexttype/packages/compiler
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
     groups:
       dev-dependencies:
         dependency-type: development

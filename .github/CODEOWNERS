@@ -1,0 +1,24 @@
+# Code owners review changes to the paths that control what this repository
+# builds, installs, publishes and runs. A change to one of these paths can
+# reach users or CI credentials without changing any product code.
+
+# CI, release and repository policy
+/.github/                                   @gez-scrumsdotcom
+
+# Dependency manifests and lockfiles
+**/package.json                             @gez-scrumsdotcom
+**/package-lock.json                        @gez-scrumsdotcom
+**/.npmrc                                   @gez-scrumsdotcom
+
+# Code that runs on users' machines or on every docs page
+/nexttype/cli/                              @gez-scrumsdotcom
+/docs/**/*.js                               @gez-scrumsdotcom
+/docs/docs.json                             @gez-scrumsdotcom
+
+# Instructions that coding agents load and follow
+**/AGENTS.md                                @gez-scrumsdotcom
+**/CLAUDE.md                                @gez-scrumsdotcom
+/nexttype/skills/                           @gez-scrumsdotcom
+
+# Security policy
+/.github/SECURITY.md                        @gez-scrumsdotcom
