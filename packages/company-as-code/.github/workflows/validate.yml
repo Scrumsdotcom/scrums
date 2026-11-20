@@ -30,7 +30,7 @@ jobs:
             runtime/package-lock.json
       - name: Install CLI
         working-directory: cli
-        run: npm ci
+        run: npm ci --ignore-scripts
       - name: Typecheck (CLI)
         working-directory: cli
         run: npm run typecheck
@@ -53,7 +53,7 @@ jobs:
 
       - name: Install runtime host
         working-directory: runtime
-        run: npm ci
+        run: npm ci --ignore-scripts
       - name: Typecheck (runtime host)
         working-directory: runtime
         run: npm run typecheck

@@ -22,7 +22,7 @@ jobs:
           cache-dependency-path: cli/package-lock.json
       - name: Install CLI
         working-directory: cli
-        run: npm ci
+        run: npm ci --ignore-scripts
       - name: Run drift gate
         working-directory: cli
         run: npm run generate:check

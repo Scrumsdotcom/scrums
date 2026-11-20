@@ -418,7 +418,7 @@ check_ledger() {
 proof() {
   if [ "${1:-}" = "init" ]; then
     target=${2:-PROOF.md}
-    if [ -e "$target" ]; then
+    if [ -e "$target" ] || [ -L "$target" ]; then
       echo "nt: $target already exists; not overwriting" >&2
       exit 2
     fi

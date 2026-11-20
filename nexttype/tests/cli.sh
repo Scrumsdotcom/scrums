@@ -95,6 +95,10 @@ expect 2 "nt compare unknown example" sh "$nt" compare nosuch
 cd "$work"
 expect 0 "nt proof init" sh "$nt" proof init
 expect 2 "nt proof init refuses to overwrite" sh "$nt" proof init
+ln -s "$work/outside.md" linked.md
+expect 2 "nt proof init refuses a dangling symlink" sh "$nt" proof init linked.md
+if [ -e "$work/outside.md" ]; then bad "nt proof init wrote through a dangling symlink"; else ok "nothing written through the dangling symlink"; fi
+rm -f linked.md
 expect 0 "first nt proof after init passes" sh "$nt" proof
 contains "nt proof: PASS" "first run prints PASS"
 contains "tokens per accepted change: ~1840 (over 1 accepted change" "first run prints tokens per accepted change"
