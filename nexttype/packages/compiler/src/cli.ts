@@ -6,7 +6,7 @@
  * no network access, starts no processes, and writes only to stdout and
  * stderr. All inputs are bounded by the limits in limits.ts.
  */
-import { closeSync, fstatSync, openSync, readSync } from "node:fs";
+import { closeSync, constants, fstatSync, openSync, readSync } from "node:fs";
 import { CheckError } from "./diagnostics.js";
 import { DEFAULT_LIMITS, ResourceError } from "./limits.js";
 import { decodeUtf8, decodeStream, printFrame } from "./syntax.js";
@@ -36,8 +36,27 @@ Exit codes:
 
 class UsageError extends Error {}
 
+// C0 controls, DEL, C1 controls, and bidirectional controls.
+// File names and arguments are chosen by the caller, often an agent, and
+// reach the terminal in diagnostics. Escaped, they cannot move the cursor,
+// rewrite the screen, set the window title, or reorder the text a person
+// reads.
+const UNSAFE_DISPLAY = /[\u0000-\u0009\u000b-\u001f\u007f-\u009f\u061c\u200e\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069]/g;
+const NEWLINE_DISPLAY = /\n/g;
+
+/** Text that is safe to print to a terminal: control characters become \u{…} escapes. */
+function displayText(text: string, keepNewlines = false): string {
+  const shown = text.replace(UNSAFE_DISPLAY, (c) => `\\u{${c.codePointAt(0)!.toString(16)}}`);
+  return keepNewlines ? shown : shown.replace(NEWLINE_DISPLAY, "\\u{a}");
+}
+
+// O_NONBLOCK lets open() return at once for a FIFO or a device, so the
+// regular-file check below runs before any read can block. It has no effect
+// on regular files. Windows has no O_NONBLOCK; there, open() does not block.
+const OPEN_FLAGS = constants.O_NONBLOCK === undefined ? constants.O_RDONLY : constants.O_RDONLY | constants.O_NONBLOCK;
+
 function readInput(path: string | undefined): string {
-  const fd = path === undefined || path === "-" ? 0 : openSync(path, "r");
+  const fd = path === undefined || path === "-" ? 0 : openSync(path, OPEN_FLAGS);
   try {
     if (fd !== 0) {
       const st = fstatSync(fd);
@@ -169,21 +188,22 @@ function main(argv: string[]): number {
 try {
   process.exitCode = main(process.argv.slice(2));
 } catch (e) {
+  // Every message can carry a file name or an argument; print it escaped.
   if (e instanceof UsageError) {
-    process.stderr.write(`ntc: ${e.message}\n\n${USAGE}`);
+    process.stderr.write(`ntc: ${displayText(e.message)}\n\n${USAGE}`);
     process.exitCode = 2;
   } else if (e instanceof CheckError) {
     const at = e.line !== undefined ? `${e.line}:${e.col ?? 1}: ` : "";
-    process.stderr.write(`ntc: ${at}${e.result} ${e.code}: ${e.message}\n`);
+    process.stderr.write(`ntc: ${at}${e.result} ${e.code}: ${displayText(e.message)}\n`);
     process.exitCode = 1;
-  } else if ((e as NodeJS.ErrnoException).code === "ENOENT" || (e as NodeJS.ErrnoException).code === "EACCES" || (e as NodeJS.ErrnoException).code === "EISDIR") {
-    process.stderr.write(`ntc: ${(e as Error).message}\n`);
+  } else if (["ENOENT", "EACCES", "EISDIR", "ENOTDIR", "ELOOP", "ENAMETOOLONG", "ENXIO"].includes((e as NodeJS.ErrnoException).code ?? "")) {
+    process.stderr.write(`ntc: ${displayText((e as Error).message)}\n`);
     process.exitCode = 2;
   } else if (e instanceof RangeError || e instanceof ResourceError) {
-    process.stderr.write(`ntc: unknown RES: resource limit: ${e.message}\n`);
+    process.stderr.write(`ntc: unknown RES: resource limit: ${displayText(e.message)}\n`);
     process.exitCode = 1;
   } else {
-    process.stderr.write(`ntc: internal error: ${(e as Error).stack ?? String(e)}\n`);
+    process.stderr.write(`ntc: internal error: ${displayText((e as Error).stack ?? String(e), true)}\n`);
     process.exitCode = 70;
   }
 }

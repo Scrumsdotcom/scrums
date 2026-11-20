@@ -3,7 +3,7 @@
 The NextType reference checker, `ntc`.
 It decodes NTΔ streams (`ntd/1`), elaborates them to the NT0 core, re-checks every term in an independent kernel, evaluates closed terms, and binds each proved obligation to a SHA-256 evidence digest.
 
-No runtime dependencies. Node.js 20 or later.
+No runtime dependencies. Node.js 22.12 or later.
 
 ## Build and test
 

@@ -19,7 +19,7 @@ Versioning follows [Versioning and stability](docs/reference/versioning.md).
 - A conformance suite under `conformance/`, seeded property tests, and a corpus-mutating fuzzer.
 - Checked example streams and manifests for the invoice, vector, and state examples.
 - Documentation: NTΔ shorthand, quick reference, patterns for agents, the `ntc` guide, the security model, and the versioning policy. Every `ntd` and `console` example in the documentation runs in CI.
-- CI on Linux and macOS with Node.js 20, 22, and 24; CodeQL; dependency review; Dependabot; a weekly fuzz run; and a tag-triggered release workflow with `SHA256SUMS` and Sigstore build provenance.
+- CI on Linux and macOS with Node.js 22 and 24; CodeQL; dependency review; Dependabot; a weekly fuzz run; and a tag-triggered release workflow with `SHA256SUMS` and Sigstore build provenance.
 - A security policy with a private reporting route.
 
 ### Changed
@@ -31,6 +31,12 @@ Versioning follows [Versioning and stability](docs/reference/versioning.md).
 - The installer pins the SHA-256 of the `nt` script it installs, refuses non-HTTPS sources and redirects, and can require GitHub build provenance (`NT_VERIFY_PROVENANCE=1`). A file that matches the published checksum but not the pin is rejected. Set `NT_SHA256` to install a different build on purpose.
 - The grammar, lexical, diagnostics, and modules reference pages now state the implemented rules. Open questions that `ntd/1` settles: comments (`;`), negative integer literals, frame size limits, and frames limited to one line.
 - The status page describes what `ntc` 0.1.0 checks and what it does not.
+- `ntc` needs Node.js 22.12 or later. Node.js 20 reached end of life on 2026-04-30 and no longer receives security fixes.
+
+### Security
+
+- `ntc` opens input files without blocking, so a FIFO or a device named as `FILE` or `--manifest` is refused as "not a regular file" at once. Before, `ntc check` on a FIFO waited for a writer and did not return, which broke the documented input bound.
+- `ntc` escapes control and bidirectional characters (as `\u{…}`) in the file names, arguments and error text that it prints to standard error. A crafted file name or option could otherwise send terminal escape sequences or reorder the text a reviewer reads.
 
 ### Fixed
 
