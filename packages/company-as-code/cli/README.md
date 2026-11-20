@@ -5,7 +5,7 @@ Reference CLI for Company-as-Code. TypeScript / Node, schema-driven, determinist
 ## Commands
 
 ```bash
-npm install
+npm ci --ignore-scripts
 npm run validate         # validate every manifest, agent, workflow, etc.
 npm run generate         # write /generated/*.json
 npm run generate:check   # CI drift gate: exits non-zero on drift

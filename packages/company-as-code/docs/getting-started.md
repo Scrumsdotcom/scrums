@@ -7,7 +7,7 @@ A walkthrough from clone to first module to first agent. Assumes Node 22 or newe
 ```bash
 git clone https://github.com/gez-scrumsdotcom/Company-as-Code.git
 cd Company-as-Code
-cd cli && npm install && cd ..
+cd cli && npm ci --ignore-scripts && cd ..
 ```
 
 The CLI lives in `/cli`. The framework is the specs in `/schemas` and `/docs`. The CLI is one reference implementation, feel free to port the generators to Go, Python, or Rust.
@@ -136,7 +136,7 @@ runtime host loads the manifest graph and runs workflows dry-run-first,
 writing every step to an audit ledger.
 
 ```bash
-cd runtime && npm install && cd ..
+cd runtime && npm ci --ignore-scripts && cd ..
 npm run host -- load --repo ..
 npm run host -- execute month-end-close \
   --repo .. \

@@ -29,7 +29,7 @@ NT_REPOSITORY="Scrumsdotcom/scrums"
 # The SHA-256 of the nt script that this installer version installs.
 # CI fails if it differs from cli/nt.sha256. To install a different build on
 # purpose, set NT_SHA256 to that build's published SHA-256.
-NT_PINNED_SHA256="8be069f5b3ab76b0582d037ee323cacc7f09fb87dfbc2f642650cacf13ecaca3"
+NT_PINNED_SHA256="a3068530a35eafa3a76e4679df0d7f4189c9de12fe4678a3adf3252a069dabb2"
 NT_SHA256=${NT_SHA256:-$NT_PINNED_SHA256}
 MARKER="nt - NextType preview command line"
 

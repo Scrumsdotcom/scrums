@@ -225,7 +225,7 @@ Every path belongs to one of four classes: **framework** (shipped by upstream, r
 # 1. Clone and install the reference CLI
 git clone https://github.com/gez-scrumsdotcom/Company-as-Code.git
 cd Company-as-Code
-npm install --prefix cli
+npm ci --ignore-scripts --prefix cli
 
 # 2. Validate every document, and resolve every typed reference
 npm run validate

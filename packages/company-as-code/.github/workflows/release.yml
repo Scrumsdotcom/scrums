@@ -28,7 +28,7 @@ jobs:
       # green on its pull request: tags can point anywhere.
       - name: Install CLI
         working-directory: cli
-        run: npm ci
+        run: npm ci --ignore-scripts
       - name: Validate
         working-directory: cli
         run: npm run validate
@@ -43,7 +43,7 @@ jobs:
         run: npm test
       - name: Install runtime host
         working-directory: runtime
-        run: npm ci
+        run: npm ci --ignore-scripts
       - name: Tests (runtime host)
         working-directory: runtime
         run: npm test

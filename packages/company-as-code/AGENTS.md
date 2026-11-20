@@ -99,7 +99,7 @@ Currently authored skills:
 Every change to a manifest, agent, workflow, skill, or any other canonical primitive must pass this loop locally before pushing:
 
 ```bash
-cd cli && npm install                # once
+cd cli && npm ci --ignore-scripts              # once
 npm run validate                     # schema + typed references + cross-document discipline
 npm run generate                     # regenerate /generated/
 npm run generate:check               # drift gate (CI runs this)

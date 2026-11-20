@@ -8,7 +8,7 @@ Where the [`/cli`](../cli) is the **dev-side** tool (validate manifests, generat
 
 ```bash
 cd runtime
-npm install
+npm ci --ignore-scripts
 npm run start -- load --repo ..
 npm run start -- execute month-end-close \
   --repo .. \
