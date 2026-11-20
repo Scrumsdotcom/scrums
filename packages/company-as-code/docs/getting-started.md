@@ -136,7 +136,7 @@ runtime host loads the manifest graph and runs workflows dry-run-first,
 writing every step to an audit ledger.
 
 ```bash
-cd runtime && npm ci --ignore-scripts && cd ..
+cd runtime && npm ci --ignore-scripts && npm rebuild better-sqlite3 && cd ..
 npm run host -- load --repo ..
 npm run host -- execute month-end-close \
   --repo .. \

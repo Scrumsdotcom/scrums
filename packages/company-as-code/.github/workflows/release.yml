@@ -43,7 +43,7 @@ jobs:
         run: npm test
       - name: Install runtime host
         working-directory: runtime
-        run: npm ci --ignore-scripts
+        run: npm ci --ignore-scripts && npm rebuild better-sqlite3
       - name: Tests (runtime host)
         working-directory: runtime
         run: npm test
