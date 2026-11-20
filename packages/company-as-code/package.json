@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "install:cli": "npm --prefix cli ci --ignore-scripts",
-    "install:runtime": "npm --prefix runtime ci --ignore-scripts",
+    "install:runtime": "npm --prefix runtime ci --ignore-scripts && npm --prefix runtime rebuild better-sqlite3",
     "validate": "npm --prefix cli run --silent validate",
     "generate": "npm --prefix cli run --silent generate",
     "generate:check": "npm --prefix cli run --silent generate:check",

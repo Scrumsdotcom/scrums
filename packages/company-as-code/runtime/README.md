@@ -9,6 +9,7 @@ Where the [`/cli`](../cli) is the **dev-side** tool (validate manifests, generat
 ```bash
 cd runtime
 npm ci --ignore-scripts
+npm rebuild better-sqlite3   # builds the one native module; see note below
 npm run start -- load --repo ..
 npm run start -- execute month-end-close \
   --repo .. \
@@ -19,6 +20,8 @@ npm run start -- audit <correlationId> --db ./runtime.db
 npm run start -- events --type finance.period_closed --db ./runtime.db
 npm run start -- trace <traceId> --db ./runtime.db
 ```
+
+Installs skip dependency lifecycle scripts. `better-sqlite3` builds a native binding in an install script, so it is rebuilt explicitly; no other runtime dependency needs install scripts.
 
 ## Commands
 

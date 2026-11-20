@@ -53,7 +53,7 @@ jobs:
 
       - name: Install runtime host
         working-directory: runtime
-        run: npm ci --ignore-scripts
+        run: npm ci --ignore-scripts && npm rebuild better-sqlite3
       - name: Typecheck (runtime host)
         working-directory: runtime
         run: npm run typecheck
