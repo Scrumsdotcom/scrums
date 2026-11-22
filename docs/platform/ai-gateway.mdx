@@ -1,6 +1,8 @@
 ---
-title: "AI Agent Gateway"
-description: "An AI gateway for models and agents: one governed endpoint that routes each call, enforces policy, records every run and meters usage per agent, team and model."
+title: "How the AI agent gateway works"
+sidebarTitle: "AI Agent Gateway"
+description: "How the AI agent gateway works: one governed endpoint that routes each model and agent call, enforces policy, records every run and meters usage."
+"og:title": "Docs: How the AI agent gateway works | Scrums.com"
 ---
 
 An AI agent gateway is a single governed endpoint between your applications and the AI they call. Every request passes through it, whether the target is a foundation model or a deployed AI agent. The gateway decides where the call goes, checks it against policy, records what happened and meters what it cost. Most AI gateways stop at models. The Scrums.com gateway governs model calls and agent calls on one plane, because an agent holds context, uses tools and acts for a principal, so it needs identity, authority boundaries and an audit trail as well as routing.
